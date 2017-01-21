@@ -8,7 +8,7 @@
   ~ "License"); you may not use this file except in compliance
   ~ with the License.  You may obtain a copy of the License at
   ~
-  ~   http://www.apache.org/licenses/LICENSE-2.0
+  ~   https://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ Unless required by applicable law or agreed to in writing,
   ~ software distributed under the License is distributed on an
@@ -39,8 +39,10 @@
     Parent pom for Apache Logging Services projects.
   </description>
   <url>https://logging.apache.org/</url>
+  <inceptionYear>1999</inceptionYear>
 
   <properties>
+    <!-- All Apache Logging projects currently have a baseline JDK version of 1.7 -->
     <maven.compiler.source>1.7</maven.compiler.source>
     <maven.compiler.target>1.7</maven.compiler.target>
   </properties>
@@ -51,12 +53,6 @@
     <url>https://git-wip-us.apache.org/repos/asf?p=logging-parent.git</url>
   </scm>
 
-  <ciManagement>
-    <system>Jenkins</system>
-    <!-- TODO -->
-    <url>https://builds.apache.org/job/???/</url>
-  </ciManagement>
-
   <mailingLists>
     <mailingList>
       <name>log4j-user</name>
@@ -64,11 +60,6 @@
       <unsubscribe>log4j-user-unsubscribe@logging.apache.org</unsubscribe>
       <post>log4j-user@logging.apache.org</post>
       <archive>https://lists.apache.org/list.html?log4j-user@logging.apache.org</archive>
-      <otherArchives>
-        <otherArchive>http://mail-archives.apache.org/mod_mbox/logging-log4j-user/</otherArchive>
-        <otherArchive>http://marc.info/?l=log4j-user</otherArchive>
-        <otherArchive>http://dir.gmane.org/gmane.comp.jakarta.log4j.user</otherArchive>
-      </otherArchives>
     </mailingList>
     <mailingList>
       <name>log4j-dev</name>
@@ -76,11 +67,6 @@
       <unsubscribe>log4j-dev-unsubscribe@logging.apache.org</unsubscribe>
       <post>log4j-dev@logging.apache.org</post>
       <archive>https://lists.apache.org/list.html?log4j-dev@logging.apache.org</archive>
-      <otherArchives>
-        <otherArchive>http://mail-archives.apache.org/mod_mbox/logging-log4j-dev/</otherArchive>
-        <otherArchive>http://marc.info/?l=log4j-dev</otherArchive>
-        <otherArchive>http://dir.gmane.org/gmane.comp.jakarta.log4j.devel</otherArchive>
-      </otherArchives>
     </mailingList>
   </mailingLists>
 
@@ -89,6 +75,11 @@
     <url>https://issues.apache.org/jira/browse/LOG4J2</url>
   </issueManagement>
 
-  <!-- TODO: add other common metadata from log4j2's parent pom -->
+  <!-- ASF parent provides the following top level metadata that we don't need to override:
+  * license
+  * organization
+  * repositories
+  * distributionManagement
+  -->
 
 </project>
