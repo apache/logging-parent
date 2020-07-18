@@ -22,14 +22,19 @@ pipeline {
     agent {
         label 'ubuntu'
     }
+    tools {
+        maven 'Maven 3 (latest)'
+        jdk 'JDK 1.8 (latest)'
+    }
+    options {
+        ansiColor 'xterm'
+        buildDiscarder logRotator(numToKeepStr: '10')
+        timeout time: 5, unit: 'MINUTES'
+    }
     stages {
         stage('Deploy') {
             steps {
-                withMaven(jdk: 'JDK 1.8 (latest)', maven: 'Maven 3 (latest)') {
-                    ansiColor('xterm') {
-                        sh 'mvn deploy'
-                    }
-                }
+                sh 'mvn deploy'
             }
         }
     }
