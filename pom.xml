@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
-    <version>23</version>
+    <version>24</version>
   </parent>
 
   <groupId>org.apache.logging</groupId>
@@ -43,6 +43,8 @@
     <!-- All Apache Logging projects currently have a baseline JDK version of 1.8 -->
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+    <!-- Support reproducible builds with a static build timestamp -->
+    <project.build.outputTimestamp>1</project.build.outputTimestamp>
   </properties>
 
   <scm>
