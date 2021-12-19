@@ -30,7 +30,7 @@
   <groupId>org.apache.logging</groupId>
   <artifactId>logging-parent</artifactId>
   <packaging>pom</packaging>
-  <version>4</version>
+  <version>5-SNAPSHOT</version>
 
   <name>Apache Logging Services</name>
   <description>
