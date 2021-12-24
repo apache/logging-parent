@@ -44,7 +44,7 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <!-- Support reproducible builds with a static build timestamp -->
-    <project.build.outputTimestamp>1</project.build.outputTimestamp>
+    <project.build.outputTimestamp>10</project.build.outputTimestamp>
   </properties>
 
   <scm>
