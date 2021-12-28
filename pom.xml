@@ -30,7 +30,7 @@
   <groupId>org.apache.logging</groupId>
   <artifactId>logging-parent</artifactId>
   <packaging>pom</packaging>
-  <version>5-SNAPSHOT</version>
+  <version>5</version>
 
   <name>Apache Logging Services</name>
   <description>
@@ -44,14 +44,14 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <!-- Support reproducible builds with a static build timestamp -->
-    <project.build.outputTimestamp>10</project.build.outputTimestamp>
+    <project.build.outputTimestamp>1640651760</project.build.outputTimestamp>
   </properties>
 
   <scm>
     <connection>scm:git:https://gitbox.apache.org/repos/asf/logging-parent.git</connection>
     <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/logging-parent.git</developerConnection>
     <url>https://gitbox.apache.org/repos/asf?p=logging-parent.git</url>
-    <tag>logging-parent-4</tag>
+    <tag>logging-parent-5</tag>
   </scm>
 
   <mailingLists>
