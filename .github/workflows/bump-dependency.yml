@@ -17,15 +17,14 @@ name: build
 
 on:
   pull_request:
-    actor: 'dependabot[bot]'
-
-permissions:
-  contents: write
-  pull-requests: write
 
 jobs:
   merge:
     runs-on: ubuntu-latest
+    if: ${{ github.event.sender == 'dependabot[bot]' }}
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - name: "[dependabot] Fetch metadata"
