@@ -1,0 +1,6 @@
+# Checked by Spotless (LF line endings)
+*.java text eol=lf
+*.xml  text eol=lf
+*.yaml text eol=lf
+*.yml  text eol=lf
+
