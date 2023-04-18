@@ -172,6 +172,8 @@
   --&gt;</content>
                 <delimiter>&lt;(!DOCTYPE|\w)</delimiter>
               </licenseHeader>
+              <endWithNewline/>
+              <trimTrailingWhitespace/>
             </format>
           </formats>
           <yaml>
@@ -201,6 +203,8 @@
 #</content>
               <delimiter>[^#]</delimiter>
             </licenseHeader>
+            <endWithNewline/>
+            <trimTrailingWhitespace/>
           </yaml>
           <lineEndings>UNIX</lineEndings>
         </configuration>
