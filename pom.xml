@@ -109,9 +109,9 @@
  * limitations under the License.
  */</content>
             </licenseHeader>
-            <trimTrailingWhitespace/>
-            <endWithNewline/>
-            <removeUnusedImports/>
+            <trimTrailingWhitespace />
+            <endWithNewline />
+            <removeUnusedImports />
             <indent>
               <spaces>true</spaces>
               <spacesPerTab>4</spacesPerTab>
@@ -144,6 +144,8 @@
             </licenseHeader>
             <sortPom>
               <expandEmptyElements>false</expandEmptyElements>
+              <!-- Maven Release plugin uses this style -->
+              <spaceBeforeCloseEmptyElement>true</spaceBeforeCloseEmptyElement>
             </sortPom>
           </pom>
           <formats>
@@ -172,8 +174,8 @@
   --&gt;</content>
                 <delimiter>&lt;(!DOCTYPE|\w)</delimiter>
               </licenseHeader>
-              <endWithNewline/>
-              <trimTrailingWhitespace/>
+              <endWithNewline />
+              <trimTrailingWhitespace />
             </format>
             <format>
               <includes>
@@ -199,7 +201,7 @@
 #</content>
                 <delimiter>(##|[^#])</delimiter>
               </licenseHeader>
-              <endWithNewline/>
+              <endWithNewline />
             </format>
           </formats>
           <yaml>
@@ -229,8 +231,8 @@
 #</content>
               <delimiter>(##|[^#])</delimiter>
             </licenseHeader>
-            <endWithNewline/>
-            <trimTrailingWhitespace/>
+            <endWithNewline />
+            <trimTrailingWhitespace />
           </yaml>
           <lineEndings>UNIX</lineEndings>
         </configuration>
