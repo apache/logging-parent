@@ -69,7 +69,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <!-- Support reproducible builds with a static build timestamp -->
     <project.build.outputTimestamp>1682105102</project.build.outputTimestamp>
-    <spotless-maven-plugin.version>2.30.0</spotless-maven-plugin.version>
+    <spotless-maven-plugin.version>2.37.0</spotless-maven-plugin.version>
   </properties>
 
   <build>
