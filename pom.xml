@@ -16,8 +16,14 @@
   ~ limitations under the License.
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
   <modelVersion>4.0.0</modelVersion>
 
+  <!-- `org.apache:apache` parent provides the following top level metadata that we don't need to override:
+       - `license`
+       - `organization`
+       - `repositories
+       - `distributionManagement` -->
   <parent>
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
@@ -26,15 +32,16 @@
 
   <groupId>org.apache.logging</groupId>
   <artifactId>logging-parent</artifactId>
-  <version>10-SNAPSHOT</version>
+  <version>${revision}</version>
   <packaging>pom</packaging>
 
   <name>Apache Logging Services</name>
-  <description>Parent pom for Apache Logging Services projects.</description>
+  <description>Parent POM for Apache Logging Services projects</description>
   <url>https://logging.apache.org/</url>
   <inceptionYear>1999</inceptionYear>
 
   <mailingLists>
+
     <mailingList>
       <name>log4j-user</name>
       <subscribe>log4j-user-subscribe@logging.apache.org</subscribe>
@@ -42,6 +49,7 @@
       <post>log4j-user@logging.apache.org</post>
       <archive>https://lists.apache.org/list.html?log4j-user@logging.apache.org</archive>
     </mailingList>
+
     <mailingList>
       <name>dev</name>
       <subscribe>dev-subscribe@logging.apache.org</subscribe>
@@ -49,41 +57,250 @@
       <post>dev@logging.apache.org</post>
       <archive>https://lists.apache.org/list.html?dev@logging.apache.org</archive>
     </mailingList>
+
   </mailingLists>
 
   <scm>
-    <connection>scm:git:https://gitbox.apache.org/repos/asf/logging-parent.git</connection>
-    <developerConnection>scm:git:https://gitbox.apache.org/repos/asf/logging-parent.git</developerConnection>
+    <connection>scm:git:git@github.com:apache/logging-parent.git</connection>
+    <developerConnection>scm:git:git@github.com:apache/logging-parent.git</developerConnection>
     <tag>HEAD</tag>
-    <url>https://gitbox.apache.org/repos/asf?p=logging-parent.git</url>
+    <url>https://github.com/apache/logging-parent</url>
   </scm>
 
   <issueManagement>
-    <system>JIRA</system>
-    <url>https://issues.apache.org/jira/browse/LOG4J2</url>
+    <system>GitHub Issues</system>
+    <url>https://github.com/apache/logging-parent/issues</url>
   </issueManagement>
 
+  <ciManagement>
+    <system>GitHub Actions</system>
+    <url>https://github.com/apache/logging-parent/actions</url>
+  </ciManagement>
+
   <properties>
-    <!-- All Apache Logging projects currently have a baseline JDK version of 1.8 -->
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-    <!-- Support reproducible builds with a static build timestamp -->
-    <project.build.outputTimestamp>1682105102</project.build.outputTimestamp>
-    <spotless-maven-plugin.version>2.30.0</spotless-maven-plugin.version>
+
+    <!-- project version -->
+    <revision>1.10.0-SNAPSHOT</revision>
+
+    <!-- `minimalJavaBuildVersion` is employed by `org.apache:apache`, which is the parent of us.
+         `minimalJavaBuildVersion` is used for enforcing the compiler version.
+         We will use `java.version` to set the target JVM byte code, which is 8. -->
+    <minimalJavaBuildVersion>[17,18)</minimalJavaBuildVersion>
+    <java.version>8</java.version>
+
+    <!-- `project.build.outputTimestamp` is required for reproducible builds: https://maven.apache.org/guides/mini/guide-reproducible-builds.html -->
+    <project.build.outputTimestamp>0</project.build.outputTimestamp>
+
+    <!-- dependency versions -->
+    <org.eclipse.jgit.version>6.6.0.202305301015-r</org.eclipse.jgit.version>
+
+    <!-- plugin versions -->
+    <beanshell-maven-plugin.version>1.4</beanshell-maven-plugin.version>
+    <error-prone.version>2.20.0</error-prone.version>
+    <findsecbugs-plugin.version>1.12.0</findsecbugs-plugin.version>
+    <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
+    <log4j-changelog-maven-plugin.version>0.4.0</log4j-changelog-maven-plugin.version>
+    <sign-maven-plugin.version>1.0.1</sign-maven-plugin.version>
+    <spotbugs-maven-plugin.version>4.7.3.5</spotbugs-maven-plugin.version>
+    <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
+
   </properties>
 
   <build>
+
     <pluginManagement>
       <plugins>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>flatten-maven-plugin</artifactId>
+          <version>${flatten-maven-plugin.version}</version>
+          <configuration>
+            <!-- Setting `outputDirectory` to `project.build.directory`, which is cleaned by `default-clean` execution of `clean:clean`.
+                 This makes `flatten:clean` redundant. -->
+            <outputDirectory>${project.build.directory}</outputDirectory>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>${spotbugs-maven-plugin.version}</version>
+        </plugin>
+
+        <!-- `src/changelog` validation must be manually enabled, since we only want this for modules containing the changelog directory.
+             For instance, it needs to run for `log4j-tools-bom`, but not for `log4j-changelog`.
+             Hence, the configuration is placed to `pluginManagement` rather than `plugins`. -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>xml-maven-plugin</artifactId>
+          <version>${xml-maven-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>changelog-validation</id>
+              <goals>
+                <goal>validate</goal>
+              </goals>
+              <configuration>
+                <skip>true</skip>
+                <validationSets>
+                  <validationSet>
+                    <dir>src/changelog</dir>
+                    <includes>**/*.xml</includes>
+                    <publicId>http://logging.apache.org/log4j/changelog</publicId>
+                    <systemId>https://logging.apache.org/log4j/changelog-0.1.1.xsd</systemId>
+                    <validating>true</validating>
+                  </validationSet>
+                </validationSets>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
         <plugin>
           <groupId>com.diffplug.spotless</groupId>
           <artifactId>spotless-maven-plugin</artifactId>
           <version>${spotless-maven-plugin.version}</version>
         </plugin>
+
       </plugins>
     </pluginManagement>
 
     <plugins>
+
+      <!-- Resolves `revision` property prior to deployment.
+           Skipping this step would result in artifacts not consumable by Maven.
+           https://maven.apache.org/maven-ci-friendly.html#install-deploy -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>flatten-maven-plugin</artifactId>
+        <version>${flatten-maven-plugin.version}</version>
+        <configuration>
+          <updatePomFile>true</updatePomFile>
+          <flattenMode>resolveCiFriendliesOnly</flattenMode>
+        </configuration>
+        <executions>
+          <execution>
+            <id>flatten-revision</id>
+            <goals>
+              <goal>flatten</goal>
+            </goals>
+            <phase>process-resources</phase>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <release>${java.version}</release>
+          <encoding>${project.build.sourceEncoding}</encoding>
+          <compilerArgs>
+            <arg>-Xlint:all</arg>
+            <arg>-XDcompilePolicy=simple</arg>
+            <arg>-Xplugin:ErrorProne</arg>
+          </compilerArgs>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>com.google.errorprone</groupId>
+              <artifactId>error_prone_core</artifactId>
+              <version>${error-prone.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+
+      <!-- Ensure that version for each dependency resolved during a build, is equal to or higher than all transitive dependency declarations.
+           A failure here requires adding the dependency to the dependency management. -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-upper-bound-deps</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireUpperBoundDeps />
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <configuration>
+          <plugins>
+            <plugin>
+              <groupId>com.h3xstream.findsecbugs</groupId>
+              <artifactId>findsecbugs-plugin</artifactId>
+              <version>${findsecbugs-plugin.version}</version>
+            </plugin>
+          </plugins>
+        </configuration>
+        <executions>
+          <execution>
+            <id>default-spotbugs</id>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <phase>verify</phase>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>xml-maven-plugin</artifactId>
+        <!-- Checking `src/changelog` only for this module!
+             Children must enable it themselves (just like we do!) for modules containing `src/changelog` directory. -->
+        <inherited>false</inherited>
+        <executions>
+          <execution>
+            <id>changelog-validation</id>
+            <configuration>
+              <skip>false</skip>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Apache RAT (Release Audit Tool) check to verify licenses.
+           `apache-rat-plugin`: https://creadur.apache.org/rat/apache-rat-plugin/
+           Release Audit Tool: https://creadur.apache.org/rat/index.html -->
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <configuration>
+          <consoleOutput>true</consoleOutput>
+          <excludes>
+            <exclude>.java-version</exclude>
+            <exclude>.mvn/jvm.config</exclude>
+            <exclude>**/*.txt</exclude>
+            <!-- The license header in changelog entry files causing Git to match irrelevant files.
+                 This is eventually causing merge conflicts.
+                 Hence, we avoid enforcing license headers there. -->
+            <exclude>src/changelog/**/*.xml</exclude>
+            <!-- License headers in GitHub templates pollute the prompt displayed to the user: -->
+            <exclude>.github/ISSUE_TEMPLATE/*.md</exclude>
+            <exclude>.github/pull_request_template.md</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <phase>verify</phase>
+          </execution>
+        </executions>
+      </plugin>
+
       <!-- Configuration here must match the one in `.editorconfig`! -->
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
@@ -245,15 +462,312 @@
             <phase>verify</phase>
           </execution>
         </executions>
+
       </plugin>
+
     </plugins>
+
   </build>
 
-  <!-- ASF parent provides the following top level metadata that we don't need to override:
-  * license
-  * organization
-  * repositories
-  * distributionManagement
-  -->
+  <profiles>
+
+    <!-- `changelog-export` profile to export changelogs.
+         It is manually enabled by users to generate release notes.
+         See `RELEASING.adoc` for instructions. -->
+    <profile>
+      <id>changelog-export</id>
+      <build>
+        <defaultGoal>log4j-changelog:export</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-changelog-maven-plugin</artifactId>
+            <version>${log4j-changelog-maven-plugin.version}</version>
+            <inherited>false</inherited>
+            <configuration>
+              <outputDirectory>${project.build.directory}/release-notes</outputDirectory>
+              <indexTemplates>
+                <template>
+                  <source>.index.md.ftl</source>
+                </template>
+              </indexTemplates>
+              <changelogTemplates>
+                <template>
+                  <source>.release-notes.md.ftl</source>
+                  <target>%v.md</target>
+                </template>
+              </changelogTemplates>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- `changelog-release` profile to move `src/changelog/.?.x.x` contents to their associated release directory.
+         It is manually enabled by users while cutting a release.
+         See `RELEASING.adoc` for instructions. -->
+    <profile>
+      <id>changelog-release</id>
+      <build>
+        <defaultGoal>log4j-changelog:release</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-changelog-maven-plugin</artifactId>
+            <version>${log4j-changelog-maven-plugin.version}</version>
+            <inherited>false</inherited>
+            <configuration>
+              <releaseVersion>${project.version}</releaseVersion>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- `distribution` profile creating the distribution ZIP containing:
+         1. Git-tracked sources
+         2. Generated JAR files
+         3. Release notes
+
+         This profile must be executed after a successful `package` phase, since we need JARs.
+         This profile is manually enabled by `.github/workflows/build.yml` while releasing. -->
+    <profile>
+
+      <id>distribution</id>
+
+      <properties>
+        <attachmentFilepathPattern>^.*/target/log4j-(.+)-${project.version}(-tests)?\\.jar$</attachmentFilepathPattern>
+        <minAttachmentCount>1</minAttachmentCount>
+      </properties>
+
+      <build>
+
+        <defaultGoal>log4j-changelog:export bsh:run</defaultGoal>
+
+        <plugins>
+
+          <!-- Generate release notes -->
+          <plugin>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-changelog-maven-plugin</artifactId>
+            <version>${log4j-changelog-maven-plugin.version}</version>
+            <configuration>
+              <outputDirectory>${project.build.directory}/release-notes</outputDirectory>
+              <indexTemplates>
+                <template>
+                  <source>.index.md.ftl</source>
+                </template>
+              </indexTemplates>
+              <changelogTemplates>
+                <template>
+                  <source>.release-notes.md.ftl</source>
+                  <target>%v.md</target>
+                </template>
+              </changelogTemplates>
+            </configuration>
+          </plugin>
+
+          <!-- Create the distribution ZIP -->
+          <plugin>
+            <groupId>com.github.genthaler</groupId>
+            <artifactId>beanshell-maven-plugin</artifactId>
+            <version>${beanshell-maven-plugin.version}</version>
+            <configuration>
+              <script><![CDATA[import java.io.*;
+                import java.nio.file.*;
+                import java.util.*;
+                import java.util.function.*;
+                import java.util.stream.*;
+                import java.util.zip.*;
+
+                import org.eclipse.jgit.dircache.*;
+                import org.eclipse.jgit.lib.Repository;
+                import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+
+                zip(String zipFileName, Map pathByFile) {
+                    OutputStream outputStream = new FileOutputStream(zipFileName);
+                    ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
+                    try {
+                        for (String file : pathByFile.keySet()) {
+                            Path path = pathByFile.get(file);
+                            ZipEntry zipEntry = new ZipEntry(file);
+                            zipEntry.setTime(0);
+                            zipOutputStream.putNextEntry(zipEntry);
+                            zipOutputStream.write(Files.readAllBytes(path));
+                            zipOutputStream.closeEntry();
+                        }
+                    } catch (Exception error) {
+                        // Supplement diagnostics
+                        error.printStackTrace(System.err);
+                        throw error;
+                    } finally {
+                        zipOutputStream.close();
+                    }
+                }
+
+                // Find Git-tracked files
+                SortedMap pathByFile = new TreeMap();
+                Repository repo = new FileRepositoryBuilder().readEnvironment().findGitDir().build();
+                DirCache repoCache = repo.readDirCache();
+                String repoDirectoryParent = repo.getDirectory().getParent();
+                for (int repoCacheEntryIndex = 0; repoCacheEntryIndex < repoCache.getEntryCount(); repoCacheEntryIndex++) {
+                    DirCacheEntry repoCacheEntry = repoCache.getEntry(repoCacheEntryIndex);
+                    String repoCacheEntryPath = repoCacheEntry.getPathString();
+                    pathByFile.put(repoCacheEntryPath, new File(repoDirectoryParent, repoCacheEntryPath).toPath());
+                }
+
+                // Create `src.zip` using Git-tracked files
+                zip("target/src.zip", pathByFile);
+                System.out.format("Generated source ZIP containing %d files.%n", new Object[]{pathByFile.size()});
+
+                // Find auxiliary files that will go into the distribution
+                SortedMap pathByFile = new TreeMap();
+                pathByFile.put("src.zip", new File("target/src.zip").toPath());
+                pathByFile.put("RELEASE-NOTES.md", new File("target/release-notes/${project.version}.md").toPath());
+                pathByFile.put("NOTICE.txt", new File("NOTICE.txt").toPath());
+                pathByFile.put("LICENSE.txt", new File("LICENSE.txt").toPath());
+
+                // Find attachments that will go into the distribution
+                SortedMap attachmentPathByFile = new TreeMap();
+                Stream paths = Files.walk(new File(repoDirectoryParent).toPath(), 8, new FileVisitOption[0]);
+                try {
+                    paths.forEach(new Consumer() {
+                        public void accept(Path path) {
+                            if (Files.isRegularFile(path) &&
+                                    path.toAbsolutePath().toString().matches("${attachmentFilepathPattern}")) {
+                                attachmentPathByFile.put(path.toFileName().toString(), path);
+                            }
+                        }
+                    });
+                } finally {
+                    paths.close();
+                }
+
+                // Check if no attachments were found
+                if (${minAttachmentCount} >= attachmentPathByFile.size()) {
+                    System.err.println("Attachments:");
+                    int[] i = {0};
+                    attachmentPathByFile.values().forEach(path ->
+                            System.err.format("  [%2d] %s%n", new Object[]{i[0]++, path}));
+                    System.err.format(
+                            "Error: Was expecting at least %d attachments, found %d!%n",
+                            ${minAttachmentCount}, attachmentPathByFile.size());
+                    System.err.println("Tip: Have you already executed the Maven `package` goal?");
+                    System.exit(1);
+                }
+
+                // Create the distribution ZIP
+                pathByFile.putAll(attachmentPathByFile);
+                zip("target/dist.zip", pathByFile);
+                System.out.format("Generated distribution ZIP containing following %d files:%n", new Object[] {pathByFile.size()});
+                for (String file : pathByFile.keySet()) {
+                    System.out.println("-> " + file);
+                }]]></script>
+            </configuration>
+            <dependencies>
+              <dependency>
+                <groupId>org.eclipse.jgit</groupId>
+                <artifactId>org.eclipse.jgit</artifactId>
+                <version>${org.eclipse.jgit.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+
+        </plugins>
+
+      </build>
+
+    </profile>
+
+    <!-- `deploy` profile activating deployment-specific configuration.
+         It is manually enabled by `.github/workflows/build.yml` while releasing. -->
+    <profile>
+
+      <id>deploy</id>
+
+      <properties>
+        <deployAtEnd>true</deployAtEnd>
+        <installAtEnd>true</installAtEnd>
+        <skipTests>true</skipTests>
+        <spotbugs.skip>true</spotbugs.skip>
+        <spotless.check.skip>true</spotless.check.skip>
+      </properties>
+
+      <build>
+
+        <defaultGoal>deploy</defaultGoal>
+
+        <plugins>
+
+          <plugin>
+            <groupId>org.simplify4u.plugins</groupId>
+            <artifactId>sign-maven-plugin</artifactId>
+            <version>${sign-maven-plugin.version}</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+
+      </build>
+
+    </profile>
+
+    <profile>
+
+      <id>release</id>
+
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>enforce-no-snapshots</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireReleaseDeps>
+                      <message>SNAPSHOT dependencies are not allowed for releases</message>
+                      <onlyWhenRelease>true</onlyWhenRelease>
+                    </requireReleaseDeps>
+                    <requireReleaseVersion>
+                      <message>A release cannot be a SNAPSHOT version</message>
+                    </requireReleaseVersion>
+                  </rules>
+                  <fail>true</fail>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+
+    </profile>
+
+  </profiles>
 
 </project>
