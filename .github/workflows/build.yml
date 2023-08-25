@@ -32,7 +32,7 @@ on:
 jobs:
 
   build:
-    uses: apache/logging-parent/.github/workflows/build-template.yml
+    uses: apache/logging-parent/.github/workflows/build-template.yml@0a2fdfe20f44bbf8ce6756b6af96af420dab9a82
     permissions:
       contents: write
       pull-requests: write
