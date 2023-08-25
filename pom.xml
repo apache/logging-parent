@@ -102,6 +102,7 @@
     <log4j-changelog-maven-plugin.version>0.4.0</log4j-changelog-maven-plugin.version>
     <sign-maven-plugin.version>1.0.1</sign-maven-plugin.version>
     <spotbugs-maven-plugin.version>4.7.3.5</spotbugs-maven-plugin.version>
+    <spotless-maven-plugin.version>2.38.0</spotless-maven-plugin.version>
     <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
 
   </properties>
@@ -370,6 +371,12 @@
               <includes>
                 <include>src/**/*.xml</include>
               </includes>
+              <excludes>
+                <!-- The license header in changelog entry files causing Git to match irrelevant files.
+                     This is eventually causing merge conflicts.
+                     Hence, we avoid enforcing license headers there. -->
+                <exclude>src/changelog/**/*.xml</exclude>
+              </excludes>
               <licenseHeader>
                 <!-- https://www.apache.org/legal/src-headers.html#headers -->
                 <content>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
