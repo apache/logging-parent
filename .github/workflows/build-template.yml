@@ -33,9 +33,6 @@ on:
         required: true
         type: string
     secrets:
-      GITHUB_TOKEN:
-        description: GitHub token for merging `dependabot` PRs
-        required: true
       GPG_SECRET_KEY:
         description: GPG secret key for signing artifacts
         required: true
