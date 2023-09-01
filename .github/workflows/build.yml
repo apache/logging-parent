@@ -35,10 +35,6 @@ on:
 
 permissions: read-all
 
-env:
-  JAVA_VERSION: 17
-  PROJECT_NAME: logging-parent
-
 jobs:
 
   build:
@@ -48,7 +44,7 @@ jobs:
       contents: write
       pull-requests: write
     with:
-      java-version: ${{ env.JAVA_VERSION }}
+      java-version: 17
 
   deploy-snapshot:
     needs: build
@@ -56,7 +52,7 @@ jobs:
     uses: apache/logging-parent/.github/workflows/deploy-snapshot-reusable.yml@main
     secrets: inherit
     with:
-      java-version: ${{ env.JAVA_VERSION }}
+      java-version: 17
 
   deploy-release:
     needs: build
@@ -64,5 +60,5 @@ jobs:
     uses: apache/logging-parent/.github/workflows/deploy-release-reusable.yml@main
     secrets: inherit
     with:
-      java-version: ${{ env.JAVA_VERSION }}
-      project-name: ${{ env.PROJECT_NAME }}
+      java-version: 17
+      project-name: logging-parent
