@@ -43,16 +43,12 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    with:
-      java-version: 17
 
   deploy-snapshot:
     needs: build
     if: github.repository == 'apache/logging-parent' && github.ref == 'refs/heads/main'
     uses: apache/logging-parent/.github/workflows/deploy-snapshot-reusable.yml@main
     secrets: inherit
-    with:
-      java-version: 17
 
   deploy-release:
     needs: build
@@ -60,5 +56,4 @@ jobs:
     uses: apache/logging-parent/.github/workflows/deploy-release-reusable.yml@main
     secrets: inherit
     with:
-      java-version: 17
       project-name: logging-parent
