@@ -23,21 +23,46 @@ on:
     # They were (hopefully!) already tested in PR-triggered workflow.
     branches-ignore:
     - "dependabot/**"
+    paths-ignore:
+      - "**.adoc"
+      - "**.md"
+      - "**.txt"
   pull_request:
     paths-ignore:
       - "**.adoc"
       - "**.md"
       - "**.txt"
 
+permissions: read-all
+
+env:
+  JAVA_VERSION: 17
+  PROJECT_NAME: logging-parent
+
 jobs:
 
   build:
-    uses: apache/logging-parent/.github/workflows/build-template.yml@c36c3cca34fbbfa0087f8236ad6217fa54f1ba75
+    uses: apache/logging-parent/.github/workflows/build-reusable.yml@main
+    # Write permissions to allow merge of `dependabot` PRs
     permissions:
       contents: write
       pull-requests: write
     with:
-      repository-path: apache/logging-parent
-      java-version: 17
-      project-name: logging-parent
+      java-version: ${{ env.JAVA_VERSION }}
+
+  deploy-snapshot:
+    needs: build
+    if: github.repository == 'apache/logging-parent' && github.ref == 'refs/heads/main'
+    uses: apache/logging-parent/.github/workflows/deploy-snapshot-reusable.yml@main
     secrets: inherit
+    with:
+      java-version: ${{ env.JAVA_VERSION }}
+
+  deploy-release:
+    needs: build
+    if: github.repository == 'apache/logging-parent' && startsWith(github.ref, 'refs/heads/release/')
+    uses: apache/logging-parent/.github/workflows/deploy-release-reusable.yml@main
+    secrets: inherit
+    with:
+      java-version: ${{ env.JAVA_VERSION }}
+      project-name: ${{ env.PROJECT_NAME }}

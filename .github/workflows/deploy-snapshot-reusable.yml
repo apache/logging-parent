@@ -1,0 +1,73 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to you under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: deploy-snapshot-reusable
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: "The Java *compiler* version! (Target is fixed: 8)"
+        required: false
+        type: string
+    secrets:
+      NEXUS_USER:
+        description: Nexus snapshot repository username for deploying artifacts
+        required: true
+      NEXUS_PW:
+        description: Nexus snapshot repository password for deploying artifacts
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744   # 3.6.0
+
+      - name: Set up Java
+        uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2   # 3.7.0
+        with:
+          distribution: temurin
+          java-version: ${{ inputs.java-version }}
+          java-package: jdk
+          architecture: x64
+          cache: maven
+          server-id: apache.snapshots.https
+          server-username: NEXUS_USERNAME
+          server-password: NEXUS_PASSWORD
+
+      - name: Export version
+        run: |
+          export PROJECT_VERSION=$(./mvnw \
+            --quiet --batch-mode -DforceStdout=true \
+            -Dexpression=project.version \
+            help:evaluate \
+            | tail -n 1)
+          echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+
+      - name: Upload to Nexus
+        run: |
+          gpg --list-secret-keys
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            -P deploy
+        env:
+          # `NEXUS_USERNAME` and `NEXUS_PASSWORD` are used in `~/.m2/settings.xml` created by `setup-java` action
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USER }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PW }}
