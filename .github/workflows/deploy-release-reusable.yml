@@ -28,6 +28,15 @@ on:
         description: Identifier used in the distribution artifact and Subversion repository folder filenames (e.g., `logging-parent`)
         required: true
         type: string
+      # `distribution-*` input defaults should match the ones in `pom.xml`!
+      distribution-attachment-filepath-pattern:
+        description: The regex pattern matched against the full filepath for determining attachments to be included in the distribution
+        default: ^.*/target/log4j-(.+)-${project.version}(-tests)?\\.jar$
+        type: string
+      distribution-attachment-count:
+        description: The number of attachments expected to be found
+        required: true
+        type: number
     secrets:
       GPG_SECRET_KEY:
         description: GPG secret key for signing artifacts
@@ -93,7 +102,9 @@ jobs:
         run: |
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
-            --non-recursive -P distribution
+            --non-recursive -P distribution \
+            -DattachmentFilepathPattern="${{ inputs.distribution-attachment-filepath-pattern }}" \
+            -DattachmentCount=${{ inputs.distribution-attachment-count }}
           export DIST_FILENAME_PREFIX="apache-${{ inputs.project-name }}"
           export DIST_FILENAME_VERSIONED_PREFIX="${DIST_FILENAME_PREFIX}-${PROJECT_VERSION}"
           export DIST_FILEPATH="/tmp/${DIST_FILENAME_VERSIONED_PREFIX}.zip"

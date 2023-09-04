@@ -542,9 +542,14 @@
 
       <id>distribution</id>
 
+      <!-- These properties and their defaults should match the ones in `.github/workflows/deploy-release-reusable.yml`! -->
       <properties>
+        <!-- The regex pattern matched against the full filepath for determining attachments to be included in the distribution: -->
         <attachmentFilepathPattern>^.*/target/log4j-(.+)-${project.version}(-tests)?\\.jar$</attachmentFilepathPattern>
-        <minAttachmentCount>1</minAttachmentCount>
+        <!-- The number of attachments expected to be found.
+             Setting the default to an excessive value to enforce the user to provide it explicitly.
+             That is, found attachments should precisely reflect what user expects. -->
+        <attachmentCount>999</attachmentCount>
       </properties>
 
       <build>
@@ -655,7 +660,7 @@
                 }
 
                 // Check if no attachments were found
-                if (${minAttachmentCount} >= attachmentPathByFile.size()) {
+                if (${attachmentCount} != attachmentPathByFile.size()) {
                     System.err.println("Attachments:");
                     int[] i = {0};
                     attachmentPathByFile.values().forEach(new Consumer() {
@@ -664,8 +669,8 @@
                         }
                     });
                     System.err.format(
-                            "Error: Was expecting at least %d attachments, found %d!%n",
-                            new Object[]{${minAttachmentCount}, attachmentPathByFile.size()});
+                            "Error: Was expecting %d attachments, found %d!%n",
+                            new Object[]{${attachmentCount}, attachmentPathByFile.size()});
                     System.err.println("Tip: Have you already executed the Maven `package` goal?");
                     System.exit(1);
                 }
