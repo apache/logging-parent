@@ -31,7 +31,7 @@ on:
       # `distribution-*` input defaults should match the ones in `pom.xml`!
       distribution-attachment-filepath-pattern:
         description: The regex pattern matched against the full filepath for determining attachments to be included in the distribution
-        default: >
+        default: |-
           '^.*/target/log4j-(.+)-'${PROJECT_VERSION}'(-tests)?\\.jar$'
         type: string
       distribution-attachment-count:
