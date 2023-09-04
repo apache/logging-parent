@@ -140,7 +140,7 @@ jobs:
           cd "$PROJECT_NAME"
 
           # Clean up old files
-          find . -name "$DIST_FILENAME_PREFIX"* -type f -print0 | xargs -0 -r svn delete
+          find . -name "${DIST_FILENAME_PREFIX}*" -type f -print0 | xargs -0 -r svn delete
 
           # Generate emails
           for EMAIL_TYPE in vote announce; do
