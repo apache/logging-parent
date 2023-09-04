@@ -133,11 +133,11 @@ jobs:
           cp "$DIST_FILEPATH"* .
 
           # Add & commit changes
-          svn add "${DIST_FILENAME_PREFIX}"*
+          svn add .
           svn commit \
             --username "$SVN_USERNAME" \
             --password "$SVN_PASSWORD" \
-            -m "Added *fake* \`${DIST_FILENAME_PREFIX}\` artifacts for release \`${PROJECT_VERSION}\`"
+            -m "Added \`${DIST_FILENAME_PREFIX}\` artifacts for release \`${PROJECT_VERSION}\`"
 
         env:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
