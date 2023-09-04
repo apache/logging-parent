@@ -658,8 +658,11 @@
                 if (${minAttachmentCount} >= attachmentPathByFile.size()) {
                     System.err.println("Attachments:");
                     int[] i = {0};
-                    attachmentPathByFile.values().forEach(path ->
-                            System.err.format("  [%2d] %s%n", new Object[]{i[0]++, path}));
+                    attachmentPathByFile.values().forEach(new Consumer() {
+                        public void accept(Path path) {
+                            System.err.format("  [%2d] %s%n", new Object[]{++i[0], path});
+                        }
+                    });
                     System.err.format(
                             "Error: Was expecting at least %d attachments, found %d!%n",
                             ${minAttachmentCount}, attachmentPathByFile.size());
