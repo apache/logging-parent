@@ -121,6 +121,8 @@ jobs:
       - name: Upload to Subversion
         run: |
 
+          set -x
+
           # Checkout the SVN repository
           export SVN_DIR="/tmp/svn-repo"
           svn co \
