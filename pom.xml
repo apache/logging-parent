@@ -636,11 +636,11 @@
 
                 // Find attachments that will go into the distribution
                 SortedMap attachmentPathByFile = new TreeMap();
-                Stream paths = Files.walk(new File(repoDirectoryParent).toPath(), 8, new FileVisitOption[0]);
+                Stream paths = Files.walk(new File(repoDirectoryParent).toPath(), 8, /* required for BSH method resolution: */ new FileVisitOption[0]);
                 try {
                     paths.forEach(new Consumer() {
                         public void accept(Path path) {
-                            if (Files.isRegularFile(path) &&
+                            if (Files.isRegularFile(path, /* required for BSH method resolution: */ new LinkOption[0]) &&
                                     path.toAbsolutePath().toString().matches("${attachmentFilepathPattern}")) {
                                 attachmentPathByFile.put(path.toFileName().toString(), path);
                             }
