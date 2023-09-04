@@ -537,14 +537,14 @@
          3. Release notes
 
          This profile must be executed after a successful `package` phase, since we need JARs.
-         This profile is manually enabled by `.github/workflows/build.yml` while releasing. -->
+         This profile is manually enabled by `.github/workflows/build-release-reusable.yml` while releasing. -->
     <profile>
 
       <id>distribution</id>
 
       <build>
 
-        <defaultGoal>log4j-changelog:export bsh:run</defaultGoal>
+        <defaultGoal>log4j-changelog:export enforcer:enforce bsh:run</defaultGoal>
 
         <plugins>
 
@@ -574,27 +574,19 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>enforce-distribution-properties</id>
-                <goals>
-                  <goal>enforce</goal>
-                </goals>
-                <configuration>
-                  <rules>
-                    <requireProperty>
-                      <property>attachmentFilepathPattern</property>
-                      <message>You must set an `attachmentFilepathPattern` property for the regex pattern matched against the full filepath for determining attachments to be included in the distribution!</message>
-                    </requireProperty>
-                    <requireProperty>
-                      <property>attachmentCount</property>
-                      <message>You must set an `attachmentCount` property for the number of attachments expected to be found!</message>
-                    </requireProperty>
-                  </rules>
-                  <fail>true</fail>
-                </configuration>
-              </execution>
-            </executions>
+            <configuration>
+              <rules>
+                <requireProperty>
+                  <property>attachmentFilepathPattern</property>
+                  <message>You must set an `attachmentFilepathPattern` property for the regex pattern matched against the full filepath for determining attachments to be included in the distribution!</message>
+                </requireProperty>
+                <requireProperty>
+                  <property>attachmentCount</property>
+                  <message>You must set an `attachmentCount` property for the number of attachments expected to be found!</message>
+                </requireProperty>
+              </rules>
+              <fail>true</fail>
+            </configuration>
           </plugin>
 
           <!-- Create the distribution ZIP -->
@@ -719,7 +711,7 @@
     </profile>
 
     <!-- `deploy` profile activating deployment-specific configuration.
-         It is manually enabled by `.github/workflows/build.yml` while releasing. -->
+         It is manually enabled by `.github/workflows/build-{snapshot,release}-reusable.yml` while releasing. -->
     <profile>
 
       <id>deploy</id>
@@ -757,6 +749,8 @@
 
     </profile>
 
+    <!-- `release` profile activating release-specific deployment configuration.
+         It is manually enabled by `.github/workflows/build-release-reusable.yml` while releasing. -->
     <profile>
 
       <id>release</id>

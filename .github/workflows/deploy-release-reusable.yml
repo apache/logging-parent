@@ -104,7 +104,7 @@ jobs:
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             --non-recursive -P distribution \
-            -DattachmentFilepathPattern="${{ inputs.distribution-attachment-filepath-pattern }}" \
+            -DattachmentFilepathPattern='${{ inputs.distribution-attachment-filepath-pattern }}' \
             -DattachmentCount=${{ inputs.distribution-attachment-count }}
           export DIST_FILENAME_PREFIX="apache-${{ inputs.project-name }}"
           export DIST_FILENAME_VERSIONED_PREFIX="${DIST_FILENAME_PREFIX}-${PROJECT_VERSION}"
