@@ -665,7 +665,7 @@
                     });
                     System.err.format(
                             "Error: Was expecting at least %d attachments, found %d!%n",
-                            ${minAttachmentCount}, attachmentPathByFile.size());
+                            new Object[]{${minAttachmentCount}, attachmentPathByFile.size()});
                     System.err.println("Tip: Have you already executed the Maven `package` goal?");
                     System.exit(1);
                 }
