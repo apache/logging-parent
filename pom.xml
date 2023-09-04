@@ -654,6 +654,7 @@
                 SortedMap pathByFile = new TreeMap();
                 pathByFile.put("src.zip", new File("target/src.zip").toPath());
                 pathByFile.put("RELEASE-NOTES.md", new File("target/release-notes/${project.version}.md").toPath());
+                pathByFile.put("README.adoc", new File("README.adoc").toPath());
                 pathByFile.put("NOTICE.txt", new File("NOTICE.txt").toPath());
                 pathByFile.put("LICENSE.txt", new File("LICENSE.txt").toPath());
 
