@@ -646,6 +646,10 @@
                             }
                         }
                     });
+                } catch (Exception error) {
+                    // Supplement diagnostics
+                    error.printStackTrace(System.err);
+                    throw error;
                 } finally {
                     paths.close();
                 }
