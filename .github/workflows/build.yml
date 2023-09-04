@@ -57,3 +57,4 @@ jobs:
     secrets: inherit
     with:
       project-name: logging-parent
+      distribution-attachment-count: 0
