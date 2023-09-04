@@ -542,16 +542,6 @@
 
       <id>distribution</id>
 
-      <!-- These properties and their defaults should match the ones in `.github/workflows/deploy-release-reusable.yml`! -->
-      <properties>
-        <!-- The regex pattern matched against the full filepath for determining attachments to be included in the distribution: -->
-        <attachmentFilepathPattern>^.*/target/log4j-(.+)-${project.version}(-tests)?\\.jar$</attachmentFilepathPattern>
-        <!-- The number of attachments expected to be found.
-             Setting the default to an excessive value to enforce the user to provide it explicitly.
-             That is, found attachments should precisely reflect what user expects. -->
-        <attachmentCount>999</attachmentCount>
-      </properties>
-
       <build>
 
         <defaultGoal>log4j-changelog:export bsh:run</defaultGoal>
@@ -577,6 +567,34 @@
                 </template>
               </changelogTemplates>
             </configuration>
+          </plugin>
+
+          <!-- Enforce properties required by the BSH creatining the distribution.
+               These properties must match the ones in `.github/workflows/deploy-release-reusable.yml`! -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>enforce-distribution-properties</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireProperty>
+                      <property>attachmentFilepathPattern</property>
+                      <message>You must set an `attachmentFilepathPattern` property for the regex pattern matched against the full filepath for determining attachments to be included in the distribution!</message>
+                    </requireProperty>
+                    <requireProperty>
+                      <property>attachmentCount</property>
+                      <message>You must set an `attachmentCount` property for the number of attachments expected to be found!</message>
+                    </requireProperty>
+                  </rules>
+                  <fail>true</fail>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
 
           <!-- Create the distribution ZIP -->
@@ -769,7 +787,6 @@
                   <goal>enforce</goal>
                 </goals>
                 <configuration>
-                  <skip>true</skip>
                   <rules>
                     <requireReleaseDeps>
                       <message>SNAPSHOT dependencies are not allowed for releases</message>

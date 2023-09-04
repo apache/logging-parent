@@ -32,7 +32,7 @@ on:
       distribution-attachment-filepath-pattern:
         description: The regex pattern matched against the full filepath for determining attachments to be included in the distribution
         # Below `\$` are placed to avoid `bad substitution` failures in CI
-        default: ^.*/target/log4j-(.+)-\${project.version}(-tests)?\\.jar\$
+        default: ^.*/target/log4j-(.+)-\${project.version}(-tests)?\.jar\$
         type: string
       distribution-attachment-count:
         description: The number of attachments expected to be found
