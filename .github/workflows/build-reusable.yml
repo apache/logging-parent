@@ -62,24 +62,13 @@ jobs:
 
       # `clean verify artifact:compare` is required to generate the build reproducibility report.
       # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
-      - name: Report build reproducibility
+      - name: Verify build reproducibility
         shell: bash
         run: |
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             -DskipTests=true \
             clean verify artifact:compare
-
-      - name: Verify build reproducibility
-        shell: bash
-        run: |
-          find . -name target -type d -exec find {} -name "*.buildcompare" \; | while read report_file; do
-            if ! grep -q "^ko=0$" "$report_file"; then
-              echo "Spotted build reproducibility failure in \`$report_file\`:"
-              cat "$report_file"
-              echo "fuck"
-            fi
-          done
 
   merge:
 
