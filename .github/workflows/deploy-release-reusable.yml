@@ -113,9 +113,12 @@ jobs:
           export SVN_DIR="/tmp/svn-repo"
           svn co \
             --depth files \
-            "https://dist.apache.org/repos/dist/dev/logging/${{ inputs.project-name }}" \
+            "https://dist.apache.org/repos/dist/dev/logging" \
             "$SVN_DIR"
+
+          # Switch to the project folder
           cd "$SVN_DIR"
+          mkdir -p "${{ inputs.project-name }}" && cd $_
 
           # Clean up old files
           find . -name "${DIST_FILENAME_PREFIX}*" -type f -print0 | xargs -0 -r svn delete
