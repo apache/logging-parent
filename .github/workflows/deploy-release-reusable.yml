@@ -130,7 +130,7 @@ jobs:
 
           # Switch to the project folder
           cd "$SVN_DIR"
-          if [ \! -f "$PROJECT_NAME" ]; then
+          if [ \! -d "$PROJECT_NAME" ]; then
             mkdir -p "$PROJECT_NAME"
             svn add "$PROJECT_NAME"
           fi
