@@ -121,8 +121,6 @@ jobs:
       - name: Upload to Subversion
         run: |
 
-          set -x
-
           # Checkout the SVN repository
           export SVN_DIR="/tmp/svn-repo"
           svn co \
@@ -132,14 +130,14 @@ jobs:
 
           # Switch to the project folder
           cd "$SVN_DIR"
-          if [ \! -e "${{ inputs.project-name }}" ]; then
-            mkdir -p "${{ inputs.project-name }}"
-            svn add "${{ inputs.project-name }}"
+          if [ \! -e "$PROJECT_NAME" ]; then
+            mkdir -p "$PROJECT_NAME"
+            svn add "$PROJECT_NAME"
           fi
-          cd "${{ inputs.project-name }}"
+          cd "$PROJECT_NAME"
 
           # Clean up old files
-          find . -name "${DIST_FILENAME_PREFIX}*" -type f -print0 | xargs -0 -r svn delete
+          find . -name "$DIST_FILENAME_PREFIX"* -type f -print0 | xargs -0 -r svn delete
 
           # Generate emails
           for EMAIL_TYPE in vote announce; do
@@ -151,12 +149,13 @@ jobs:
           cp "$DIST_FILEPATH"* .
 
           # Add & commit changes
-          svn add "${DIST_FILENAME_PREFIX}"*
+          svn add "$DIST_FILENAME_PREFIX"*
           svn commit \
             --username "$SVN_USERNAME" \
             --password "$SVN_PASSWORD" \
             -m "Added \`${DIST_FILENAME_PREFIX}\` artifacts for release \`${PROJECT_VERSION}\`"
 
         env:
+          PROJECT_NAME: ${{ inputs.project-name }}
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
