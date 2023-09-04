@@ -130,7 +130,11 @@ jobs:
 
           # Switch to the project folder
           cd "$SVN_DIR"
-          mkdir -p "${{ inputs.project-name }}" && cd $_
+          if [ \! -e "${{ inputs.project-name }}" ]; then
+            mkdir -p "${{ inputs.project-name }}"
+            svn add "${{ inputs.project-name }}"
+          fi
+          cd "${{ inputs.project-name }}"
 
           # Clean up old files
           find . -name "${DIST_FILENAME_PREFIX}*" -type f -print0 | xargs -0 -r svn delete
@@ -145,7 +149,7 @@ jobs:
           cp "$DIST_FILEPATH"* .
 
           # Add & commit changes
-          svn add .
+          svn add "${DIST_FILENAME_PREFIX}"*
           svn commit \
             --username "$SVN_USERNAME" \
             --password "$SVN_PASSWORD" \
