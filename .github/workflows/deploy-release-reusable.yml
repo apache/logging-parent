@@ -108,14 +108,19 @@ jobs:
             -DattachmentCount=${{ inputs.distribution-attachment-count }}
           export DIST_FILENAME_PREFIX="apache-${{ inputs.project-name }}"
           export DIST_FILENAME_VERSIONED_PREFIX="${DIST_FILENAME_PREFIX}-${PROJECT_VERSION}"
-          export DIST_FILEPATH="/tmp/${DIST_FILENAME_VERSIONED_PREFIX}.zip"
-          mv "target/dist.zip" "$DIST_FILEPATH"
-          gpg --armor --detach-sign --yes --pinentry-mode error "$DIST_FILEPATH"
-          sha512sum "$DIST_FILEPATH" > "$DIST_FILEPATH.sha512"
+          export DIST_FILEPATH_PREFIX="/tmp/${DIST_FILENAME_VERSIONED_PREFIX}"
+          export DIST_FILEPATH_SRC="${DIST_FILEPATH_PREFIX}-src.zip"
+          export DIST_FILEPATH_BIN="${DIST_FILEPATH_PREFIX}-bin.zip"
+          mv "target/src.zip" "$DIST_FILEPATH_SRC"
+          mv "target/bin.zip" "$DIST_FILEPATH_BIN"
+          for DIST_FILEPATH in "$DIST_FILEPATH_SRC" "$DIST_FILEPATH_BIN"; do
+            gpg --armor --detach-sign --yes --pinentry-mode error "$DIST_FILEPATH"
+            sha512sum "$DIST_FILEPATH" > "$DIST_FILEPATH.sha512"
+          done
           cat >> $GITHUB_ENV << EOF
           DIST_FILENAME_PREFIX=$DIST_FILENAME_PREFIX
           DIST_FILENAME_VERSIONED_PREFIX=$DIST_FILENAME_VERSIONED_PREFIX
-          DIST_FILEPATH=$DIST_FILEPATH
+          DIST_FILEPATH_PREFIX=$DIST_FILEPATH_PREFIX
           EOF
 
       - name: Upload to Subversion
@@ -147,7 +152,7 @@ jobs:
           done
 
           # Copy the distribution
-          cp "$DIST_FILEPATH"* .
+          cp "$DIST_FILEPATH_PREFIX"* .
 
           # Add & commit changes
           svn add "$DIST_FILENAME_PREFIX"*

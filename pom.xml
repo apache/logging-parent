@@ -646,18 +646,22 @@
                     pathByFile.put(repoCacheEntryPath, new File(repoDirectoryParent, repoCacheEntryPath).toPath());
                 }
 
-                // Create `src.zip` using Git-tracked files
+                // Create the source distribution using Git-tracked files
                 zip("target/src.zip", pathByFile);
-                System.out.format("Generated source ZIP containing %d files.%n", new Object[]{pathByFile.size()});
+                System.out.format("Generated the source distribution (`src.zip`) containing %d files.%n", new Object[]{pathByFile.size()});
 
-                // Find auxiliary files that will go into the distribution
+                // Short-circuit if there is no binary distribution expected
+                if (${attachmentCount} == 0) {
+                    return;
+                }
+
+                // Find auxiliary files that will go into the binary distribution
                 SortedMap pathByFile = new TreeMap();
-                pathByFile.put("src.zip", new File("target/src.zip").toPath());
                 pathByFile.put("RELEASE-NOTES.md", new File("target/release-notes/${project.version}.md").toPath());
                 pathByFile.put("NOTICE.txt", new File("NOTICE.txt").toPath());
                 pathByFile.put("LICENSE.txt", new File("LICENSE.txt").toPath());
 
-                // Find attachments that will go into the distribution
+                // Find attachments that will go into the binary distribution
                 String attachmentFilepathPattern = "${attachmentFilepathPattern}";
                 System.out.format("Locating attachments matching the provided pattern: `%s`%n", new Object[] {attachmentFilepathPattern});
                 SortedMap attachmentPathByFile = new TreeMap();
@@ -667,7 +671,7 @@
                         public void accept(Path path) {
                             if (Files.isRegularFile(path, /* required for BSH method resolution: */ new LinkOption[0]) &&
                                     path.toAbsolutePath().toString().matches(attachmentFilepathPattern)) {
-                                attachmentPathByFile.put(path.toFileName().toString(), path);
+                                attachmentPathByFile.put(path.getFileName().toString(), path);
                             }
                         }
                     });
@@ -695,10 +699,10 @@
                     System.exit(1);
                 }
 
-                // Create the distribution ZIP
+                // Create the binary distribution
                 pathByFile.putAll(attachmentPathByFile);
-                zip("target/dist.zip", pathByFile);
-                System.out.format("Generated distribution ZIP containing following %d files:%n", new Object[] {pathByFile.size()});
+                zip("target/bin.zip", pathByFile);
+                System.out.format("Generated the binary distribution (`bin.zip`) containing following %d files:%n", new Object[] {pathByFile.size()});
                 for (String file : pathByFile.keySet()) {
                     System.out.println("-> " + file);
                 }]]></script>
