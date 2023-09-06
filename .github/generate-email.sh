@@ -34,6 +34,7 @@ fail_for_invalid_args() {
 # Constants
 PROJECT_NAME="Apache Logging Parent"
 PROJECT_REPO="https://github.com/apache/logging-parent"
+PROJECT_DIST_DIR="https://dist.apache.org/repos/dist/dev/logging/logging-parent"
 PROJECT_VERSION="$2"
 COMMIT_ID="$3"
 
@@ -59,7 +60,7 @@ This is a vote to release the $PROJECT_NAME $PROJECT_VERSION.
 
 Source repository: $PROJECT_REPO
 Commit: $COMMIT_ID
-Distribution: https://dist.apache.org/repos/dist/dev/logging
+Distribution: $PROJECT_DIST_DIR
 Nexus: https://repository.apache.org/content/repositories/orgapachelogging-1113
 Signing key: 0x077e8893a6dcc33dd4a4d5b256e73ba9a0b592d0
 
