@@ -77,6 +77,7 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
 
       - name: Export version
+        shell: bash
         run: |
           [[ "$GIT_REF" =~ ^refs/heads/release/.+$ ]] || {
             echo "was expecting a \`refs/heads/release/\`-prefixed Git reference, found: \`$GIT_REF\`"
@@ -88,6 +89,7 @@ jobs:
           GIT_REF: ${{ github.ref }}
 
       - name: Set the Maven `revision` property
+        shell: bash
         run: |
           export REVISION=$(./mvnw \
             --non-recursive --quiet --batch-mode \
@@ -110,6 +112,7 @@ jobs:
           fi
 
       - name: Release changelog
+        shell: bash
         run: |
           ./mvnw \
             --non-recursive --batch-mode --errors --no-transfer-progress \
@@ -123,6 +126,7 @@ jobs:
           fi
 
       - name: Upload to Nexus
+        shell: bash
         run: |
           gpg --list-secret-keys
           ./mvnw \
@@ -136,6 +140,7 @@ jobs:
           SIGN_KEY: ${{ secrets.GPG_SECRET_KEY }}
 
       - name: Create the distribution
+        shell: bash
         run: |
 
           # Generate the distribution (i.e., `src.zip` and optional `bin.zip`)
@@ -170,6 +175,7 @@ jobs:
           EOF
 
       - name: Upload to Subversion
+        shell: bash
         run: |
 
           # Checkout the SVN repository

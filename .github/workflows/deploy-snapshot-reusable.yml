@@ -53,6 +53,7 @@ jobs:
           server-password: NEXUS_PASSWORD
 
       - name: Export version
+        shell: bash
         run: |
           export PROJECT_VERSION=$(./mvnw \
             --quiet --batch-mode -DforceStdout=true \
@@ -62,6 +63,7 @@ jobs:
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
 
       - name: Upload to Nexus
+        shell: bash
         run: |
           gpg --list-secret-keys
           ./mvnw \
