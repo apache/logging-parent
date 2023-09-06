@@ -89,7 +89,6 @@ jobs:
 
       - name: Set the Maven `revision` property
         run: |
-          set -x
           export REVISION=$(./mvnw \
             --non-recursive --quiet --batch-mode \
             -DforceStdout=true \
@@ -112,7 +111,6 @@ jobs:
 
       - name: Release changelog
         run: |
-          set -x
           ./mvnw \
             --non-recursive --batch-mode --errors --no-transfer-progress \
             -P changelog-release
@@ -194,8 +192,9 @@ jobs:
           find . -name "${DIST_FILENAME_PREFIX}*" -type f -print0 | xargs -0 -r svn delete
 
           # Generate emails
+          export COMMIT_ID=$(git rev-parse HEAD)
           for EMAIL_TYPE in vote announce; do
-            "$GITHUB_WORKSPACE/.github/generate-email.sh" $EMAIL_TYPE $PROJECT_VERSION $GITHUB_SHA \
+            "$GITHUB_WORKSPACE/.github/generate-email.sh" $EMAIL_TYPE $PROJECT_VERSION $COMMIT_ID \
               > "${DIST_FILENAME_VERSIONED_PREFIX}-email-${EMAIL_TYPE}.txt"
           done
 
