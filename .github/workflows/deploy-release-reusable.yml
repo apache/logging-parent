@@ -177,6 +177,7 @@ jobs:
       - name: Upload to Subversion
         shell: bash
         run: |
+          set -x
 
           # Checkout the SVN repository
           export SVN_DIR="/tmp/svn-repo"
