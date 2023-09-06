@@ -82,7 +82,7 @@ jobs:
             echo "was expecting a \`refs/heads/release/\`-prefixed Git reference, found: \`$GIT_REF\`"
             exit 1
           }
-          export PROJECT_VERSION=$(echo "$GIT_REF | sed 's/^refs\/heads\/release\///')
+          export PROJECT_VERSION=$(echo "$GIT_REF" | sed 's/^refs\/heads\/release\///')
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
         env:
           GIT_REF: ${{ github.ref }}
