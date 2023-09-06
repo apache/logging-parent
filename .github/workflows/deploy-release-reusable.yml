@@ -101,22 +101,32 @@ jobs:
       - name: Create the distribution
         if: startsWith(github.ref, 'refs/heads/release/')
         run: |
+
+          # Generate the distribution (i.e., `src.zip` and optional `bin.zip`)
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             --non-recursive -P distribution \
             -DattachmentFilepathPattern=${{ inputs.distribution-attachment-filepath-pattern }} \
             -DattachmentCount=${{ inputs.distribution-attachment-count }}
+
+          # Rename distribution files
           export DIST_FILENAME_PREFIX="apache-${{ inputs.project-name }}"
           export DIST_FILENAME_VERSIONED_PREFIX="${DIST_FILENAME_PREFIX}-${PROJECT_VERSION}"
           export DIST_FILEPATH_PREFIX="/tmp/${DIST_FILENAME_VERSIONED_PREFIX}"
           export DIST_FILEPATH_SRC="${DIST_FILEPATH_PREFIX}-src.zip"
           export DIST_FILEPATH_BIN="${DIST_FILEPATH_PREFIX}-bin.zip"
           mv "target/src.zip" "$DIST_FILEPATH_SRC"
-          mv "target/bin.zip" "$DIST_FILEPATH_BIN"
+          [ -e "$DIST_FILEPATH_SRC" ] && mv "target/bin.zip" "$DIST_FILEPATH_BIN"
+
+          # Create signature and checksum files
           for DIST_FILEPATH in "$DIST_FILEPATH_SRC" "$DIST_FILEPATH_BIN"; do
-            gpg --armor --detach-sign --yes --pinentry-mode error "$DIST_FILEPATH"
-            sha512sum "$DIST_FILEPATH" > "$DIST_FILEPATH.sha512"
+            if [ -e "$DIST_FILEPATH" ]; then
+              gpg --armor --detach-sign --yes --pinentry-mode error "$DIST_FILEPATH"
+              sha512sum "$DIST_FILEPATH" > "$DIST_FILEPATH.sha512"
+            fi
           done
+
+          # Pass the necessary environment variables
           cat >> $GITHUB_ENV << EOF
           DIST_FILENAME_PREFIX=$DIST_FILENAME_PREFIX
           DIST_FILENAME_VERSIONED_PREFIX=$DIST_FILENAME_VERSIONED_PREFIX
