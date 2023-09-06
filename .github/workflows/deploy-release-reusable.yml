@@ -78,12 +78,45 @@ jobs:
 
       - name: Export version
         run: |
-          export PROJECT_VERSION=$(./mvnw \
-            --quiet --batch-mode -DforceStdout=true \
-            -Dexpression=project.version \
+          [[ "$GIT_REF" =~ ^refs/heads/release/.+$ ]] || {
+            echo "was expecting a \`refs/heads/release/\`-prefixed Git reference, found: \`$GIT_REF\`"
+            exit 1
+          }
+          export PROJECT_VERSION=$(echo "$GIT_REF | sed 's/^refs\/heads\/release\///')
+          echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+        env:
+          GIT_REF: ${{ github.ref }}
+
+      - name: Set the Maven `revision` property
+        run: |
+          set -x
+          export REVISION=$(./mvnw \
+            --non-recursive --quiet --batch-mode
+            -DforceStdout=true \
+            -Dexpression=revision \
             help:evaluate \
             | tail -n 1)
-          echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+          if [ "$REVISION" != "$PROJECT_VERSION" ]; then
+            echo "Maven \`revision\` property \`$REVISION\` doesn't match with the project version \`$PROJECT_VERSION\`, updating \`pom.xml\`..."
+            ./mvnw \
+              --non-recursive --batch-mode --errors --no-transfer-progress \
+              -Dproperty=revision \
+              -DnewVersion="$PROJECT_VERSION" \
+              -DgenerateBackupPoms=false \
+              versions:set-property
+            git commit pom.xml -m "Set version to \`$PROJECT_VERSION\`"
+          fi
+
+      - name: Release changelog
+        run: |
+          set -x
+          ./mvnw \
+            --non-recursive --batch-mode --errors --no-transfer-progress \
+            -P changelog-release
+          git add src/changelog
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit src/changelog -m "Release changelog for version \`$PROJECT_VERSION\`"
+          fi
 
       - name: Upload to Nexus
         run: |
@@ -99,7 +132,6 @@ jobs:
           SIGN_KEY: ${{ secrets.GPG_SECRET_KEY }}
 
       - name: Create the distribution
-        if: startsWith(github.ref, 'refs/heads/release/')
         run: |
 
           # Generate the distribution (i.e., `src.zip` and optional `bin.zip`)
