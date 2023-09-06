@@ -55,6 +55,9 @@ jobs:
     if: github.repository == 'apache/logging-parent' && startsWith(github.ref, 'refs/heads/release/')
     uses: apache/logging-parent/.github/workflows/deploy-release-reusable.yml@main
     secrets: inherit
+    # Write permissions to allow the Maven `revision` property update, changelog release, etc.
+    permissions:
+      contents: write
     with:
       project-name: logging-parent
       distribution-attachment-count: 0
