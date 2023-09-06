@@ -177,7 +177,9 @@ jobs:
       - name: Upload to Subversion
         shell: bash
         run: |
-          set -x
+
+          # Find the effective Git commit ID
+          export COMMIT_ID=$(git rev-parse HEAD)
 
           # Checkout the SVN repository
           export SVN_DIR="/tmp/svn-repo"
@@ -199,7 +201,6 @@ jobs:
           find . -name "${DIST_FILENAME_PREFIX}*" -type f -print0 | xargs -0 -r svn delete
 
           # Generate emails
-          export COMMIT_ID=$(git rev-parse HEAD)
           for EMAIL_TYPE in vote announce; do
             "$GITHUB_WORKSPACE/.github/generate-email.sh" $EMAIL_TYPE $PROJECT_VERSION $COMMIT_ID \
               > "${DIST_FILENAME_VERSIONED_PREFIX}-email-${EMAIL_TYPE}.txt"
