@@ -116,11 +116,11 @@ jobs:
           export DIST_FILEPATH_SRC="${DIST_FILEPATH_PREFIX}-src.zip"
           export DIST_FILEPATH_BIN="${DIST_FILEPATH_PREFIX}-bin.zip"
           mv "target/src.zip" "$DIST_FILEPATH_SRC"
-          [ -e "$DIST_FILEPATH_SRC" ] && mv "target/bin.zip" "$DIST_FILEPATH_BIN"
+          [ -f "$DIST_FILEPATH_SRC" ] && mv "target/bin.zip" "$DIST_FILEPATH_BIN"
 
           # Create signature and checksum files
           for DIST_FILEPATH in "$DIST_FILEPATH_SRC" "$DIST_FILEPATH_BIN"; do
-            if [ -e "$DIST_FILEPATH" ]; then
+            if [ -f "$DIST_FILEPATH" ]; then
               gpg --armor --detach-sign --yes --pinentry-mode error "$DIST_FILEPATH"
               sha512sum "$DIST_FILEPATH" > "$DIST_FILEPATH.sha512"
             fi
