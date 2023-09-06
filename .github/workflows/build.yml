@@ -57,4 +57,6 @@ jobs:
     secrets: inherit
     with:
       project-name: logging-parent
-      distribution-attachment-count: 0
+      distribution-attachment-count: 1
+      distribution-attachment-filepath-pattern: |-
+        '.*/spotless-license-header.txt$'
