@@ -91,7 +91,7 @@ jobs:
         run: |
           set -x
           export REVISION=$(./mvnw \
-            --non-recursive --quiet --batch-mode
+            --non-recursive --quiet --batch-mode \
             -DforceStdout=true \
             -Dexpression=revision \
             help:evaluate \
