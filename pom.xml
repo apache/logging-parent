@@ -155,25 +155,54 @@
 
     <plugins>
 
-      <!-- Resolves `revision` property prior to deployment.
-           Skipping this step would result in artifacts not consumable by Maven.
-           https://maven.apache.org/maven-ci-friendly.html#install-deploy -->
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>flatten-maven-plugin</artifactId>
         <version>${flatten-maven-plugin.version}</version>
-        <configuration>
-          <updatePomFile>true</updatePomFile>
-          <flattenMode>resolveCiFriendliesOnly</flattenMode>
-        </configuration>
         <executions>
+
+          <!-- Resolves `revision` property prior to deployment.
+               Skipping this step would result in artifacts not consumable by Maven.
+               https://maven.apache.org/maven-ci-friendly.html#install-deploy -->
           <execution>
             <id>flatten-revision</id>
             <goals>
               <goal>flatten</goal>
             </goals>
             <phase>process-resources</phase>
+            <configuration>
+              <updatePomFile>true</updatePomFile>
+              <flattenMode>resolveCiFriendliesOnly</flattenMode>
+            </configuration>
           </execution>
+
+          <!-- BOMs should ideally _only_ contain dependencies for modules of the project.
+               No invasive properties or plugin/dependency management – either from the BOM itself or its parent.
+               The following `flatten-maven-plugin` exactly performs that trimming operation. -->
+          <execution>
+            <id>flatten-bom</id>
+            <goals>
+              <goal>flatten</goal>
+            </goals>
+            <!-- BOM flattening is disabled by default!
+                 This execution must be manually enabled by the consumer. -->
+            <phase>none</phase>
+            <configuration>
+              <flattenMode>bom</flattenMode>
+              <!-- POM `ElementHandling` is pretty cryptic: https://www.mojohaus.org/flatten-maven-plugin/apidocs/org/codehaus/mojo/flatten/ElementHandling.html
+                   Trial-and-error has shown that we should use either `remove` or `interpolate`.
+                   `remove` simply removes the element.
+                   `interpolate` takes the element from the original POM with variables interpolated.
+                   Avoid using `resolve`, which uses the effective POM where inherited changes from the parent are also incorporated. -->
+              <pomElements>
+                <properties>remove</properties>
+                <repositories>remove</repositories>
+                <distributionManagement>remove</distributionManagement>
+                <dependencyManagement>interpolate</dependencyManagement>
+              </pomElements>
+            </configuration>
+          </execution>
+
         </executions>
       </plugin>
 
