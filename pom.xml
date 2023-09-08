@@ -792,7 +792,6 @@
                   <goal>enforce</goal>
                 </goals>
                 <configuration>
-                  <skip>true</skip>
                   <rules>
                     <requireReleaseDeps>
                       <message>SNAPSHOT dependencies are not allowed for releases</message>
