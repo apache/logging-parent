@@ -113,7 +113,7 @@
     <pluginManagement>
       <plugins>
 
-        <!-- `artifact:compare` is used in `.github/workflows/build-reusable.yml` -->
+        <!-- `artifact:compare` is used in `.github/workflows/build-reusable.yaml` -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-artifact-plugin</artifactId>
@@ -399,10 +399,11 @@
           </formats>
           <yaml>
             <includes>
-              <include>.asf.yml</include>
+              <include>.asf.yaml</include>
+              <include>.github/**/*.yaml</include>
               <include>.github/**/*.yml</include>
-              <include>src/**/*.yml</include>
               <include>src/**/*.yaml</include>
+              <include>src/**/*.yml</include>
             </includes>
             <licenseHeader>
               <!-- https://www.apache.org/legal/src-headers.html#headers -->
@@ -486,7 +487,7 @@
     </profile>
 
     <!-- `changelog-export` profile to export changelogs.
-         It is manually enabled by `.github/workflows/deploy-release-reusable.yml` to generate release notes. -->
+         It is manually enabled by `.github/workflows/deploy-release-reusable.yaml` to generate release notes. -->
     <profile>
       <id>changelog-export</id>
       <build>
@@ -516,7 +517,7 @@
     </profile>
 
     <!-- `changelog-release` profile to move `src/changelog/.?.x.x` contents to their associated release directory.
-         It is manually enabled by `.github/workflows/deploy-release-reusable.yml` to generate release notes. -->
+         It is manually enabled by `.github/workflows/deploy-release-reusable.yaml` to generate release notes. -->
     <profile>
       <id>changelog-release</id>
       <build>
@@ -541,7 +542,7 @@
          4. Auxiliary support files (`README.adoc`, `LICENSE.txt`, etc.)
 
          This profile must be executed after a successful `package` phase, since we need JARs.
-         This profile is manually enabled by `.github/workflows/deploy-release-reusable.yml` while releasing. -->
+         This profile is manually enabled by `.github/workflows/deploy-release-reusable.yaml` while releasing. -->
     <profile>
 
       <id>distribution</id>
@@ -574,7 +575,7 @@
           </plugin>
 
           <!-- Enforce properties required by the BSH creating the distribution.
-               These properties must match the ones in `.github/workflows/deploy-release-reusable.yml`! -->
+               These properties must match the ones in `.github/workflows/deploy-release-reusable.yaml`! -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
@@ -720,7 +721,7 @@
     </profile>
 
     <!-- `deploy` profile activating deployment-specific configuration.
-         It is manually enabled by `.github/workflows/deploy-{snapshot,release}-reusable.yml` while releasing. -->
+         It is manually enabled by `.github/workflows/deploy-{snapshot,release}-reusable.yaml` while releasing. -->
     <profile>
 
       <id>deploy</id>
@@ -759,7 +760,7 @@
     </profile>
 
     <!-- `release` profile activating release-specific deployment configuration.
-         It is manually enabled by `.github/workflows/deploy-release-reusable.yml` while releasing. -->
+         It is manually enabled by `.github/workflows/deploy-release-reusable.yaml` while releasing. -->
     <profile>
 
       <id>release</id>

@@ -36,7 +36,7 @@ You can use this project as follows:
 .. xref:src/changelog/.1.x.x/.release-notes.md.ftl[] (adapt the folder name to match your project; `.2.x.x`, `.3.x.x`, etc.)
 .. xref:src/changelog/.changelog.md.ftl[]
 .. xref:src/changelog/.index.md.ftl[]
-.. xref:.github/workflows/build.yml[]
+.. xref:.github/workflows/build.yaml[]
 .. xref:.github/generate-email.sh[]
 .. xref:LICENSE.txt[]
 .. xref:NOTICE.txt[]
@@ -61,15 +61,15 @@ The provided parent POM features the following conveniences:
 
 The provided reusable GitHub Actions workflows feature the following conveniences:
 
-xref:.github/workflows/build-reusable.yml[`build-reusable.yml`]::
+xref:.github/workflows/build-reusable.yaml[`build-reusable.yml`]::
 * Compiles against Java 8 bytecode using the specified Java compiler version
 * Verifies reproducibility
 * Automatically merges verified `dependabot` PRs
 
-xref:.github/workflows/deploy-snapshot-reusable.yml[`deploy-snapshot-reusable.yml`]::
+xref:.github/workflows/deploy-snapshot-reusable.yaml[`deploy-snapshot-reusable.yml`]::
 * Deploys SNAPSHOT artifacts
 
-xref:.github/workflows/deploy-release-reusable.yml[`deploy-release-reusable.yml`]::
+xref:.github/workflows/deploy-release-reusable.yaml[`deploy-release-reusable.yml`]::
 * Deploys release artifacts
 * Generates the release notes
 * Generates the distribution ZIP containing Git-tracked sources, release notes, binary attachments, `NOTICE.txt`, etc.
