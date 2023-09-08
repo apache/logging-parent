@@ -80,7 +80,7 @@
   <properties>
 
     <!-- project version -->
-    <revision>1.10.0-SNAPSHOT</revision>
+    <revision>10.0.0</revision>
 
     <!-- `minimalJavaBuildVersion` is employed by `org.apache:apache`, which is the parent of us.
          `minimalJavaBuildVersion` is used for enforcing the compiler version.
@@ -137,33 +137,10 @@
           <version>${spotbugs-maven-plugin.version}</version>
         </plugin>
 
-        <!-- `src/changelog` validation must be manually enabled, since we only want this for modules containing the changelog directory.
-             For instance, it needs to run for `log4j-tools-bom`, but not for `log4j-changelog`.
-             Hence, the configuration is placed to `pluginManagement` rather than `plugins`. -->
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>xml-maven-plugin</artifactId>
           <version>${xml-maven-plugin.version}</version>
-          <executions>
-            <execution>
-              <id>changelog-validation</id>
-              <goals>
-                <goal>validate</goal>
-              </goals>
-              <configuration>
-                <skip>true</skip>
-                <validationSets>
-                  <validationSet>
-                    <dir>src/changelog</dir>
-                    <includes>**/*.xml</includes>
-                    <publicId>http://logging.apache.org/log4j/changelog</publicId>
-                    <systemId>https://logging.apache.org/log4j/changelog-0.1.1.xsd</systemId>
-                    <validating>true</validating>
-                  </validationSet>
-                </validationSets>
-              </configuration>
-            </execution>
-          </executions>
         </plugin>
 
         <plugin>
@@ -259,22 +236,6 @@
               <goal>check</goal>
             </goals>
             <phase>verify</phase>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>xml-maven-plugin</artifactId>
-        <!-- Checking `src/changelog` only for this module!
-             Children must enable it themselves (just like we do!) for modules containing `src/changelog` directory. -->
-        <inherited>false</inherited>
-        <executions>
-          <execution>
-            <id>changelog-validation</id>
-            <configuration>
-              <skip>false</skip>
-            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -486,9 +447,46 @@
 
   <profiles>
 
+    <!-- `changelog-validate` profile to validate changelog XMLs. -->
+    <profile>
+      <id>changelog-validate</id>
+      <activation>
+        <file>
+          <exists>src/changelog</exists>
+        </file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>xml-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>validate-changelog</id>
+                <goals>
+                  <goal>validate</goal>
+                </goals>
+                <configuration>
+                  <skip>true</skip>
+                  <validationSets>
+                    <validationSet>
+                      <dir>src/changelog</dir>
+                      <includes>**/*.xml</includes>
+                      <publicId>http://logging.apache.org/log4j/changelog</publicId>
+                      <systemId>https://logging.apache.org/log4j/changelog-0.1.1.xsd</systemId>
+                      <validating>true</validating>
+                    </validationSet>
+                  </validationSets>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
     <!-- `changelog-export` profile to export changelogs.
-         It is manually enabled by users to generate release notes.
-         See `RELEASING.adoc` for instructions. -->
+         It is manually enabled by `.github/workflows/deploy-release-reusable.yml` to generate release notes. -->
     <profile>
       <id>changelog-export</id>
       <build>
@@ -498,7 +496,6 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-changelog-maven-plugin</artifactId>
             <version>${log4j-changelog-maven-plugin.version}</version>
-            <inherited>false</inherited>
             <configuration>
               <outputDirectory>${project.build.directory}/release-notes</outputDirectory>
               <indexTemplates>
@@ -519,8 +516,7 @@
     </profile>
 
     <!-- `changelog-release` profile to move `src/changelog/.?.x.x` contents to their associated release directory.
-         It is manually enabled by users while cutting a release.
-         See `RELEASING.adoc` for instructions. -->
+         It is manually enabled by `.github/workflows/deploy-release-reusable.yml` to generate release notes. -->
     <profile>
       <id>changelog-release</id>
       <build>
@@ -530,7 +526,6 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-changelog-maven-plugin</artifactId>
             <version>${log4j-changelog-maven-plugin.version}</version>
-            <inherited>false</inherited>
             <configuration>
               <releaseVersion>${project.version}</releaseVersion>
             </configuration>
@@ -539,13 +534,14 @@
       </build>
     </profile>
 
-    <!-- `distribution` profile creating the distribution ZIP containing:
+    <!-- `distribution` profile creating the distribution containing:
          1. Git-tracked sources
-         2. Generated JAR files
+         2. Attachments (generated JAR files, etc.)
          3. Release notes
+         4. Auxiliary support files (`README.adoc`, `LICENSE.txt`, etc.)
 
          This profile must be executed after a successful `package` phase, since we need JARs.
-         This profile is manually enabled by `.github/workflows/build-release-reusable.yml` while releasing. -->
+         This profile is manually enabled by `.github/workflows/deploy-release-reusable.yml` while releasing. -->
     <profile>
 
       <id>distribution</id>
@@ -577,7 +573,7 @@
             </configuration>
           </plugin>
 
-          <!-- Enforce properties required by the BSH creatining the distribution.
+          <!-- Enforce properties required by the BSH creating the distribution.
                These properties must match the ones in `.github/workflows/deploy-release-reusable.yml`! -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -658,6 +654,7 @@
                 // Find auxiliary files that will go into the binary distribution
                 SortedMap pathByFile = new TreeMap();
                 pathByFile.put("RELEASE-NOTES.md", new File("target/release-notes/${project.version}.md").toPath());
+                pathByFile.put("README.adoc", new File("README.adoc").toPath());
                 pathByFile.put("NOTICE.txt", new File("NOTICE.txt").toPath());
                 pathByFile.put("LICENSE.txt", new File("LICENSE.txt").toPath());
 
@@ -723,7 +720,7 @@
     </profile>
 
     <!-- `deploy` profile activating deployment-specific configuration.
-         It is manually enabled by `.github/workflows/build-{snapshot,release}-reusable.yml` while releasing. -->
+         It is manually enabled by `.github/workflows/deploy-{snapshot,release}-reusable.yml` while releasing. -->
     <profile>
 
       <id>deploy</id>
@@ -762,7 +759,7 @@
     </profile>
 
     <!-- `release` profile activating release-specific deployment configuration.
-         It is manually enabled by `.github/workflows/build-release-reusable.yml` while releasing. -->
+         It is manually enabled by `.github/workflows/deploy-release-reusable.yml` while releasing. -->
     <profile>
 
       <id>release</id>

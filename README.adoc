@@ -33,10 +33,14 @@ You can use this project as follows:
 . Add `org.apache.logging:logging-parent` as a `parent` to your `pom.xml`
 .. Check if `./mvnw verify` succeeds, otherwise make necessary changes
 . Copy and adapt following files:
+.. xref:src/changelog/.1.x.x/.release-notes.md.ftl[] (adapt the folder name to match your project; `.2.x.x`, `.3.x.x`, etc.)
 .. xref:src/changelog/.changelog.md.ftl[]
 .. xref:src/changelog/.index.md.ftl[]
 .. xref:.github/workflows/build.yml[]
 .. xref:.github/generate-email.sh[]
+.. xref:LICENSE.txt[]
+.. xref:NOTICE.txt[]
+.. xref:README.adoc[] (you can reuse _Distribution_, _Support_, _Security_, and _License_ sections as is)
 .. xref:RELEASE-NOTES.md[]
 .. xref:RELEASING.adoc[]
 
