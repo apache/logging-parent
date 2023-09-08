@@ -35,8 +35,9 @@
   <version>${revision}</version>
   <packaging>pom</packaging>
 
-  <name>Apache Logging Services</name>
-  <description>Parent POM for Apache Logging Services projects</description>
+  <name>Apache Logging Services parent project</name>
+  <!-- `description` should ideally match the entry in `.asf.yaml` -->
+  <description>Parent project internally used in Maven-based projects of the Apache Logging Services</description>
   <url>https://logging.apache.org/</url>
   <inceptionYear>1999</inceptionYear>
 

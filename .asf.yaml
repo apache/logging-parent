@@ -19,7 +19,7 @@
 
 github:
 
-  description: "Parent Maven POM internally used by the Apache Logging Services projects"
+  description: Parent project internally used in Maven-based projects of the Apache Logging Services
   homepage: https://logging.apache.org
   labels:
     - apache
