@@ -105,9 +105,9 @@ jobs:
               -DnewVersion="$PROJECT_VERSION" \
               -DgenerateBackupPoms=false \
               versions:set-property
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-            git commit pom.xml -m "Set version to \`$PROJECT_VERSION\`"
+            git config user.name "ASF Logging Services RM"
+            git config user.email private@logging.apache.org
+            git commit -s pom.xml -m "Set version to \`$PROJECT_VERSION\`"
             git push origin
           fi
 
@@ -119,9 +119,9 @@ jobs:
             -P changelog-release
           git add src/changelog
           if [ -n "$(git status --porcelain)" ]; then
-            git config user.name github-actions
-            git config user.email github-actions@github.com
-            git commit src/changelog -m "Release changelog for version \`$PROJECT_VERSION\`"
+            git config user.name "ASF Logging Services RM"
+            git config user.email private@logging.apache.org
+            git commit -s src/changelog -m "Release changelog for version \`$PROJECT_VERSION\`"
             git push origin
           fi
 
