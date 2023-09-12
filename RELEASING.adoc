@@ -99,19 +99,32 @@ I will continue the release process.
 === In the git repository
 
 . Pull the most recent changes and tags
++
+[source,bash]
+----
+git fetch -p
+----
 . Tag the release (e.g., `rel/7.8.0`) and push it
 +
 [source,bash]
 ----
-git tag -a rel/7.8.0 <COMMIT-ID> -m 7.8.0
+git tag -a rel/7.8.0 <COMMIT-ID> -m 7.8.0     # <1>
 git push origin rel/7.8.0
 ----
++
+<1> You can find the `COMMIT-ID` in the generated vote email.
 +
 [IMPORTANT]
 ====
 The ASF infrastructure treats ``rel/``-prefixed git tags special and ensures they are immutable for provenance reasons.
 ====
 . Merge `release/7.8.0` to `main`
++
+[source,bash]
+----
+git checkout main
+git merge release/7.8.0
+----
 . Set the revision property to the next development version (e.g., `7.9.0-SNAPSHOT`) in xref:pom.xml[`pom.xml`]
 . Commit changes and push the `main` branch
 . Delete the local and remote copies of the `release/7.8.0` branch
@@ -121,9 +134,9 @@ The ASF infrastructure treats ``rel/``-prefixed git tags special and ensures the
 . _Release_ the repository in https://reporter.apache.org/addrelease.html?logging[repository.apache.org]
 . In https://dist.apache.org/repos/dist/release/logging/{project-name}[dist.apache.org/repos/dist] Subversion repository,
 .. create the `*release*/logging/{project-name}/7.8.0` folder, and copy the signed sources and their checksum from `*dev*/logging/{project-name}` to there
-.. delete the folder from an earlier release in `*release*/logging/{project-name}`
+.. delete the folder from an earlier release in `*release*/logging/{project-name}` (stash the generated announcement email somewhere, you will need it later on)
 .. commit changes
-. Report the release at https://reporter.apache.org/[reporter.apache.org]
+. Report the release at https://reporter.apache.org/addrelease.html?logging[reporter.apache.org]
 
 === In GitHub
 
