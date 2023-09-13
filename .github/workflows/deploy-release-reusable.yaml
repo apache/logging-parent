@@ -107,7 +107,7 @@ jobs:
               versions:set-property
             git config user.name "ASF Logging Services RM"
             git config user.email private@logging.apache.org
-            git commit -s pom.xml -m "Set version to \`$PROJECT_VERSION\`"
+            git commit -S pom.xml -m "Set version to \`$PROJECT_VERSION\`"
             git push origin
           fi
 
@@ -121,7 +121,7 @@ jobs:
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "ASF Logging Services RM"
             git config user.email private@logging.apache.org
-            git commit -s src/changelog -m "Release changelog for version \`$PROJECT_VERSION\`"
+            git commit -S src/changelog -m "Release changelog for version \`$PROJECT_VERSION\`"
             git push origin
           fi
 
