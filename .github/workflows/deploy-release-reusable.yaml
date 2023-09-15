@@ -163,7 +163,9 @@ jobs:
           for DIST_FILEPATH in "$DIST_FILEPATH_SRC" "$DIST_FILEPATH_BIN"; do
             if [ -f "$DIST_FILEPATH" ]; then
               gpg --armor --detach-sign --yes --pinentry-mode error "$DIST_FILEPATH"
-              sha512sum "$DIST_FILEPATH" > "$DIST_FILEPATH.sha512"
+              sha512sum "$DIST_FILEPATH" \
+                | ( read CHECKSUM FILEPATH; echo $CHECKSUM $(basename "$FILEPATH") ) \
+                > "$DIST_FILEPATH.sha512"
             fi
           done
 
