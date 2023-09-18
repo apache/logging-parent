@@ -15,7 +15,7 @@
   ~ limitations under the License.
   -->
 
-# ${release.version}<#if release.date?has_content> (${release.date})</#if>
+= ${release.version}<#if release.date?has_content> (${release.date})</#if>
 
 This minor release contains various improvements that we expect to relieve the load on `pom.xml` and GitHub Actions workflows of Maven-based projects we parent.
 This is of particular importance while managing and cutting releases from multiple repositories.
@@ -24,4 +24,4 @@ See `README.adoc` for the complete list of features and their usage.
 See [this `logging-log4j-tools` GitHub Actions workflow run](https://github.com/apache/logging-log4j-tools/actions/runs/6120297528) demonstrating a successful release cut using a SNAPSHOT version of this `logging-parent` release.
 All preparations (release notes, distribution ZIP, vote & announcement emails, etc.) are staged to both Nexus and SVN and waiting the release manager to proceed.
 
-<#include "../.changelog.md.ftl">
+<#include "../.changelog.adoc.ftl">

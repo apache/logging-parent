@@ -4,5 +4,5 @@
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.1.xsd"
        type="removed">
   <author id="github:vy"/>
-  <description format="markdown">Removed `project.build.outputTimestamp` override since it is already provided by the parent POM and its old value `0` was causing reproducibility issues for `spring-boot:repackage`</description>
+  <description format="asciidoc">Removed `project.build.outputTimestamp` override since it is already provided by the parent POM and its old value `0` was causing reproducibility issues for `spring-boot:repackage`</description>
 </entry>

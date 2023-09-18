@@ -147,6 +147,34 @@
           <version>${spotless-maven-plugin.version}</version>
         </plugin>
 
+        <plugin>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-changelog-maven-plugin</artifactId>
+          <version>${log4j-changelog-maven-plugin.version}</version>
+          <executions>
+            <execution>
+              <id>export-changelog</id>
+              <goals>
+                <goal>export</goal>
+              </goals>
+              <configuration>
+                <outputDirectory>${project.build.directory}/release-notes</outputDirectory>
+                <indexTemplates>
+                  <template>
+                    <source>.index.adoc.ftl</source>
+                  </template>
+                </indexTemplates>
+                <changelogTemplates>
+                  <template>
+                    <source>.release-notes.adoc.ftl</source>
+                    <target>%v.adoc</target>
+                  </template>
+                </changelogTemplates>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
       </plugins>
     </pluginManagement>
 
@@ -514,32 +542,12 @@
     </profile>
 
     <!-- `changelog-export` profile to export changelogs.
-         It is manually enabled by `.github/workflows/deploy-release-reusable.yaml` to generate release notes. -->
+         It is not used by CI.
+         It is only here to complement `changelog-release` and for user convenience. -->
     <profile>
       <id>changelog-export</id>
       <build>
-        <defaultGoal>log4j-changelog:export</defaultGoal>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-changelog-maven-plugin</artifactId>
-            <version>${log4j-changelog-maven-plugin.version}</version>
-            <configuration>
-              <outputDirectory>${project.build.directory}/release-notes</outputDirectory>
-              <indexTemplates>
-                <template>
-                  <source>.index.md.ftl</source>
-                </template>
-              </indexTemplates>
-              <changelogTemplates>
-                <template>
-                  <source>.release-notes.md.ftl</source>
-                  <target>%v.md</target>
-                </template>
-              </changelogTemplates>
-            </configuration>
-          </plugin>
-        </plugins>
+        <defaultGoal>log4j-changelog:export@export-changelog</defaultGoal>
       </build>
     </profile>
 
@@ -576,30 +584,9 @@
 
       <build>
 
-        <defaultGoal>log4j-changelog:export enforcer:enforce bsh:run</defaultGoal>
+        <defaultGoal>log4j-changelog:export@export-changelog enforcer:enforce bsh:run</defaultGoal>
 
         <plugins>
-
-          <!-- Generate release notes -->
-          <plugin>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-changelog-maven-plugin</artifactId>
-            <version>${log4j-changelog-maven-plugin.version}</version>
-            <configuration>
-              <outputDirectory>${project.build.directory}/release-notes</outputDirectory>
-              <indexTemplates>
-                <template>
-                  <source>.index.md.ftl</source>
-                </template>
-              </indexTemplates>
-              <changelogTemplates>
-                <template>
-                  <source>.release-notes.md.ftl</source>
-                  <target>%v.md</target>
-                </template>
-              </changelogTemplates>
-            </configuration>
-          </plugin>
 
           <!-- Enforce properties required by the BSH creating the distribution.
                These properties must match the ones in `.github/workflows/deploy-release-reusable.yaml`! -->
@@ -681,7 +668,7 @@
 
                 // Find auxiliary files that will go into the binary distribution
                 SortedMap pathByFile = new TreeMap();
-                pathByFile.put("RELEASE-NOTES.md", new File("target/release-notes/${project.version}.md").toPath());
+                pathByFile.put("RELEASE-NOTES.adoc", new File("target/release-notes/${project.version}.adoc").toPath());
                 pathByFile.put("README.adoc", new File("README.adoc").toPath());
                 pathByFile.put("NOTICE.txt", new File("NOTICE.txt").toPath());
                 pathByFile.put("LICENSE.txt", new File("LICENSE.txt").toPath());

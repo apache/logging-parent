@@ -4,5 +4,5 @@
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.1.xsd"
        type="added">
   <author id="github:vy"/>
-  <description format="markdown">Added `maven-properties-adoc` profile that populates `doc/maven-properties.adoc` from `doc/maven-properties.tmpl.adoc`, if present</description>
+  <description format="asciidoc">Added `maven-properties-adoc` profile that populates `doc/maven-properties.adoc` from `doc/maven-properties.tmpl.adoc`, if present</description>
 </entry>

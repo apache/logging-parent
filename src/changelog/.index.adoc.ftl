@@ -14,13 +14,9 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<#if entriesByType?size gt 0>## Changes
-<#list entriesByType as entryType, entries>
 
-### ${entryType?capitalize}
+= Release Notes
 
-<#list entries as entry>
-* ${entry.description.text?replace("\\s+", " ", "r")}<#if entry.issues?has_content> (<#list entry.issues as issue><#if issue.link?starts_with("https://github.com/apache/logging-parent")>#${issue.id}<#else>[${issue.id}](${issue.link})</#if><#if issue?has_next>, </#if></#list>)</#if>
+<#list releases as release>
+* [${release.version}](${release.version}.md)<#if release.date?has_content> (${release.date})</#if>
 </#list>
-</#list>
-</#if>

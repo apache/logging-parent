@@ -4,5 +4,5 @@
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.1.xsd"
        type="added">
   <author id="github:vy"/>
-  <description format="markdown">Added `distribution` profile to easily create a distribution file containing Git-tracked sources, release notes, binary attachments, `NOTICE.txt`, etc.</description>
+  <description format="asciidoc">Added `asciidoc` profile to easily create a distribution file containing Git-tracked sources, release notes, binary attachments, `NOTICE.txt`, etc.</description>
 </entry>
