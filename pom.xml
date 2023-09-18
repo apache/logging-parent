@@ -158,7 +158,7 @@
                 <goal>export</goal>
               </goals>
               <configuration>
-                <outputDirectory>${project.build.directory}/release-notes</outputDirectory>
+                <outputDirectory>${project.build.directory}/generated-sources/site/asciidoc/release-notes</outputDirectory>
                 <indexTemplates>
                   <template>
                     <source>.index.adoc.ftl</source>
@@ -494,7 +494,6 @@
             <phase>verify</phase>
           </execution>
         </executions>
-
       </plugin>
 
     </plugins>
@@ -825,27 +824,27 @@
 
     </profile>
 
-    <!-- populate `doc/maven-properties.adoc` from `doc/maven-properties.tmpl.adoc` -->
+    <!-- populate `src/site/asciidoc/maven-properties.adoc` from `src/site/asciidoc/maven-properties.tmpl.adoc` -->
     <profile>
 
       <id>maven-properties-adoc</id>
 
       <activation>
         <file>
-          <exists>doc/maven-properties.tmpl.adoc</exists>
+          <exists>src/site/asciidoc/maven-properties.tmpl.adoc</exists>
         </file>
       </activation>
 
       <build>
         <plugins>
 
-          <!-- copy `doc/maven-properties.tmpl.adoc` to `target/doc` -->
+          <!-- copy `src/site/asciidoc/maven-properties.tmpl.adoc` to `target/maven-properties-adoc` -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
               <execution>
-                <id>copy-doc-maven-properties-tmpl</id>
+                <id>copy-maven-properties-adoc</id>
                 <goals>
                   <goal>run</goal>
                 </goals>
@@ -853,8 +852,8 @@
                 <inherited>false</inherited>
                 <configuration>
                   <target>
-                    <copy overwrite="true" tofile="${project.build.directory}/doc/maven-properties.adoc" verbose="true">
-                      <fileset file="doc/maven-properties.tmpl.adoc" />
+                    <copy overwrite="true" tofile="${project.build.directory}/maven-properties-adoc/maven-properties.adoc" verbose="true">
+                      <fileset file="src/site/asciidoc/maven-properties.tmpl.adoc" />
                     </copy>
                   </target>
                 </configuration>
@@ -862,23 +861,23 @@
             </executions>
           </plugin>
 
-          <!-- process `target/doc` and output to `doc` -->
+          <!-- process `target/maven-properties-adoc` and output to `src/site/asciidoc` -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-resources-plugin</artifactId>
             <executions>
               <execution>
-                <id>filter-doc-maven-properties-tmpl</id>
+                <id>filter-maven-properties-adoc</id>
                 <goals>
                   <goal>copy-resources</goal>
                 </goals>
                 <phase>process-sources</phase>
                 <inherited>false</inherited>
                 <configuration>
-                  <outputDirectory>doc</outputDirectory>
+                  <outputDirectory>src/site/asciidoc</outputDirectory>
                   <resources>
                     <resource>
-                      <directory>${project.build.directory}/doc</directory>
+                      <directory>${project.build.directory}/maven-properties-adoc</directory>
                       <filtering>true</filtering>
                     </resource>
                   </resources>
