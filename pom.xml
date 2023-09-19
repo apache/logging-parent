@@ -916,7 +916,7 @@
         <npm.version>9.8.1</npm.version>
 
         <!-- plugin versions -->
-        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
+        <exec-maven-plugin.version>3.1.0</exec-maven-plugin.version>
         <frontend-maven-plugin.version>1.14.0</frontend-maven-plugin.version>
 
       </properties>
