@@ -1054,16 +1054,9 @@
             <artifactId>beanshell-maven-plugin</artifactId>
             <configuration>
               <script><![CDATA[import java.io.*;
+                  import java.nio.charset.*;
                   import java.nio.file.*;
                   import java.nio.file.attribute.*;
-                  import java.util.*;
-                  import java.util.function.*;
-                  import java.util.stream.*;
-                  import java.util.zip.*;
-
-                  import org.eclipse.jgit.dircache.*;
-                  import org.eclipse.jgit.lib.Repository;
-                  import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
                   download(String relativePath) {
                       System.out.format("Downloading `%s`%n", new Object[]{relativePath});
@@ -1071,7 +1064,10 @@
 
                           // Create the target file
                           Path dstPath = new File(relativePath).toPath();
-                          Files.createDirectories(dstPath.getParent(), /* required for BSH method resolution: */ new FileAttribute[0]);
+                          Path dstPathParent = dstPath.getParent();
+                          if (dstPathParent != null) {
+                              Files.createDirectories(dstPath.getParent(), /* required for BSH method resolution: */ new FileAttribute[0]);
+                          }
 
                           // Download the source file
                           String srcUrl = "https://raw.githubusercontent.com/apache/logging-parent/main/" + relativePath;
@@ -1098,10 +1094,10 @@
                           for (int i = 0; i < substitutionCount; i += 2) {
                               String from = substitutions[i];
                               String to = substitutions[i + 1];
-                              System.out.format("  Replacing `%s` with `%s`%n", new Object[]{from, to}):
+                              System.out.format("  Replacing `%s` with `%s`%n", new Object[]{from, to});
                               content = content.replaceAll(from, to);
                           }
-                          System.out.println("  Writing replaced content"):
+                          System.out.println("  Writing replaced content");
                           Files.writeString(path, content, StandardCharsets.UTF_8, new OpenOption[]{StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING});
                       } catch (Exception error) {
                           // Supplement diagnostics
@@ -1110,12 +1106,12 @@
                       }
                   }
 
-                  download(".github/workflows/build.yml", new String[] {
+                  download(".github/workflows/build.yaml", new String[] {
                       "'apache/logging-parent'", "apache/${repositoryName}",
                       "project-name: logging-parent", "project-name: ${projectName}"
                   });
                   download(".github/dependabot.yaml");
-                  download("generate-email.sh");
+                  download(".github/generate-email.sh");
                   download(".mvn/wrapper/maven-wrapper.properties");
                   download(".mvn/jvm.config");
                   download("src/antora/modules/ROOT/pages/index.adoc");
@@ -1129,7 +1125,7 @@
                   download(".gitattributes");
                   download(".gitignore");
                   download(".java-version");
-                  download(".antora-playbook.yaml");
+                  download("antora-playbook.yaml");
                   download("LICENSE.txt");
                   download("mvnw");
                   download("mvnw.cmd");
