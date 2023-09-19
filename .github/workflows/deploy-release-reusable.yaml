@@ -117,11 +117,11 @@ jobs:
           ./mvnw \
             --non-recursive --batch-mode --errors --no-transfer-progress \
             -P changelog-release
-          git add src/changelog
+          git add src/changelog src/antora
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "ASF Logging Services RM"
             git config user.email private@logging.apache.org
-            git commit -S src/changelog -m "Release changelog for version \`$PROJECT_VERSION\`"
+            git commit -S src/changelog src/antora -m "Release changelog for version \`$PROJECT_VERSION\`"
             git push origin
           fi
 

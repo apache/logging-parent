@@ -16,13 +16,13 @@
 #
 site:
   title: Logging Parent
-  url: "https://logging.apache.org/parent"
+  url: "https://logging.apache.org/logging-parent"
   start_page: "logging-parent::index.adoc"
 content:
   sources:
     - url: ./
       branches: HEAD
-      start_path: target/generated-sources/antora
+      start_path: src/antora
 ui:
   bundle:
     url: "https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable"

@@ -157,28 +157,6 @@
           <groupId>org.apache.logging.log4j</groupId>
           <artifactId>log4j-changelog-maven-plugin</artifactId>
           <version>${log4j-changelog-maven-plugin.version}</version>
-          <executions>
-            <execution>
-              <id>export-changelog</id>
-              <goals>
-                <goal>export</goal>
-              </goals>
-              <configuration>
-                <outputDirectory>${project.build.directory}/generated-sources/antora/modules/ROOT/pages/release-notes</outputDirectory>
-                <indexTemplates>
-                  <template>
-                    <source>.index.adoc.ftl</source>
-                  </template>
-                </indexTemplates>
-                <changelogTemplates>
-                  <template>
-                    <source>.release-notes.adoc.ftl</source>
-                    <target>%v.adoc</target>
-                  </template>
-                </changelogTemplates>
-              </configuration>
-            </execution>
-          </executions>
         </plugin>
 
       </plugins>
@@ -546,14 +524,52 @@
       </build>
     </profile>
 
-    <!-- `changelog-export` profile to export changelogs.
-         It is not used by CI.
-         It is only here to complement `changelog-release` and for user convenience. -->
+    <!-- `changelog-export` profile to export changelogs -->
     <profile>
+
       <id>changelog-export</id>
+
+      <activation>
+        <file>
+          <exists>src/changelog</exists>
+        </file>
+      </activation>
+
       <build>
-        <defaultGoal>log4j-changelog:export@export-changelog</defaultGoal>
+        <plugins>
+
+          <!-- export release notes to `src/antora/modules/ROOT/pages/release-notes` -->
+          <plugin>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-changelog-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>export-changelog</id>
+                <goals>
+                  <goal>export</goal>
+                </goals>
+                <phase>generate-sources</phase>
+                <configuration>
+                  <outputDirectory>src/antora/modules/ROOT/pages/release-notes</outputDirectory>
+                  <indexTemplates>
+                    <template>
+                      <source>.index.adoc.ftl</source>
+                    </template>
+                  </indexTemplates>
+                  <changelogTemplates>
+                    <template>
+                      <source>.release-notes.adoc.ftl</source>
+                      <target>%v.adoc</target>
+                    </template>
+                  </changelogTemplates>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
       </build>
+
     </profile>
 
     <!-- `changelog-release` profile to move `src/changelog/.?.x.x` contents to their associated release directory.
@@ -561,7 +577,7 @@
     <profile>
       <id>changelog-release</id>
       <build>
-        <defaultGoal>log4j-changelog:release</defaultGoal>
+        <defaultGoal>log4j-changelog:release generate-sources</defaultGoal>
         <plugins>
           <plugin>
             <groupId>org.apache.logging.log4j</groupId>
@@ -589,7 +605,7 @@
 
       <build>
 
-        <defaultGoal>log4j-changelog:export@export-changelog enforcer:enforce bsh:run</defaultGoal>
+        <defaultGoal>enforcer:enforce bsh:run</defaultGoal>
 
         <plugins>
 
@@ -672,7 +688,7 @@
 
                 // Find auxiliary files that will go into the binary distribution
                 SortedMap pathByFile = new TreeMap();
-                pathByFile.put("RELEASE-NOTES.adoc", new File("target/release-notes/${project.version}.adoc").toPath());
+                pathByFile.put("RELEASE-NOTES.adoc", new File("src/antora/modules/ROOT/pages/release-notes/${project.version}.adoc").toPath());
                 pathByFile.put("README.adoc", new File("README.adoc").toPath());
                 pathByFile.put("NOTICE.txt", new File("NOTICE.txt").toPath());
                 pathByFile.put("LICENSE.txt", new File("LICENSE.txt").toPath());
@@ -829,7 +845,7 @@
 
     </profile>
 
-    <!-- Generates `src/antora/antora.yml` from `src/antora/antora.tmpl.yml` -->
+    <!-- `antora-tmpl-yml` profile to generate `src/antora/antora.yml` from `src/antora/antora.tmpl.yml` -->
     <profile>
 
       <id>antora-tmpl-yml</id>
@@ -854,7 +870,6 @@
                   <goal>run</goal>
                 </goals>
                 <phase>generate-sources</phase>
-                <inherited>false</inherited>
                 <configuration>
                   <target>
                     <copy overwrite="true" tofile="${project.build.directory}/antora-yml/antora.yml" verbose="true">
@@ -877,7 +892,6 @@
                   <goal>copy-resources</goal>
                 </goals>
                 <phase>process-sources</phase>
-                <inherited>false</inherited>
                 <configuration>
                   <outputDirectory>src/antora</outputDirectory>
                   <resources>
@@ -896,7 +910,7 @@
 
     </profile>
 
-    <!-- Generates `target/site` from `src/antora` -->
+    <!-- `antora` profile to generate `target/site` from `src/antora` -->
     <profile>
 
       <id>antora</id>
@@ -924,44 +938,7 @@
       <build>
         <plugins>
 
-          <!-- export release notes to `target/generated-sources/antora/modules/ROOT/pages/release-notes` -->
-          <plugin>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-changelog-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>export-changelog</id>
-                <phase>pre-site</phase>
-              </execution>
-            </executions>
-          </plugin>
-
-          <!-- copy `src/antora` to `target/generated-sources/antora` -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>copy-site</id>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <phase>pre-site</phase>
-                <configuration>
-                  <outputDirectory>${project.build.directory}/generated-sources/antora</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>src/antora</directory>
-                      <excludes>
-                        <exclude>*.tmpl.*</exclude>
-                      </excludes>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
+          <!-- Install `node`, `npm`, `antora`, etc. -->
           <plugin>
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
@@ -991,6 +968,7 @@
             </executions>
           </plugin>
 
+          <!-- Run `antora` -->
           <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>

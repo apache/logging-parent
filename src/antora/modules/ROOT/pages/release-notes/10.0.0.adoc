@@ -28,13 +28,27 @@
     Auto-generation happens during `generate-sources` phase of Maven.
 ////
 
-== ${release.version}<#if release.date?has_content> (${release.date})</#if>
+== 10.0.0 (2023-09-08)
 
 This minor release contains various improvements that we expect to relieve the load on `pom.xml` and GitHub Actions workflows of Maven-based projects we parent.
 This is of particular importance while managing and cutting releases from multiple repositories.
 See `README.adoc` for the complete list of features and their usage.
 
-See [this `logging-log4j-tools` GitHub Actions workflow run](https://github.com/apache/logging-log4j-tools/actions/runs/6120297528) demonstrating a successful release cut using a SNAPSHOT version of this `logging-parent` release.
-All preparations (release notes, distribution ZIP, vote & announcement emails, etc.) are staged to both Nexus and SVN and waiting the release manager to proceed.
+See https://github.com/apache/logging-log4j-tools/actions/runs/6120297528[this `log4j-tools` GitHub Actions workflow run] demonstrating a successful release cut using a SNAPSHOT version of this `logging-parent` release.
+All preparations (release notes, source and binary distributions, vote & announcement emails, etc.) are staged to both Nexus and SVN and waiting the release manager to proceed.
 
-<#include "../.changelog.adoc.ftl">
+
+=== Added
+
+* Added `changelog-export` profile to easily export changelogs to Markdown files
+* Added `changelog-release` profile to easily move `src/changelog/.?.x.x` contents to their associated release directory
+* Added `deploy` profile to ease the Maven `deploy` goal
+* Added `asciidoc` profile to easily create a distribution file containing Git-tracked sources, release notes, binary attachments, `NOTICE.txt`, etc.
+* Documented release instructions (i.e., `RELEASING.md`)
+* Added `release` profile to share common release-specific Maven configuration
+* Added reusable GitHub Actions workflows to share CI boilerplate for other repositories
+* Switched to using `log4j-changelog-maven-plugin` for managing changelog and release notes
+
+=== Changed
+
+* Switched to semantic versioning (old version: `9`, new version: `10.0.0`)

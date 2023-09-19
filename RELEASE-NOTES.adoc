@@ -18,4 +18,4 @@ limitations under the License.
 This project uses https://github.com/apache/logging-log4j-tools/tree/main/log4j-changelog-maven-plugin[`log4j-changelog-maven-plugin`] for keeping a changelog and generating release notes.
 
 Changelog files are located under xref:src/changelog[`src/changelog`].
-Release notes can be generated using `./mvnw -N -P changelog-export` command.
+Release notes are automatically exported during Maven `generate-sources` phase to xref:src/antora/modules/ROOT/release-notes[`src/antora/modules/ROOT/release-notes`].
