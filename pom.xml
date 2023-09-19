@@ -1095,7 +1095,7 @@
                               String from = substitutions[i];
                               String to = substitutions[i + 1];
                               System.out.format("  Replacing `%s` with `%s`%n", new Object[]{from, to});
-                              content = content.replaceAll(from, to);
+                              content = content.replace(from, to);
                           }
                           System.out.println("  Writing replaced content");
                           Files.writeString(path, content, StandardCharsets.UTF_8, new OpenOption[]{StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING});
@@ -1107,7 +1107,7 @@
                   }
 
                   download(".github/workflows/build.yaml", new String[] {
-                      "'apache/logging-parent'", "apache/${repositoryName}",
+                      "'apache/logging-parent'", "'apache/${repositoryName}'",
                       "project-name: logging-parent", "project-name: ${projectName}"
                   });
                   download(".github/dependabot.yaml");
@@ -1128,6 +1128,7 @@
                   download("antora-playbook.yaml");
                   download("LICENSE.txt");
                   download("mvnw");
+                  new File("mvnw").setExecutable(true);
                   download("mvnw.cmd");
                   download("NOTICE.txt");
                   download("RELEASE-NOTES.adoc");

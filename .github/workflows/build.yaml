@@ -22,7 +22,7 @@ on:
     # Avoid workflow run for _merged_ `dependabot` PRs.
     # They were (hopefully!) already tested in PR-triggered workflow.
     branches-ignore:
-    - "dependabot/**"
+      - "dependabot/**"
     paths-ignore:
       - "**.adoc"
       - "**.md"
