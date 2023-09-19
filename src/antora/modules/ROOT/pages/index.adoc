@@ -1,0 +1,75 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+
+:log4j-url: https://logging.apache.org/log4j/2.x
+:log4j-api-url: {log4j-url}/manual/api-separation.html
+
+= Logging Parent
+
+{project-name} is the parent project **internally** used in Maven-based projects of https://logging.apache.org[the Apache Logging Services].
+
+== Features
+
+This project aims to deliver the following features.
+
+=== Parent POM
+
+The provided parent POM features the following conveniences:
+
+* https://creadur.apache.org/rat[`apache-rat-plugin`] integration for license preamble verification
+* https://github.com/apache/logging-log4j-tools/tree/main/log4j-changelog-maven-plugin[`log4j-changelog-maven-plugin`] integration for changelog and release note management
+* https://maven.apache.org/enforcer/maven-enforcer-plugin/[`maven-enforcer-plugin`] checks
+* https://github.com/diffplug/spotless/tree/main/plugin-maven[`spotless-maven-plugin`] integration for code formatting
+* https://antora.org/[Antora]-based site generation
+
+=== Reusable GitHub Actions workflows
+
+The provided reusable GitHub Actions workflows feature the following conveniences:
+
+`build-reusable.yaml`::
+* Compiles against Java 8 bytecode using the specified Java compiler version
+* Verifies reproducibility
+* Automatically merges verified `dependabot` PRs
+
+`deploy-snapshot-reusable.yaml`::
+* Deploys SNAPSHOT artifacts
+
+`deploy-release-reusable.yaml`::
+* Deploys release artifacts
+* Generates the release notes
+* Generates the distribution ZIP containing Git-tracked sources, release notes, binary attachments, `NOTICE.txt`, etc.
+* Generates the release vote & announcement emails
+* Uploads the distribution ZIP and emails to SVN
+
+== Usage
+
+You can use this project as follows:
+
+. Add `org.apache.logging:logging-parent` as a `parent` to your `pom.xml`
+.. Check if `./mvnw verify` succeeds, otherwise make necessary changes
+. Bootstrap the support files (`.gitignore`, `.github/workflows/build.yaml`, etc.) using
++
+[source,bash]
+----
+./mvnw -N -P boostrap \
+  -DrepositoryName=... \  # <1>
+  -DprojectName=...       # <2>
+----
+<1> The name of the repository (e.g., `logging-log4j-tools`)
+<2> The name of the project (e.g., `log4j-tools`)
++
+and adapt them their content as you see fit

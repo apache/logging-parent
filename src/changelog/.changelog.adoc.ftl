@@ -14,7 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<#if entriesByType?size gt 0>== Changes
+<#if entriesByType?size gt 0>
 <#list entriesByType as entryType, entries>
 
 === ${entryType?capitalize}

@@ -18,5 +18,5 @@
 = Release Notes
 
 <#list releases as release>
-* xref:${release.version}.adoc[${release.version}]<#if release.date?has_content> (${release.date})</#if>
+include::${release.version}.adoc[${release.version}]
 </#list>

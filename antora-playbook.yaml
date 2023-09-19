@@ -14,24 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-
-# `.asf.yaml` documentation: https://cwiki.apache.org/confluence/display/INFRA/Git+-+.asf.yaml+features
-
-github:
-
-  description: Parent project internally used in Maven-based projects of the Apache Logging Services
-  homepage: https://logging.apache.org/logging-parent
-  labels:
-    - apache
-    - java
-    - log4j
-    - log4j2
-    - logging
-
-  features:
-    issues: true
-
-  # Prevent force pushes to primary branches
-  protected_branches:
-    main:
-      required_signatures: true
+site:
+  title: Logging Parent
+  url: "https://logging.apache.org/parent"
+  start_page: "logging-parent::index.adoc"
+content:
+  sources:
+    - url: ./
+      branches: HEAD
+      start_path: target/generated-sources/antora
+ui:
+  bundle:
+    url: "https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable"
+    snapshot: true
