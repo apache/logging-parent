@@ -158,7 +158,7 @@
                 <goal>export</goal>
               </goals>
               <configuration>
-                <outputDirectory>${project.build.directory}/generated-sources/site/asciidoc/release-notes</outputDirectory>
+                <outputDirectory>${project.build.directory}/generated-sources/antora/modules/ROOT/pages/release-notes</outputDirectory>
                 <indexTemplates>
                   <template>
                     <source>.index.adoc.ftl</source>
@@ -824,27 +824,27 @@
 
     </profile>
 
-    <!-- populate `src/site/asciidoc/maven-properties.adoc` from `src/site/asciidoc/maven-properties.tmpl.adoc` -->
+    <!-- Generates `src/antora/antora.yml` from `src/antora/antora.tmpl.yml` -->
     <profile>
 
-      <id>maven-properties-adoc</id>
+      <id>antora-tmpl-yml</id>
 
       <activation>
         <file>
-          <exists>src/site/asciidoc/maven-properties.tmpl.adoc</exists>
+          <exists>src/antora/antora.tmpl.yml</exists>
         </file>
       </activation>
 
       <build>
         <plugins>
 
-          <!-- copy `src/site/asciidoc/maven-properties.tmpl.adoc` to `target/maven-properties-adoc` -->
+          <!-- copy `src/antora/antora.tmpl.yml` to `target/antora-yml/antora.yml` -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
               <execution>
-                <id>copy-maven-properties-adoc</id>
+                <id>copy-antora-yml</id>
                 <goals>
                   <goal>run</goal>
                 </goals>
@@ -852,8 +852,8 @@
                 <inherited>false</inherited>
                 <configuration>
                   <target>
-                    <copy overwrite="true" tofile="${project.build.directory}/maven-properties-adoc/maven-properties.adoc" verbose="true">
-                      <fileset file="src/site/asciidoc/maven-properties.tmpl.adoc" />
+                    <copy overwrite="true" tofile="${project.build.directory}/antora-yml/antora.yml" verbose="true">
+                      <fileset file="src/antora/antora.tmpl.yml" />
                     </copy>
                   </target>
                 </configuration>
@@ -861,26 +861,149 @@
             </executions>
           </plugin>
 
-          <!-- process `target/maven-properties-adoc` and output to `src/site/asciidoc` -->
+          <!-- process `target/antora-yml` and output to `src/antora` -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-resources-plugin</artifactId>
             <executions>
               <execution>
-                <id>filter-maven-properties-adoc</id>
+                <id>filter-antora-yml</id>
                 <goals>
                   <goal>copy-resources</goal>
                 </goals>
                 <phase>process-sources</phase>
                 <inherited>false</inherited>
                 <configuration>
-                  <outputDirectory>src/site/asciidoc</outputDirectory>
+                  <outputDirectory>src/antora</outputDirectory>
                   <resources>
                     <resource>
-                      <directory>${project.build.directory}/maven-properties-adoc</directory>
+                      <directory>${project.build.directory}/antora-yml</directory>
                       <filtering>true</filtering>
                     </resource>
                   </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+
+    </profile>
+
+    <!-- Generates `target/site` from `src/antora` -->
+    <profile>
+
+      <id>antora</id>
+
+      <activation>
+        <file>
+          <exists>src/antora</exists>
+        </file>
+      </activation>
+
+      <properties>
+
+        <!-- dependency versions -->
+        <antora.version>3.1.4</antora.version>
+        <http-server.version>14.1.1</http-server.version>
+        <node.version>v18.12.0</node.version>
+        <npm.version>9.8.1</npm.version>
+
+        <!-- plugin versions -->
+        <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
+        <frontend-maven-plugin.version>1.14.0</frontend-maven-plugin.version>
+
+      </properties>
+
+      <build>
+        <plugins>
+
+          <!-- export release notes to `target/generated-sources/antora/modules/ROOT/pages/release-notes` -->
+          <plugin>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-changelog-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>export-changelog</id>
+                <phase>pre-site</phase>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!-- copy `src/antora` to `target/generated-sources/antora` -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-site</id>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <phase>pre-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/generated-sources/antora</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>src/antora</directory>
+                      <excludes>
+                        <exclude>*.tmpl.*</exclude>
+                      </excludes>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <version>${frontend-maven-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>install-node-and-npm</id>
+                <goals>
+                  <goal>install-node-and-npm</goal>
+                </goals>
+                <phase>pre-site</phase>
+                <configuration>
+                  <nodeVersion>${node.version}</nodeVersion>
+                  <npmVersion>${npm.version}</npmVersion>
+                </configuration>
+              </execution>
+              <execution>
+                <id>npm-install-antora</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <phase>pre-site</phase>
+                <configuration>
+                  <arguments>install @antora/cli@${antora.version} @antora/site-generator-default@${antora.version}</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>${exec-maven-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>run-antora</id>
+                <goals>
+                  <goal>exec</goal>
+                </goals>
+                <phase>site</phase>
+                <configuration>
+                  <executable>node/node</executable>
+                  <arguments>
+                    <argument>node_modules/.bin/antora</argument>
+                    <argument>antora-playbook.yaml</argument>
+                    <argument>--to-dir=${project.build.directory}/site</argument>
+                  </arguments>
                 </configuration>
               </execution>
             </executions>

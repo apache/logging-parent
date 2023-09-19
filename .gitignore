@@ -25,3 +25,8 @@ target/
 .project
 .classpath
 .settings/
+# Frontend
+node
+node_modules
+package-lock.json
+package.json
