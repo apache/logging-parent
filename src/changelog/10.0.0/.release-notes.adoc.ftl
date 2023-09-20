@@ -34,9 +34,9 @@
 ////
 
 [#release-notes-${release.version?replace("[^a-zA-Z0-9]", "-", "r")}]
-=== ${release.version}<#if release.date?has_content>
+=== ${release.version}
 
-Date:: ${release.date}</#if>
+<#if release.date?has_content>Release date:: ${release.date}</#if>
 
 This minor release contains various improvements that we expect to relieve the load on `pom.xml` and GitHub Actions workflows of Maven-based projects we parent.
 This is of particular importance while managing and cutting releases from multiple repositories.

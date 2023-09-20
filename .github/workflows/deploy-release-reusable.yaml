@@ -133,7 +133,7 @@ jobs:
         run: |
           ./mvnw \
             --non-recursive --batch-mode --errors --no-transfer-progress \
-            generate-sources
+            process-sources
           git add src/site
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "ASF Logging Services CI"

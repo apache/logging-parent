@@ -160,7 +160,7 @@ jobs:
         run: |
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
-            generate-sources
+            process-sources
 
       - name: Add & commit changes
         shell: bash

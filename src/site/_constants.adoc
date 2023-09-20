@@ -25,11 +25,11 @@
     IF THIS FILE DOESN'T HAVE A `.tmpl.adoc` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT IT!
 
     `_constants.adoc` is auto-generated from `_constants.tmpl.adoc`.
-    Auto-generation happens during `generate-sources` phase of Maven.
+    Auto-generation happens during `process-sources` phase of Maven.
     Hence, you must always
 
     1. Edit `_constants.tmpl.adoc`
-    2. Run `./mvnw generate-resources`
+    2. Run `./mvnw process-sources`
     3. Commit both `_constants.tmpl.adoc` and the generated `_constants.adoc`
 ////
 

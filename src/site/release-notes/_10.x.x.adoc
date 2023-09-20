@@ -36,6 +36,8 @@
 [#release-notes-10-x-x]
 === 10.x.x
 
+
+
 This minor release focuses on shipping AsciiDoc-based website generation convenience targeting the `src/site` folder.
 As a part of this effort, `logging-parent` started publishing https://logging.apache.org/logging-parent[its own website] and `log4j-changelog` support is switched from Markdown to AsciiDoc.
 
@@ -43,6 +45,7 @@ As a part of this effort, `logging-parent` started publishing https://logging.ap
 ==== Added
 
 * Added `asciidoc` and `constants-tmpl-adoc` profiles to generate AsciiDoc-based websites from `src/site`
+* Added support to auto-generate changelog entries for `dependabot` updates
 * Started publishing https://logging.apache.org/logging-parent[the project website]
 
 ==== Changed

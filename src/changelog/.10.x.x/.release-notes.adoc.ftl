@@ -34,9 +34,9 @@
 ////
 
 [#release-notes-${release.version?replace("[^a-zA-Z0-9]", "-", "r")}]
-=== ${release.version}<#if release.date?has_content>
+=== ${release.version}
 
-Date:: ${release.date}</#if>
+<#if release.date?has_content>Release date:: ${release.date}</#if>
 
 This minor release focuses on shipping AsciiDoc-based website generation convenience targeting the `src/site` folder.
 As a part of this effort, `logging-parent` started publishing https://logging.apache.org/logging-parent[its own website] and `log4j-changelog` support is switched from Markdown to AsciiDoc.

@@ -36,7 +36,7 @@
 [#release-notes-10-0-0]
 === 10.0.0
 
-Date:: 2023-09-08
+Release date:: 2023-09-08
 
 This minor release contains various improvements that we expect to relieve the load on `pom.xml` and GitHub Actions workflows of Maven-based projects we parent.
 This is of particular importance while managing and cutting releases from multiple repositories.
