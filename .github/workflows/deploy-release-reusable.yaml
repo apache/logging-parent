@@ -24,11 +24,14 @@ on:
         description: "The Java *compiler* version. (Target is fixed: 8)"
         default: 17
         type: string
-      project-name:
+      project-id:
         description: Identifier used in the distribution artifact and Subversion repository folder filenames (e.g., `logging-parent`)
         required: true
         type: string
-      # `distribution-*` input defaults should match the ones in `pom.xml`!
+      site-enabled:
+        description: Flag indicating if a website should be generated prior to deployment using `./mvnw -N site`
+        default: false
+        type: boolean
       distribution-attachment-filepath-pattern:
         description: The regex pattern matched against the full filepath for determining attachments to be included in the distribution
         default: |-
@@ -117,13 +120,40 @@ jobs:
           ./mvnw \
             --non-recursive --batch-mode --errors --no-transfer-progress \
             -P changelog-release
-          git add src/changelog src/antora
+          git add src/changelog
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "ASF Logging Services RM"
             git config user.email private@logging.apache.org
-            git commit -S src/changelog src/antora -m "Release changelog for version \`$PROJECT_VERSION\`"
+            git commit -S src/changelog -m "Release changelog for version \`$PROJECT_VERSION\`"
             git push origin
           fi
+
+      - name: Commit generated sources
+        shell: bash
+        run: |
+          ./mvnw \
+            --non-recursive --batch-mode --errors --no-transfer-progress \
+            generate-sources
+          git add src/site
+          if [ -n "$(git status --porcelain)" ]; then
+            git config user.name "ASF Logging Services RM"
+            git config user.email private@logging.apache.org
+            git commit -S src/site -m "Add auto-generated sources"
+            git push origin
+          fi
+
+      - name: Build the website
+        if: inputs.site-enabled
+        shell: bash
+        run: |
+          gpg --list-secret-keys
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            --non-recursive \
+            site
+          cd target/site
+          find . -print0 | xargs -0 touch -d 1970-01-01T00:00:00Z
+          find . -print0 | sort --zero-terminated | xargs -0 zip -roX ../site.zip
 
       - name: Upload to Nexus
         shell: bash
@@ -146,12 +176,13 @@ jobs:
           # Generate the distribution (i.e., `src.zip` and optional `bin.zip`)
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
-            --non-recursive -P distribution \
+            --non-recursive \
+            -P distribution \
             -DattachmentFilepathPattern=${{ inputs.distribution-attachment-filepath-pattern }} \
             -DattachmentCount=${{ inputs.distribution-attachment-count }}
 
           # Rename distribution files
-          export DIST_FILENAME_PREFIX="apache-${{ inputs.project-name }}"
+          export DIST_FILENAME_PREFIX="apache-${{ inputs.project-id }}"
           export DIST_FILENAME_VERSIONED_PREFIX="${DIST_FILENAME_PREFIX}-${PROJECT_VERSION}"
           export DIST_FILEPATH_PREFIX="/tmp/${DIST_FILENAME_VERSIONED_PREFIX}"
           export DIST_FILEPATH_SRC="${DIST_FILEPATH_PREFIX}-src.zip"
@@ -190,14 +221,14 @@ jobs:
             "https://dist.apache.org/repos/dist/dev/logging" \
             "$SVN_DIR"
           cd "$SVN_DIR"
-          svn up --depth files "$PROJECT_NAME"
+          svn up --depth files "$PROJECT_ID"
 
           # Switch to the project folder
-          if [ \! -d "$PROJECT_NAME" ]; then
-            mkdir -p "$PROJECT_NAME"
-            svn add "$PROJECT_NAME"
+          if [ \! -d "$PROJECT_ID" ]; then
+            mkdir -p "$PROJECT_ID"
+            svn add "$PROJECT_ID"
           fi
-          cd "$PROJECT_NAME"
+          cd "$PROJECT_ID"
 
           # Clean up old files
           find . -name "${DIST_FILENAME_PREFIX}*" -type f -print0 | xargs -0 -r svn delete
@@ -207,6 +238,11 @@ jobs:
             "$GITHUB_WORKSPACE/.github/generate-email.sh" $EMAIL_TYPE $PROJECT_VERSION $COMMIT_ID \
               > "${DIST_FILENAME_VERSIONED_PREFIX}-email-${EMAIL_TYPE}.txt"
           done
+
+          # Copy the site
+          if [ "$SITE_ENABLED" == "true" ]; then
+            cp "$GITHUB_WORKSPACE/target/site.zip" > "${DIST_FILENAME_VERSIONED_PREFIX}-site.zip"
+          fi
 
           # Copy the distribution
           cp "$DIST_FILEPATH_PREFIX"* .
@@ -219,6 +255,7 @@ jobs:
             -m "Added \`${DIST_FILENAME_PREFIX}\` artifacts for release \`${PROJECT_VERSION}\`"
 
         env:
-          PROJECT_NAME: ${{ inputs.project-name }}
+          PROJECT_ID: ${{ inputs.project-id }}
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SITE_ENABLED: ${{ inputs.site-enabled }}

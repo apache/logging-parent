@@ -15,17 +15,14 @@
     limitations under the License.
 ////
 
-:log4j-url: https://logging.apache.org/log4j/2.x
-:log4j-api-url: {log4j-url}/manual/api-separation.html
+include::_constants.adoc[]
 
-= Logging Parent
-
-{project-name} is the parent project **internally** used in Maven-based projects of https://logging.apache.org[the Apache Logging Services].
-
+[#features]
 == Features
 
-This project aims to deliver the following features.
+{project-name} aims to deliver the following features.
 
+[#parent-pom]
 === Parent POM
 
 The provided parent POM features the following conveniences:
@@ -34,8 +31,9 @@ The provided parent POM features the following conveniences:
 * https://github.com/apache/logging-log4j-tools/tree/main/log4j-changelog-maven-plugin[`log4j-changelog-maven-plugin`] integration for changelog and release note management
 * https://maven.apache.org/enforcer/maven-enforcer-plugin/[`maven-enforcer-plugin`] checks
 * https://github.com/diffplug/spotless/tree/main/plugin-maven[`spotless-maven-plugin`] integration for code formatting
-* https://antora.org/[Antora]-based site generation
+* https://asciidoc.org/[AsciiDoc]-based site generation
 
+[#reusable-workflows]
 === Reusable GitHub Actions workflows
 
 The provided reusable GitHub Actions workflows feature the following conveniences:
@@ -54,22 +52,3 @@ The provided reusable GitHub Actions workflows feature the following convenience
 * Generates the distribution ZIP containing Git-tracked sources, release notes, binary attachments, `NOTICE.txt`, etc.
 * Generates the release vote & announcement emails
 * Uploads the distribution ZIP and emails to SVN
-
-== Usage
-
-You can use this project as follows:
-
-. Add `org.apache.logging:logging-parent` as a `parent` to your `pom.xml`
-.. Check if `./mvnw verify` succeeds, otherwise make necessary changes
-. Bootstrap the support files (`.gitignore`, `.github/workflows/build.yaml`, etc.) using
-+
-[source,bash]
-----
-./mvnw -N -P boostrap \
-  -DrepositoryName=... \  # <1>
-  -DprojectName=...       # <2>
-----
-<1> The name of the repository (e.g., `logging-log4j-tools`)
-<2> The name of the project (e.g., `log4j-tools`)
-+
-and adapt them their content as you see fit

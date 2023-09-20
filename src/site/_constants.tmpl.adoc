@@ -22,31 +22,20 @@
     ██ ███ ██ ██   ██ ██   ██ ██  ██ ██ ██ ██  ██ ██ ██    ██
      ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████  ██
 
-    IF THIS FILE DOESN'T HAVE A `.ftl` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT!
+    IF THIS FILE DOESN'T HAVE A `.tmpl.adoc` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT IT!
 
-    Version-specific release notes (`7.8.0.adoc`, etc.) are generated from `src/changelog/.changelog.adoc.ftl`.
+    `_constants.adoc` is auto-generated from `_constants.tmpl.adoc`.
     Auto-generation happens during `generate-sources` phase of Maven.
+    Hence, you must always
+
+    1. Edit `_constants.tmpl.adoc`
+    2. Run `./mvnw generate-resources`
+    3. Commit both `_constants.tmpl.adoc` and the generated `_constants.adoc`
 ////
 
-== 10.x.x
-
-This minor release contains various improvements that we expect to relieve the load on `pom.xml` and GitHub Actions workflows of Maven-based projects we parent.
-This is of particular importance while managing and cutting releases from multiple repositories.
-See `README.adoc` for the complete list of features and their usage.
-
-See [this `logging-log4j-tools` GitHub Actions workflow run](https://github.com/apache/logging-log4j-tools/actions/runs/6120297528) demonstrating a successful release cut using a SNAPSHOT version of this `logging-parent` release.
-All preparations (release notes, distribution ZIP, vote & announcement emails, etc.) are staged to both Nexus and SVN and waiting the release manager to proceed.
-
-
-=== Added
-
-* Added `antora` and `antora-tmpl-yml` profiles to generate Antora-based websites from `src/antora`
-* Added `bootstrap` profile to download support files from `logging-parent`
-
-=== Changed
-
-* Switched the default `log4j-changelog` configuration from Markdown (`.release-notes.md.ftl` and `.index.md.ftl`) to AsciiDoc (`.release-notes.adoc.ftl` and `.index.adoc.ftl`)
-
-=== Removed
-
-* Removed `project.build.outputTimestamp` override since it is already provided by the parent POM and its old value `0` was causing reproducibility issues for `spring-boot:repackage`
+:project-github-url: ${scm.url}
+:project-version: ${project.version}
+:project-name: Logging Parent
+:project-id: logging-parent
+:java-target-version: ${java.version}
+:java-compiler-version: ${minimalJavaBuildVersion}

@@ -4,5 +4,5 @@
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.1.xsd"
        type="added">
   <author id="github:vy"/>
-  <description format="asciidoc">Added `antora` and `antora-tmpl-yml` profiles to generate Antora-based websites from `src/antora`</description>
+  <description format="asciidoc">Added `asciidoc` and `constants-tmpl-adoc` profiles to generate AsciiDoc-based websites from `src/site`</description>
 </entry>

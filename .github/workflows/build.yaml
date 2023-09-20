@@ -48,16 +48,19 @@ jobs:
     needs: build
     if: github.repository == 'apache/logging-parent' && github.ref == 'refs/heads/main'
     uses: apache/logging-parent/.github/workflows/deploy-snapshot-reusable.yaml@main
+    # Secrets for deployments
     secrets: inherit
 
   deploy-release:
     needs: build
     if: github.repository == 'apache/logging-parent' && startsWith(github.ref, 'refs/heads/release/')
     uses: apache/logging-parent/.github/workflows/deploy-release-reusable.yaml@main
+    # Secrets for deployments
     secrets: inherit
     # Write permissions to allow the Maven `revision` property update, changelog release, etc.
     permissions:
       contents: write
     with:
-      project-name: logging-parent
+      project-id: logging-parent
       distribution-attachment-count: 0
+      site-enabled: true

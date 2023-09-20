@@ -14,6 +14,21 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 ////
-* xref:index.adoc[Basics]
-* xref:release-notes/index.adoc[]
-* {project-scm-url}[Source code repository]
+
+include::_constants.adoc[]
+
+[#usage]
+== Usage
+
+You can use {project-name} as follows:
+
+. Add `org.apache.logging:logging-parent:{project-version}` as a `parent` to your `pom.xml`
+.. Check if `./mvnw verify` succeeds, otherwise make necessary changes
+. Copy and adapt the support files (`.gitignore`, `.github/workflows/build.yaml`, etc.)
+. Check out your website:
++
+[source,bash]
+----
+./mvnw -N site
+python -m http.server -d target/site
+----

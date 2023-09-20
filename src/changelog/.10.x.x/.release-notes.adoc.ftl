@@ -22,19 +22,23 @@
     ██ ███ ██ ██   ██ ██   ██ ██  ██ ██ ██ ██  ██ ██ ██    ██
      ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████  ██
 
-    IF THIS FILE DOESN'T HAVE A `.ftl` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT!
+    IF THIS FILE DOESN'T HAVE A `.ftl` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT IT!
 
-    Version-specific release notes (`7.8.0.adoc`, etc.) are generated from `src/changelog/.changelog.adoc.ftl`.
+    Version-specific release notes (`7.8.0.adoc`, etc.) are generated from `src/changelog/*/.release-notes.adoc.ftl`.
     Auto-generation happens during `generate-sources` phase of Maven.
+    Hence, you must always
+
+    1. Find and edit the associated `.release-notes.adoc.ftl`
+    2. Run `./mvnw generate-sources`
+    3. Commit both `.release-notes.adoc.ftl` and the generated `7.8.0.adoc`
 ////
 
-== ${release.version}<#if release.date?has_content> (${release.date})</#if>
+[#release-notes-${release.version?replace("[^a-zA-Z0-9]", "-", "r")}]
+=== ${release.version}<#if release.date?has_content>
 
-This minor release contains various improvements that we expect to relieve the load on `pom.xml` and GitHub Actions workflows of Maven-based projects we parent.
-This is of particular importance while managing and cutting releases from multiple repositories.
-See `README.adoc` for the complete list of features and their usage.
+Date:: ${release.date}</#if>
 
-See [this `logging-log4j-tools` GitHub Actions workflow run](https://github.com/apache/logging-log4j-tools/actions/runs/6120297528) demonstrating a successful release cut using a SNAPSHOT version of this `logging-parent` release.
-All preparations (release notes, distribution ZIP, vote & announcement emails, etc.) are staged to both Nexus and SVN and waiting the release manager to proceed.
+This minor release focuses on shipping AsciiDoc-based website generation convenience targeting the `src/site` folder.
+As a part of this effort, `logging-parent` started publishing https://logging.apache.org/logging-parent[its own website] and `log4j-changelog` support is switched from Markdown to AsciiDoc.
 
 <#include "../.changelog.adoc.ftl">

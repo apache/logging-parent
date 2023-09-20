@@ -22,13 +22,21 @@
     ██ ███ ██ ██   ██ ██   ██ ██  ██ ██ ██ ██  ██ ██ ██    ██
      ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████  ██
 
-    IF THIS FILE DOESN'T HAVE A `.ftl` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT!
+    IF THIS FILE DOESN'T HAVE A `.ftl` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT IT!
 
-    Version-specific release notes (`7.8.0.adoc`, etc.) are generated from `src/changelog/.changelog.adoc.ftl`.
+    Version-specific release notes (`7.8.0.adoc`, etc.) are generated from `src/changelog/*/.release-notes.adoc.ftl`.
     Auto-generation happens during `generate-sources` phase of Maven.
+    Hence, you must always
+
+    1. Find and edit the associated `.release-notes.adoc.ftl`
+    2. Run `./mvnw generate-sources`
+    3. Commit both `.release-notes.adoc.ftl` and the generated `7.8.0.adoc`
 ////
 
-== ${release.version}<#if release.date?has_content> (${release.date})</#if>
+[#release-notes-${release.version?replace("[^a-zA-Z0-9]", "-", "r")}]
+=== ${release.version}<#if release.date?has_content>
+
+Date:: ${release.date}</#if>
 
 This minor release contains various improvements that we expect to relieve the load on `pom.xml` and GitHub Actions workflows of Maven-based projects we parent.
 This is of particular importance while managing and cutting releases from multiple repositories.

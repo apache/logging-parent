@@ -22,13 +22,21 @@
     ██ ███ ██ ██   ██ ██   ██ ██  ██ ██ ██ ██  ██ ██ ██    ██
      ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████  ██
 
-    IF THIS FILE DOESN'T HAVE A `.ftl` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT!
+    IF THIS FILE DOESN'T HAVE A `.ftl` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT IT!
 
-    Version-specific release notes (`7.8.0.adoc`, etc.) are generated from `src/changelog/.changelog.adoc.ftl`.
+    Version-specific release notes (`7.8.0.adoc`, etc.) are generated from `src/changelog/*/.release-notes.adoc.ftl`.
     Auto-generation happens during `generate-sources` phase of Maven.
+    Hence, you must always
+
+    1. Find and edit the associated `.release-notes.adoc.ftl`
+    2. Run `./mvnw generate-sources`
+    3. Commit both `.release-notes.adoc.ftl` and the generated `7.8.0.adoc`
 ////
 
-== 10.0.0 (2023-09-08)
+[#release-notes-10-0-0]
+=== 10.0.0
+
+Date:: 2023-09-08
 
 This minor release contains various improvements that we expect to relieve the load on `pom.xml` and GitHub Actions workflows of Maven-based projects we parent.
 This is of particular importance while managing and cutting releases from multiple repositories.
@@ -38,7 +46,7 @@ See https://github.com/apache/logging-log4j-tools/actions/runs/6120297528[this `
 All preparations (release notes, source and binary distributions, vote & announcement emails, etc.) are staged to both Nexus and SVN and waiting the release manager to proceed.
 
 
-=== Added
+==== Added
 
 * Added `changelog-export` profile to easily export changelogs to Markdown files
 * Added `changelog-release` profile to easily move `src/changelog/.?.x.x` contents to their associated release directory
@@ -49,6 +57,6 @@ All preparations (release notes, source and binary distributions, vote & announc
 * Added reusable GitHub Actions workflows to share CI boilerplate for other repositories
 * Switched to using `log4j-changelog-maven-plugin` for managing changelog and release notes
 
-=== Changed
+==== Changed
 
 * Switched to semantic versioning (old version: `9`, new version: `10.0.0`)
