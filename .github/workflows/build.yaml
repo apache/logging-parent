@@ -43,8 +43,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    # Secrets for signing commits
-    secrets: inherit
 
   deploy-snapshot:
     needs: build

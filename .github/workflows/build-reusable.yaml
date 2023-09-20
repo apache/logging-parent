@@ -24,10 +24,6 @@ on:
         description: "The Java *compiler* version. (Target is fixed: 8)"
         default: 17
         type: string
-    secrets:
-      GPG_SECRET_KEY:
-        description: GPG secret key for signing commits
-        required: true
 
 jobs:
 
@@ -124,7 +120,6 @@ jobs:
           server-id: apache.releases.https
           server-username: NEXUS_USERNAME
           server-password: NEXUS_PASSWORD
-          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
 
       - name: Find the release version major
         shell: bash
@@ -167,9 +162,9 @@ jobs:
         run: |
           git add .
           git status
-          git config user.name "ASF Logging Services CI"
-          git config user.email private@logging.apache.org
-          git commit -a -m "Add auto-generated sources"
+          git config user.name dependabot
+          git config user.email dependabot@github.com
+          git commit -S -a -m "Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\`"
           git push origin
 
       - name: Close the PR
