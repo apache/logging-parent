@@ -22,19 +22,20 @@
     ██ ███ ██ ██   ██ ██   ██ ██  ██ ██ ██ ██  ██ ██ ██    ██
      ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████  ██
 
-    IF THIS FILE DOESN'T HAVE A `.tmpl.adoc` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT!
+    IF THIS FILE DOESN'T HAVE A `.tmpl.adoc` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT IT!
 
-    `constants.adoc` is auto-generated from `constants.tmpl.adoc` during `generate-sources` phase of Maven.
-    Hence you must always,
+    `_constants.adoc` is auto-generated from `_constants.tmpl.adoc`.
+    Auto-generation happens during `generate-sources` phase of Maven.
+    Hence, you must always
 
-    1. Edit `constants.tmpl.adoc`
+    1. Edit `_constants.tmpl.adoc`
     2. Run `./mvnw generate-resources`
-    3. Commit both `constants.tmpl.adoc` and `constants.adoc`
+    3. Commit both `_constants.tmpl.adoc` and the generated `_constants.adoc`
 ////
 
 :project-github-url: https://github.com/apache/logging-parent
-:project-version: 1.2.3
+:project-version: 10.1.0-SNAPSHOT
 :project-name: Logging Parent
 :project-id: logging-parent
-:java-target-version: 1.8
+:java-target-version: 17.0.8
 :java-compiler-version: [17,18)
