@@ -24,6 +24,10 @@ on:
         description: "The Java *compiler* version. (Target is fixed: 8)"
         default: 17
         type: string
+    secrets:
+      GPG_SECRET_KEY:
+        description: GPG secret key for signing commits
+        required: true
 
 jobs:
 
@@ -70,23 +74,106 @@ jobs:
             -DskipTests=true \
             clean verify artifact:compare
 
-  merge:
+  merge-dependabot:
 
     runs-on: ubuntu-latest
     needs: build
+    if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
 
     steps:
 
-      - name: "[dependabot] Fetch metadata"
+      - name: Fetch metadata
         id: metadata
-        if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
         uses: dependabot/fetch-metadata@c9c4182bf1b97f5224aee3906fd373f6b61b4526   # 1.6.0
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: "[dependabot] Auto-merge the PR"
-        if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
-        run: gh pr merge --auto --squash "$PR_URL"
+      - name: Find dependency attributes
+        shell: bash
+        run: |
+          DEPENDENCY_NAME=$(echo "$DEPENDENCY_NAMES" | tr "," '\n' | head -n 1)
+          cat >> $GITHUB_ENV << EOF
+          DEPENDENCY_NAME=$DEPENDENCY_NAME
+          DEPENDENCY_VERSION=$DEPENDENCY_VERSION
+          EOF
+        env:
+          DEPENDENCY_NAMES: ${{ steps.dependabot-metadata.outputs.dependency-names }}
+          DEPENDENCY_VERSION: ${{ steps.dependabot-metadata.outputs.new-version }}
+
+      - name: Download patch
+        shell: bash
+        run: curl "$PATCH_URL" -o /tmp/patch
+        env:
+          PATCH_URL: ${{ github.event.pull_request.patch_url }}
+
+      - name: Checkout repository
+        uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac   # 4.0.0
+
+      - name: Apply patch
+        shell: bash
+        run: apply /tmp/patch
+
+      - name: Set up Java & GPG
+        uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2   # 3.7.0
+        with:
+          distribution: temurin
+          java-version: ${{ inputs.java-version }}
+          java-package: jdk
+          architecture: x64
+          cache: maven
+          server-id: apache.releases.https
+          server-username: NEXUS_USERNAME
+          server-password: NEXUS_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
+
+      - name: Find the release version major
+        shell: bash
+        run: |
+          RELEASE_VERSION_MAJOR=$(./mvnw \
+            --non-recursive --quiet --batch-mode \
+            -DforceStdout=true \
+            -Dexpression=revision \
+            help:evaluate \
+            | tail -n 1 \
+            | sed -r 's/([0-9]+)\./\1/g')
+          echo "RELEASE_VERSION_MAJOR=$RELEASE_VERSION_MAJOR" >> $GITHUB_ENV
+
+      - name: Create changelog entry
+        shell: bash
+        run: |
+          RELEASE_CHANGELOG_FILEPATH="src/changelog/.${RELEASE_VERSION_MAJOR}.x.x"
+          SAFE_DEPENDENCY_NAME=$(echo "$DEPENDENCY_NAME" | tr "[:upper:]" "[:lower:]" | sed -r 's/[^a-z0-9]/_/g' | sed -r 's/_+/_/g')
+          CHANGELOG_ENTRY_FILEPATH="$RELEASE_CHANGELOG_FILEPATH/update_${SAFE_DEPENDENCY_NAME}.xml"
+          cat > "$CHANGELOG_ENTRY_FILEPATH" << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns="http://logging.apache.org/log4j/changelog"
+                 xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.1.xsd"
+                 type="changed">
+          <author id="github:dependabot"/>
+            <description format="asciidoc">Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\`</description>
+          </entry>
+          EOF
+
+      - name: Generate sources
+        shell: bash
+        run: |
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            generate-sources
+
+      - name: Add & commit changes
+        shell: bash
+        run: |
+          git add .
+          git status
+          git config user.name "ASF Logging Services CI"
+          git config user.email private@logging.apache.org
+          git commit -a -m "Add auto-generated sources"
+          git push origin
+
+      - name: Close the PR
+        run: gh pr close "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
