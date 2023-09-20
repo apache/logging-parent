@@ -107,7 +107,7 @@ jobs:
 
       - name: Apply patch
         shell: bash
-        run: apply /tmp/patch
+        run: git apply /tmp/patch
 
       - name: Set up Java & GPG
         uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2   # 3.7.0
