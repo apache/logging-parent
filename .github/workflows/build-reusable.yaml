@@ -93,12 +93,12 @@ jobs:
           DEPENDENCY_VERSION=$DEPENDENCY_VERSION
           EOF
         env:
-          DEPENDENCY_NAMES: ${{ steps.dependabot-metadata.outputs.dependency-names }}
-          DEPENDENCY_VERSION: ${{ steps.dependabot-metadata.outputs.new-version }}
+          DEPENDENCY_NAMES: ${{ steps.metadata.outputs.dependency-names }}
+          DEPENDENCY_VERSION: ${{ steps.metadata.outputs.new-version }}
 
       - name: Download patch
         shell: bash
-        run: curl "$PATCH_URL" -o /tmp/patch
+        run: wget "$PATCH_URL" -O /tmp/patch
         env:
           PATCH_URL: ${{ github.event.pull_request.patch_url }}
 
