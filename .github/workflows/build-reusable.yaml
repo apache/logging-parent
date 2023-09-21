@@ -168,6 +168,8 @@ jobs:
       - name: Add & commit changes
         shell: bash
         run: |
+          gpg --list-keys
+          echo "###"
           git add .
           git status
           git config user.name "ASF Logging Services CI"
