@@ -37,5 +37,5 @@
 :project-version: ${project.version}
 :project-name: Logging Parent
 :project-id: logging-parent
-:java-target-version: ${java.version}
+:java-target-version: ${maven.compiler.target}
 :java-compiler-version: ${minimalJavaBuildVersion}

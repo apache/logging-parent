@@ -37,5 +37,5 @@
 :project-version: 10.1.0-SNAPSHOT
 :project-name: Logging Parent
 :project-id: logging-parent
-:java-target-version: 17.0.8
+:java-target-version: 8
 :java-compiler-version: [17,18)

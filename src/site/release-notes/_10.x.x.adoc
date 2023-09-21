@@ -55,3 +55,7 @@ As a part of this effort, `logging-parent` started publishing https://logging.ap
 ==== Removed
 
 * Removed `project.build.outputTimestamp` override since it is already provided by the parent POM and its old value `0` was causing https://github.com/spring-projects/spring-boot/pull/37438[reproducibility issues] for `spring-boot:repackage`
+
+==== Fixed
+
+* Replaced incorrect `java.version` Maven property override with `maven.compiler.{source,release,target}`

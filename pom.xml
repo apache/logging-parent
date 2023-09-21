@@ -83,11 +83,14 @@
     <!-- project version -->
     <revision>10.1.0-SNAPSHOT</revision>
 
+    <!-- target Java 8 -->
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
+    <maven.compiler.release>8</maven.compiler.release>
+
     <!-- `minimalJavaBuildVersion` is employed by `org.apache:apache`, which is the parent of us.
-         `minimalJavaBuildVersion` is used for enforcing the compiler version.
-         We will use `java.version` to set the target JVM byte code, which is 8. -->
+         `minimalJavaBuildVersion` is used for enforcing the compiler version. -->
     <minimalJavaBuildVersion>[17,18)</minimalJavaBuildVersion>
-    <java.version>8</java.version>
 
     <!-- dependency versions -->
     <org.eclipse.jgit.version>6.7.0.202309050840-r</org.eclipse.jgit.version>
@@ -219,7 +222,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <release>${java.version}</release>
+          <source>${maven.compiler.source}</source>
+          <release>${maven.compiler.release}</release>
+          <target>${maven.compiler.target}</target>
           <encoding>${project.build.sourceEncoding}</encoding>
           <compilerArgs>
             <arg>-Xlint:all</arg>
