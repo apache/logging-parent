@@ -79,7 +79,7 @@ jobs:
     steps:
 
       - name: Fetch metadata
-        id: metadata
+        id: dependabot-metadata
         uses: dependabot/fetch-metadata@c9c4182bf1b97f5224aee3906fd373f6b61b4526   # 1.6.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -93,8 +93,8 @@ jobs:
           DEPENDENCY_VERSION=$DEPENDENCY_VERSION
           EOF
         env:
-          DEPENDENCY_NAMES: ${{ steps.metadata.outputs.dependency-names }}
-          DEPENDENCY_VERSION: ${{ steps.metadata.outputs.new-version }}
+          DEPENDENCY_NAMES: ${{ steps.dependabot-metadata.outputs.dependency-names }}
+          DEPENDENCY_VERSION: ${{ steps.dependabot-metadata.outputs.new-version }}
 
       - name: Download patch
         shell: bash
@@ -107,7 +107,12 @@ jobs:
 
       - name: Apply patch
         shell: bash
-        run: git apply /tmp/patch
+        run:
+          git checkout $TARGET_BRANCH
+          git log -1
+          git apply /tmp/patch
+        env:
+          TARGET_BRANCH: ${{ steps.dependabot-metadata.outputs.target-branch }}
 
       - name: Set up Java & GPG
         uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2   # 3.7.0
