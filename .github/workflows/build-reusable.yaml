@@ -129,10 +129,9 @@ jobs:
           RELEASE_VERSION_MAJOR=$(./mvnw \
             --non-recursive --quiet --batch-mode \
             -DforceStdout=true \
-            -Dexpression=revision \
-            help:evaluate \
-            | tail -n 1 \
-            | sed -r 's/([0-9]+)\./\1/g')
+            -Dexpression=parsedVersion.majorVersion \
+            build-helper:parse-version help:evaluate \
+            | tail -n 1)
           echo "RELEASE_VERSION_MAJOR=$RELEASE_VERSION_MAJOR" >> $GITHUB_ENV
 
       - name: Create changelog entry
@@ -141,6 +140,7 @@ jobs:
           RELEASE_CHANGELOG_FILEPATH="src/changelog/.${RELEASE_VERSION_MAJOR}.x.x"
           SAFE_DEPENDENCY_NAME=$(echo "$DEPENDENCY_NAME" | tr "[:upper:]" "[:lower:]" | sed -r 's/[^a-z0-9]/_/g' | sed -r 's/_+/_/g')
           CHANGELOG_ENTRY_FILEPATH="$RELEASE_CHANGELOG_FILEPATH/update_${SAFE_DEPENDENCY_NAME}.xml"
+          mkdir -p $(dirname "$CHANGELOG_ENTRY_FILEPATH")
           cat > "$CHANGELOG_ENTRY_FILEPATH" << EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
