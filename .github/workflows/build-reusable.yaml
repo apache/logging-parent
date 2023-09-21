@@ -24,6 +24,10 @@ on:
         description: "The Java *compiler* version. (Target is fixed: 8)"
         default: 17
         type: string
+    secrets:
+      GPG_SECRET_KEY:
+        description: GPG secret key for signing commits
+        required: true
 
 jobs:
 
