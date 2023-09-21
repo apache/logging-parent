@@ -107,7 +107,7 @@ jobs:
 
       - name: Apply patch
         shell: bash
-        run:
+        run: |
           git checkout $TARGET_BRANCH
           git log -1
           git apply /tmp/patch
