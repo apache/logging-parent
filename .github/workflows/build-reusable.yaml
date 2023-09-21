@@ -153,9 +153,6 @@ jobs:
       - name: Add & commit changes
         shell: bash
         run: |
-          gh gpg-key list
-          gh auth setup-git
-          gh gpg-key list
           git add .
           git status
           git config user.name github-actions
