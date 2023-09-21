@@ -24,10 +24,6 @@ on:
         description: "The Java *compiler* version. (Target is fixed: 8)"
         default: 17
         type: string
-    secrets:
-      GPG_SECRET_KEY:
-        description: GPG secret key for signing commits
-        required: true
 
 jobs:
 
@@ -116,7 +112,7 @@ jobs:
         shell: bash
         run: git apply /tmp/patch
 
-      - name: Set up Java & GPG
+      - name: Set up Java
         uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2   # 3.12.0
         with:
           distribution: temurin
@@ -127,7 +123,6 @@ jobs:
           server-id: apache.releases.https
           server-username: NEXUS_USERNAME
           server-password: NEXUS_PASSWORD
-          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
 
       - name: Find the release version major
         shell: bash
@@ -169,14 +164,26 @@ jobs:
         shell: bash
         run: |
           git add .
-          git config user.name "ASF Logging Services RM"
-          git config user.email private@logging.apache.org
-          git commit -S -a -m "Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\`"
-          git log --show-signature -1
-          git push origin
-
-      - name: Close the PR
-        run: gh pr close "$PR_URL"
+          export TOUCHED_FILE_COUNT=$(git status --porcelain | wc -l)
+          export TOUCHED_FILE_NUMBER=1
+          git status --porcelain | while read _ TOUCHED_FILEPATH; do
+            echo "Committing \`$TOUCHED_FILEPATH\`..."
+            export MESSAGE="Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\` [$TOUCHED_FILE_NUMBER/$TOUCHED_FILE_COUNT]"
+            export SHA=$(git rev-parse $TARGET_BRANCH:"$TOUCHED_FILEPATH")
+            export CONTENT=$(base64 -i "$TOUCHED_FILEPATH")
+            gh api --method PUT /repos/:owner/:repo/contents/$TOUCHED_FILEPATH \
+              --field message="$MESSAGE" \
+              --field content="$CONTENT" \
+              --field encoding="base64" \
+              --field branch="$TARGET_BRANCH" \
+              --field sha="$SHA"
+          done
         env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TARGET_BRANCH: ${{ steps.dependabot-metadata.outputs.target-branch }}
+
+#      - name: Close the PR
+#        run: gh pr close "$PR_URL"
+#        env:
+#          PR_URL: ${{ github.event.pull_request.html_url }}
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -43,8 +43,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    # Secrets for merging `dependabot` PRs
-    secrets: inherit
 
   deploy-snapshot:
     needs: build
