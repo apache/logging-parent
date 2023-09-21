@@ -172,6 +172,7 @@ jobs:
           git config user.name "ASF Logging Services RM"
           git config user.email private@logging.apache.org
           git commit -S -a -m "Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\`"
+          git log --show-signature -1
           git push origin
 
       - name: Close the PR
