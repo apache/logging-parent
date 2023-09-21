@@ -108,7 +108,7 @@ jobs:
               -DnewVersion="$PROJECT_VERSION" \
               -DgenerateBackupPoms=false \
               versions:set-property
-            git config user.name "ASF Logging Services CI"
+            git config user.name "ASF Logging Services RM"
             git config user.email private@logging.apache.org
             git commit -S pom.xml -m "Set version to \`$PROJECT_VERSION\`"
             git push origin
@@ -122,7 +122,7 @@ jobs:
             -P changelog-release
           git add src/changelog
           if [ -n "$(git status --porcelain)" ]; then
-            git config user.name "ASF Logging Services CI"
+            git config user.name "ASF Logging Services RM"
             git config user.email private@logging.apache.org
             git commit -S src/changelog -m "Release changelog for version \`$PROJECT_VERSION\`"
             git push origin
@@ -136,7 +136,7 @@ jobs:
             process-sources
           git add src/site
           if [ -n "$(git status --porcelain)" ]; then
-            git config user.name "ASF Logging Services CI"
+            git config user.name "ASF Logging Services RM"
             git config user.email private@logging.apache.org
             git commit -S src/site -m "Add auto-generated sources"
             git push origin
