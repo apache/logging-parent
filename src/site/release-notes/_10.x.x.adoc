@@ -51,6 +51,7 @@ As a part of this effort, `logging-parent` started publishing https://logging.ap
 ==== Changed
 
 * Switched the default `log4j-changelog` configuration from Markdown (`.release-notes.md.ftl` and `.index.md.ftl`) to AsciiDoc (`.release-notes.adoc.ftl` and `.index.adoc.ftl`)
+* Update `com.google.errorprone:error_prone_core` to version `2.22.0`
 
 ==== Removed
 
