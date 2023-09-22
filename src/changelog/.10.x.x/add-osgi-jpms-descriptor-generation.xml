@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://logging.apache.org/log4j/changelog"
+       xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.1.xsd"
+       type="added">
+  <author id="github:vy"/>
+  <author id="github:ppkarwasz"/>
+  <description format="asciidoc">Added `bnd-maven-plugin` defaults to auto-generate both OSGi and JPMS descriptors</description>
+</entry>

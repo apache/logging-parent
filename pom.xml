@@ -94,9 +94,12 @@
 
     <!-- dependency versions -->
     <org.eclipse.jgit.version>6.7.0.202309050840-r</org.eclipse.jgit.version>
+    <osgi.version>8.0.0</osgi.version>
+    <spotbugs-annotations.version>4.7.3</spotbugs-annotations.version>
 
     <!-- plugin versions -->
     <beanshell-maven-plugin.version>1.4</beanshell-maven-plugin.version>
+    <bnd-maven-plugin.version>6.4.0</bnd-maven-plugin.version>
     <error-prone.version>2.22.0</error-prone.version>
     <findsecbugs-plugin.version>1.12.0</findsecbugs-plugin.version>
     <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
@@ -108,6 +111,24 @@
     <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
 
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-annotations</artifactId>
+        <version>${spotbugs-annotations.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>osgi.annotation</artifactId>
+        <version>${osgi.version}</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
 
   <build>
 
@@ -160,6 +181,12 @@
           <groupId>org.apache.logging.log4j</groupId>
           <artifactId>log4j-changelog-maven-plugin</artifactId>
           <version>${log4j-changelog-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>biz.aQute.bnd</groupId>
+          <artifactId>bnd-maven-plugin</artifactId>
+          <version>${bnd-maven-plugin.version}</version>
         </plugin>
 
       </plugins>
@@ -481,6 +508,46 @@
               <goal>check</goal>
             </goals>
             <phase>verify</phase>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- Generate OSGi and JPMS descriptors.
+           Annotate packages that need to be exported with `org.osgi.annotation.bundle.Export` provided by `org.osgi:osgi-annotation` artifact. -->
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <id>default-jar</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <bnd><![CDATA[
+
+                # `Bundle-DocURL` uses `project.url`.
+                # This is set to `${project.parent.url}${project.artifactId}` through Maven's inheritance assembly[1].
+                # This eventually produces incorrect values.
+                # Hence, we remove them from the produced descriptor.
+                #
+                # `Bundle-SCM` uses `project.scm.url` and suffers from the same inheritance problem `Bundle-DocURL` has.
+                #
+                # [1] https://maven.apache.org/ref/3.9.4/maven-model-builder/#inheritance-assembly
+                #     Inheritance assembly can be disabled for certain properties, e.g., `project.url`.
+                #     Though this would necessitate changes in the root `pom.xml`s of parented projects.
+                #
+                # `Bundle-Developers` is removed, since it is nothing but noise and occupies quite some real estate.
+                -removeheaders: Bundle-DocURL,Bundle-SCM,Bundle-Developers
+
+                # Create OSGi and JPMS module names based on the `project.artifactId`
+                symbolic-name: org.apache.logging.$[subst;$[project.artifactId];-;.]
+                Bundle-SymbolicName: $[symbolic-name]
+                -jpms-module-info: $[symbolic-name];access=0
+
+              ]]></bnd>
+            </configuration>
           </execution>
         </executions>
       </plugin>
