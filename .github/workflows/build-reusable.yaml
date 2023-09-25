@@ -24,6 +24,10 @@ on:
         description: The Java compiler version
         default: 17
         type: string
+    secrets:
+      GPG_SECRET_KEY:
+        description: GPG secret key for signing commits
+        required: true
 
 jobs:
 
@@ -40,7 +44,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac   # 4.0.0
 
-      - name: Set up Java
+      - name: Set up Java & GPG
         uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2   # 3.7.0
         with:
           distribution: temurin
@@ -48,6 +52,7 @@ jobs:
           java-package: jdk
           architecture: x64
           cache: maven
+          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
 
       # We could have used `verify`, but `clean install` is required while generating the build reproducibility report, which is performed in the next step.
       # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
@@ -163,25 +168,10 @@ jobs:
         shell: bash
         run: |
           git add .
-          export TOUCHED_FILE_COUNT=$(git status --porcelain | wc -l)
-          export TOUCHED_FILE_NUMBER=1
-          git status --porcelain | while read _ TOUCHED_FILEPATH; do
-            # Hack to perform signed and verified commits by Steve Winton: https://gist.github.com/swinton/03e84635b45c78353b1f71e41007fc7c
-            echo "Committing \`$TOUCHED_FILEPATH\`..."
-            export MESSAGE="Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\` [$TOUCHED_FILE_NUMBER/$TOUCHED_FILE_COUNT]"
-            export SHA=$(git rev-parse "$TARGET_BRANCH":"$TOUCHED_FILEPATH")
-            export CONTENT=$(base64 -i "$TOUCHED_FILEPATH")
-            gh api --method PUT "/repos/:owner/:repo/contents/$TOUCHED_FILEPATH" \
-              --field message="$MESSAGE" \
-              --field content="$CONTENT" \
-              --field encoding="base64" \
-              --field branch="$TARGET_BRANCH" \
-              --field sha="$SHA"
-            let TOUCHED_FILE_NUMBER+=1
-          done
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TARGET_BRANCH: ${{ steps.dependabot-metadata.outputs.target-branch }}
+          git config user.name "ASF Logging Services RM"
+          git config user.email private@logging.apache.org
+          git commit -S -a -m "Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\`"
+          git push origin
 
       - name: Close the PR
         run: gh pr close "$PR_URL"
