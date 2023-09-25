@@ -94,7 +94,7 @@
 
     <!-- dependency versions -->
     <org.eclipse.jgit.version>6.7.0.202309050840-r</org.eclipse.jgit.version>
-    <osgi.version>8.0.0</osgi.version>
+    <osgi.version>8.1.0</osgi.version>
     <spotbugs-annotations.version>4.7.3</spotbugs-annotations.version>
 
     <!-- plugin versions -->
