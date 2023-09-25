@@ -581,7 +581,7 @@
                 -jpms-module-info: $[bnd-module-name];access=0
 
                 # Prevents an execution error in multi-release jars:
-                -fixupmessages:·"Classes·found·in·the·wrong·directory";restrict:=error;is:=warning
+                -fixupmessages: "Classes found in the wrong directory";restrict:=error;is:=warning
 
                 # OSGI modules do not make sens in JPMS
                 -jpms-module-info-options: org.osgi.core;static=true,org.osgi.framework;static=true,$[bnd-extra-module-options]
