@@ -44,7 +44,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3df4ab11eba7bda6032a0b82a6bb43b11571feac   # 4.0.0
 
-      - name: Set up Java & GPG
+      - name: Set up Java
         uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2   # 3.7.0
         with:
           distribution: temurin
@@ -52,7 +52,6 @@ jobs:
           java-package: jdk
           architecture: x64
           cache: maven
-          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
 
       # We could have used `verify`, but `clean install` is required while generating the build reproducibility report, which is performed in the next step.
       # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
@@ -116,7 +115,7 @@ jobs:
         shell: bash
         run: git apply /tmp/patch
 
-      - name: Set up Java
+      - name: Set up Java & GPG
         uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2   # 3.12.0
         with:
           distribution: temurin
@@ -127,6 +126,7 @@ jobs:
           server-id: apache.releases.https
           server-username: NEXUS_USERNAME
           server-password: NEXUS_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
 
       - name: Find the release version major
         shell: bash
