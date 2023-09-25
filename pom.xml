@@ -92,9 +92,31 @@
          `minimalJavaBuildVersion` is used for enforcing the compiler version. -->
     <minimalJavaBuildVersion>[17,18)</minimalJavaBuildVersion>
 
+    <!-- JPMS and OSGi options -->
+    <!-- Overrides some options in multi-release JARs -->
+    <bnd-multi-release>false</bnd-multi-release>
+    <!-- Module name if different from the OSGi symbolic bundle name -->
+    <bnd-module-name>$[symbolic-name]</bnd-module-name>
+    <!--
+      ~ Allows to change imported package attributes (e.g. add 'resolution:=optional')
+      ~ See: https://bnd.bndtools.org/heads/import_package.html
+      -->
+    <bnd-extra-package-options />
+    <!--
+      ~ Allows to override the compute JPMS 'requires' statements.
+      ~ This should be used only if the previous `bnd-extra-package-options` can not be used
+      ~ due to a (reported?) BND bug.
+      ~ See: https://bnd.bndtools.org/chapters/330-jpms.html#advanced-options
+      -->
+    <bnd-extra-module-options />
+
     <!-- dependency versions -->
     <org.eclipse.jgit.version>6.7.0.202309050840-r</org.eclipse.jgit.version>
-    <osgi.version>8.1.0</osgi.version>
+    <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
+    <bnd.annotation.version>6.4.1</bnd.annotation.version>
+    <osgi.annotation.version>8.1.0</osgi.annotation.version>
+    <osgi.annotation.bundle.version>2.0.0</osgi.annotation.bundle.version>
+
     <spotbugs-annotations.version>4.7.3</spotbugs-annotations.version>
 
     <!-- plugin versions -->
@@ -116,6 +138,12 @@
     <dependencies>
 
       <dependency>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>biz.aQute.bnd.annotation</artifactId>
+        <version>${bnd.annotation.version}</version>
+      </dependency>
+
+      <dependency>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-annotations</artifactId>
         <version>${spotbugs-annotations.version}</version>
@@ -124,7 +152,13 @@
       <dependency>
         <groupId>org.osgi</groupId>
         <artifactId>osgi.annotation</artifactId>
-        <version>${osgi.version}</version>
+        <version>${osgi.annotation.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>osgi.annotation.bundle</artifactId>
+        <version>${osgi.annotation.bundle.version}</version>
       </dependency>
 
     </dependencies>
@@ -526,7 +560,6 @@
             </goals>
             <configuration>
               <bnd><![CDATA[
-
                 # `Bundle-DocURL` uses `project.url`.
                 # This is set to `${project.parent.url}${project.artifactId}` through Maven's inheritance assembly[1].
                 # This eventually produces incorrect values.
@@ -542,10 +575,23 @@
                 -removeheaders: Bundle-DocURL,Bundle-SCM,Bundle-Developers
 
                 # Create OSGi and JPMS module names based on the `project.artifactId`
+                # This mostly agrees with `maven-bundle-plugin`, except it never uses hyphens.
                 symbolic-name: org.apache.logging.$[subst;$[project.artifactId];-;.]
                 Bundle-SymbolicName: $[symbolic-name]
-                -jpms-module-info: $[symbolic-name];access=0
+                -jpms-module-info: $[bnd-module-name];access=0
 
+                # Prevents an execution error in multi-release jars:
+                -fixupmessages:·"Classes·found·in·the·wrong·directory";restrict:=error;is:=warning
+
+                # OSGI modules do not make sens in JPMS
+                -jpms-module-info-options: org.osgi.core;static=true,org.osgi.framework;static=true,$[bnd-extra-module-options]
+                # Import all packages by default:
+                Import-Package: $[bnd-extra-package-options],*
+
+                # Allow each project to override the Multi-Release header:
+                Multi-Release: $[bnd-multi-release]
+                # Add manifests and modules for each multi-release version:
+                -jpms-multi-release: $[bnd-multi-release]
               ]]></bnd>
             </configuration>
           </execution>
