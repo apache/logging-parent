@@ -21,19 +21,19 @@ on:
   push:
     # Ignore `dependabot` branches, those are handled by `merge-dependabot.yaml`
     branches-ignore:
-      - 'dependabot/**'
-    paths-ignore:
-      - "**.adoc"
-      - "**.md"
-      - "**.txt"
+      - "dependabot/**"
+#    paths-ignore:
+#      - "**.adoc"
+#      - "**.md"
+#      - "**.txt"
   pull_request:
     # Ignore `dependabot` branches, those are handled by `merge-dependabot.yaml`
     branches-ignore:
-      - 'dependabot/**'
-    paths-ignore:
-      - "**.adoc"
-      - "**.md"
-      - "**.txt"
+      - "dependabot/**"
+#    paths-ignore:
+#      - "**.adoc"
+#      - "**.md"
+#      - "**.txt"
 
 permissions: read-all
 
