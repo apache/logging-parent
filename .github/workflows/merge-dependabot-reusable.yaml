@@ -34,7 +34,6 @@ jobs:
   merge-dependabot:
 
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
 
     steps:
 

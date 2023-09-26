@@ -33,18 +33,8 @@ permissions: read-all
 
 jobs:
 
-  debug:
-    runs-on: ubuntu-latest
-    steps:
-      - name: echo
-        shell: bash
-        run: |
-          echo "event_name: ${{ github.event_name }}"
-          echo "actor: ${{ github.actor }}"
-
   build:
-    needs: debug
-    if: github.event_name != 'pull_request' || github.actor == 'dependabot[bot]'
+    if: github.actor != 'dependabot[bot]'
     uses: apache/logging-parent/.github/workflows/build-reusable.yaml@main
 
   deploy-snapshot:
