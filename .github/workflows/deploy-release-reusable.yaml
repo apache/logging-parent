@@ -146,7 +146,6 @@ jobs:
         if: inputs.site-enabled
         shell: bash
         run: |
-          gpg --list-secret-keys
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             --non-recursive \
@@ -158,7 +157,6 @@ jobs:
       - name: Upload to Nexus
         shell: bash
         run: |
-          gpg --list-secret-keys
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             -P deploy,release
