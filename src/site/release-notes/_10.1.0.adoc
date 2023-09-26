@@ -33,10 +33,10 @@
     3. Commit both `.release-notes.adoc.ftl` and the generated `7.8.0.adoc`
 ////
 
-[#release-notes-10-x-x]
-=== 10.x.x
+[#release-notes-10-1-0]
+=== 10.1.0
 
-
+Release date:: 2023-09-26
 
 This minor release focuses on shipping AsciiDoc-based website generation convenience targeting the `src/site` folder.
 As a part of this effort, `logging-parent` started publishing https://logging.apache.org/logging-parent/latest[its own website] and `log4j-changelog` support is switched from Markdown to AsciiDoc.
@@ -46,3 +46,26 @@ Users only need to annotate packages that are to be exported with `org.osgi.anno
 Hence, no need for custom `.bnd` and/or `module-info.java` files anymore.
 In particular, we expect the absence of `module-info.java` files to avoid several IDE and testing related headaches.
 
+
+==== Added
+
+* Added `asciidoc` and `constants-tmpl-adoc` profiles to generate AsciiDoc-based websites from `src/site`
+* Added support to auto-generate changelog entries for `dependabot` updates
+* Added `bnd-maven-plugin` defaults to auto-generate both OSGi and JPMS descriptors
+* Started publishing https://logging.apache.org/logging-parent/latest[the project website]
+
+==== Changed
+
+* Switched the default `log4j-changelog` configuration from Markdown (`.release-notes.md.ftl` and `.index.md.ftl`) to AsciiDoc (`.release-notes.adoc.ftl` and `.index.adoc.ftl`)
+* Update `actions/checkout` to version `4.1.0`
+* Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.7.3.6`
+* Update `com.google.errorprone:error_prone_core` to version `2.22.0`
+* Update `org.osgi:osgi.annotation` to version `8.1.0`
+
+==== Removed
+
+* Removed `project.build.outputTimestamp` override since it is already provided by the parent POM and its old value `0` was causing https://github.com/spring-projects/spring-boot/pull/37438[reproducibility issues] for `spring-boot:repackage`
+
+==== Fixed
+
+* Replaced incorrect `java.version` Maven property override with `maven.compiler.{source,release,target}`
