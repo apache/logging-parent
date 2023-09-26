@@ -20,11 +20,11 @@ name: merge-dependabot
 on:
   pull_request_target:
     branches:
-      - "dependabot/**"
-#    paths-ignore:
-#      - "**.adoc"
-#      - "**.md"
-#      - "**.txt"
+      - dependabot/**
+    paths-ignore:
+      - "**.adoc"
+      - "**.md"
+      - "**.txt"
 
 permissions: read-all
 
