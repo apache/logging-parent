@@ -62,13 +62,6 @@ You can iterate on the `release/7.8.0` branch to perfect it.
 ====
 . _Close_ the repository in https://repository.apache.org/[repository.apache.org]
 
-[#stage-website]
-=== Stage the website
-. Check out the `asf-staging` branch of https://github.com/apache/logging-site[the `logging-site` repository]
-. Add the contents of the generated website from the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}] Subversion directory to `content/{project-id}` folder
-. Commit and push your changes
-. Verify the result in https://logging.staged.apache.org/{project-id}
-
 [#vote-release]
 === Vote the release
 
@@ -149,11 +142,6 @@ Once the artifacts are visible in https://central.sonatype.dev/[central.sonatype
 
 . Use the `rel/7.8.0` tag
 . Copy release notes from the generated emails
-
-[#publish-website]
-=== Publish the website
-. Cherry-pick the `asf-staging` branch commit of https://github.com/apache/logging-site[the `logging-site` repository] to `asf-site` branch and push your changes
-. Verify the result in https://logging.apache.org/{project-id}
 
 [#announce-release]
 === Announce the release
