@@ -35,6 +35,7 @@
 
 :project-github-url: ${scm.url}
 :project-version: ${project.version}
+:project-version-major: ${parsedVersion.majorVersion}
 :project-name: Logging Parent
 :project-id: logging-parent
 :java-target-version: ${maven.compiler.target}
