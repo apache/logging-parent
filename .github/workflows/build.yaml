@@ -57,8 +57,11 @@ jobs:
     uses: apache/logging-parent/.github/workflows/deploy-release-reusable.yaml@main
     # Secrets for deployments
     secrets:
-      NEXUS_USER: ${{ secrets.NEXUS_USER }}
-      NEXUS_PW: ${{ secrets.NEXUS_PW }}
+      GPG_SECRET_KEY: ${{ secrets.GPG_SECRET_KEY }}
+      LOGGING_STAGE_DEPLOYER_USER: ${{ secrets.LOGGING_STAGE_DEPLOYER_USER }}
+      LOGGING_STAGE_DEPLOYER_PW: ${{ secrets.LOGGING_STAGE_DEPLOYER_PW }}
+      SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+      SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
     # Write permissions to allow the Maven `revision` property update, changelog release, etc.
     permissions:
       contents: write
