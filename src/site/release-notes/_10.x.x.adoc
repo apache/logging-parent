@@ -57,6 +57,7 @@ In particular, we expect the absence of `module-info.java` files to avoid severa
 ==== Changed
 
 * Switched the default `log4j-changelog` configuration from Markdown (`.release-notes.md.ftl` and `.index.md.ftl`) to AsciiDoc (`.release-notes.adoc.ftl` and `.index.adoc.ftl`)
+* Update `actions/checkout` to version `4.1.0`
 * Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.7.3.6`
 * Update `com.google.errorprone:error_prone_core` to version `2.22.0`
 * Update `org.osgi:osgi.annotation` to version `8.1.0`
