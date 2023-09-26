@@ -150,6 +150,11 @@ Once the artifacts are visible in https://central.sonatype.dev/[central.sonatype
 . Use the `rel/7.8.0` tag
 . Copy release notes from the generated emails
 
+[#publish-website]
+=== Publish the website
+. Cherry-pick the `asf-staging` branch commit of https://github.com/apache/logging-site[the `logging-site` repository] to `asf-site` branch and push your changes
+. Verify the result in https://logging.apache.org/{project-id}
+
 [#announce-release]
 === Announce the release
 
