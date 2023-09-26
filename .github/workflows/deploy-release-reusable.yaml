@@ -239,7 +239,7 @@ jobs:
 
           # Copy the site
           if [ "$SITE_ENABLED" == "true" ]; then
-            cp "$GITHUB_WORKSPACE/target/site.zip" > "${DIST_FILENAME_VERSIONED_PREFIX}-site.zip"
+            cp "$GITHUB_WORKSPACE/target/site.zip" "${DIST_FILENAME_VERSIONED_PREFIX}-site.zip"
           fi
 
           # Copy the distribution
