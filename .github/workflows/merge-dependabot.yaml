@@ -19,8 +19,6 @@ name: merge-dependabot
 
 on:
   pull_request_target:
-    branches:
-      - dependabot/**
     paths-ignore:
       - "**.adoc"
       - "**.md"
@@ -31,6 +29,7 @@ permissions: read-all
 jobs:
 
   build:
+    if: github.event_name != 'pull_request' || github.actor == 'dependabot[bot]'
     uses: apache/logging-parent/.github/workflows/build-reusable.yaml@main
 
   merge-dependabot:
