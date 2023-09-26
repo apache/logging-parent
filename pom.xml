@@ -95,8 +95,8 @@
     <!-- JPMS and OSGi options -->
     <!-- Overrides some options in multi-release JARs -->
     <bnd-multi-release>false</bnd-multi-release>
-    <!-- Module name if different from the OSGi symbolic bundle name -->
-    <bnd-module-name>$[symbolic-name]</bnd-module-name>
+    <!-- Module name: defaults to the OSGi symbolic bundle name without hyphens-->
+    <bnd-module-name>$[subst;$[Bundle-SymbolicName];-;.]</bnd-module-name>
     <!--
       ~ Allows to change imported package attributes (e.g. add 'resolution:=optional')
       ~ See: https://bnd.bndtools.org/heads/import_package.html
@@ -157,7 +157,7 @@
 
       <dependency>
         <groupId>org.osgi</groupId>
-        <artifactId>osgi.annotation.bundle</artifactId>
+        <artifactId>org.osgi.annotation.bundle</artifactId>
         <version>${osgi.annotation.bundle.version}</version>
       </dependency>
 
@@ -575,9 +575,8 @@
                 -removeheaders: Bundle-DocURL,Bundle-SCM,Bundle-Developers
 
                 # Create OSGi and JPMS module names based on the `project.artifactId`
-                # This mostly agrees with `maven-bundle-plugin`, except it never uses hyphens.
-                symbolic-name: org.apache.logging.$[subst;$[project.artifactId];-;.]
-                Bundle-SymbolicName: $[symbolic-name]
+                # This agrees with `maven-bundle-plugin`.
+                Bundle-SymbolicName: org.apache.logging.$[subst;$[project.artifactId];log4j-]
                 -jpms-module-info: $[bnd-module-name];access=0
 
                 # Prevents an execution error in multi-release jars:
