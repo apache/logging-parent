@@ -20,7 +20,7 @@
 github:
 
   description: Parent project internally used in Maven-based projects of the Apache Logging Services
-  homepage: https://logging.apache.org/logging-parent
+  homepage: https://logging.apache.org/logging-parent/latest
   labels:
     - apache
     - java

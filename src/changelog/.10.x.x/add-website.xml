@@ -4,5 +4,5 @@
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.1.xsd"
        type="added">
   <author id="github:vy"/>
-  <description format="asciidoc">Started publishing https://logging.apache.org/logging-parent[the project website]</description>
+  <description format="asciidoc">Started publishing https://logging.apache.org/logging-parent/latest[the project website]</description>
 </entry>

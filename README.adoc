@@ -19,4 +19,4 @@ https://github.com/apache/logging-parent/actions[image:https://github.com/apache
 https://search.maven.org/search?q=g:org.apache.logging%20a:logging-parent[image:https://img.shields.io/maven-central/v/org.apache.logging/logging-parent.svg[Maven Central]]
 https://www.apache.org/licenses/LICENSE-2.0.txt[image:https://img.shields.io/github/license/apache/logging-parent.svg[License]]
 
-Parent project **internally** used in Maven-based projects of https://logging.apache.org[the Apache Logging Services] projects. See https://logging.apache.org/logging-parent[the project website] for further information.
+Parent project **internally** used in Maven-based projects of https://logging.apache.org[the Apache Logging Services] projects. See https://logging.apache.org/logging-parent/latest[the project website] for further information.
