@@ -152,7 +152,7 @@ jobs:
             site
           cd target/site
           find . -print0 | xargs -0 touch -d 1970-01-01T00:00:00Z
-          find . -print0 | sort --zero-terminated | xargs -0 zip -roX ../site.zip
+          find . -print0 | sort --zero-terminated | xargs -0 zip -oX ../site.zip
 
       - name: Upload to Nexus
         shell: bash
