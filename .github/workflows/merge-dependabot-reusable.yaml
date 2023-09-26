@@ -1,0 +1,136 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to you under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: merge-dependabot-reusable
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: The Java compiler version
+        default: 17
+        type: string
+    secrets:
+      GPG_SECRET_KEY:
+        description: GPG secret key for signing commits
+        required: true
+
+jobs:
+
+  merge-dependabot:
+
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.actor == 'dependabot[bot]'
+
+    steps:
+
+      - name: Fetch metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@c9c4182bf1b97f5224aee3906fd373f6b61b4526   # 1.6.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Find dependency attributes
+        shell: bash
+        run: |
+          DEPENDENCY_NAME=$(echo "$DEPENDENCY_NAMES" | tr "," '\n' | head -n 1)
+          cat >> $GITHUB_ENV << EOF
+          DEPENDENCY_NAME=$DEPENDENCY_NAME
+          DEPENDENCY_VERSION=$DEPENDENCY_VERSION
+          EOF
+        env:
+          DEPENDENCY_NAMES: ${{ steps.dependabot-metadata.outputs.dependency-names }}
+          DEPENDENCY_VERSION: ${{ steps.dependabot-metadata.outputs.new-version }}
+
+      - name: Download patch
+        shell: bash
+        run: wget "$PATCH_URL" -O /tmp/patch
+        env:
+          PATCH_URL: ${{ github.event.pull_request.patch_url }}
+
+      - name: Checkout repository
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744   # 3.6.0
+        with:
+          ref: ${{ steps.dependabot-metadata.outputs.target-branch }}
+
+      - name: Apply patch
+        shell: bash
+        run: git apply /tmp/patch
+
+      - name: Set up Java & GPG
+        uses: actions/setup-java@cd89f46ac9d01407894225f350157564c9c7cee2   # 3.12.0
+        with:
+          distribution: temurin
+          java-version: ${{ inputs.java-version }}
+          java-package: jdk
+          architecture: x64
+          cache: maven
+          server-id: apache.releases.https
+          server-username: NEXUS_USERNAME
+          server-password: NEXUS_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
+
+      - name: Find the release version major
+        shell: bash
+        run: |
+          RELEASE_VERSION_MAJOR=$(./mvnw \
+            --non-recursive --quiet --batch-mode \
+            -DforceStdout=true \
+            -Dexpression=parsedVersion.majorVersion \
+            build-helper:parse-version help:evaluate \
+            | tail -n 1)
+          echo "RELEASE_VERSION_MAJOR=$RELEASE_VERSION_MAJOR" >> $GITHUB_ENV
+
+      - name: Create changelog entry
+        shell: bash
+        run: |
+          RELEASE_CHANGELOG_FILEPATH="src/changelog/.${RELEASE_VERSION_MAJOR}.x.x"
+          SAFE_DEPENDENCY_NAME=$(echo "$DEPENDENCY_NAME" | tr "[:upper:]" "[:lower:]" | sed -r 's/[^a-z0-9]/_/g' | sed -r 's/_+/_/g')
+          CHANGELOG_ENTRY_FILEPATH="$RELEASE_CHANGELOG_FILEPATH/update_${SAFE_DEPENDENCY_NAME}.xml"
+          mkdir -p $(dirname "$CHANGELOG_ENTRY_FILEPATH")
+          cat > "$CHANGELOG_ENTRY_FILEPATH" << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns="http://logging.apache.org/log4j/changelog"
+                 xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.1.xsd"
+                 type="changed">
+          <author id="github:dependabot"/>
+            <description format="asciidoc">Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\`</description>
+          </entry>
+          EOF
+
+      - name: Generate sources
+        shell: bash
+        run: |
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            process-sources
+
+      - name: Add & commit changes
+        shell: bash
+        run: |
+          git add .
+          git config user.name "ASF Logging Services RM"
+          git config user.email private@logging.apache.org
+          git commit -S -a -m "Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\`"
+          git push origin
+
+      - name: Close the PR
+        run: gh pr close "$PR_URL" -c "Changes are applied by CI"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
