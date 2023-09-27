@@ -33,6 +33,7 @@ fail_for_invalid_args() {
 
 # Constants
 PROJECT_NAME="Apache Logging Parent"
+PROJECT_SITE="https://logging.apache.org/logging-parent"
 PROJECT_REPO="https://github.com/apache/logging-parent"
 PROJECT_DIST_DIR="https://dist.apache.org/repos/dist/dev/logging/logging-parent"
 PROJECT_VERSION="$2"
@@ -85,13 +86,12 @@ announce)
 To: log4j-user@logging.apache.org, dev@logging.apache.org
 Title: [ANNOUNCE] $PROJECT_NAME $PROJECT_VERSION released
 
-${PROJECT_NAME}[1] team is pleased to announce the $PROJECT_VERSION
+${PROJECT_NAME} team is pleased to announce the $PROJECT_VERSION
 release. This project contains the parent POM for other Maven-based
-Apache Logging Services projects[2]. For further information (support,
+Apache Logging Services projects. For further information (support,
 download, etc.) see the project website[1].
 
-[1] $PROJECT_REPO
-[2] https://logging.apache.org
+[1] $PROJECT_SITE
 
 # Release Notes
 EOF
