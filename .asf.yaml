@@ -41,4 +41,4 @@ github:
 staging:
   profile: ~
   whoami: asf-staging
-  subdir: logging-parent
+  subdir: content/logging-parent
