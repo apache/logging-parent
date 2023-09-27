@@ -36,6 +36,6 @@
 [#release-notes]
 == Release Notes
 
-<#list releases as release>
+<#list releases as release><#if release.changelogEntryCount gt 0>
 include::release-notes/_${release.version}.adoc[]
-</#list>
+</#if></#list>
