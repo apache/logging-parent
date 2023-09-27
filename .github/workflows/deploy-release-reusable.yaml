@@ -151,6 +151,7 @@ jobs:
             --non-recursive \
             site
           cd target/site
+          find . -empty -type -d -delete
           find . -print0 | xargs -0 touch -d 1970-01-01T00:00:00Z
           find . -print0 | sort --zero-terminated | xargs -0 zip -oX ../site.zip
 
