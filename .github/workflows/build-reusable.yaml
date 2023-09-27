@@ -52,6 +52,7 @@ jobs:
       # We could have used `verify`, but `clean install` is required while generating the build reproducibility report, which is performed in the next step.
       # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
       - name: Build
+        id: build
         shell: bash
         run: |
           ./mvnw \
@@ -60,12 +61,34 @@ jobs:
             -DinstallAtEnd=true \
             clean install
 
+      # We upload tests results if the build fails.
+      - name: Upload test results
+        if: failure() && steps.build.conclusion == 'failure'
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32   # 3.1.3
+        with:
+          name: surefire-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
+          path: |
+            **/target/surefire-reports
+            **/target/logs
+
       # `clean verify artifact:compare` is required to generate the build reproducibility report.
       # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
       - name: Verify build reproducibility
+        id: reproducibility
         shell: bash
         run: |
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             -DskipTests=true \
             clean verify artifact:compare
+
+      # We reproducibility results if the build fails.
+      - name: Upload reproducibility results
+        if: failure() && steps.reproducibility.conclusion == 'failure'
+        uses: actions/upload-artifact@a8a3f3ad30e3422c9c7b888a15615d19a852ae32   # 3.1.3
+        with:
+          name: reproducibility-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
+          path: |
+            **/target/*.buildcompare
+            **/target/*.jar
+            **/target/reference/*.jar

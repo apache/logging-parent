@@ -38,12 +38,6 @@
 
 <#if release.date?has_content>Release date:: ${release.date}</#if>
 
-This minor release focuses on shipping AsciiDoc-based website generation convenience targeting the `src/site` folder.
-As a part of this effort, `logging-parent` started publishing https://logging.apache.org/logging-parent/latest[its own website] and `log4j-changelog` support is switched from Markdown to AsciiDoc.
-
-The introduced https://github.com/bndtools/bnd/blob/master/maven-plugins/bnd-maven-plugin[`bnd-maven-plugin`] default auto-generates both OSGi and JPMS descriptors.
-Users only need to annotate packages that are to be exported with `org.osgi.annotation.bundle.Export`, plugin will do the rest of the magic.
-Hence, no need for custom `.bnd` and/or `module-info.java` files anymore.
-In particular, we expect the absence of `module-info.java` files to avoid several IDE and testing related headaches.
+This minor release contains several small improvements.
 
 <#include "../.changelog.adoc.ftl">
