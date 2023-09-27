@@ -23,9 +23,9 @@ include::_constants.adoc[]
 
 {project-name} is the parent project **internally** used in Maven-based projects of https://logging.apache.org[the Apache Logging Services].
 
-include::features.adoc[]
+include::_features.adoc[]
 
-include::usage.adoc[]
+include::_usage.adoc[]
 
 [#development]
 == Development
@@ -72,9 +72,9 @@ See https://logging.apache.org/log4j/2.x/support.html[the Log4j support policy] 
 If you have encountered an unlisted security vulnerability or other unexpected behaviour that has security impact, please report them privately to mailto:security@logging.apache.org[the Log4j security mailing list].
 See https://logging.apache.org/log4j/2.x/security.html[the Log4j Security page] for further details.
 
-include::release-notes.adoc[]
+include::_release-notes.adoc[]
 
-include::release-instructions.adoc[]
+include::_release-instructions.adoc[]
 
 [#license]
 == License
