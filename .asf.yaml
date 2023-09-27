@@ -37,8 +37,3 @@ github:
       required_signatures: true
     asf-staging:
       required_signatures: true
-
-staging:
-  profile: ~
-  whoami: asf-staging
-  subdir: content/logging-parent
