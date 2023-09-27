@@ -52,7 +52,7 @@ In particular, we expect the absence of `module-info.java` files to avoid severa
 * Added `asciidoc` and `constants-tmpl-adoc` profiles to generate AsciiDoc-based websites from `src/site`
 * Added support to auto-generate changelog entries for `dependabot` updates
 * Added `bnd-maven-plugin` defaults to auto-generate both OSGi and JPMS descriptors
-* Started publishing https://logging.apache.org/logging-parent/latest[the project website]
+* Started publishing https://logging.apache.org/logging-parent[the project website]
 
 ==== Changed
 
