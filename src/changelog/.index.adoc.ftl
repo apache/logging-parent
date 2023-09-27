@@ -37,5 +37,5 @@
 == Release Notes
 
 <#list releases as release><#if release.changelogEntryCount gt 0>
-include::release-notes/_${release.version}.adoc[]
+include::_release-notes/_${release.version}.adoc[]
 </#if></#list>

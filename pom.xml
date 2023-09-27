@@ -678,13 +678,13 @@
                   <indexTemplates>
                     <template>
                       <source>.index.adoc.ftl</source>
-                      <target>release-notes.adoc</target>
+                      <target>_release-notes.adoc</target>
                     </template>
                   </indexTemplates>
                   <changelogTemplates>
                     <template>
                       <source>.release-notes.adoc.ftl</source>
-                      <target>release-notes/_%v.adoc</target>
+                      <target>_release-notes/_%v.adoc</target>
                     </template>
                   </changelogTemplates>
                 </configuration>
@@ -813,7 +813,7 @@
 
                 // Find auxiliary files that will go into the binary distribution
                 SortedMap pathByFile = new TreeMap();
-                pathByFile.put("RELEASE-NOTES.adoc", new File("src/site/release-notes/${project.version}.adoc").toPath());
+                pathByFile.put("RELEASE-NOTES.adoc", new File("src/site/_release-notes/_${project.version}.adoc").toPath());
                 pathByFile.put("README.adoc", new File("README.adoc").toPath());
                 pathByFile.put("NOTICE.txt", new File("NOTICE.txt").toPath());
                 pathByFile.put("LICENSE.txt", new File("LICENSE.txt").toPath());
