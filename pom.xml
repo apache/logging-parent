@@ -38,7 +38,9 @@
   <name>Apache Logging Parent</name>
   <!-- `description` should ideally match the entry in `.asf.yaml` -->
   <description>Parent project internally used in Maven-based projects of the Apache Logging Services</description>
-  <url>https://logging.apache.org/</url>
+
+  <url>https://logging.apache.org/logging-parent</url>
+
   <inceptionYear>1999</inceptionYear>
 
   <mailingLists>
