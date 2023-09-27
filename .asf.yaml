@@ -35,3 +35,13 @@ github:
   protected_branches:
     main:
       required_signatures: true
+
+staging:
+  profile: ~
+  whoami: asf-staging
+  subdir: parent
+
+publish:
+  profile: ~
+  whoami: asf-site
+  subdir: parent
