@@ -36,7 +36,7 @@
 [#release-notes-10-1-0]
 === 10.1.0
 
-Release date:: 2023-09-26
+Release date:: 2023-09-27
 
 This minor release focuses on shipping AsciiDoc-based website generation convenience targeting the `src/site` folder.
 As a part of this effort, `logging-parent` started publishing https://logging.apache.org/logging-parent/latest[its own website] and `log4j-changelog` support is switched from Markdown to AsciiDoc.
