@@ -651,7 +651,7 @@
 
                 # Create OSGi and JPMS module names based on the `project.artifactId`
                 # This agrees with `maven-bundle-plugin`.
-                Bundle-SymbolicName: org.apache.logging.$[subst;$[project.artifactId];log4j-]
+                Bundle-SymbolicName: org.apache.logging.log4j.$[subst;$[project.artifactId];log4j-]
                 -jpms-module-info: $[bnd-module-name];access=0
 
                 # Prevents an execution error in multi-release jars:
