@@ -119,7 +119,10 @@ jobs:
         run: |
           ./mvnw \
             --non-recursive --batch-mode --errors --no-transfer-progress \
-            -P changelog-release process-sources
+            -P changelog-release
+          ./mvnw \
+            --non-recursive --batch-mode --errors --no-transfer-progress \
+            process-sources
           git add src
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "ASF Logging Services RM"
