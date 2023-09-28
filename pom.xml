@@ -649,9 +649,9 @@
                 # `Bundle-Developers` is removed, since it is nothing but noise and occupies quite some real estate.
                 -removeheaders: Bundle-DocURL,Bundle-SCM,Bundle-Developers
 
-                # Create OSGi and JPMS module names based on the `project.artifactId`
+                # Create OSGi and JPMS module names based on the `groupId` and `artifactId`.
                 # This agrees with `maven-bundle-plugin`.
-                Bundle-SymbolicName: org.apache.logging.log4j.$[subst;$[project.artifactId];log4j-]
+                Bundle-SymbolicName: $[project.groupId].$[subst;$[subst;$[project.artifactId];log4j-];[^A-Za-z0-9];_]
                 -jpms-module-info: $[bnd-module-name];access=0
 
                 # Prevents an execution error in multi-release jars:
@@ -661,11 +661,13 @@
                 -jpms-module-info-options: org.osgi.core;static=true;transitive=false,\
                   org.osgi.framework;static=true;transitive=false,\
                   $[bnd-extra-module-options]
+
                 # Import all packages by default:
                 Import-Package: $[bnd-extra-package-options],*
 
-                # Allow each project to override the Multi-Release header:
+                # Allow each project to override the `Multi-Release` header:
                 Multi-Release: $[bnd-multi-release]
+
                 # Add manifests and modules for each multi-release version:
                 -jpms-multi-release: $[bnd-multi-release]
               ]]></bnd>
