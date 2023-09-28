@@ -5,5 +5,5 @@
        type="added">
   <issue id="28" link="https://github.com/apache/logging-parent/issues/28"/>
   <author id="github:ppkarwasz"/>
-  <description format="asciidoc">Added report uploading in case of test or reproducibility failures.</description>
+  <description format="asciidoc">Added CI report uploading in case of test or reproducibility failures</description>
 </entry>

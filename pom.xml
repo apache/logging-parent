@@ -38,8 +38,68 @@
   <name>Apache Logging Parent</name>
   <!-- `description` should ideally match the entry in `.asf.yaml` -->
   <description>Parent project internally used in Maven-based projects of the Apache Logging Services</description>
-  <url>https://logging.apache.org/</url>
+
+  <url>https://logging.apache.org/logging-parent</url>
+
   <inceptionYear>1999</inceptionYear>
+
+  <developers>
+
+    <developer>
+      <id>ggregory</id>
+      <name>Gary Gregory</name>
+      <email>ggregory@apache.org</email>
+      <url>https://www.garygregory.com</url>
+      <organization>The Apache Software Foundation</organization>
+      <organizationUrl>https://www.apache.org/</organizationUrl>
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+      <timezone>America/New_York</timezone>
+    </developer>
+
+    <developer>
+      <id>grobmeier</id>
+      <name>Christian Grobmeier</name>
+      <email>grobmeier@apache.org</email>
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+      <timezone>Europe/Berlin</timezone>
+    </developer>
+
+    <developer>
+      <id>mattsicker</id>
+      <name>Matt Sicker</name>
+      <email>mattsicker@apache.org</email>
+      <organization>Apple</organization>
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+      <timezone>America/Chicago</timezone>
+    </developer>
+
+    <developer>
+      <id>pkarwasz</id>
+      <name>Piotr P. Karwasz</name>
+      <email>pkarwasz@apache.org</email>
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+      <timezone>Europe/Warsaw</timezone>
+    </developer>
+
+    <developer>
+      <id>vy</id>
+      <name>Volkan Yazıcı</name>
+      <email>vy@apache.org</email>
+      <roles>
+        <role>PMC Chair</role>
+      </roles>
+      <timezone>Europe/Amsterdam</timezone>
+    </developer>
+
+  </developers>
 
   <mailingLists>
 
@@ -81,7 +141,7 @@
   <properties>
 
     <!-- project version -->
-    <revision>10.1.0-SNAPSHOT</revision>
+    <revision>10.1.0</revision>
 
     <!-- target Java 8 -->
     <maven.compiler.source>8</maven.compiler.source>
@@ -120,6 +180,7 @@
     <spotbugs-annotations.version>4.7.3</spotbugs-annotations.version>
 
     <!-- plugin versions -->
+    <asciidoctor-maven-plugin.version>2.2.4</asciidoctor-maven-plugin.version>
     <beanshell-maven-plugin.version>1.4</beanshell-maven-plugin.version>
     <bnd-maven-plugin.version>6.4.0</bnd-maven-plugin.version>
     <build-helper-maven-plugin.version>3.4.0</build-helper-maven-plugin.version>
@@ -169,6 +230,12 @@
 
     <pluginManagement>
       <plugins>
+
+        <plugin>
+          <groupId>org.asciidoctor</groupId>
+          <artifactId>asciidoctor-maven-plugin</artifactId>
+          <version>${asciidoctor-maven-plugin.version}</version>
+        </plugin>
 
         <!-- `artifact:compare` is used in `.github/workflows/build-reusable.yaml` -->
         <plugin>
@@ -294,6 +361,7 @@
           <release>${maven.compiler.release}</release>
           <target>${maven.compiler.target}</target>
           <encoding>${project.build.sourceEncoding}</encoding>
+          <parameters>true</parameters>
           <compilerArgs>
             <arg>-Xlint:all</arg>
             <arg>-XDcompilePolicy=simple</arg>
@@ -581,21 +649,25 @@
                 # `Bundle-Developers` is removed, since it is nothing but noise and occupies quite some real estate.
                 -removeheaders: Bundle-DocURL,Bundle-SCM,Bundle-Developers
 
-                # Create OSGi and JPMS module names based on the `project.artifactId`
+                # Create OSGi and JPMS module names based on the `groupId` and `artifactId`.
                 # This agrees with `maven-bundle-plugin`.
-                Bundle-SymbolicName: org.apache.logging.$[subst;$[project.artifactId];log4j-]
+                Bundle-SymbolicName: $[project.groupId].$[subst;$[subst;$[project.artifactId];log4j-];[^A-Za-z0-9];_]
                 -jpms-module-info: $[bnd-module-name];access=0
 
                 # Prevents an execution error in multi-release jars:
                 -fixupmessages: "Classes found in the wrong directory";restrict:=error;is:=warning
 
-                # OSGI modules do not make sens in JPMS
-                -jpms-module-info-options: org.osgi.core;static=true,org.osgi.framework;static=true,$[bnd-extra-module-options]
+                # OSGI modules do not make sense in JPMS
+                -jpms-module-info-options: org.osgi.core;static=true;transitive=false,\
+                  org.osgi.framework;static=true;transitive=false,\
+                  $[bnd-extra-module-options]
+
                 # Import all packages by default:
                 Import-Package: $[bnd-extra-package-options],*
 
-                # Allow each project to override the Multi-Release header:
+                # Allow each project to override the `Multi-Release` header:
                 Multi-Release: $[bnd-multi-release]
+
                 # Add manifests and modules for each multi-release version:
                 -jpms-multi-release: $[bnd-multi-release]
               ]]></bnd>
@@ -678,13 +750,13 @@
                   <indexTemplates>
                     <template>
                       <source>.index.adoc.ftl</source>
-                      <target>release-notes.adoc</target>
+                      <target>_release-notes.adoc</target>
                     </template>
                   </indexTemplates>
                   <changelogTemplates>
                     <template>
                       <source>.release-notes.adoc.ftl</source>
-                      <target>release-notes/_%v.adoc</target>
+                      <target>_release-notes/_%v.adoc</target>
                     </template>
                   </changelogTemplates>
                 </configuration>
@@ -813,7 +885,7 @@
 
                 // Find auxiliary files that will go into the binary distribution
                 SortedMap pathByFile = new TreeMap();
-                pathByFile.put("RELEASE-NOTES.adoc", new File("src/site/release-notes/${project.version}.adoc").toPath());
+                pathByFile.put("RELEASE-NOTES.adoc", new File("src/site/_release-notes/_${project.version}.adoc").toPath());
                 pathByFile.put("README.adoc", new File("README.adoc").toPath());
                 pathByFile.put("NOTICE.txt", new File("NOTICE.txt").toPath());
                 pathByFile.put("LICENSE.txt", new File("LICENSE.txt").toPath());
@@ -1078,7 +1150,6 @@
           <plugin>
             <groupId>org.asciidoctor</groupId>
             <artifactId>asciidoctor-maven-plugin</artifactId>
-            <version>${asciidoctor-maven-plugin.version}</version>
             <executions>
               <execution>
                 <id>export-asciidoc-to-html</id>
