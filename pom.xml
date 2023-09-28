@@ -354,6 +354,7 @@
           <release>${maven.compiler.release}</release>
           <target>${maven.compiler.target}</target>
           <encoding>${project.build.sourceEncoding}</encoding>
+          <parameters>true</parameters>
           <compilerArgs>
             <arg>-Xlint:all</arg>
             <arg>-XDcompilePolicy=simple</arg>
