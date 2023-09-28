@@ -119,26 +119,12 @@ jobs:
         run: |
           ./mvnw \
             --non-recursive --batch-mode --errors --no-transfer-progress \
-            -P changelog-release
-          git add src/changelog
+            -P changelog-release process-sources
+          git add src
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "ASF Logging Services RM"
             git config user.email private@logging.apache.org
-            git commit -S src/changelog -m "Release changelog for version \`$PROJECT_VERSION\`"
-            git push origin
-          fi
-
-      - name: Commit generated sources
-        shell: bash
-        run: |
-          ./mvnw \
-            --non-recursive --batch-mode --errors --no-transfer-progress \
-            process-sources
-          git add src/site
-          if [ -n "$(git status --porcelain)" ]; then
-            git config user.name "ASF Logging Services RM"
-            git config user.email private@logging.apache.org
-            git commit -S src/site -m "Add auto-generated sources"
+            git commit -S src -m "Release changelog for version \`$PROJECT_VERSION\`"
             git push origin
           fi
 
