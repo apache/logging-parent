@@ -657,8 +657,10 @@
                 # Prevents an execution error in multi-release jars:
                 -fixupmessages: "Classes found in the wrong directory";restrict:=error;is:=warning
 
-                # OSGI modules do not make sens in JPMS
-                -jpms-module-info-options: org.osgi.core;static=true,org.osgi.framework;static=true,$[bnd-extra-module-options]
+                # OSGI modules do not make sense in JPMS
+                -jpms-module-info-options: org.osgi.core;static=true;transitive=false,\
+                  org.osgi.framework;static=true;transitive=false,\
+                  $[bnd-extra-module-options]
                 # Import all packages by default:
                 Import-Package: $[bnd-extra-package-options],*
 
