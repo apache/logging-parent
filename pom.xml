@@ -658,9 +658,12 @@
                 # Prevents an execution error in multi-release jars:
                 -fixupmessages: "Classes found in the wrong directory";restrict:=error;is:=warning
 
-                # OSGI modules do not make sense in JPMS
+                # 1. OSGI modules do not make sense in JPMS
+                # 2. BND has a problem detecting the name of multi-release JPMS modules
                 -jpms-module-info-options: org.osgi.core;static=true;transitive=false,\
                   org.osgi.framework;static=true;transitive=false,\
+                  org.apache.logging.log4j;substitute="log4j-api",\
+                  org.apache.logging.log4j.core;substitute="log4j-core",\
                   $[bnd-extra-module-options]
 
                 # Import all packages by default:
