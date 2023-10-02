@@ -97,11 +97,12 @@ jobs:
       - name: Create changelog entry
         shell: bash
         run: |
-          RELEASE_CHANGELOG_FILEPATH="src/changelog/.${RELEASE_VERSION_MAJOR}.x.x"
-          SAFE_DEPENDENCY_NAME=$(echo "$DEPENDENCY_NAME" | tr "[:upper:]" "[:lower:]" | sed -r 's/[^a-z0-9]/_/g' | sed -r 's/_+/_/g')
-          CHANGELOG_ENTRY_FILEPATH="$RELEASE_CHANGELOG_FILEPATH/update_${SAFE_DEPENDENCY_NAME}.xml"
-          mkdir -p $(dirname "$CHANGELOG_ENTRY_FILEPATH")
-          cat > "$CHANGELOG_ENTRY_FILEPATH" << EOF
+          if [ -d "src/changelog" ]; then
+            RELEASE_CHANGELOG_FILEPATH="src/changelog/.${RELEASE_VERSION_MAJOR}.x.x"
+            SAFE_DEPENDENCY_NAME=$(echo "$DEPENDENCY_NAME" | tr "[:upper:]" "[:lower:]" | sed -r 's/[^a-z0-9]/_/g' | sed -r 's/_+/_/g')
+            CHANGELOG_ENTRY_FILEPATH="$RELEASE_CHANGELOG_FILEPATH/update_${SAFE_DEPENDENCY_NAME}.xml"
+            mkdir -p $(dirname "$CHANGELOG_ENTRY_FILEPATH")
+            cat > "$CHANGELOG_ENTRY_FILEPATH" << EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xmlns="http://logging.apache.org/log4j/changelog"
@@ -111,6 +112,7 @@ jobs:
             <description format="asciidoc">Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\`</description>
           </entry>
           EOF
+          fi
 
       - name: Generate sources
         shell: bash
