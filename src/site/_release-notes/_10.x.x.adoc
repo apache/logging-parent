@@ -40,15 +40,3 @@
 
 This minor release contains several small improvements.
 
-
-==== Added
-
-* Used `project.build.outputTimestamp` to timestamp generated distribution files
-
-==== Changed
-
-* Update `com.diffplug.spotless:spotless-maven-plugin` to version `2.40.0`
-
-==== Fixed
-
-* Fixed checksum (i.e., `*.sha512`) file format
