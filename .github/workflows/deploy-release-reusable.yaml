@@ -135,13 +135,19 @@ jobs:
         if: inputs.site-enabled
         shell: bash
         run: |
+          export TIMESTAMP=$(./mvnw \
+            --non-recursive --quiet --batch-mode \
+            -DforceStdout=true \
+            -Dexpression=project.build.outputTimestamp \
+            help:evaluate \
+            | tail -n 1)
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             --non-recursive \
             site
           cd target/site
           find . -empty -type d -delete
-          find . -print0 | xargs -0 touch -d 1970-01-01T00:00:00Z
+          find . -print0 | xargs -0 touch -d "$TIMESTAMP"
           find . -print0 | sort --zero-terminated | xargs -0 zip -oX ../site.zip
 
       - name: Upload to Nexus

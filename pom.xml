@@ -842,6 +842,7 @@
                 import org.eclipse.jgit.lib.Repository;
                 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
+                long timestampMillis = java.time.Instant.parse("${project.build.outputTimestamp}").toEpochMilli();
                 zip(String zipFileName, Map pathByFile) {
                     OutputStream outputStream = new FileOutputStream(zipFileName);
                     ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
@@ -849,7 +850,7 @@
                         for (String file : pathByFile.keySet()) {
                             Path path = pathByFile.get(file);
                             ZipEntry zipEntry = new ZipEntry(file);
-                            zipEntry.setTime(0);
+                            zipEntry.setTime(timestampMillis);
                             zipOutputStream.putNextEntry(zipEntry);
                             zipOutputStream.write(Files.readAllBytes(path));
                             zipOutputStream.closeEntry();
