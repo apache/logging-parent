@@ -34,6 +34,7 @@ fail_for_invalid_args() {
 # Constants
 PROJECT_NAME="Apache Logging Parent"
 PROJECT_SITE="https://logging.apache.org/logging-parent"
+PROJECT_STAGING_SITE="${PROJECT_SITE/apache.org/staged.apache.org}"
 PROJECT_REPO="https://github.com/apache/logging-parent"
 PROJECT_DIST_DIR="https://dist.apache.org/repos/dist/dev/logging/logging-parent"
 PROJECT_VERSION="$2"
@@ -55,11 +56,12 @@ case $1 in
 vote)
     cat <<EOF
 To: dev@logging.apache.org
-Title: [VOTE] Release $PROJECT_NAME $PROJECT_VERSION
+Title: [VOTE][LAZY] Release $PROJECT_NAME $PROJECT_VERSION
 
-This is a vote to release the $PROJECT_NAME $PROJECT_VERSION.
+This is a lazy-vote to release the $PROJECT_NAME $PROJECT_VERSION.
 
-Source repository: $PROJECT_REPO
+Website: $PROJECT_STAGING_SITE
+GitHub: $PROJECT_REPO
 Commit: $COMMIT_ID
 Distribution: $PROJECT_DIST_DIR
 Nexus: https://repository.apache.org/content/repositories/orgapachelogging-1113
@@ -70,11 +72,10 @@ Please download, test, and cast your votes on this mailing list.
 [ ] +1, release the artifacts
 [ ] -1, don't release, because...
 
-This vote is open for 72 hours and will pass unless getting a
+This vote is open for 24 hours and will pass unless getting a
 net negative vote count. All votes are welcome and we encourage
 everyone to test the release, but only the Logging Services PMC
-votes are officially counted. At least 3 +1 votes and more
-positive than negative votes are required.
+votes are officially counted.
 
 === Release Notes
 EOF
