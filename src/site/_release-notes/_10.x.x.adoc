@@ -44,3 +44,4 @@ This minor release contains several small improvements.
 ==== Fixed
 
 * Keep parent in `flatten-bom` configuration (https://github.com/apache/logging-parent/issues/37[37])
+* Used specific execution IDs in ``defaultGoal``s to avoid running unwanted plugins

@@ -704,12 +704,15 @@
 
     <!-- `changelog-validate` profile to validate changelog XMLs. -->
     <profile>
+
       <id>changelog-validate</id>
+
       <activation>
         <file>
           <exists>src/changelog</exists>
         </file>
       </activation>
+
       <build>
         <plugins>
           <plugin>
@@ -738,6 +741,7 @@
           </plugin>
         </plugins>
       </build>
+
     </profile>
 
     <!-- `changelog-export` profile to export changelogs -->
@@ -792,20 +796,31 @@
     <!-- `changelog-release` profile to move `src/changelog/.?.x.x` contents to their associated release directory.
          It is manually enabled by `.github/workflows/deploy-release-reusable.yaml` to generate release notes. -->
     <profile>
+
       <id>changelog-release</id>
+
       <build>
-        <defaultGoal>log4j-changelog:release generate-sources</defaultGoal>
+
+        <defaultGoal>log4j-changelog:release@release-changelog generate-sources</defaultGoal>
+
         <plugins>
           <plugin>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-changelog-maven-plugin</artifactId>
             <version>${log4j-changelog-maven-plugin.version}</version>
-            <configuration>
-              <releaseVersion>${project.version}</releaseVersion>
-            </configuration>
+            <executions>
+              <execution>
+                <id>release-changelog</id>
+                <configuration>
+                  <releaseVersion>${project.version}</releaseVersion>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
+
       </build>
+
     </profile>
 
     <!-- `distribution` profile creating the distribution containing:
@@ -822,7 +837,7 @@
 
       <build>
 
-        <defaultGoal>enforcer:enforce bsh:run</defaultGoal>
+        <defaultGoal>enforcer:enforce@enforce-distribution-arguments bsh:run@create-distribution</defaultGoal>
 
         <plugins>
 
@@ -831,132 +846,148 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
-            <configuration>
-              <rules>
-                <requireProperty>
-                  <property>attachmentFilepathPattern</property>
-                  <message>You must set an `attachmentFilepathPattern` property for the regex pattern matched against the full filepath for determining attachments to be included in the distribution!</message>
-                </requireProperty>
-                <requireProperty>
-                  <property>attachmentCount</property>
-                  <message>You must set an `attachmentCount` property for the number of attachments expected to be found!</message>
-                </requireProperty>
-              </rules>
-              <fail>true</fail>
-            </configuration>
+            <executions>
+              <execution>
+                <id>enforce-distribution-arguments</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireProperty>
+                      <property>attachmentFilepathPattern</property>
+                      <message>You must set an `attachmentFilepathPattern` property for the regex pattern matched against the full filepath for determining attachments to be included in the distribution!</message>
+                    </requireProperty>
+                    <requireProperty>
+                      <property>attachmentCount</property>
+                      <message>You must set an `attachmentCount` property for the number of attachments expected to be found!</message>
+                    </requireProperty>
+                  </rules>
+                  <fail>true</fail>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
 
           <!-- Create the distribution ZIP -->
           <plugin>
             <groupId>com.github.genthaler</groupId>
             <artifactId>beanshell-maven-plugin</artifactId>
-            <configuration>
-              <script><![CDATA[import java.io.*;
-                import java.nio.file.*;
-                import java.util.*;
-                import java.util.function.*;
-                import java.util.stream.*;
-                import java.util.zip.*;
+            <executions>
+              <execution>
+                <id>create-distribution</id>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <script><![CDATA[import java.io.*;
+                    import java.nio.file.*;
+                    import java.util.*;
+                    import java.util.function.*;
+                    import java.util.stream.*;
+                    import java.util.zip.*;
 
-                import org.eclipse.jgit.dircache.*;
-                import org.eclipse.jgit.lib.Repository;
-                import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+                    import org.eclipse.jgit.dircache.*;
+                    import org.eclipse.jgit.lib.Repository;
+                    import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
-                long timestampMillis = java.time.Instant.parse("${project.build.outputTimestamp}").toEpochMilli();
-                zip(String zipFileName, Map pathByFile) {
-                    OutputStream outputStream = new FileOutputStream(zipFileName);
-                    ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
-                    try {
-                        for (String file : pathByFile.keySet()) {
-                            Path path = pathByFile.get(file);
-                            ZipEntry zipEntry = new ZipEntry(file);
-                            zipEntry.setTime(timestampMillis);
-                            zipOutputStream.putNextEntry(zipEntry);
-                            zipOutputStream.write(Files.readAllBytes(path));
-                            zipOutputStream.closeEntry();
+                    long timestampMillis = java.time.Instant.parse("${project.build.outputTimestamp}").toEpochMilli();
+                    zip(String zipFileName, Map pathByFile) {
+                        OutputStream outputStream = new FileOutputStream(zipFileName);
+                        ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
+                        try {
+                            for (String file : pathByFile.keySet()) {
+                                Path path = pathByFile.get(file);
+                                ZipEntry zipEntry = new ZipEntry(file);
+                                zipEntry.setTime(timestampMillis);
+                                zipOutputStream.putNextEntry(zipEntry);
+                                zipOutputStream.write(Files.readAllBytes(path));
+                                zipOutputStream.closeEntry();
+                            }
+                        } catch (Exception error) {
+                            // Supplement diagnostics
+                            error.printStackTrace(System.err);
+                            throw error;
+                        } finally {
+                            zipOutputStream.close();
                         }
+                    }
+
+                    // Find Git-tracked files
+                    SortedMap pathByFile = new TreeMap();
+                    Repository repo = new FileRepositoryBuilder().readEnvironment().findGitDir().build();
+                    DirCache repoCache = repo.readDirCache();
+                    String repoDirectoryParent = repo.getDirectory().getParent();
+                    for (int repoCacheEntryIndex = 0; repoCacheEntryIndex < repoCache.getEntryCount(); repoCacheEntryIndex++) {
+                        DirCacheEntry repoCacheEntry = repoCache.getEntry(repoCacheEntryIndex);
+                        String repoCacheEntryPath = repoCacheEntry.getPathString();
+                        pathByFile.put(repoCacheEntryPath, new File(repoDirectoryParent, repoCacheEntryPath).toPath());
+                    }
+
+                    // Create the source distribution using Git-tracked files
+                    zip("target/src.zip", pathByFile);
+                    System.out.format("Generated the source distribution (`src.zip`) containing %d files.%n", new Object[]{pathByFile.size()});
+
+                    // Short-circuit if there is no binary distribution expected
+                    if (${attachmentCount} == 0) {
+                        return;
+                    }
+
+                    // Find auxiliary files that will go into the binary distribution
+                    SortedMap pathByFile = new TreeMap();
+                    pathByFile.put("RELEASE-NOTES.adoc", new File("src/site/_release-notes/_${project.version}.adoc").toPath());
+                    pathByFile.put("README.adoc", new File("README.adoc").toPath());
+                    pathByFile.put("NOTICE.txt", new File("NOTICE.txt").toPath());
+                    pathByFile.put("LICENSE.txt", new File("LICENSE.txt").toPath());
+
+                    // Find attachments that will go into the binary distribution
+                    String attachmentFilepathPattern = "${attachmentFilepathPattern}";
+                    System.out.format("Locating attachments matching the provided pattern: `%s`%n", new Object[] {attachmentFilepathPattern});
+                    SortedMap attachmentPathByFile = new TreeMap();
+                    Stream paths = Files.walk(new File(repoDirectoryParent).toPath(), 8, /* required for BSH method resolution: */ new FileVisitOption[0]);
+                    try {
+                        paths.forEach(new Consumer() {
+                            public void accept(Path path) {
+                                if (Files.isRegularFile(path, /* required for BSH method resolution: */ new LinkOption[0]) &&
+                                        path.toAbsolutePath().toString().matches(attachmentFilepathPattern)) {
+                                    attachmentPathByFile.put(path.getFileName().toString(), path);
+                                }
+                            }
+                        });
                     } catch (Exception error) {
                         // Supplement diagnostics
                         error.printStackTrace(System.err);
                         throw error;
                     } finally {
-                        zipOutputStream.close();
+                        paths.close();
                     }
-                }
 
-                // Find Git-tracked files
-                SortedMap pathByFile = new TreeMap();
-                Repository repo = new FileRepositoryBuilder().readEnvironment().findGitDir().build();
-                DirCache repoCache = repo.readDirCache();
-                String repoDirectoryParent = repo.getDirectory().getParent();
-                for (int repoCacheEntryIndex = 0; repoCacheEntryIndex < repoCache.getEntryCount(); repoCacheEntryIndex++) {
-                    DirCacheEntry repoCacheEntry = repoCache.getEntry(repoCacheEntryIndex);
-                    String repoCacheEntryPath = repoCacheEntry.getPathString();
-                    pathByFile.put(repoCacheEntryPath, new File(repoDirectoryParent, repoCacheEntryPath).toPath());
-                }
-
-                // Create the source distribution using Git-tracked files
-                zip("target/src.zip", pathByFile);
-                System.out.format("Generated the source distribution (`src.zip`) containing %d files.%n", new Object[]{pathByFile.size()});
-
-                // Short-circuit if there is no binary distribution expected
-                if (${attachmentCount} == 0) {
-                    return;
-                }
-
-                // Find auxiliary files that will go into the binary distribution
-                SortedMap pathByFile = new TreeMap();
-                pathByFile.put("RELEASE-NOTES.adoc", new File("src/site/_release-notes/_${project.version}.adoc").toPath());
-                pathByFile.put("README.adoc", new File("README.adoc").toPath());
-                pathByFile.put("NOTICE.txt", new File("NOTICE.txt").toPath());
-                pathByFile.put("LICENSE.txt", new File("LICENSE.txt").toPath());
-
-                // Find attachments that will go into the binary distribution
-                String attachmentFilepathPattern = "${attachmentFilepathPattern}";
-                System.out.format("Locating attachments matching the provided pattern: `%s`%n", new Object[] {attachmentFilepathPattern});
-                SortedMap attachmentPathByFile = new TreeMap();
-                Stream paths = Files.walk(new File(repoDirectoryParent).toPath(), 8, /* required for BSH method resolution: */ new FileVisitOption[0]);
-                try {
-                    paths.forEach(new Consumer() {
-                        public void accept(Path path) {
-                            if (Files.isRegularFile(path, /* required for BSH method resolution: */ new LinkOption[0]) &&
-                                    path.toAbsolutePath().toString().matches(attachmentFilepathPattern)) {
-                                attachmentPathByFile.put(path.getFileName().toString(), path);
+                    // Check if no attachments were found
+                    if (${attachmentCount} != attachmentPathByFile.size()) {
+                        System.err.println("Attachments:");
+                        int[] i = {0};
+                        attachmentPathByFile.values().forEach(new Consumer() {
+                            public void accept(Path path) {
+                                System.err.format("  [%2d] %s%n", new Object[]{++i[0], path});
                             }
-                        }
-                    });
-                } catch (Exception error) {
-                    // Supplement diagnostics
-                    error.printStackTrace(System.err);
-                    throw error;
-                } finally {
-                    paths.close();
-                }
+                        });
+                        System.err.format(
+                                "Error: Was expecting %d attachments, found %d!%n",
+                                new Object[]{${attachmentCount}, attachmentPathByFile.size()});
+                        System.err.println("Tip: Have you already executed the Maven `package` goal?");
+                        System.exit(1);
+                    }
 
-                // Check if no attachments were found
-                if (${attachmentCount} != attachmentPathByFile.size()) {
-                    System.err.println("Attachments:");
-                    int[] i = {0};
-                    attachmentPathByFile.values().forEach(new Consumer() {
-                        public void accept(Path path) {
-                            System.err.format("  [%2d] %s%n", new Object[]{++i[0], path});
-                        }
-                    });
-                    System.err.format(
-                            "Error: Was expecting %d attachments, found %d!%n",
-                            new Object[]{${attachmentCount}, attachmentPathByFile.size()});
-                    System.err.println("Tip: Have you already executed the Maven `package` goal?");
-                    System.exit(1);
-                }
-
-                // Create the binary distribution
-                pathByFile.putAll(attachmentPathByFile);
-                zip("target/bin.zip", pathByFile);
-                System.out.format("Generated the binary distribution (`bin.zip`) containing following %d files:%n", new Object[] {pathByFile.size()});
-                for (String file : pathByFile.keySet()) {
-                    System.out.println("-> " + file);
-                }]]></script>
-            </configuration>
+                    // Create the binary distribution
+                    pathByFile.putAll(attachmentPathByFile);
+                    zip("target/bin.zip", pathByFile);
+                    System.out.format("Generated the binary distribution (`bin.zip`) containing following %d files:%n", new Object[] {pathByFile.size()});
+                    for (String file : pathByFile.keySet()) {
+                        System.out.println("-> " + file);
+                    }]]></script>
+                </configuration>
+              </execution>
+            </executions>
             <dependencies>
               <dependency>
                 <groupId>org.eclipse.jgit</groupId>
