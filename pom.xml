@@ -673,14 +673,17 @@
 
                 # 1. OSGI modules do not make sense in JPMS
                 # 2. BND has a problem detecting the name of multi-release JPMS modules
-                -jpms-module-info-options: org.osgi.core;static=true;transitive=false,\
+                -jpms-module-info-options: \
+                  $[bnd-extra-module-options],\
+                  org.osgi.core;static=true;transitive=false,\
                   org.osgi.framework;static=true;transitive=false,\
                   org.apache.logging.log4j;substitute="log4j-api",\
-                  org.apache.logging.log4j.core;substitute="log4j-core",\
-                  $[bnd-extra-module-options]
+                  org.apache.logging.log4j.core;substitute="log4j-core"
 
                 # Import all packages by default:
-                Import-Package: $[bnd-extra-package-options],*
+                Import-Package: \
+                  $[bnd-extra-package-options],\
+                  *
 
                 # Allow each project to override the `Multi-Release` header:
                 Multi-Release: $[bnd-multi-release]
