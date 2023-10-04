@@ -94,7 +94,7 @@ download, etc.) see the project website[1].
 
 [1] $PROJECT_SITE
 
-# Release Notes
+=== Release Notes
 EOF
     dump_release_notes
     ;;
