@@ -108,11 +108,15 @@ jobs:
                  xmlns="http://logging.apache.org/log4j/changelog"
                  xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.1.xsd"
                  type="changed">
+            <issue id="$PR_ID" link="$PR_URL"/>
             <author id="github:dependabot"/>
             <description format="asciidoc">Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\`</description>
           </entry>
           EOF
           fi
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_ID: ${{ github.event.pull_request.id }}
 
       - name: Generate sources
         shell: bash
@@ -127,11 +131,15 @@ jobs:
           git add .
           git config user.name "ASF Logging Services RM"
           git config user.email private@logging.apache.org
-          git commit -S -a -m "Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\`"
+          git commit -S -a -m "Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\` (#$PR_ID)"
           git push origin
+          COMMIT_ID=$(git rev-parse HEAD)
+          echo "COMMIT_ID=$COMMIT_ID" >> $GITHUB_ENV
+        env:
+          PR_ID: ${{ github.event.pull_request.id }}
 
       - name: Close the PR
-        run: gh pr close "$PR_URL" -c "Changes are applied by CI"
+        run: gh pr close "$PR_URL" -c "Changes are applied by CI in $COMMIT_ID"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
