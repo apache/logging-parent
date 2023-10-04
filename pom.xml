@@ -346,6 +346,19 @@
                 <repositories>remove</repositories>
                 <distributionManagement>remove</distributionManagement>
                 <dependencyManagement>interpolate</dependencyManagement>
+                <!-- Keep the `parent`!
+                     Otherwise, this causes build failures for artifacts whose dependencies need to be resolved at runtime.
+                     Consider the following problem experienced in `log4j-transform-maven-plugin`:
+
+                     1. `log4j-transform-parent` depends on `log4j-transform-bom`
+                     2. `log4j-transform-bom` depends on `logging-parent`
+                     3. `logging-parent` contains `dependencyManagement`, etc. that are used by `log4j-transform-maven-plugin`
+                     4. Dependencies of `log4j-transform-maven-plugin` et al. is resolved *at runtime*
+                     5. Though at runtime, the deployed `log4j-transform-bom` is used, which is flattened and hence doesn't have a parent!
+                     6. Hence, at runtime, all `logging-parent` logic is lost
+
+                     To avoid this, parents should better be kept while flattening BOMs. -->
+                <parent>keep</parent>
               </pomElements>
             </configuration>
           </execution>
