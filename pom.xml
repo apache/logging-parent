@@ -342,6 +342,7 @@
                    `interpolate` takes the element from the original POM with variables interpolated.
                    Avoid using `resolve`, which uses the effective POM where inherited changes from the parent are also incorporated. -->
               <pomElements>
+                <build>remove</build>
                 <properties>remove</properties>
                 <repositories>remove</repositories>
                 <distributionManagement>remove</distributionManagement>

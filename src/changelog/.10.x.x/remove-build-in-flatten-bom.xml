@@ -3,7 +3,7 @@
        xmlns="http://logging.apache.org/log4j/changelog"
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.1.xsd"
        type="fixed">
-  <issue id="#39" link="https://github.com/apache/logging-parent/issues/39"/>
   <author id="github:ppkarwasz"/>
-  <description format="asciidoc">Prioritize definitions in `bnd-extra-*` variables over those inherited</description>
+  <author id="github:vy"/>
+  <description format="asciidoc">Remove `build` in `flatten-bom` configuration</description>
 </entry>
