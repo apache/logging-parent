@@ -122,7 +122,7 @@ jobs:
         shell: bash
         run: |
           ./mvnw \
-            --show-version --batch-mode --errors --no-transfer-progress \
+            --non-recursive --show-version --batch-mode --errors --no-transfer-progress \
             process-sources
 
       - name: Add & commit changes
