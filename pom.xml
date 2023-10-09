@@ -874,6 +874,13 @@
           <plugin>
             <groupId>com.github.genthaler</groupId>
             <artifactId>beanshell-maven-plugin</artifactId>
+            <dependencies>
+              <dependency>
+                <groupId>org.eclipse.jgit</groupId>
+                <artifactId>org.eclipse.jgit</artifactId>
+                <version>${org.eclipse.jgit.version}</version>
+              </dependency>
+            </dependencies>
             <executions>
               <execution>
                 <id>create-distribution</id>
@@ -899,16 +906,25 @@
                         try {
                             for (String file : pathByFile.keySet()) {
                                 Path path = pathByFile.get(file);
-                                ZipEntry zipEntry = new ZipEntry(file);
-                                zipEntry.setTime(timestampMillis);
-                                zipOutputStream.putNextEntry(zipEntry);
-                                zipOutputStream.write(Files.readAllBytes(path));
-                                zipOutputStream.closeEntry();
+                                try {
+                                    ZipEntry zipEntry = new ZipEntry(file);
+                                    zipEntry.setTime(timestampMillis);
+                                    zipOutputStream.putNextEntry(zipEntry);
+                                    zipOutputStream.write(Files.readAllBytes(path));
+                                    zipOutputStream.closeEntry();
+                                } catch (Exception error) {
+                                    String message = String.format(
+                                        "failed processing file `%s` at path `%s`",
+                                        new Object[]{file, path});
+                                    throw new RuntimeException(message, error);
+                                }
                             }
                         } catch (Exception error) {
+                            String message = String.format("failed creating ZIP archive `%s`", new Object[]{zipFileName});
+                            Exception extendedError = new RuntimeException(message, error);
                             // Supplement diagnostics
-                            error.printStackTrace(System.err);
-                            throw error;
+                            extendedError.printStackTrace(System.err);
+                            throw extendedError;
                         } finally {
                             zipOutputStream.close();
                         }
@@ -989,13 +1005,6 @@
                 </configuration>
               </execution>
             </executions>
-            <dependencies>
-              <dependency>
-                <groupId>org.eclipse.jgit</groupId>
-                <artifactId>org.eclipse.jgit</artifactId>
-                <version>${org.eclipse.jgit.version}</version>
-              </dependency>
-            </dependencies>
           </plugin>
 
         </plugins>
