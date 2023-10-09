@@ -39,3 +39,8 @@
 :project-id: logging-parent
 :java-target-version: 8
 :java-compiler-version: [17,18)
+:website-github-repository-name: logging-site
+:website-github-url: https://github.com/apache/{website-github-repository-name}
+:website-folder: {project-id}
+:website-url-staging: https://logging.staged.apache.org/{project-id}
+:website-url: https://logging.apache.org/{project-id}

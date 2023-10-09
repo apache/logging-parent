@@ -45,6 +45,13 @@ git fetch -p
 git checkout -B release/7.8.0 origin/main
 git push origin release/7.8.0
 ----
++
+[TIP]
+====
+`release/`-prefixed branches trigger a particular GitHub Actions workflow and its run is idempotent.
+You can iterate on the `release/7.8.0` branch to perfect it.
+====
+
 . Verify that the associated {project-github-url}/actions[GitHub Actions workflow] succeeds:
 .. `revision` property in `pom.xml` is updated
 .. Changelog is released (i.e., `src/changelog/7.8.0` folder is populated)
@@ -54,13 +61,37 @@ git push origin release/7.8.0
 +
 If not, commit necessary fixes, push, and repeat.
 
-+
-[TIP]
-====
-GitHub Actions workflow is idempotent.
-You can iterate on the `release/7.8.0` branch to perfect it.
-====
 . _Close_ the repository in https://repository.apache.org/[repository.apache.org]
+
+[#stage-release-website]
+=== Stage the release website
+
+. Checkout the `asf-staging` branch of {website-github-url}[the website repository]
+. Browse to the `{website-folder}` folder
+. Override the contents of the `7.x` folder using the website uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}] Subversion repository
+
+These steps can be summarized as follows in shell:
+
+[source,bash,subs="+attributes"]
+----
+# Clone repositories (unless you already have them!)
+svn co https://dist.apache.org/repos/dist/dev/logging logging-dist-dev
+git clone {website-github-url} {website-github-repository-name}
+
+# Checkout the branch
+cd {website-github-repository-name}
+git checkout -B asf-staging origin/asf-staging
+
+# Override the website
+git rm -rf {website-folder}/7.x
+mkdir {website-folder}/7.x
+unzip ../logging-dist-dev/{project-id}/*-7.8.0-site.zip -d {website-folder}/7.x
+git add {website-folder}/7.x
+git commit -a -m 'Add `{project-id}` version `7.8.0` website'
+git push origin asf-staging
+----
+
+Changes should be visible in {website-url-staging}[the project **staging** website].
 
 [#vote-release]
 === Vote the release
@@ -119,11 +150,18 @@ The ASF infrastructure treats ``rel/``-prefixed git tags special and ensures the
 [source,bash]
 ----
 git checkout main
-git merge release/7.8.0
+git rebase origin/main    # Sync with the remote repository
+git merge rel/7.8.0       # Pull changes up to the newly created tag
 ----
 . Set the revision property to the next development version (e.g., `7.9.0-SNAPSHOT`) in xref:pom.xml[`pom.xml`]
 . Commit changes and push the `main` branch
 . Delete the local and remote copies of the `release/7.8.0` branch
++
+[source,bash]
+----
+git branch -D release/7.8.0
+git push --delete origin release/7.8.0
+----
 
 [#publish-release-asf]
 ==== In the ASF infrastructure
@@ -131,17 +169,71 @@ git merge release/7.8.0
 . _Release_ the repository in https://repository.apache.org[repository.apache.org]
 . In https://dist.apache.org/repos/dist/release/logging/{project-id}[dist.apache.org/repos/dist] Subversion repository,
 .. create the `*release*/logging/{project-id}/7.8.0` folder, and copy the signed sources and their checksum from `*dev*/logging/{project-id}` to there
-.. delete the folder from an earlier release in `*release*/logging/{project-id}` (stash the generated announcement email somewhere, you will need it later on)
-.. commit changes
+.. delete the folder from an earlier release in `*release*/logging/{project-id}`
+.. commit your changes in `*release*/logging/{project-id}`
+.. delete the `*dev*/logging/{project-id}` folder (stash the generated announcement email somewhere, you will need it later on)
+.. commit changes your changes in `*dev*/logging/{project-id}`
+
++
+--
+These steps can be summarized as follows in shell:
+
+[source,bash,subs="+attributes"]
+----
+# Clone repositories (unless you already have them!)
+svn co https://dist.apache.org/repos/dist/dev/logging logging-dist-dev
+svn co https://dist.apache.org/repos/dist/release/logging logging-dist-rel
+
+# Update `release` folder
+cd logging-dist-rel
+mkdir -p {project-id}/7.8.0
+cp ../logging-dist-dev/{project-id}/*-7.8.0-{bin,src}.* {project-id}/7.8.0/
+svn commit -m 'Add `{project-id}` version `7.8.0` distribution'
+
+# Update `dev` folder
+cd logging-dist-dev
+cp {project-id}/*-7.8.0-email-announce.txt /tmp
+svn rm {project-id}
+svn commit -m 'Remove `{project-id}` version `7.8.0` files released'
+----
+--
 . Report the release at https://reporter.apache.org/addrelease.html?logging[reporter.apache.org]
 
 [#publish-release-github]
 ==== In GitHub
 
-Once the artifacts are visible in https://central.sonatype.dev/[central.sonatype.dev], {project-github-url}/releases/new[create a new release in GitHub]
+{project-github-url}/releases/new[Create a new release in GitHub]
 
 . Use the `rel/7.8.0` tag
 . Copy release notes from the generated emails
+
+[#publish-release-website]
+=== Publish the release website
+
+. Checkout the `asf-site` branch of {website-github-url}[the website repository]
+. Replace the `{website-folder}/7.x` folder with the one in `asf-staging` branch
+
+These steps can be summarized as follows in shell:
+
+[source,bash,subs="+attributes"]
+----
+# Clone the repository (unless you already have it!)
+git clone {website-github-url} {website-github-repository-name}
+
+# Checkout the branch
+cd {website-github-repository-name}
+git checkout -B asf-site origin/asf-site
+
+# Override the website
+git rm -rf {website-folder}/7.x
+mkdir {website-folder}/7.x
+git checkout asf-staging -- {website-folder}/7.x
+git add {website-folder}/7.x
+git commit -a -m 'Add `{project-id}` version `7.8.0` website'
+git push origin asf-site
+----
+
+Changes should be visible in {website-url}[the project website].
 
 [#announce-release]
 === Announce the release

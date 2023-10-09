@@ -43,5 +43,7 @@ This minor release contains several small improvements.
 
 ==== Fixed
 
+* Prioritize definitions in `bnd-extra-*` variables over those inherited (https://github.com/apache/logging-parent/issues/39[#39])
 * Keep parent in `flatten-bom` configuration (https://github.com/apache/logging-parent/issues/37[37])
+* Remove `build` in `flatten-bom` configuration
 * Used specific execution IDs in ``defaultGoal``s to avoid running unwanted plugins
