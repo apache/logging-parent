@@ -67,8 +67,7 @@ If not, commit necessary fixes, push, and repeat.
 === Stage the release website
 
 . Checkout the `asf-staging` branch of {website-github-url}[the website repository]
-. Browse to the `{website-folder}` folder
-. Override the contents of the `7.x` folder using the website uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}] Subversion repository
+. Override the contents of the `{website-folder}7.x` folder using the website uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}] Subversion repository
 
 These steps can be summarized as follows in shell:
 
@@ -83,10 +82,10 @@ cd {website-github-repository-name}
 git checkout -B asf-staging origin/asf-staging
 
 # Override the website
-git rm -rf {website-folder}/7.x
-mkdir {website-folder}/7.x
-unzip ../logging-dist-dev/{project-id}/*-7.8.0-site.zip -d {website-folder}/7.x
-git add {website-folder}/7.x
+git rm -rf {website-folder}7.x
+mkdir {website-folder}7.x
+unzip ../logging-dist-dev/{project-id}/*-7.8.0-site.zip -d {website-folder}7.x
+git add {website-folder}7.x
 git commit -a -m 'Add `{project-id}` version `7.8.0` website'
 git push origin asf-staging
 ----
@@ -211,7 +210,7 @@ svn commit -m 'Remove `{project-id}` version `7.8.0` files released'
 === Publish the release website
 
 . Checkout the `asf-site` branch of {website-github-url}[the website repository]
-. Replace the `{website-folder}/7.x` folder with the one in `asf-staging` branch
+. Replace the `{website-folder}7.x` folder with the one in `asf-staging` branch
 
 These steps can be summarized as follows in shell:
 
@@ -225,10 +224,10 @@ cd {website-github-repository-name}
 git checkout -B asf-site origin/asf-site
 
 # Override the website
-git rm -rf {website-folder}/7.x
-mkdir {website-folder}/7.x
-git checkout asf-staging -- {website-folder}/7.x
-git add {website-folder}/7.x
+git rm -rf {website-folder}7.x
+mkdir {website-folder}7.x
+git checkout asf-staging -- {website-folder}7.x
+git add {website-folder}7.x
 git commit -a -m 'Add `{project-id}` version `7.8.0` website'
 git push origin asf-site
 ----
