@@ -906,6 +906,10 @@
                         try {
                             for (String file : pathByFile.keySet()) {
                                 Path path = pathByFile.get(file);
+                                // Skip directories, which is tracked by Git only when it is a symlink
+                                if (Files.isDirectory(path, /* required for BSH method resolution: */ new LinkOption[0])) {
+                                    continue;
+                                }
                                 try {
                                     ZipEntry zipEntry = new ZipEntry(file);
                                     zipEntry.setTime(timestampMillis);
