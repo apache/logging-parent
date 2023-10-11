@@ -29,6 +29,6 @@ You can use {project-name} as follows:
 +
 [source,bash]
 ----
-./mvnw -N site
+./mvnw site
 python -m http.server -d target/site
 ----

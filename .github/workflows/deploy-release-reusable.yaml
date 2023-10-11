@@ -29,7 +29,7 @@ on:
         required: true
         type: string
       site-enabled:
-        description: Flag indicating if a website should be generated prior to deployment using `./mvnw -N site`
+        description: Flag indicating if a website should be generated prior to deployment using `./mvnw site`
         default: false
         type: boolean
       distribution-attachment-filepath-pattern:
@@ -143,7 +143,6 @@ jobs:
             | tail -n 1)
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
-            --non-recursive \
             site
           cd target/site
           find . -empty -type d -delete

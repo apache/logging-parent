@@ -45,7 +45,7 @@ You can build and view the website as follows:
 
 [source,bash]
 ----
-./mvnw -N site
+./mvnw site
 python -m http.server -d target/site
 ----
 
