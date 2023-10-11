@@ -19,11 +19,6 @@ name: scorecards-analysis
 
 on:
   workflow_call:
-    inputs:
-      java-version:
-        description: The Java compiler version
-        default: 17
-        type: string
 
 jobs:
 
