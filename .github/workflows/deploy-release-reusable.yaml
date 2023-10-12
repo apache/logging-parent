@@ -143,6 +143,10 @@ jobs:
             | tail -n 1)
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
+            -Dmaven.test.skip \
+            install
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
             site
           cd target/site
           find . -empty -type d -delete
