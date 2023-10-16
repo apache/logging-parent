@@ -41,6 +41,10 @@
 This minor release contains several small improvements.
 
 
+==== Changed
+
+* Update `github/codeql-action` to version `2.22.3` (https://github.com/apache/logging-parent/pull/47[1558328036])
+
 ==== Fixed
 
 * Prioritize definitions in `bnd-extra-*` variables over those inherited (https://github.com/apache/logging-parent/issues/39[#39])
