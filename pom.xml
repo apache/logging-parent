@@ -671,64 +671,68 @@
         </executions>
       </plugin>
 
-      <!-- Generate OSGi and JPMS descriptors.
-           Annotate packages that need to be exported with `org.osgi.annotation.bundle.Export` provided by `org.osgi:osgi-annotation` artifact. -->
+      <!--
+        ~ Generate OSGi and JPMS descriptors.
+        ~ Annotate packages that need to be exported with `org.osgi.annotation.bundle.Export`
+        ~ provided by `org.osgi:org.osgi.annotation.bundle` artifact.
+        -->
       <plugin>
         <groupId>biz.aQute.bnd</groupId>
         <artifactId>bnd-maven-plugin</artifactId>
         <extensions>true</extensions>
+        <!-- Common configuration that can be used with all the plugin's goals -->
+        <configuration>
+          <bnd><![CDATA[
+            # `Bundle-DocURL` uses `project.url`.
+            # This is set to `${project.parent.url}${project.artifactId}` through Maven's inheritance assembly[1].
+            # This eventually produces incorrect values.
+            # Hence, we remove them from the produced descriptor.
+            #
+            # `Bundle-SCM` uses `project.scm.url` and suffers from the same inheritance problem `Bundle-DocURL` has.
+            #
+            # [1] https://maven.apache.org/ref/3.9.4/maven-model-builder/#inheritance-assembly
+            #     Inheritance assembly can be disabled for certain properties, e.g., `project.url`.
+            #     Though this would necessitate changes in the root `pom.xml`s of parented projects.
+            #
+            # `Bundle-Developers` is removed, since it is nothing but noise and occupies quite some real estate.
+            -removeheaders: Bundle-DocURL,Bundle-SCM,Bundle-Developers
+
+            # Create OSGi and JPMS module names based on the `groupId` and `artifactId`.
+            # This almost agrees with `maven-bundle-plugin`, but replaces non-alphanumeric characters
+            # with full stops `.`.
+            Bundle-SymbolicName: $[project.groupId].$[subst;$[subst;$[project.artifactId];log4j-];[^A-Za-z0-9];.]
+            -jpms-module-info: $[bnd-module-name];access=0
+
+            # Prevents an execution error in multi-release jars:
+            -fixupmessages: "Classes found in the wrong directory";restrict:=error;is:=warning
+
+            # 1. OSGI modules do not make sense in JPMS
+            # 2. BND has a problem detecting the name of multi-release JPMS modules
+            -jpms-module-info-options: \
+              $[bnd-extra-module-options],\
+              org.osgi.core;static=true;transitive=false,\
+              org.osgi.framework;static=true;transitive=false,\
+              org.apache.logging.log4j;substitute="log4j-api",\
+              org.apache.logging.log4j.core;substitute="log4j-core"
+
+            # Import all packages by default:
+            Import-Package: \
+              $[bnd-extra-package-options],\
+              *
+
+            # Allow each project to override the `Multi-Release` header:
+            Multi-Release: $[bnd-multi-release]
+
+            # Add manifests and modules for each multi-release version:
+            -jpms-multi-release: $[bnd-multi-release]
+          ]]></bnd>
+        </configuration>
         <executions>
           <execution>
             <id>default-jar</id>
             <goals>
               <goal>jar</goal>
             </goals>
-            <configuration>
-              <bnd><![CDATA[
-                # `Bundle-DocURL` uses `project.url`.
-                # This is set to `${project.parent.url}${project.artifactId}` through Maven's inheritance assembly[1].
-                # This eventually produces incorrect values.
-                # Hence, we remove them from the produced descriptor.
-                #
-                # `Bundle-SCM` uses `project.scm.url` and suffers from the same inheritance problem `Bundle-DocURL` has.
-                #
-                # [1] https://maven.apache.org/ref/3.9.4/maven-model-builder/#inheritance-assembly
-                #     Inheritance assembly can be disabled for certain properties, e.g., `project.url`.
-                #     Though this would necessitate changes in the root `pom.xml`s of parented projects.
-                #
-                # `Bundle-Developers` is removed, since it is nothing but noise and occupies quite some real estate.
-                -removeheaders: Bundle-DocURL,Bundle-SCM,Bundle-Developers
-
-                # Create OSGi and JPMS module names based on the `groupId` and `artifactId`.
-                # This almost agrees with `maven-bundle-plugin`, but replaces non-alphanumeric characters
-                # with full stops `.`.
-                Bundle-SymbolicName: $[project.groupId].$[subst;$[subst;$[project.artifactId];log4j-];[^A-Za-z0-9];.]
-                -jpms-module-info: $[bnd-module-name];access=0
-
-                # Prevents an execution error in multi-release jars:
-                -fixupmessages: "Classes found in the wrong directory";restrict:=error;is:=warning
-
-                # 1. OSGI modules do not make sense in JPMS
-                # 2. BND has a problem detecting the name of multi-release JPMS modules
-                -jpms-module-info-options: \
-                  $[bnd-extra-module-options],\
-                  org.osgi.core;static=true;transitive=false,\
-                  org.osgi.framework;static=true;transitive=false,\
-                  org.apache.logging.log4j;substitute="log4j-api",\
-                  org.apache.logging.log4j.core;substitute="log4j-core"
-
-                # Import all packages by default:
-                Import-Package: \
-                  $[bnd-extra-package-options],\
-                  *
-
-                # Allow each project to override the `Multi-Release` header:
-                Multi-Release: $[bnd-multi-release]
-
-                # Add manifests and modules for each multi-release version:
-                -jpms-multi-release: $[bnd-multi-release]
-              ]]></bnd>
-            </configuration>
           </execution>
         </executions>
       </plugin>

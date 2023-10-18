@@ -48,6 +48,7 @@ This minor release contains several small improvements.
 ==== Changed
 
 * Add a compulsory `bnd-baseline-maven-plugin` execution to check for breaking API changes
+* Apply the default `bnd-maven-plugin` configuration to all the plugin's goals
 * Moves `.flattened-pom.xml` to the same directory as `pom.xml` to preserve the relative parent path. This requires adding `.flattened-pom.xml` to the `.gitignore` file of the repository.
 * Update `actions/checkout` to version `4.1.1` (https://github.com/apache/logging-parent/pull/48[1562197994])
 * Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.0` (https://github.com/apache/logging-parent/pull/44[1553835070])
