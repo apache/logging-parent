@@ -116,7 +116,7 @@ jobs:
           fi
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
-          PR_ID: ${{ github.event.pull_request.id }}
+          PR_ID: ${{ github.event.pull_request.number }}
 
       - name: Generate sources
         shell: bash
@@ -136,7 +136,7 @@ jobs:
           COMMIT_ID=$(git rev-parse HEAD)
           echo "COMMIT_ID=$COMMIT_ID" >> $GITHUB_ENV
         env:
-          PR_ID: ${{ github.event.pull_request.id }}
+          PR_ID: ${{ github.event.pull_request.number }}
 
       - name: Close the PR
         run: gh pr close "$PR_URL" -c "Changes are applied by CI in $COMMIT_ID"
