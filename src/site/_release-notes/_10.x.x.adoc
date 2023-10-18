@@ -44,6 +44,7 @@ This minor release contains several small improvements.
 ==== Changed
 
 * Update `github/codeql-action` to version `2.22.3` (https://github.com/apache/logging-parent/pull/47[1558328036])
+* Update `ossf/scorecard-action` to version `2.3.0` (https://github.com/apache/logging-parent/pull/45[1553916310])
 
 ==== Fixed
 
