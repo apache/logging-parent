@@ -47,6 +47,8 @@ This minor release contains several small improvements.
 
 ==== Changed
 
+* Add a compulsory `bnd-baseline-maven-plugin` execution to check for breaking API changes
+* Moves `.flattened-pom.xml` to the same directory as `pom.xml` to preserve the relative parent path. This requires adding `.flattened-pom.xml` to the `.gitignore` file of the repository.
 * Update `actions/checkout` to version `4.1.1` (https://github.com/apache/logging-parent/pull/48[1562197994])
 * Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.0` (https://github.com/apache/logging-parent/pull/44[1553835070])
 * Update `github/codeql-action` to version `2.22.3` (https://github.com/apache/logging-parent/pull/47[1558328036])
@@ -54,7 +56,6 @@ This minor release contains several small improvements.
 
 ==== Fixed
 
-* Moves `.flattened-pom.xml` to the same directory as `pom.xml` to preserve the relative parent path. This requires adding `.flattened-pom.xml` to the `.gitignore` file of the repository.
 * Prioritize definitions in `bnd-extra-*` variables over those inherited (https://github.com/apache/logging-parent/issues/39[#39])
 * Keep parent in `flatten-bom` configuration (https://github.com/apache/logging-parent/issues/37[37])
 * Remove `build` in `flatten-bom` configuration

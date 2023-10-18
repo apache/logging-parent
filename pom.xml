@@ -176,6 +176,7 @@
     <bnd.annotation.version>6.4.1</bnd.annotation.version>
     <osgi.annotation.version>8.1.0</osgi.annotation.version>
     <osgi.annotation.bundle.version>2.0.0</osgi.annotation.bundle.version>
+    <osgi.annotation.versioning.version>1.1.2</osgi.annotation.versioning.version>
 
     <spotbugs-annotations.version>4.8.0</spotbugs-annotations.version>
 
@@ -224,6 +225,11 @@
         <version>${osgi.annotation.bundle.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.annotation.versioning</artifactId>
+        <version>${osgi.annotation.versioning.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -279,6 +285,12 @@
           <groupId>org.apache.logging.log4j</groupId>
           <artifactId>log4j-changelog-maven-plugin</artifactId>
           <version>${log4j-changelog-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>biz.aQute.bnd</groupId>
+          <artifactId>bnd-baseline-maven-plugin</artifactId>
+          <version>${bnd-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
@@ -717,6 +729,25 @@
                 -jpms-multi-release: $[bnd-multi-release]
               ]]></bnd>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!--
+        ~ Check for breaking API changes between releases.
+        ~ If a change in the public API occurred, suggests the minimal version number to use.
+        ~ Versioning can be also applied on a per-package level. For this purpose you can
+        ~ annotate packages with `org.osgi.annotation.versioning.Version` provided by `org.osgi:org.osgi.annotation.versioning` artifact.
+        -->
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-baseline-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>baseline</id>
+            <goals>
+              <goal>baseline</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>

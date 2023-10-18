@@ -5,7 +5,6 @@
        type="changed">
   <author id="github:ppkarwasz"/>
   <description format="asciidoc">
-    Moves `.flattened-pom.xml` to the same directory as `pom.xml` to preserve the relative parent path.
-    This requires adding `.flattened-pom.xml` to the `.gitignore` file of the repository.
+    Add a compulsory `bnd-baseline-maven-plugin` execution to check for breaking API changes
   </description>
 </entry>
