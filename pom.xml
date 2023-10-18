@@ -177,7 +177,7 @@
     <osgi.annotation.version>8.1.0</osgi.annotation.version>
     <osgi.annotation.bundle.version>2.0.0</osgi.annotation.bundle.version>
 
-    <spotbugs-annotations.version>4.7.3</spotbugs-annotations.version>
+    <spotbugs-annotations.version>4.8.0</spotbugs-annotations.version>
 
     <!-- plugin versions -->
     <asciidoctor-maven-plugin.version>2.2.4</asciidoctor-maven-plugin.version>
