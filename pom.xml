@@ -248,11 +248,6 @@
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>flatten-maven-plugin</artifactId>
           <version>${flatten-maven-plugin.version}</version>
-          <configuration>
-            <!-- Setting `outputDirectory` to `project.build.directory`, which is cleaned by `default-clean` execution of `clean:clean`.
-                 This makes `flatten:clean` redundant. -->
-            <outputDirectory>${project.build.directory}</outputDirectory>
-          </configuration>
         </plugin>
 
         <plugin>
@@ -321,6 +316,14 @@
               <updatePomFile>true</updatePomFile>
               <flattenMode>resolveCiFriendliesOnly</flattenMode>
             </configuration>
+          </execution>
+
+          <!-- Cleans the `.flattened-pom.xml` files -->
+          <execution>
+            <id>flatten-clean</id>
+            <goals>
+              <goal>clean</goal>
+            </goals>
           </execution>
 
           <!-- BOMs should ideally _only_ contain dependencies for modules of the project.

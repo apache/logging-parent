@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://logging.apache.org/log4j/changelog"
+       xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.2.xsd"
+       type="fixed">
+  <author id="github:ppkarwasz"/>
+  <description format="asciidoc">
+    Moves `.flattened-pom.xml` to the same directory as `pom.xml` to preserve the relative parent path.
+    This requires adding `.flattened-pom.xml` to the `.gitignore` file of the repository.
+  </description>
+</entry>
