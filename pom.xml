@@ -189,7 +189,7 @@
     <error-prone.version>2.22.0</error-prone.version>
     <findsecbugs-plugin.version>1.12.0</findsecbugs-plugin.version>
     <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-    <log4j-changelog-maven-plugin.version>0.4.0</log4j-changelog-maven-plugin.version>
+    <log4j-changelog-maven-plugin.version>0.5.0</log4j-changelog-maven-plugin.version>
     <maven-artifact-plugin.version>3.4.1</maven-artifact-plugin.version>
     <sign-maven-plugin.version>1.0.1</sign-maven-plugin.version>
     <spotbugs-maven-plugin.version>4.7.3.6</spotbugs-maven-plugin.version>
@@ -285,6 +285,16 @@
           <groupId>org.apache.logging.log4j</groupId>
           <artifactId>log4j-changelog-maven-plugin</artifactId>
           <version>${log4j-changelog-maven-plugin.version}</version>
+          <!-- `log4j-tools` release `0.5.0` has an invalid POM, where the parent is missing.
+               This will be fixed by `<parent>keep` modification to the `flatten-bom` execution we have below.
+               Until then (that is, the next `log4j-tools` release) we need this temporary dependency fix. -->
+          <dependencies>
+            <dependency>
+              <groupId>org.freemarker</groupId>
+              <artifactId>freemarker</artifactId>
+              <version>2.3.32</version>
+            </dependency>
+          </dependencies>
         </plugin>
 
         <plugin>
@@ -791,7 +801,7 @@
                       <dir>src/changelog</dir>
                       <includes>**/*.xml</includes>
                       <publicId>http://logging.apache.org/log4j/changelog</publicId>
-                      <systemId>https://logging.apache.org/log4j/changelog-0.1.1.xsd</systemId>
+                      <systemId>https://logging.apache.org/log4j/changelog-0.1.2.xsd</systemId>
                       <validating>true</validating>
                     </validationSet>
                   </validationSets>
