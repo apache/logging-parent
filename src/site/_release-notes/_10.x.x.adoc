@@ -41,6 +41,10 @@
 This minor release contains several small improvements.
 
 
+==== Added
+
+* Added support for auto-generating CycloneDX Software Bill of Materials (SBOM)
+
 ==== Changed
 
 * Update `actions/checkout` to version `4.1.1` (https://github.com/apache/logging-parent/pull/48[1562197994])

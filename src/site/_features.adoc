@@ -32,6 +32,7 @@ The provided parent POM features the following conveniences:
 * https://maven.apache.org/enforcer/maven-enforcer-plugin/[`maven-enforcer-plugin`] checks
 * https://github.com/diffplug/spotless/tree/main/plugin-maven[`spotless-maven-plugin`] integration for code formatting
 * https://github.com/bndtools/bnd/blob/master/maven-plugins/bnd-maven-plugin/README.md[`bnd-maven-plugin`] integration for auto-generating OSGi and JPMS descriptors
+* https://github.com/CycloneDX/cyclonedx-maven-plugin[`cyclonedx-maven-plugin`] integration for auto-generating Software Bill of Materials (SBOM)
 * https://asciidoc.org/[AsciiDoc]-based site generation
 
 [#reusable-workflows]

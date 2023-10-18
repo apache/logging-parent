@@ -184,6 +184,7 @@
     <beanshell-maven-plugin.version>1.4</beanshell-maven-plugin.version>
     <bnd-maven-plugin.version>6.4.0</bnd-maven-plugin.version>
     <build-helper-maven-plugin.version>3.4.0</build-helper-maven-plugin.version>
+    <cyclonedx-maven-plugin.version>2.7.9</cyclonedx-maven-plugin.version>
     <error-prone.version>2.22.0</error-prone.version>
     <findsecbugs-plugin.version>1.12.0</findsecbugs-plugin.version>
     <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
@@ -292,6 +293,12 @@
           <version>${build-helper-maven-plugin.version}</version>
         </plugin>
 
+        <plugin>
+          <groupId>org.cyclonedx</groupId>
+          <artifactId>cyclonedx-maven-plugin</artifactId>
+          <version>${cyclonedx-maven-plugin.version}</version>
+        </plugin>
+
       </plugins>
     </pluginManagement>
 
@@ -392,6 +399,20 @@
             </path>
           </annotationProcessorPaths>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.cyclonedx</groupId>
+        <artifactId>cyclonedx-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-sbom</id>
+            <goals>
+              <goal>makeAggregateBom</goal>
+            </goals>
+            <phase>package</phase>
+          </execution>
+        </executions>
       </plugin>
 
       <!-- Ensure that version for each dependency resolved during a build, is equal to or higher than all transitive dependency declarations.
