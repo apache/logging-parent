@@ -111,7 +111,7 @@ jobs:
             git config user.name "ASF Logging Services RM"
             git config user.email private@logging.apache.org
             git commit -S pom.xml -m "Set version to \`$PROJECT_VERSION\`"
-            git push origin
+            git push -f origin
           fi
 
       - name: Release changelog
@@ -128,7 +128,7 @@ jobs:
             git config user.name "ASF Logging Services RM"
             git config user.email private@logging.apache.org
             git commit -S src -m "Release changelog for version \`$PROJECT_VERSION\`"
-            git push origin
+            git push -f origin
           fi
 
       - name: Build the website

@@ -32,6 +32,12 @@ on:
       - "**.md"
       - "**.txt"
 
+# If the branch is 'main' run once per commit.
+# If the branch is 'release/*' allow only one concurrent run.
+concurrency:
+  group: ${{ github.ref_name == 'main' && github.ref || github.ref_name }}
+  cancel-in-progress: true
+
 permissions: read-all
 
 jobs:

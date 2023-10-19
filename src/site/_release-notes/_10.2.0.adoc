@@ -33,14 +33,31 @@
     3. Commit both `.release-notes.adoc.ftl` and the generated `7.8.0.adoc`
 ////
 
-[#release-notes-10-x-x]
-=== 10.x.x
+[#release-notes-10-2-0]
+=== 10.2.0
 
-
+Release date:: 2023-10-18
 
 This minor release contains several small improvements.
 
 
+==== Added
+
+* Added support for auto-generating CycloneDX Software Bill of Materials (SBOM)
+
 ==== Changed
 
-* Update `com.google.errorprone:error_prone_core` to version `2.23.0` (https://github.com/apache/logging-parent/pull/49[49])
+* Add a compulsory `bnd-baseline-maven-plugin` execution to check for breaking API changes
+* Apply the default `bnd-maven-plugin` configuration to all the plugin's goals
+* Moves `.flattened-pom.xml` to the same directory as `pom.xml` to preserve the relative parent path. This requires adding `.flattened-pom.xml` to the `.gitignore` file of the repository.
+* Update `org.apache.logging.log4j:log4j-changelog-maven-plugin` to version `0.5.0`
+* Update `log4j-changelog` XSD (used for validating changelog entries) to version `0.1.2`
+* Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.0` (https://github.com/apache/logging-parent/pull/44[44])
+
+==== Fixed
+
+* Prioritize definitions in `bnd-extra-*` variables over those inherited (https://github.com/apache/logging-parent/issues/39[39])
+* Keep parent in `flatten-bom` configuration (https://github.com/apache/logging-parent/issues/37[37])
+* Remove `build` in `flatten-bom` configuration
+* Fixed the archiving of symbolically linked directories in the `distribution` Maven profile (https://github.com/apache/logging-parent/issues/43[43])
+* Used specific execution IDs in ``defaultGoal``s to avoid running unwanted plugins
