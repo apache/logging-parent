@@ -226,7 +226,7 @@ git checkout -B asf-site origin/asf-site
 # Override the website
 git rm -rf {website-folder}7.x
 mkdir {website-folder}7.x
-git checkout asf-staging -- {website-folder}7.x
+git checkout origin/asf-staging -- {website-folder}7.x
 git add {website-folder}7.x
 git commit -a -m 'Add `{project-id}` version `7.8.0` website'
 git push origin asf-site
