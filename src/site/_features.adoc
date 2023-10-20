@@ -16,6 +16,7 @@
 ////
 
 include::_constants.adoc[]
+:cyclonedx-maven-plugin-link: https://github.com/CycloneDX/cyclonedx-maven-plugin[`cyclonedx-maven-plugin`]
 
 [#features]
 == Features
@@ -32,8 +33,15 @@ The provided parent POM features the following conveniences:
 * https://maven.apache.org/enforcer/maven-enforcer-plugin/[`maven-enforcer-plugin`] checks
 * https://github.com/diffplug/spotless/tree/main/plugin-maven[`spotless-maven-plugin`] integration for code formatting
 * https://github.com/bndtools/bnd/blob/master/maven-plugins/bnd-maven-plugin/README.md[`bnd-maven-plugin`] integration for auto-generating OSGi and JPMS descriptors
-* https://github.com/CycloneDX/cyclonedx-maven-plugin[`cyclonedx-maven-plugin`] integration for auto-generating Software Bill of Materials (SBOM)
+* {cyclonedx-maven-plugin-link} integration for auto-generating Software Bill of Materials (SBOM)
 * https://asciidoc.org/[AsciiDoc]-based site generation
+
+[#cyclonedx-sbom]
+==== CycloneDX Software Bill of Materials (SBOM)
+
+{project-name} streamlines the generation of SBOMs using {cyclonedx-maven-plugin-link}.
+Plugin execution generates SBOM files for each module, including the root one.
+Generated SBOM files are attached as artifacts with `cyclonedx` classifier and `xml`/`json`  extensions, that is, `<artifactId>-<version>-cyclonedx.{xml,json}`.
 
 [#reusable-workflows]
 === Reusable GitHub Actions workflows

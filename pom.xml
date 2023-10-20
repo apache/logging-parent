@@ -138,6 +138,10 @@
     <url>https://github.com/apache/logging-parent/actions</url>
   </ciManagement>
 
+  <distributionManagement>
+    <downloadUrl>https://logging.apache.org/logging-parent/latest/#distribution</downloadUrl>
+  </distributionManagement>
+
   <properties>
 
     <!-- project version -->
