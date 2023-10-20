@@ -34,6 +34,11 @@ include::_constants.adoc[]
 In the code examples below, assuming the version to be released is `7.8.0`.
 ====
 
+[WARNING]
+====
+The website-specific instructions are only applicable to projects which employ the reusable CI workflow with `site-enabled` input set to `true`.
+====
+
 [#stage-release]
 === Stage the release
 
