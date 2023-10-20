@@ -602,12 +602,20 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <p><a href="https://github.com/bndtools/bnd/blob/master/maven-plugins/bnd-maven-plugin/README.md"><code>bnd-maven-plugin</code></a> integration for auto-generating OSGi and JPMS descriptors</p>
 </li>
 <li>
-<p><a href="https://github.com/CycloneDX/cyclonedx-maven-plugin"><code>cyclonedx-maven-plugin</code></a> integration for auto-generating Software Bill of Materials (SBOM)</p>
+<p><a href="https://github.com/CycloneDX/cyclonedx-maven-plugin">`cyclonedx-maven-plugin`</a> integration for auto-generating Software Bill of Materials (SBOM)</p>
 </li>
 <li>
 <p><a href="https://asciidoc.org/">AsciiDoc</a>-based site generation</p>
 </li>
 </ul>
+</div>
+<div class="sect3">
+<h4 id="cyclonedx-sbom">CycloneDX Software Bill of Materials (SBOM)</h4>
+<div class="paragraph">
+<p>Logging Parent streamlines the generation of SBOMs using <a href="https://github.com/CycloneDX/cyclonedx-maven-plugin">`cyclonedx-maven-plugin`</a>.
+Plugin execution generates SBOM files for each module, including the root one.
+Generated SBOM files are attached as artifacts with <code>cyclonedx</code> classifier and <code>xml</code>/<code>json</code>  extensions, that is, <code>&lt;artifactId&gt;-&lt;version&gt;-cyclonedx.{xml,json}</code>.</p>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -1064,6 +1072,20 @@ All preparations (release notes, source and binary distributions, vote &amp; ann
 </tr>
 </table>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The website-specific instructions are only applicable to projects which employ the reusable CI workflow with <code>site-enabled</code> input set to <code>true</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="sect2">
 <h3 id="stage-release">Stage the release</h3>
 <div class="olist arabic">
@@ -1387,7 +1409,7 @@ git checkout -B asf-site origin/asf-site
 # Override the website
 git rm -rf 7.x
 mkdir 7.x
-git checkout asf-staging -- 7.x
+git checkout origin/asf-staging -- 7.x
 git add 7.x
 git commit -a -m 'Add `logging-parent` version `7.8.0` website'
 git push origin asf-site</code></pre>
@@ -1442,7 +1464,7 @@ See the License for the specific language governing permissions and limitations 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-10-18 18:47:23 UTC
+Last updated 2023-10-18 10:26:59 +0200
 </div>
 </div>
 </body>
