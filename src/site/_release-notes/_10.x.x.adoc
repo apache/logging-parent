@@ -44,3 +44,4 @@ This minor release contains several small improvements.
 ==== Changed
 
 * Update `com.google.errorprone:error_prone_core` to version `2.23.0` (https://github.com/apache/logging-parent/pull/49[49])
+* Update `github/codeql-action` to version `2.22.4` (https://github.com/apache/logging-parent/pull/51[51])
