@@ -176,6 +176,18 @@
     <!-- Allows to extend the `bnd-maven-plugin` configuration with extras: -->
     <bnd-extra-config />
 
+    <!--
+      ~ These properties allow to override the default `bnd-maven-plugin` configuration through properties.
+      ~ They should be used as a last resort.
+      -->
+    <!--
+      ~ Create OSGi and JPMS module names based on the `groupId` and `artifactId`.
+      ~ This almost agrees with `maven-bundle-plugin`, but replaces non-alphanumeric characters
+      ~ with full stops `.`.
+      -->
+    <bnd-bundle-symbolicname>$[project.groupId].$[subst;$[subst;$[project.artifactId];log4j-];[^A-Za-z0-9];.]</bnd-bundle-symbolicname>
+    <bnd-jpms-module-info>$[bnd-module-name];access=0</bnd-jpms-module-info>
+
     <!-- dependency versions -->
     <org.eclipse.jgit.version>6.7.0.202309050840-r</org.eclipse.jgit.version>
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
@@ -717,8 +729,8 @@
             # Create OSGi and JPMS module names based on the `groupId` and `artifactId`.
             # This almost agrees with `maven-bundle-plugin`, but replaces non-alphanumeric characters
             # with full stops `.`.
-            Bundle-SymbolicName: $[project.groupId].$[subst;$[subst;$[project.artifactId];log4j-];[^A-Za-z0-9];.]
-            -jpms-module-info: $[bnd-module-name];access=0
+            Bundle-SymbolicName: $[bnd-bundle-symbolicname]
+            -jpms-module-info: $[bnd-jpms-module-info]
 
             # Prevents an execution error in multi-release jars:
             -fixupmessages.classes_in_wrong_dir: "Classes found in the wrong directory";restrict:=error;is:=warning
