@@ -4,6 +4,5 @@
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.2.xsd"
        type="changed">
   <issue id="apache/logging-log4j2#1895" link="https://github.com/apache/logging-log4j2/issues/1895"/>
-  <author id="github:vy"/>
-  <description format="asciidoc">Converted `bnd-maven-plugin` API leakage warnings to errors</description>
+  <description format="asciidoc">Convert `bnd-maven-plugin` API leakage warnings to errors</description>
 </entry>

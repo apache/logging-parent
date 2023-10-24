@@ -3,6 +3,5 @@
        xmlns="http://logging.apache.org/log4j/changelog"
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.2.xsd"
        type="changed">
-  <author id="github:ppkarwasz"/>
   <description format="asciidoc">Changes the default OSGi and module name to use full stops `.` instead of non-alphanumeric characters</description>
 </entry>

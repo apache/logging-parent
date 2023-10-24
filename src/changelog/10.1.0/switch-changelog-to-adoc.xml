@@ -3,6 +3,5 @@
        xmlns="http://logging.apache.org/log4j/changelog"
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.2.xsd"
        type="changed">
-  <author id="github:vy"/>
   <description format="asciidoc">Switched the default `log4j-changelog` configuration from Markdown (`.release-notes.md.ftl` and `.index.md.ftl`) to AsciiDoc (`.release-notes.adoc.ftl` and `.index.adoc.ftl`)</description>
 </entry>

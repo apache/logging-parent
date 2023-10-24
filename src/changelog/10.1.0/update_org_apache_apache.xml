@@ -3,6 +3,5 @@
        xmlns="http://logging.apache.org/log4j/changelog"
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.2.xsd"
        type="changed">
-  <author id="github:grobmeier"/>
   <description format="asciidoc">Update `org.apache:apache` to version `30`</description>
 </entry>

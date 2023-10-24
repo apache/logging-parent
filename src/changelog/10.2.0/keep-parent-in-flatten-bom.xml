@@ -4,7 +4,5 @@
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.2.xsd"
        type="fixed">
   <issue id="37" link="https://github.com/apache/logging-parent/issues/37"/>
-  <author id="github:ppkarwasz"/>
-  <author id="github:vy"/>
   <description format="asciidoc">Keep parent in `flatten-bom` configuration</description>
 </entry>

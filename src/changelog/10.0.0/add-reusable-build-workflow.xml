@@ -3,6 +3,5 @@
        xmlns="http://logging.apache.org/log4j/changelog"
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.2.xsd"
        type="added">
-  <author id="github:vy"/>
   <description format="asciidoc">Added reusable GitHub Actions workflows to share CI boilerplate for other repositories</description>
 </entry>

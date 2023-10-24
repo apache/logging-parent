@@ -3,6 +3,5 @@
        xmlns="http://logging.apache.org/log4j/changelog"
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.2.xsd"
        type="added">
-  <author id="github:vy"/>
   <description format="asciidoc">Added `release` profile to share common release-specific Maven configuration</description>
 </entry>
