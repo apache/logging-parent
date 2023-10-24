@@ -353,7 +353,7 @@
 
           <!-- Cleans the `.flattened-pom.xml` files -->
           <execution>
-            <id>flatten-clean</id>
+            <id>clean-flattened-pom</id>
             <goals>
               <goal>clean</goal>
             </goals>
@@ -763,7 +763,7 @@
         <artifactId>bnd-baseline-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>baseline</id>
+            <id>check-api-compat</id>
             <goals>
               <goal>baseline</goal>
             </goals>
