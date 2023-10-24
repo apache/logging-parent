@@ -357,6 +357,7 @@
             <goals>
               <goal>clean</goal>
             </goals>
+            <phase>clean</phase>
           </execution>
 
           <!-- BOMs should ideally _only_ contain dependencies for modules of the project.
