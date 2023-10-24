@@ -173,6 +173,8 @@
       ~ See: https://bnd.bndtools.org/chapters/330-jpms.html#advanced-options
       -->
     <bnd-extra-module-options />
+    <!-- Allows to extend the `bnd-maven-plugin` configuration with extras: -->
+    <bnd-extra-config />
 
     <!-- dependency versions -->
     <org.eclipse.jgit.version>6.7.0.202309050840-r</org.eclipse.jgit.version>
@@ -719,7 +721,10 @@
             -jpms-module-info: $[bnd-module-name];access=0
 
             # Prevents an execution error in multi-release jars:
-            -fixupmessages: "Classes found in the wrong directory";restrict:=error;is:=warning
+            -fixupmessages.classes_in_wrong_dir: "Classes found in the wrong directory";restrict:=error;is:=warning
+
+            # Convert API leakage warnings to errors
+            -fixupmessages.priv_refs: "private references";restrict:=warning;is:=error
 
             # 1. OSGI modules do not make sense in JPMS
             # 2. BND has a problem detecting the name of multi-release JPMS modules
@@ -740,6 +745,9 @@
 
             # Add manifests and modules for each multi-release version:
             -jpms-multi-release: $[bnd-multi-release]
+
+            # Extra configuration provided by the consumer:
+            ${bnd-extra-config}
           ]]></bnd>
         </configuration>
         <executions>
