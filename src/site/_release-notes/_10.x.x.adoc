@@ -43,14 +43,15 @@ This minor release contains several small improvements.
 
 ==== Added
 
-* Added support to extend the `bnd-maven-plugin` configuration with `bnd-extra-config` property (https://github.com/apache/logging-log4j2/issues/1895[apache/logging-log4j2#1895])
+* Add support to extend the `bnd-maven-plugin` configuration with `bnd-extra-config` property (https://github.com/apache/logging-log4j2/issues/1895[apache/logging-log4j2#1895])
 
 ==== Changed
 
-* Converted `bnd-maven-plugin` API leakage warnings to errors (https://github.com/apache/logging-log4j2/issues/1895[apache/logging-log4j2#1895])
+* Convert `bnd-maven-plugin` API leakage warnings to errors (https://github.com/apache/logging-log4j2/issues/1895[apache/logging-log4j2#1895])
 * Update `com.google.errorprone:error_prone_core` to version `2.23.0` (https://github.com/apache/logging-parent/pull/49[49])
 * Update `github/codeql-action` to version `2.22.4` (https://github.com/apache/logging-parent/pull/51[51])
 
 ==== Fixed
 
+* Fix broken changelog entry validation
 * Attach `flatten:clean` to `clean` phase

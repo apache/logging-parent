@@ -807,12 +807,14 @@
                 <goals>
                   <goal>validate</goal>
                 </goals>
+                <phase>validate</phase>
                 <configuration>
-                  <skip>true</skip>
                   <validationSets>
                     <validationSet>
                       <dir>src/changelog</dir>
-                      <includes>**/*.xml</includes>
+                      <includes>
+                        <include>**/*.xml</include>
+                      </includes>
                       <publicId>http://logging.apache.org/log4j/changelog</publicId>
                       <systemId>https://logging.apache.org/log4j/changelog-0.1.2.xsd</systemId>
                       <validating>true</validating>
