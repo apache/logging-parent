@@ -183,7 +183,7 @@ jobs:
 
             # This regex needs to work for both Java (`distribution` profile) and `find` (while counting attachments)!
             # Hence, we don't escape dots, etc. with backslashes, which is problematic to get working in both worlds.
-            export DIST_ATTACHMENT_FILEPATH_PATTERN="^$ALT_DEPLOYMENT_REPO_FILEPATH/log4j-.+-$PROJECT_VERSION"'((-tests)?.jar|-cyclonedx.(xml|json))$'
+            export DIST_ATTACHMENT_FILEPATH_PATTERN="^$ALT_DEPLOYMENT_REPO_FILEPATH/log4j-.+-$PROJECT_VERSION"'((-tests)?.jar|-cyclonedx.(xml|json)|.pom)$'
             export DIST_ATTACHMENT_COUNT=$(find "$ALT_DEPLOYMENT_REPO_FILEPATH" -type f -regextype posix-extended -regex "$DIST_ATTACHMENT_FILEPATH_PATTERN" | wc -l)
 
           fi
