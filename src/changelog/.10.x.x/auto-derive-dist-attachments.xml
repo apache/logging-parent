@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://logging.apache.org/log4j/changelog"
+       xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.2.xsd"
+       type="changed">
+  <description format="asciidoc">
+    `deploy-release-reusable.yaml` is improved to automatically derive deployed artifacts as attachments.
+    This renders both `distribution-attachment-filepath-pattern` and `distribution-attachment-count` input arguments redundant for almost all cases.
+  </description>
+</entry>
