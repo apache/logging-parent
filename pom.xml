@@ -1058,6 +1058,7 @@
                     pathByFile.put("LICENSE.txt", new File("LICENSE.txt").toPath());
 
                     // Find attachments that will go into the binary distribution
+                    Path projectDir = Paths.get("${maven.multiModuleProjectDirectory}", new String[0]);
                     String attachmentFilepathPattern = "${attachmentFilepathPattern}";
                     System.out.format("Locating attachments matching the provided pattern: `%s`%n", new Object[] {attachmentFilepathPattern});
                     SortedMap attachmentPathByFile = new TreeMap();
@@ -1065,9 +1066,11 @@
                     try {
                         paths.forEach(new Consumer() {
                             public void accept(Path path) {
-                                if (Files.isRegularFile(path, /* required for BSH method resolution: */ new LinkOption[0]) &&
-                                        path.toAbsolutePath().toString().matches(attachmentFilepathPattern)) {
-                                    attachmentPathByFile.put(path.getFileName().toString(), path);
+                                if (Files.isRegularFile(path, /* required for BSH method resolution: */ new LinkOption[0])) {
+                                    String relativePath = projectDir.relativize(path).toString();
+                                    if (relativePath.matches(attachmentFilepathPattern)) {
+                                        attachmentPathByFile.put(path.getFileName().toString(), path);
+                                    }
                                 }
                             }
                         });
