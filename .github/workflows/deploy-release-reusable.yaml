@@ -78,6 +78,13 @@ jobs:
           server-password: NEXUS_PASSWORD
           gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
 
+      - name: Set up Git user
+        shell: bash
+        run: |
+          # Set up user name and email required for `git commit`
+          git config user.name "ASF Logging Services RM"
+          git config user.email private@logging.apache.org
+
       - name: Export version
         shell: bash
         run: |
@@ -107,9 +114,18 @@ jobs:
               -DnewVersion="$PROJECT_VERSION" \
               -DgenerateBackupPoms=false \
               versions:set-property
-            git config user.name "ASF Logging Services RM"
-            git config user.email private@logging.apache.org
             git commit -S pom.xml -m "Set version to \`$PROJECT_VERSION\`"
+            git push -f origin
+          fi
+
+      - name: Set the Maven `project.build.outputTimestamp` property
+        shell: bash
+        run: |
+          export PROPERTY="project.build.outputTimestamp"
+          export TIMESTAMP=$(date --utc "+%Y-%m-%dT%H:%M:%SZ")
+          sed 's|^([\t ]+<'$PROPERTY'>).+(</'$PROPERTY'>)$|\1'$TIMESTAMP'\2|g' -i pom.xml
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -S pom.xml -m 'Update the `project.build.outputTimestamp` property'
             git push -f origin
           fi
 
@@ -124,8 +140,6 @@ jobs:
             process-sources
           git add src
           if [ -n "$(git status --porcelain)" ]; then
-            git config user.name "ASF Logging Services RM"
-            git config user.email private@logging.apache.org
             git commit -S src -m "Release changelog for version \`$PROJECT_VERSION\`"
             git push -f origin
           fi
