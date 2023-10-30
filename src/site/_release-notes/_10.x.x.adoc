@@ -52,6 +52,7 @@ This minor release contains several small improvements.
 * Convert `bnd-maven-plugin` API leakage warnings to errors (https://github.com/apache/logging-log4j2/issues/1895[apache/logging-log4j2#1895])
 * Update `com.google.errorprone:error_prone_core` to version `2.23.0` (https://github.com/apache/logging-parent/pull/49[49])
 * Update `github/codeql-action` to version `2.22.5` (https://github.com/apache/logging-parent/pull/53[53])
+* Update `org.cyclonedx:cyclonedx-maven-plugin` to version `2.7.10` (https://github.com/apache/logging-parent/pull/54[54])
 
 ==== Fixed
 
