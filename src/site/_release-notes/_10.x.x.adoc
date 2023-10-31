@@ -60,3 +60,4 @@ This minor release contains several small improvements.
 
 * Fix broken changelog entry validation
 * Attach `flatten:clean` to `clean` phase
+* Add missing `Implementation-` and `Specification-` entries in `MANIFEST.MF` to `bnd-maven-plugin` configuration (https://github.com/apache/logging-log4j2/issues/1923[apache/logging-log4j2#1923])

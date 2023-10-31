@@ -708,6 +708,21 @@
         </executions>
       </plugin>
 
+      <!-- populate the `parsedVersion` property -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>parse-version</id>
+            <goals>
+              <goal>parse-version</goal>
+            </goals>
+            <phase>validate</phase>
+          </execution>
+        </executions>
+      </plugin>
+
       <!--
         ~ Generate OSGi and JPMS descriptors.
         ~ Annotate packages that need to be exported with `org.osgi.annotation.bundle.Export`
@@ -765,6 +780,19 @@
 
             # Add manifests and modules for each multi-release version:
             -jpms-multi-release: $[bnd-multi-release]
+
+            # Adds certain `Implementation-*` and `Specification-*` entries to the generated `MANIFEST.MF`.
+            # Using these properties is known to be a bad practice: https://github.com/apache/logging-log4j2/issues/1923#issuecomment-1786818254
+            # Users should use `META-INF/maven/<groupId>/<artifactId>/pom.properties` instead.
+            # Yet we support it due to backward compatibility reasons.
+            # The issue was reported to `bnd-maven-plugin` too: https://github.com/bndtools/bnd/issues/5855
+            # We set these values to their Maven Archiver defaults: https://maven.apache.org/shared/maven-archiver/#class_manifest
+            Implementation-Title: ${project.name}
+            Implementation-Vendor: ${project.organization.name}
+            Implementation-Version: ${project.version}
+            Specification-Title: ${project.name}
+            Specification-Vendor: ${project.organization.name}
+            Specification-Version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}
 
             # Extra configuration provided by the consumer:
             ${bnd-extra-config}
@@ -1234,21 +1262,6 @@
 
       <build>
         <plugins>
-
-          <!-- populate the `parsedVersion` property -->
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>parse-version</id>
-                <goals>
-                  <goal>parse-version</goal>
-                </goals>
-                <phase>validate</phase>
-              </execution>
-            </executions>
-          </plugin>
 
           <!-- copy `src/site/_constants.tmpl.adoc` to `target/constants-adoc/_constants.adoc` -->
           <plugin>
