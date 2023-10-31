@@ -789,6 +789,12 @@
       <plugin>
         <groupId>biz.aQute.bnd</groupId>
         <artifactId>bnd-baseline-maven-plugin</artifactId>
+        <configuration>
+          <!-- Do not use the &lt;distributionManagement&rt; element to download releases -->
+          <includeDistributionManagement>false</includeDistributionManagement>
+          <!-- Do not check against alpha releases -->
+          <releaseversions>true</releaseversions>
+        </configuration>
         <executions>
           <execution>
             <id>check-api-compat</id>
