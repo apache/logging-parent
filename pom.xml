@@ -289,7 +289,7 @@
         <plugin>
           <groupId>org.simplify4u.plugins</groupId>
           <artifactId>sign-maven-plugin</artifactId>
-          <version>${sign-maven-plugin.version}</version>
+          <version>${version.sign-maven-plugin}</version>
         </plugin>
 
         <plugin>
