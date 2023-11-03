@@ -207,19 +207,19 @@
     <spotbugs-annotations.version>4.8.0</spotbugs-annotations.version>
 
     <!-- plugin versions -->
-    <version.asciidoctor-maven-plugin>2.2.4</version.asciidoctor-maven-plugin>
-    <version.beanshell-maven-plugin>1.4</version.beanshell-maven-plugin>
-    <version.bnd-maven-plugin>6.4.0</version.bnd-maven-plugin>
-    <version.bnd-baseline-maven-plugin>${version.bnd-maven-plugin}</version.bnd-baseline-maven-plugin>
-    <version.build-helper-maven-plugin>3.4.0</version.build-helper-maven-plugin>
-    <version.cyclonedx-maven-plugin>2.7.10</version.cyclonedx-maven-plugin>
-    <version.flatten-maven-plugin>1.5.0</version.flatten-maven-plugin>
-    <version.log4j-changelog-maven-plugin>0.5.0</version.log4j-changelog-maven-plugin>
-    <version.maven-artifact-plugin>3.4.1</version.maven-artifact-plugin>
-    <version.sign-maven-plugin>1.0.1</version.sign-maven-plugin>
-    <version.spotbugs-maven-plugin>4.7.3.6</version.spotbugs-maven-plugin>
-    <version.spotless-maven-plugin>2.40.0</version.spotless-maven-plugin>
-    <version.xml-maven-plugin>1.1.0</version.xml-maven-plugin>
+    <asciidoctor-maven-plugin.version>2.2.4</asciidoctor-maven-plugin.version>
+    <beanshell-maven-plugin.version>1.4</beanshell-maven-plugin.version>
+    <bnd-maven-plugin.version>6.4.0</bnd-maven-plugin.version>
+    <bnd-baseline-maven-plugin.version>${bnd-maven-plugin.version}</bnd-baseline-maven-plugin.version>
+    <build-helper-maven-plugin.version>3.4.0</build-helper-maven-plugin.version>
+    <cyclonedx-maven-plugin.version>2.7.10</cyclonedx-maven-plugin.version>
+    <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
+    <log4j-changelog-maven-plugin.version>0.5.0</log4j-changelog-maven-plugin.version>
+    <maven-artifact-plugin.version>3.4.1</maven-artifact-plugin.version>
+    <sign-maven-plugin.version>1.0.1</sign-maven-plugin.version>
+    <spotbugs-maven-plugin.version>4.7.3.6</spotbugs-maven-plugin.version>
+    <spotless-maven-plugin.version>2.40.0</spotless-maven-plugin.version>
+    <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
 
     <!-- plugin dependencies versions -->
     <error-prone.version>2.23.0</error-prone.version>
@@ -270,56 +270,56 @@
         <plugin>
           <groupId>org.asciidoctor</groupId>
           <artifactId>asciidoctor-maven-plugin</artifactId>
-          <version>${version.asciidoctor-maven-plugin}</version>
+          <version>${asciidoctor-maven-plugin.version}</version>
         </plugin>
 
         <!-- `artifact:compare` is used in `.github/workflows/build-reusable.yaml` -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-artifact-plugin</artifactId>
-          <version>${version.maven-artifact-plugin}</version>
+          <version>${maven-artifact-plugin.version}</version>
         </plugin>
 
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>flatten-maven-plugin</artifactId>
-          <version>${version.flatten-maven-plugin}</version>
+          <version>${flatten-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
           <groupId>org.simplify4u.plugins</groupId>
           <artifactId>sign-maven-plugin</artifactId>
-          <version>${version.sign-maven-plugin}</version>
+          <version>${sign-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>${version.spotbugs-maven-plugin}</version>
+          <version>${spotbugs-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>xml-maven-plugin</artifactId>
-          <version>${version.xml-maven-plugin}</version>
+          <version>${xml-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
           <groupId>com.diffplug.spotless</groupId>
           <artifactId>spotless-maven-plugin</artifactId>
-          <version>${version.spotless-maven-plugin}</version>
+          <version>${spotless-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
           <groupId>com.github.genthaler</groupId>
           <artifactId>beanshell-maven-plugin</artifactId>
-          <version>${version.beanshell-maven-plugin}</version>
+          <version>${beanshell-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
           <groupId>org.apache.logging.log4j</groupId>
           <artifactId>log4j-changelog-maven-plugin</artifactId>
-          <version>${version.log4j-changelog-maven-plugin}</version>
+          <version>${log4j-changelog-maven-plugin.version}</version>
           <!-- `log4j-tools` release `0.5.0` has an invalid POM, where the parent is missing.
                This will be fixed by `<parent>keep` modification to the `flatten-bom` execution we have below.
                Until then (that is, the next `log4j-tools` release) we need this temporary dependency fix. -->
@@ -335,25 +335,25 @@
         <plugin>
           <groupId>biz.aQute.bnd</groupId>
           <artifactId>bnd-baseline-maven-plugin</artifactId>
-          <version>${version.bnd-baseline-maven-plugin}</version>
+          <version>${bnd-baseline-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
           <groupId>biz.aQute.bnd</groupId>
           <artifactId>bnd-maven-plugin</artifactId>
-          <version>${version.bnd-maven-plugin}</version>
+          <version>${bnd-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>build-helper-maven-plugin</artifactId>
-          <version>${version.build-helper-maven-plugin}</version>
+          <version>${build-helper-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
           <groupId>org.cyclonedx</groupId>
           <artifactId>cyclonedx-maven-plugin</artifactId>
-          <version>${version.cyclonedx-maven-plugin}</version>
+          <version>${cyclonedx-maven-plugin.version}</version>
         </plugin>
 
       </plugins>
