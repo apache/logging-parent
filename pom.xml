@@ -197,6 +197,84 @@
     <bnd-bundle-symbolicname>$[project.groupId].$[subst;$[subst;$[project.artifactId];log4j-];[^A-Za-z0-9];.]</bnd-bundle-symbolicname>
     <bnd-jpms-module-info>$[bnd-module-name];access=0</bnd-jpms-module-info>
 
+    <!-- VDR coordinates -->
+    <vdr.serialNumber>dfa35519-9734-4259-bba1-3e825cf4be06</vdr.serialNumber>
+    <vdr.url>https://logging.apache.org/security/urn:uuid:dfa35519-9734-4259-bba1-3e825cf4be06</vdr.url>
+    <!--
+      ~ This XSLT stylsheet performs three tasks:
+      ~
+      ~ 1. Changes the namespace from SBOM 1.4 to SBOM 1.5,
+      ~ 2. Adds a `serialNumber` to the SBOM,
+      ~ 3. Adds a BOM-link and an URL reference to our VDR to all Apache Logging Services artifacts.
+      -->
+    <transform.sbom.stylesheet><![CDATA[
+<xsl:stylesheet version="1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns="http://cyclonedx.org/schema/bom/1.5"
+    xmlns:xalan="http://xml.apache.org/xalan"
+    xmlns:cdx14="http://cyclonedx.org/schema/bom/1.4"
+    xmlns:cdx15="http://cyclonedx.org/schema/bom/1.5"
+    exclude-result-prefixes="xalan cdx14 cdx15">
+  <xsl:param name="sbom.serialNumber"/>
+  <xsl:param name="vdr.serialNumber"/>
+  <xsl:param name="vdr.url"/>
+  <xsl:output method="xml"
+              version="1.0"
+              encoding="UTF-8"
+              indent="yes"
+              xalan:indent-amount="2"
+              xalan:line-separator="&#10;"/>
+  <!-- Fixes the license formatting -->
+  <xsl:template match="/">
+    <xsl:text>&#10;</xsl:text>
+    <xsl:apply-templates />
+  </xsl:template>
+  <!-- Standard copy template -->
+  <xsl:template match="@*|node()">
+    <xsl:copy>
+      <xsl:apply-templates select="@*" />
+      <xsl:apply-templates />
+    </xsl:copy>
+  </xsl:template>
+  <xsl:template match="cdx14:*">
+    <xsl:element name="{local-name()}" namespace="http://cyclonedx.org/schema/bom/1.5">
+      <xsl:apply-templates select="@*" />
+      <xsl:apply-templates />
+    </xsl:element>
+  </xsl:template>
+  <xsl:template match="cdx14:bom">
+    <bom>
+      <xsl:attribute name="version">
+        <xsl:value-of select="1"/>
+      </xsl:attribute>
+      <xsl:attribute name="serialNumber">
+        <xsl:text>urn:uuid:</xsl:text>
+        <xsl:value-of select="$sbom.serialNumber"/>
+      </xsl:attribute>
+      <xsl:apply-templates />
+    </bom>
+  </xsl:template>
+  <xsl:template match="cdx14:externalReferences[starts-with(preceding-sibling::cdx14:group, 'org.apache.logging')]">
+    <externalReferences>
+      <xsl:apply-templates/>
+      <reference>
+        <xsl:attribute name="type">vulnerability-assertion</xsl:attribute>
+        <url>
+          <xsl:text>urn:cdx:</xsl:text>
+          <xsl:value-of select="$vdr.serialNumber"/>
+        </url>
+      </reference>
+      <reference>
+        <xsl:attribute name="type">vulnerability-assertion</xsl:attribute>
+        <url>
+          <xsl:value-of select="$vdr.url"/>
+        </url>
+      </reference>
+    </externalReferences>
+  </xsl:template>
+</xsl:stylesheet>
+]]></transform.sbom.stylesheet>
+
     <!-- dependency versions -->
     <org.eclipse.jgit.version>6.7.0.202309050840-r</org.eclipse.jgit.version>
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
@@ -468,6 +546,78 @@
               <goal>makeAggregateBom</goal>
             </goals>
             <phase>package</phase>
+            <configuration>
+              <outputFormat>xml</outputFormat>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.github.genthaler</groupId>
+        <artifactId>beanshell-maven-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.16.0</version>
+          </dependency>
+          <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>serializer</artifactId>
+            <version>2.7.3</version>
+          </dependency>
+          <dependency>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+            <version>2.7.3</version>
+          </dependency>
+        </dependencies>
+        <executions>
+          <execution>
+            <id>process-sbom</id>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <script><![CDATA[import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+import javax.xml.transform.*;
+import javax.xml.transform.stream.*;
+import org.apache.commons.codec.digest.*;
+
+    // Compute parameters
+    final String STYLESHEET = project.getProperties().getProperty("transform.sbom.stylesheet");
+    final File pomFile = project.getModel().getPomFile();
+    final byte[] digest = new DigestUtils(MessageDigestAlgorithms.SHA_256).digest(pomFile);
+    final UUID bomSerialNumber = UUID.nameUUIDFromBytes(digest);
+    final String vdrSerialNumber = Objects.requireNonNull(project.getProperties().getProperty("vdr.serialNumber"));
+    final String vdrUrl = Objects.requireNonNull(project.getProperties().getProperty("vdr.url"));
+
+    // Move original SBOM file
+    final Path basedir = project.getBasedir().toPath();
+    final Path destPath = basedir.resolve("target/bom.xml");
+    final Path sourcePath = basedir.resolve("target/bom.orig.xml");
+    if (!Files.isReadable(destPath)) {
+      System.out.println("No CycloneDX SBOM file found, skipping transformation.");
+      return;
+    }
+    Files.move(destPath, sourcePath, new CopyOption[] {StandardCopyOption.REPLACE_EXISTING});
+
+    // Apply XSLT transformation
+    final StreamSource stylesheet = new StreamSource(new StringReader(STYLESHEET));
+    final TransformerFactory factory = TransformerFactory.newInstance();
+    final Transformer transformer = factory.newTransformer(stylesheet);
+    transformer.setParameter("sbom.serialNumber", bomSerialNumber.toString());
+    transformer.setParameter("vdr.serialNumber", vdrSerialNumber);
+    transformer.setParameter("vdr.url", vdrUrl);
+    final StreamSource source = new StreamSource(sourcePath.toUri().toASCIIString());
+    final StreamResult result = new StreamResult(destPath.toUri().toASCIIString());
+    transformer.transform(source, result);
+  ]]></script>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -1044,7 +1194,8 @@
                     import org.eclipse.jgit.lib.Repository;
                     import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
-                    long timestampMillis = java.time.Instant.parse("${project.build.outputTimestamp}").toEpochMilli();
+                    String outputTimestamp = project.getProperties().getProperty("project.build.outputTimestamp");
+                    long timestampMillis = java.time.Instant.parse(outputTimestamp).toEpochMilli();
                     zip(String zipFileName, Map pathByFile) {
                         OutputStream outputStream = new FileOutputStream(zipFileName);
                         ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
