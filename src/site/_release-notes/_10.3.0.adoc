@@ -49,10 +49,13 @@ This minor release contains several small improvements.
 ==== Changed
 
 * `deploy-release-reusable.yaml` is improved to automatically derive deployed artifacts as attachments. This renders both `distribution-attachment-filepath-pattern` and `distribution-attachment-count` input arguments redundant for almost all cases.
+* Disable the usage of `<distributionManagement>` and alpha releases in the `bnd-baseline-maven-plugin`.
 * Convert `bnd-maven-plugin` API leakage warnings to errors (https://github.com/apache/logging-log4j2/issues/1895[apache/logging-log4j2#1895])
 * Update `com.google.errorprone:error_prone_core` to version `2.23.0` (https://github.com/apache/logging-parent/pull/49[49])
+* Update `org.cyclonedx:cyclonedx-maven-plugin` to version `2.7.10` (https://github.com/apache/logging-parent/pull/54[54])
 
 ==== Fixed
 
 * Fix broken changelog entry validation
 * Attach `flatten:clean` to `clean` phase
+* Add missing `Implementation-` and `Specification-` entries in `MANIFEST.MF` to `bnd-maven-plugin` configuration (https://github.com/apache/logging-log4j2/issues/1923[apache/logging-log4j2#1923])
