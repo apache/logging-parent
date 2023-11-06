@@ -156,6 +156,15 @@
          Hence, *DO NOT MANUALLY EDIT THIS VALUE*! -->
     <project.build.outputTimestamp>2023-10-26T09:50:45Z</project.build.outputTimestamp>
 
+    <!-- `project.build.outputTimestamp` is required to be present for reproducible builds.
+         We actually inherit one from the `org.apache:apache` parent.
+         Though inheriting this property has two undesired consequences:
+         1. `artifact:compare` dumps an `ERROR` log stating that this `property should not be inherited but defined` (#50)
+         2. This value is employed in various places while creating the distribution
+         To mitigate these, we define a *dummy* value here and let the CI replace it during a release.
+         Hence, *DO NOT MANUALLY EDIT THIS VALUE*! -->
+    <project.build.outputTimestamp>2023-10-26T08:29:15Z</project.build.outputTimestamp>
+
     <!-- target Java 8 -->
     <maven.compiler.source>8</maven.compiler.source>
     <maven.compiler.target>8</maven.compiler.target>
@@ -210,10 +219,9 @@
     <asciidoctor-maven-plugin.version>2.2.4</asciidoctor-maven-plugin.version>
     <beanshell-maven-plugin.version>1.4</beanshell-maven-plugin.version>
     <bnd-maven-plugin.version>6.4.0</bnd-maven-plugin.version>
+    <bnd-baseline-maven-plugin.version>${bnd-maven-plugin.version}</bnd-baseline-maven-plugin.version>
     <build-helper-maven-plugin.version>3.4.0</build-helper-maven-plugin.version>
-    <cyclonedx-maven-plugin.version>2.7.9</cyclonedx-maven-plugin.version>
-    <error-prone.version>2.23.0</error-prone.version>
-    <findsecbugs-plugin.version>1.12.0</findsecbugs-plugin.version>
+    <cyclonedx-maven-plugin.version>2.7.10</cyclonedx-maven-plugin.version>
     <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
     <log4j-changelog-maven-plugin.version>0.5.0</log4j-changelog-maven-plugin.version>
     <maven-artifact-plugin.version>3.4.1</maven-artifact-plugin.version>
@@ -221,6 +229,10 @@
     <spotbugs-maven-plugin.version>4.7.3.6</spotbugs-maven-plugin.version>
     <spotless-maven-plugin.version>2.40.0</spotless-maven-plugin.version>
     <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
+
+    <!-- plugin dependencies versions -->
+    <error-prone.version>2.23.0</error-prone.version>
+    <findsecbugs-plugin.version>1.12.0</findsecbugs-plugin.version>
 
   </properties>
 
@@ -284,6 +296,12 @@
         </plugin>
 
         <plugin>
+          <groupId>org.simplify4u.plugins</groupId>
+          <artifactId>sign-maven-plugin</artifactId>
+          <version>${sign-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
           <version>${spotbugs-maven-plugin.version}</version>
@@ -326,7 +344,7 @@
         <plugin>
           <groupId>biz.aQute.bnd</groupId>
           <artifactId>bnd-baseline-maven-plugin</artifactId>
-          <version>${bnd-maven-plugin.version}</version>
+          <version>${bnd-baseline-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
@@ -355,7 +373,6 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>flatten-maven-plugin</artifactId>
-        <version>${flatten-maven-plugin.version}</version>
         <executions>
 
           <!-- Resolves `revision` property prior to deployment.
@@ -708,6 +725,21 @@
         </executions>
       </plugin>
 
+      <!-- populate the `parsedVersion` property -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>parse-version</id>
+            <goals>
+              <goal>parse-version</goal>
+            </goals>
+            <phase>validate</phase>
+          </execution>
+        </executions>
+      </plugin>
+
       <!--
         ~ Generate OSGi and JPMS descriptors.
         ~ Annotate packages that need to be exported with `org.osgi.annotation.bundle.Export`
@@ -766,6 +798,19 @@
             # Add manifests and modules for each multi-release version:
             -jpms-multi-release: $[bnd-multi-release]
 
+            # Adds certain `Implementation-*` and `Specification-*` entries to the generated `MANIFEST.MF`.
+            # Using these properties is known to be a bad practice: https://github.com/apache/logging-log4j2/issues/1923#issuecomment-1786818254
+            # Users should use `META-INF/maven/<groupId>/<artifactId>/pom.properties` instead.
+            # Yet we support it due to backward compatibility reasons.
+            # The issue was reported to `bnd-maven-plugin` too: https://github.com/bndtools/bnd/issues/5855
+            # We set these values to their Maven Archiver defaults: https://maven.apache.org/shared/maven-archiver/#class_manifest
+            Implementation-Title: ${project.name}
+            Implementation-Vendor: ${project.organization.name}
+            Implementation-Version: ${project.version}
+            Specification-Title: ${project.name}
+            Specification-Vendor: ${project.organization.name}
+            Specification-Version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}
+
             # Extra configuration provided by the consumer:
             ${bnd-extra-config}
           ]]></bnd>
@@ -789,6 +834,12 @@
       <plugin>
         <groupId>biz.aQute.bnd</groupId>
         <artifactId>bnd-baseline-maven-plugin</artifactId>
+        <configuration>
+          <!-- Do not use the &lt;distributionManagement&rt; element to download releases -->
+          <includeDistributionManagement>false</includeDistributionManagement>
+          <!-- Do not check against alpha releases -->
+          <releaseversions>true</releaseversions>
+        </configuration>
         <executions>
           <execution>
             <id>check-api-compat</id>
@@ -912,7 +963,6 @@
           <plugin>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-changelog-maven-plugin</artifactId>
-            <version>${log4j-changelog-maven-plugin.version}</version>
             <executions>
               <execution>
                 <id>release-changelog</id>
@@ -1147,7 +1197,6 @@
           <plugin>
             <groupId>org.simplify4u.plugins</groupId>
             <artifactId>sign-maven-plugin</artifactId>
-            <version>${sign-maven-plugin.version}</version>
             <executions>
               <execution>
                 <goals>
@@ -1229,21 +1278,6 @@
       <build>
         <plugins>
 
-          <!-- populate the `parsedVersion` property -->
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>parse-version</id>
-                <goals>
-                  <goal>parse-version</goal>
-                </goals>
-                <phase>validate</phase>
-              </execution>
-            </executions>
-          </plugin>
-
           <!-- copy `src/site/_constants.tmpl.adoc` to `target/constants-adoc/_constants.adoc` -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -1311,9 +1345,6 @@
         <!-- disable `maven-site-plugin`-->
         <maven.site.skip>true</maven.site.skip>
         <maven.site.deploy.skip>true</maven.site.deploy.skip>
-
-        <!-- plugin versions -->
-        <asciidoctor-maven-plugin.version>2.2.4</asciidoctor-maven-plugin.version>
 
       </properties>
 

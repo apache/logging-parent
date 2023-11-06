@@ -74,7 +74,7 @@ Please download, test, and cast your votes on this mailing list.
 [ ] +1, release the artifacts
 [ ] -1, don't release, because...
 
-This vote is open for 24 hours and will pass unless getting a
+This vote is open for 72 hours and will pass unless getting a
 net negative vote count. All votes are welcome and we encourage
 everyone to test the release, but only the Logging Services PMC
 votes are officially counted.
