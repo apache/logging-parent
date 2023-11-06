@@ -41,7 +41,8 @@ The provided parent POM features the following conveniences:
 
 {project-name} streamlines the generation of SBOMs using {cyclonedx-maven-plugin-link}.
 Plugin execution generates SBOM files for each module, including the root one.
-Generated SBOM files are attached as artifacts with `cyclonedx` classifier and `xml`/`json`  extensions, that is, `<artifactId>-<version>-cyclonedx.{xml,json}`.
+SBOM content is enriched with VDR (Vulnerability Disclosure Report) references wherever possible.
+Generated SBOM files are attached as artifacts with `cyclonedx` classifier and XML extensions, that is, `<artifactId>-<version>-cyclonedx.xml`.
 
 [#reusable-workflows]
 === Reusable GitHub Actions workflows
