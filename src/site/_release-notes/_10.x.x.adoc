@@ -53,6 +53,7 @@ This minor release contains several small improvements.
 * Disable the usage of `<distributionManagement>` and alpha releases in the `bnd-baseline-maven-plugin`.
 * Convert `bnd-maven-plugin` API leakage warnings to errors (https://github.com/apache/logging-log4j2/issues/1895[apache/logging-log4j2#1895])
 * Update `com.google.errorprone:error_prone_core` to version `2.23.0` (https://github.com/apache/logging-parent/pull/49[49])
+* Update `org.apache.maven.plugins:maven-artifact-plugin` to version `3.5.0`
 * Update `org.cyclonedx:cyclonedx-maven-plugin` to version `2.7.10` (https://github.com/apache/logging-parent/pull/54[54])
 
 ==== Fixed
