@@ -156,15 +156,6 @@
          Hence, *DO NOT MANUALLY EDIT THIS VALUE*! -->
     <project.build.outputTimestamp>2023-11-06T09:31:38Z</project.build.outputTimestamp>
 
-    <!-- `project.build.outputTimestamp` is required to be present for reproducible builds.
-         We actually inherit one from the `org.apache:apache` parent.
-         Though inheriting this property has two undesired consequences:
-         1. `artifact:compare` dumps an `ERROR` log stating that this `property should not be inherited but defined` (#50)
-         2. This value is employed in various places while creating the distribution
-         To mitigate these, we define a *dummy* value here and let the CI replace it during a release.
-         Hence, *DO NOT MANUALLY EDIT THIS VALUE*! -->
-    <project.build.outputTimestamp>2023-11-06T09:31:38Z</project.build.outputTimestamp>
-
     <!-- target Java 8 -->
     <maven.compiler.source>8</maven.compiler.source>
     <maven.compiler.target>8</maven.compiler.target>
