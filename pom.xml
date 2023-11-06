@@ -154,7 +154,7 @@
          2. This value is employed in various places while creating the distribution
          To mitigate these, we define a *dummy* value here and let the CI replace it during a release.
          Hence, *DO NOT MANUALLY EDIT THIS VALUE*! -->
-    <project.build.outputTimestamp>2023-10-26T09:50:45Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2023-11-06T09:31:38Z</project.build.outputTimestamp>
 
     <!-- `project.build.outputTimestamp` is required to be present for reproducible builds.
          We actually inherit one from the `org.apache:apache` parent.
@@ -163,7 +163,7 @@
          2. This value is employed in various places while creating the distribution
          To mitigate these, we define a *dummy* value here and let the CI replace it during a release.
          Hence, *DO NOT MANUALLY EDIT THIS VALUE*! -->
-    <project.build.outputTimestamp>2023-10-26T08:29:15Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2023-11-06T09:31:38Z</project.build.outputTimestamp>
 
     <!-- target Java 8 -->
     <maven.compiler.source>8</maven.compiler.source>
