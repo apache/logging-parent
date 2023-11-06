@@ -1522,6 +1522,33 @@ import org.apache.commons.codec.digest.*;
 
     </profile>
 
+    <!-- Adds exclusion filter to Spotbugs, if present -->
+    <profile>
+
+      <id>spotbugs-exclude</id>
+
+      <activation>
+        <file>
+          <exists>${maven.multiModuleProjectDirectory}/spotbugs-exclude.xml</exists>
+        </file>
+      </activation>
+
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <configuration>
+              <excludeFilterFile>${maven.multiModuleProjectDirectory}/spotbugs-exclude.xml</excludeFilterFile>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+
+    </profile>
+
   </profiles>
 
 </project>
