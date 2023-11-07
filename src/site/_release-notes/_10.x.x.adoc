@@ -52,6 +52,7 @@ This minor release contains several small improvements.
 * `deploy-release-reusable.yaml` is improved to automatically derive deployed artifacts as attachments. This renders both `distribution-attachment-filepath-pattern` and `distribution-attachment-count` input arguments redundant for almost all cases.
 * Disable the usage of `<distributionManagement>` and alpha releases in the `bnd-baseline-maven-plugin`.
 * Convert `bnd-maven-plugin` API leakage warnings to errors (https://github.com/apache/logging-log4j2/issues/1895[apache/logging-log4j2#1895])
+* Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.1` (https://github.com/apache/logging-parent/pull/58[58])
 * Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.8.1.0` (https://github.com/apache/logging-parent/pull/57[57])
 * Update `com.google.errorprone:error_prone_core` to version `2.23.0` (https://github.com/apache/logging-parent/pull/49[49])
 * Update `org.apache.maven.plugins:maven-artifact-plugin` to version `3.5.0`
