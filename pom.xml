@@ -198,25 +198,23 @@
     <bnd-jpms-module-info>$[bnd-module-name];access=0</bnd-jpms-module-info>
 
     <!-- VDR coordinates -->
-    <vdr.serialNumber>dfa35519-9734-4259-bba1-3e825cf4be06</vdr.serialNumber>
-    <vdr.url>https://logging.apache.org/cyclonedx/urn:uuid:dfa35519-9734-4259-bba1-3e825cf4be06</vdr.url>
+    <vdr.url>https://logging.apache.org/cyclonedx/vdr.xml</vdr.url>
     <!--
-      ~ This XSLT stylsheet performs three tasks:
+      ~ This XSLT stylesheet performs three tasks:
       ~
-      ~ 1. Changes the namespace from SBOM 1.4 to SBOM 1.5,
-      ~ 2. Adds a `serialNumber` to the SBOM,
-      ~ 3. Adds a BOM-link and an URL reference to our VDR to all Apache Logging Services artifacts.
+      ~ 1. Changes the namespace from SBOM 1.4 to SBOM 1.5
+      ~ 2. Adds a `serialNumber` to the SBOM
+      ~ 3. Adds a reference to the Apache Logging Services VDR
       -->
-    <transform.sbom.stylesheet><![CDATA[
-<xsl:stylesheet version="1.0"
+    <sbom.xslt><![CDATA[<xsl:stylesheet version="1.0"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
     xmlns="http://cyclonedx.org/schema/bom/1.5"
     xmlns:xalan="http://xml.apache.org/xalan"
     xmlns:cdx14="http://cyclonedx.org/schema/bom/1.4"
     xmlns:cdx15="http://cyclonedx.org/schema/bom/1.5"
     exclude-result-prefixes="xalan cdx14 cdx15">
+
   <xsl:param name="sbom.serialNumber"/>
-  <xsl:param name="vdr.serialNumber"/>
   <xsl:param name="vdr.url"/>
   <xsl:output method="xml"
               version="1.0"
@@ -224,11 +222,13 @@
               indent="yes"
               xalan:indent-amount="2"
               xalan:line-separator="&#10;"/>
+
   <!-- Fixes the license formatting -->
   <xsl:template match="/">
     <xsl:text>&#10;</xsl:text>
     <xsl:apply-templates />
   </xsl:template>
+
   <!-- Standard copy template -->
   <xsl:template match="@*|node()">
     <xsl:copy>
@@ -236,12 +236,16 @@
       <xsl:apply-templates />
     </xsl:copy>
   </xsl:template>
+
+  <!-- Bump the SBOM schema version from `1.4` to `1.5` -->
   <xsl:template match="cdx14:*">
     <xsl:element name="{local-name()}" namespace="http://cyclonedx.org/schema/bom/1.5">
       <xsl:apply-templates select="@*" />
       <xsl:apply-templates />
     </xsl:element>
   </xsl:template>
+
+  <!-- Add the SBOM `serialNumber` -->
   <xsl:template match="cdx14:bom">
     <bom>
       <xsl:attribute name="version">
@@ -254,16 +258,11 @@
       <xsl:apply-templates />
     </bom>
   </xsl:template>
+
+  <!-- Add the link to the VDR -->
   <xsl:template match="cdx14:externalReferences[starts-with(preceding-sibling::cdx14:group, 'org.apache.logging')]">
     <externalReferences>
       <xsl:apply-templates/>
-      <reference>
-        <xsl:attribute name="type">vulnerability-assertion</xsl:attribute>
-        <url>
-          <xsl:text>urn:cdx:</xsl:text>
-          <xsl:value-of select="$vdr.serialNumber"/>
-        </url>
-      </reference>
       <reference>
         <xsl:attribute name="type">vulnerability-assertion</xsl:attribute>
         <url>
@@ -272,8 +271,9 @@
       </reference>
     </externalReferences>
   </xsl:template>
+
 </xsl:stylesheet>
-]]></transform.sbom.stylesheet>
+]]></sbom.xslt>
 
     <!-- dependency versions -->
     <org.eclipse.jgit.version>6.7.0.202309050840-r</org.eclipse.jgit.version>
@@ -589,12 +589,11 @@ import javax.xml.transform.stream.*;
 import org.apache.commons.codec.digest.*;
 
     // Compute parameters
-    final String STYLESHEET = project.getProperties().getProperty("transform.sbom.stylesheet");
+    final String xslt = project.getProperties().getProperty("sbom.xslt");
     final File pomFile = project.getModel().getPomFile();
     final byte[] digest = new DigestUtils(MessageDigestAlgorithms.SHA_256).digest(pomFile);
     final UUID bomSerialNumber = UUID.nameUUIDFromBytes(digest);
-    final String vdrSerialNumber = Objects.requireNonNull(project.getProperties().getProperty("vdr.serialNumber"));
-    final String vdrUrl = Objects.requireNonNull(project.getProperties().getProperty("vdr.url"));
+    final String vdrUrl = Objects.requireNonNull(project.getProperties().getProperty("vdr.url"), "vdr.url");
 
     // Move original SBOM file
     final Path basedir = project.getBasedir().toPath();
@@ -607,11 +606,10 @@ import org.apache.commons.codec.digest.*;
     Files.move(destPath, sourcePath, new CopyOption[] {StandardCopyOption.REPLACE_EXISTING});
 
     // Apply XSLT transformation
-    final StreamSource stylesheet = new StreamSource(new StringReader(STYLESHEET));
+    final StreamSource xsltSource = new StreamSource(new StringReader(xslt));
     final TransformerFactory factory = TransformerFactory.newInstance();
-    final Transformer transformer = factory.newTransformer(stylesheet);
+    final Transformer transformer = factory.newTransformer(xsltSource);
     transformer.setParameter("sbom.serialNumber", bomSerialNumber.toString());
-    transformer.setParameter("vdr.serialNumber", vdrSerialNumber);
     transformer.setParameter("vdr.url", vdrUrl);
     final StreamSource source = new StreamSource(sourcePath.toUri().toASCIIString());
     final StreamResult result = new StreamResult(destPath.toUri().toASCIIString());

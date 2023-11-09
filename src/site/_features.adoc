@@ -39,10 +39,12 @@ The provided parent POM features the following conveniences:
 [#cyclonedx-sbom]
 ==== CycloneDX Software Bill of Materials (SBOM)
 
-{project-name} streamlines the generation of SBOMs using {cyclonedx-maven-plugin-link}.
-Plugin execution generates SBOM files for each module, including the root one.
-SBOM content is enriched with VDR (Vulnerability Disclosure Report) references wherever possible.
+{project-name} streamlines the generation of https://cyclonedx.org/capabilities/vdr[CycloneDX Software Bill of Materials (SBOM)] using {cyclonedx-maven-plugin-link}.
+Plugin execution is configured and activated to generate SBOM files for each module, including the root one.
 Generated SBOM files are attached as artifacts with `cyclonedx` classifier and XML extensions, that is, `<artifactId>-<version>-cyclonedx.xml`.
+
+Produced SBOMs are enriched with `vulnerability-assertion` references to a https://cyclonedx.org/capabilities/vdr[CycloneDX Vulnerability Disclosure Report (VDR)] that Apache Logging Services uses for all projects it maintains.
+This VDR is accessible through the following URL: https://logging.apache.org/cyclonedx/vdr.xml[]
 
 [#reusable-workflows]
 === Reusable GitHub Actions workflows
