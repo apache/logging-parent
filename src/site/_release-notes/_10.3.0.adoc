@@ -36,7 +36,7 @@
 [#release-notes-10-3-0]
 === 10.3.0
 
-Release date:: 2023-11-06
+Release date:: 2023-11-09
 
 This minor release contains several small improvements.
 
