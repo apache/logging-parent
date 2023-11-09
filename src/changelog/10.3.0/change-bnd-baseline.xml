@@ -4,6 +4,6 @@
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.2.xsd"
        type="changed">
   <description format="asciidoc">
-    Disable the usage of `&lt;distributionManagement&gt;` and alpha releases in the `bnd-baseline-maven-plugin`.
+    Disable the usage of `&lt;distributionManagement&gt;` and alpha releases in the `bnd-baseline-maven-plugin`
   </description>
 </entry>
