@@ -2,8 +2,8 @@
 <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="http://logging.apache.org/log4j/changelog"
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.2.xsd"
-       type="changed">
+       type="added">
   <description format="asciidoc">
-    Disable the usage of `&lt;distributionManagement&gt;` and alpha releases in the `bnd-baseline-maven-plugin`.
+    Add XSLT transformation step to add a deterministic `serialNumber` and VDR links to the SBOM
   </description>
 </entry>

@@ -16,7 +16,7 @@
 ////
 
 include::_constants.adoc[]
-:cyclonedx-maven-plugin-link: https://github.com/CycloneDX/cyclonedx-maven-plugin[`cyclonedx-maven-plugin`]
+:cyclonedx-maven-plugin-link: https://github.com/CycloneDX/cyclonedx-maven-plugin[cyclonedx-maven-plugin]
 
 [#features]
 == Features
@@ -39,9 +39,12 @@ The provided parent POM features the following conveniences:
 [#cyclonedx-sbom]
 ==== CycloneDX Software Bill of Materials (SBOM)
 
-{project-name} streamlines the generation of SBOMs using {cyclonedx-maven-plugin-link}.
-Plugin execution generates SBOM files for each module, including the root one.
-Generated SBOM files are attached as artifacts with `cyclonedx` classifier and `xml`/`json`  extensions, that is, `<artifactId>-<version>-cyclonedx.{xml,json}`.
+{project-name} streamlines the generation of https://cyclonedx.org/capabilities/vdr[CycloneDX Software Bill of Materials (SBOM)] using {cyclonedx-maven-plugin-link}.
+Plugin execution is configured and activated to generate SBOM files for each module, including the root one.
+Generated SBOM files are attached as artifacts with `cyclonedx` classifier and XML extensions, that is, `<artifactId>-<version>-cyclonedx.xml`.
+
+Produced SBOMs are enriched with `vulnerability-assertion` references to a https://cyclonedx.org/capabilities/vdr[CycloneDX Vulnerability Disclosure Report (VDR)] that Apache Logging Services uses for all projects it maintains.
+This VDR is accessible through the following URL: https://logging.apache.org/cyclonedx/vdr.xml[]
 
 [#reusable-workflows]
 === Reusable GitHub Actions workflows
@@ -58,6 +61,7 @@ The provided reusable GitHub Actions workflows feature the following convenience
 
 `deploy-release-reusable.yaml`::
 * Deploys release artifacts
+* Updates `revision` and `project.build.outputTimestamp` Maven properties
 * Generates the release notes
 * Generates the distribution ZIP containing Git-tracked sources, release notes, binary attachments, `NOTICE.txt`, etc.
 * Generates the release vote & announcement emails
