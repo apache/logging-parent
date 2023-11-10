@@ -192,10 +192,11 @@ svn co https://dist.apache.org/repos/dist/release/logging logging-dist-rel
 cd logging-dist-rel
 mkdir -p {project-id}/7.8.0
 cp ../logging-dist-dev/{project-id}/*-7.8.0-{bin,src}.* {project-id}/7.8.0/
+svn add {project-id}/7.8.0
 svn commit -m 'Add `{project-id}` version `7.8.0` distribution'
 
 # Update `dev` folder
-cd logging-dist-dev
+cd ../logging-dist-dev
 cp {project-id}/*-7.8.0-email-announce.txt /tmp
 svn rm {project-id}
 svn commit -m 'Remove `{project-id}` version `7.8.0` files released'
