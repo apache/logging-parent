@@ -545,6 +545,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#security">Security</a></li>
 <li><a href="#release-notes">Release Notes</a>
 <ul class="sectlevel2">
+<li><a href="#release-notes-10-3-0">10.3.0</a></li>
 <li><a href="#release-notes-10-2-0">10.2.0</a></li>
 <li><a href="#release-notes-10-1-1">10.1.1</a></li>
 <li><a href="#release-notes-10-1-0">10.1.0</a></li>
@@ -602,7 +603,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <p><a href="https://github.com/bndtools/bnd/blob/master/maven-plugins/bnd-maven-plugin/README.md"><code>bnd-maven-plugin</code></a> integration for auto-generating OSGi and JPMS descriptors</p>
 </li>
 <li>
-<p><a href="https://github.com/CycloneDX/cyclonedx-maven-plugin">`cyclonedx-maven-plugin`</a> integration for auto-generating Software Bill of Materials (SBOM)</p>
+<p><a href="https://github.com/CycloneDX/cyclonedx-maven-plugin">cyclonedx-maven-plugin</a> integration for auto-generating Software Bill of Materials (SBOM)</p>
 </li>
 <li>
 <p><a href="https://asciidoc.org/">AsciiDoc</a>-based site generation</p>
@@ -612,9 +613,13 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <div class="sect3">
 <h4 id="cyclonedx-sbom">CycloneDX Software Bill of Materials (SBOM)</h4>
 <div class="paragraph">
-<p>Logging Parent streamlines the generation of SBOMs using <a href="https://github.com/CycloneDX/cyclonedx-maven-plugin">`cyclonedx-maven-plugin`</a>.
-Plugin execution generates SBOM files for each module, including the root one.
-Generated SBOM files are attached as artifacts with <code>cyclonedx</code> classifier and <code>xml</code>/<code>json</code>  extensions, that is, <code>&lt;artifactId&gt;-&lt;version&gt;-cyclonedx.{xml,json}</code>.</p>
+<p>Logging Parent streamlines the generation of <a href="https://cyclonedx.org/capabilities/vdr">CycloneDX Software Bill of Materials (SBOM)</a> using <a href="https://github.com/CycloneDX/cyclonedx-maven-plugin">cyclonedx-maven-plugin</a>.
+Plugin execution is configured and activated to generate SBOM files for each module, including the root one.
+Generated SBOM files are attached as artifacts with <code>cyclonedx</code> classifier and XML extensions, that is, <code>&lt;artifactId&gt;-&lt;version&gt;-cyclonedx.xml</code>.</p>
+</div>
+<div class="paragraph">
+<p>Produced SBOMs are enriched with <code>vulnerability-assertion</code> references to a <a href="https://cyclonedx.org/capabilities/vdr">CycloneDX Vulnerability Disclosure Report (VDR)</a> that Apache Logging Services uses for all projects it maintains.
+This VDR is accessible through the following URL: <a href="https://logging.apache.org/cyclonedx/vdr.xml" class="bare">https://logging.apache.org/cyclonedx/vdr.xml</a></p>
 </div>
 </div>
 </div>
@@ -659,6 +664,9 @@ Generated SBOM files are attached as artifacts with <code>cyclonedx</code> class
 <p>Deploys release artifacts</p>
 </li>
 <li>
+<p>Updates <code>revision</code> and <code>project.build.outputTimestamp</code> Maven properties</p>
+</li>
+<li>
 <p>Generates the release notes</p>
 </li>
 <li>
@@ -687,7 +695,7 @@ Generated SBOM files are attached as artifacts with <code>cyclonedx</code> class
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Add <code>org.apache.logging:logging-parent:10.2.0</code> as a <code>parent</code> to your <code>pom.xml</code></p>
+<p>Add <code>org.apache.logging:logging-parent:10.3.0</code> as a <code>parent</code> to your <code>pom.xml</code></p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -784,6 +792,86 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 <h2 id="release-notes">Release Notes</h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="release-notes-10-3-0">10.3.0</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2023-11-09</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This minor release contains several small improvements.</p>
+</div>
+<div class="sect3">
+<h4 id="_added">Added</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Add support to extend the <code>bnd-maven-plugin</code> configuration with <code>bnd-extra-config</code> property (<a href="https://github.com/apache/logging-log4j2/issues/1895">apache/logging-log4j2#1895</a>)</p>
+</li>
+<li>
+<p>Add support to replace <code>project.build.outputTimestamp</code> Maven property in CI (<a href="https://github.com/apache/logging-parent/issues/50">50</a>)</p>
+</li>
+<li>
+<p>Add XSLT transformation step to add a deterministic <code>serialNumber</code> and VDR links to the SBOM</p>
+</li>
+<li>
+<p>Add support for an optional <code>spotbugs-exclude.xml</code> file</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_changed">Changed</h4>
+<div class="ulist">
+<ul>
+<li>
+<p><code>deploy-release-reusable.yaml</code> is improved to automatically derive deployed artifacts as attachments. This renders both <code>distribution-attachment-filepath-pattern</code> and <code>distribution-attachment-count</code> input arguments redundant for almost all cases.</p>
+</li>
+<li>
+<p>Disable the usage of <code>&lt;distributionManagement&gt;</code> and alpha releases in the <code>bnd-baseline-maven-plugin</code></p>
+</li>
+<li>
+<p>Convert <code>bnd-maven-plugin</code> API leakage warnings to errors (<a href="https://github.com/apache/logging-log4j2/issues/1895">apache/logging-log4j2#1895</a>)</p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-annotations</code> to version <code>4.8.1</code> (<a href="https://github.com/apache/logging-parent/pull/58">58</a>)</p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.8.1.0</code> (<a href="https://github.com/apache/logging-parent/pull/57">57</a>)</p>
+</li>
+<li>
+<p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.23.0</code> (<a href="https://github.com/apache/logging-parent/pull/49">49</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache.maven.plugins:maven-artifact-plugin</code> to version <code>3.5.0</code></p>
+</li>
+<li>
+<p>Update <code>org.cyclonedx:cyclonedx-maven-plugin</code> to version <code>2.7.10</code> (<a href="https://github.com/apache/logging-parent/pull/54">54</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_fixed">Fixed</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Fix broken changelog entry validation</p>
+</li>
+<li>
+<p>Attach <code>flatten:clean</code> to <code>clean</code> phase</p>
+</li>
+<li>
+<p>Add missing <code>Implementation-</code> and <code>Specification-</code> entries in <code>MANIFEST.MF</code> to <code>bnd-maven-plugin</code> configuration (<a href="https://github.com/apache/logging-log4j2/issues/1923">apache/logging-log4j2#1923</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="release-notes-10-2-0">10.2.0</h3>
 <div class="dlist">
 <dl>
@@ -797,7 +885,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 <p>This minor release contains several small improvements.</p>
 </div>
 <div class="sect3">
-<h4 id="_added">Added</h4>
+<h4 id="_added_2">Added</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -807,7 +895,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed">Changed</h4>
+<h4 id="_changed_2">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -832,7 +920,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 </div>
 </div>
 <div class="sect3">
-<h4 id="_fixed">Fixed</h4>
+<h4 id="_fixed_2">Fixed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -868,7 +956,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 <p>This patch release contains minor fixes addressing issues blocking the release of <code>log4j-tools</code>, <code>log4j-kotlin</code>, etc.</p>
 </div>
 <div class="sect3">
-<h4 id="_added_2">Added</h4>
+<h4 id="_added_3">Added</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -878,7 +966,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_2">Changed</h4>
+<h4 id="_changed_3">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -891,7 +979,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 </div>
 </div>
 <div class="sect3">
-<h4 id="_fixed_2">Fixed</h4>
+<h4 id="_fixed_3">Fixed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -925,7 +1013,7 @@ Hence, no need for custom <code>.bnd</code> and/or <code>module-info.java</code>
 In particular, we expect the absence of <code>module-info.java</code> files to avoid several IDE and testing related headaches.</p>
 </div>
 <div class="sect3">
-<h4 id="_added_3">Added</h4>
+<h4 id="_added_4">Added</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -947,7 +1035,7 @@ In particular, we expect the absence of <code>module-info.java</code> files to a
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_3">Changed</h4>
+<h4 id="_changed_4">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -982,7 +1070,7 @@ In particular, we expect the absence of <code>module-info.java</code> files to a
 </div>
 </div>
 <div class="sect3">
-<h4 id="_fixed_3">Fixed</h4>
+<h4 id="_fixed_4">Fixed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1012,7 +1100,7 @@ See <code>README.adoc</code> for the complete list of features and their usage.<
 All preparations (release notes, source and binary distributions, vote &amp; announcement emails, etc.) are staged to both Nexus and SVN and waiting the release manager to proceed.</p>
 </div>
 <div class="sect3">
-<h4 id="_added_4">Added</h4>
+<h4 id="_added_5">Added</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1043,7 +1131,7 @@ All preparations (release notes, source and binary distributions, vote &amp; ann
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_4">Changed</h4>
+<h4 id="_changed_5">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1464,7 +1552,7 @@ See the License for the specific language governing permissions and limitations 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-10-18 10:26:59 +0200
+Last updated 2023-11-09 09:08:55 UTC
 </div>
 </div>
 </body>
