@@ -282,6 +282,7 @@
     <osgi.annotation.version>8.1.0</osgi.annotation.version>
     <osgi.annotation.bundle.version>2.0.0</osgi.annotation.bundle.version>
     <osgi.annotation.versioning.version>1.1.2</osgi.annotation.versioning.version>
+    <palantir-java-format.version>2.38.0</palantir-java-format.version>
     <spotbugs-annotations.version>4.8.1</spotbugs-annotations.version>
 
     <!-- plugin versions -->
@@ -719,16 +720,9 @@ import org.apache.commons.codec.digest.*;
  * limitations under the License.
  */</content>
             </licenseHeader>
-            <trimTrailingWhitespace />
-            <endWithNewline />
-            <removeUnusedImports />
-            <indent>
-              <spaces>true</spaces>
-              <spacesPerTab>4</spacesPerTab>
-            </indent>
-            <importOrder>
-              <order>java,javax,jakarta,,\#java,\#javax,\#jakarta,\#</order>
-            </importOrder>
+            <palantirJavaFormat>
+              <version>${palantir-java-format.version}</version>
+            </palantirJavaFormat>
           </java>
           <pom>
             <licenseHeader>
