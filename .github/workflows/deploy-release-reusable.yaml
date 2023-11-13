@@ -122,10 +122,14 @@ jobs:
         shell: bash
         run: |
           export PROPERTY="project.build.outputTimestamp"
+          grep -q '^([\t ]+<'$PROPERTY'>' pom.xml || {
+            echo "Failed to find the \`$PROPERTY\` Maven property!"
+            exit 1
+          }
           export TIMESTAMP=$(TZ=UTC0 git show --quiet --date="format-local:%Y-%m-%dT%H:%M:%SZ" --format="%cd")
           sed -r 's|^([\t ]+<'$PROPERTY'>).+(</'$PROPERTY'>)$|\1'$TIMESTAMP'\2|g' -i pom.xml
           if [ -n "$(git status --porcelain)" ]; then
-            git commit -S pom.xml -m 'Update the `project.build.outputTimestamp` property'
+            git commit -S pom.xml -m "Update the \`$PROPERTY\` property"
             git push -f origin
           fi
 
