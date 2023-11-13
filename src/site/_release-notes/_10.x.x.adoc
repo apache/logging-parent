@@ -43,10 +43,12 @@ This minor release contains several small improvements.
 
 ==== Added
 
+* Add deterministic Palantir Java formatter
 * Add XSLT transformation step to add a deterministic `serialNumber` and VDR links to the SBOM
 
 ==== Changed
 
+* Increase directory scanning depth from 8 to 32 in the distribution BeanShell script
 * Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.1` (https://github.com/apache/logging-parent/pull/58[58])
 * Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.8.1.0` (https://github.com/apache/logging-parent/pull/57[57])
 * Update `org.apache.maven.plugins:maven-artifact-plugin` to version `3.5.0`
