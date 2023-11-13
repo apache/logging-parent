@@ -44,7 +44,6 @@ This minor release contains several small improvements.
 ==== Added
 
 * Add deterministic Palantir Java formatter
-* Add XSLT transformation step to add a deterministic `serialNumber` and VDR links to the SBOM
 
 ==== Changed
 
