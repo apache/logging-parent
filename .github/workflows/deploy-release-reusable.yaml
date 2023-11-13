@@ -122,7 +122,7 @@ jobs:
         shell: bash
         run: |
           export PROPERTY="project.build.outputTimestamp"
-          grep -q '^([\t ]+<'$PROPERTY'>' pom.xml || {
+          grep -qE '^[\t ]+<'$PROPERTY'>' pom.xml || {
             echo "Failed to find the \`$PROPERTY\` Maven property!"
             exit 1
           }
