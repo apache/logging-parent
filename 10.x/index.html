@@ -545,6 +545,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#security">Security</a></li>
 <li><a href="#release-notes">Release Notes</a>
 <ul class="sectlevel2">
+<li><a href="#release-notes-10-4-0">10.4.0</a></li>
 <li><a href="#release-notes-10-3-0">10.3.0</a></li>
 <li><a href="#release-notes-10-2-0">10.2.0</a></li>
 <li><a href="#release-notes-10-1-1">10.1.1</a></li>
@@ -695,7 +696,7 @@ This VDR is accessible through the following URL: <a href="https://logging.apach
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Add <code>org.apache.logging:logging-parent:10.3.0</code> as a <code>parent</code> to your <code>pom.xml</code></p>
+<p>Add <code>org.apache.logging:logging-parent:10.4.0</code> as a <code>parent</code> to your <code>pom.xml</code></p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -792,6 +793,40 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 <h2 id="release-notes">Release Notes</h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="release-notes-10-4-0">10.4.0</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2023-11-13</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This minor release contains several small improvements.</p>
+</div>
+<div class="sect3">
+<h4 id="_added">Added</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Add deterministic Palantir Java formatter</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_changed">Changed</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Increase directory scanning depth from 8 to 32 in the distribution BeanShell script</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="release-notes-10-3-0">10.3.0</h3>
 <div class="dlist">
 <dl>
@@ -805,7 +840,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 <p>This minor release contains several small improvements.</p>
 </div>
 <div class="sect3">
-<h4 id="_added">Added</h4>
+<h4 id="_added_2">Added</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -824,7 +859,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed">Changed</h4>
+<h4 id="_changed_2">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -885,7 +920,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 <p>This minor release contains several small improvements.</p>
 </div>
 <div class="sect3">
-<h4 id="_added_2">Added</h4>
+<h4 id="_added_3">Added</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -895,7 +930,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_2">Changed</h4>
+<h4 id="_changed_3">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -956,7 +991,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 <p>This patch release contains minor fixes addressing issues blocking the release of <code>log4j-tools</code>, <code>log4j-kotlin</code>, etc.</p>
 </div>
 <div class="sect3">
-<h4 id="_added_3">Added</h4>
+<h4 id="_added_4">Added</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -966,7 +1001,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_3">Changed</h4>
+<h4 id="_changed_4">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1013,7 +1048,7 @@ Hence, no need for custom <code>.bnd</code> and/or <code>module-info.java</code>
 In particular, we expect the absence of <code>module-info.java</code> files to avoid several IDE and testing related headaches.</p>
 </div>
 <div class="sect3">
-<h4 id="_added_4">Added</h4>
+<h4 id="_added_5">Added</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1035,7 +1070,7 @@ In particular, we expect the absence of <code>module-info.java</code> files to a
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_4">Changed</h4>
+<h4 id="_changed_5">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1100,7 +1135,7 @@ See <code>README.adoc</code> for the complete list of features and their usage.<
 All preparations (release notes, source and binary distributions, vote &amp; announcement emails, etc.) are staged to both Nexus and SVN and waiting the release manager to proceed.</p>
 </div>
 <div class="sect3">
-<h4 id="_added_5">Added</h4>
+<h4 id="_added_6">Added</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1131,7 +1166,7 @@ All preparations (release notes, source and binary distributions, vote &amp; ann
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_5">Changed</h4>
+<h4 id="_changed_6">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1435,10 +1470,11 @@ svn co https://dist.apache.org/repos/dist/release/logging logging-dist-rel
 cd logging-dist-rel
 mkdir -p logging-parent/7.8.0
 cp ../logging-dist-dev/logging-parent/*-7.8.0-{bin,src}.* logging-parent/7.8.0/
+svn add logging-parent/7.8.0
 svn commit -m 'Add `logging-parent` version `7.8.0` distribution'
 
 # Update `dev` folder
-cd logging-dist-dev
+cd ../logging-dist-dev
 cp logging-parent/*-7.8.0-email-announce.txt /tmp
 svn rm logging-parent
 svn commit -m 'Remove `logging-parent` version `7.8.0` files released'</code></pre>
@@ -1552,7 +1588,7 @@ See the License for the specific language governing permissions and limitations 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-11-09 09:08:55 UTC
+Last updated 2023-11-13 20:52:45 UTC
 </div>
 </div>
 </body>
