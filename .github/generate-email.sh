@@ -16,6 +16,10 @@
 # limitations under the License.
 #
 
+# Enable strict mode
+set -euo pipefail
+IFS=$'\n\t'
+
 SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 
 stderr() {
@@ -45,6 +49,13 @@ RELEASE_NOTES_FILE="$SCRIPT_DIR/../src/site/_release-notes/_$PROJECT_VERSION.ado
 [ -f "$RELEASE_NOTES_FILE" ] || {
     stderr "Couldn't find release notes file: $RELEASE_NOTES_FILE"
     exit 1
+}
+
+dump_review_kit() {
+    cat "$SCRIPT_DIR/release-review-kit.txt" \
+        | sed -n '/-----8<-----~( cut here )~-----8<-----/,$p' \
+        | tail -n +2 \
+        | sed -r 's!^!    !g'
 }
 
 dump_release_notes() {
@@ -79,9 +90,17 @@ net negative vote count. All votes are welcome and we encourage
 everyone to test the release, but only the Logging Services PMC
 votes are officially counted.
 
-=== Release Notes
+=== Review kit
+
+The minimum set of steps needed to review the uploaded distribution
+files in the Subversion repository can be summarized as follows:
+
+$(dump_review_kit)
+
+=== Release notes
+
+$(dump_release_notes)
 EOF
-    dump_release_notes
     ;;
 
 announce)
