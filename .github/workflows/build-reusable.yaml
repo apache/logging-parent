@@ -105,8 +105,8 @@ jobs:
         with:
           name: reproducibility-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
           path: |
+            **/target/bom.xml
             **/target/*.buildcompare
             **/target/*.jar
             **/target/*.zip
-            **/target/reference/*.jar
-            **/target/reference/*.zip
+            **/target/reference/*
