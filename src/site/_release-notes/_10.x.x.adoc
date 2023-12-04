@@ -47,4 +47,5 @@ This minor release contains several small improvements.
 * Update `com.diffplug.spotless:spotless-maven-plugin` to version `2.41.1` (https://github.com/apache/logging-parent/pull/70[70])
 * Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.2` (https://github.com/apache/logging-parent/pull/68[68])
 * Update `github/codeql-action` to version `2.22.8` (https://github.com/apache/logging-parent/pull/64[64])
+* Update `org.apache.logging.log4j:log4j-changelog-maven-plugin` to version `0.6.0` (https://github.com/apache/logging-parent/pull/72[72])
 * Update `org.codehaus.mojo:build-helper-maven-plugin` to version `3.5.0` (https://github.com/apache/logging-parent/pull/65[65])
