@@ -196,6 +196,69 @@
       -->
     <bnd-bundle-symbolicname>$[project.groupId].$[subst;$[subst;$[project.artifactId];log4j-];[^A-Za-z0-9];.]</bnd-bundle-symbolicname>
     <bnd-jpms-module-info>$[bnd-module-name];access=0</bnd-jpms-module-info>
+    <!-- Internally used to configure both `bnd-process` and `jar` goals -->
+    <bnd-common-config><![CDATA[
+      # `Bundle-DocURL` uses `project.url`.
+      # This is set to `${project.parent.url}${project.artifactId}` through Maven's inheritance assembly[1].
+      # This eventually produces incorrect values.
+      # Hence, we remove them from the produced descriptor.
+      #
+      # `Bundle-SCM` uses `project.scm.url` and suffers from the same inheritance problem `Bundle-DocURL` has.
+      #
+      # [1] https://maven.apache.org/ref/3.9.4/maven-model-builder/#inheritance-assembly
+      #     Inheritance assembly can be disabled for certain properties, e.g., `project.url`.
+      #     Though this would necessitate changes in the root `pom.xml`s of parented projects.
+      #
+      # `Bundle-Developers` is removed, since it is nothing but noise and occupies quite some real estate.
+      -removeheaders: Bundle-DocURL,Bundle-SCM,Bundle-Developers
+
+      # Create OSGi module name based on the `groupId` and `artifactId`.
+      # This almost agrees with `maven-bundle-plugin`, but replaces non-alphanumeric characters
+      # with full stops `.`.
+      Bundle-SymbolicName: $[bnd-bundle-symbolicname]
+
+      # Prevents an execution error in multi-release jars:
+      -fixupmessages.classes_in_wrong_dir: "Classes found in the wrong directory";restrict:=error;is:=warning
+
+      # Convert API leakage warnings to errors
+      -fixupmessages.priv_refs: "private references";restrict:=warning;is:=error
+
+      # 1. OSGI modules do not make sense in JPMS
+      # 2. BND has a problem detecting the name of multi-release JPMS modules
+      -jpms-module-info-options: \
+        $[bnd-extra-module-options],\
+        org.osgi.core;static=true;transitive=false,\
+        org.osgi.framework;static=true;transitive=false,\
+        org.apache.logging.log4j;substitute="log4j-api",\
+        org.apache.logging.log4j.core;substitute="log4j-core"
+
+      # Import all packages by default:
+      Import-Package: \
+        $[bnd-extra-package-options],\
+        *
+
+      # Allow each project to override the `Multi-Release` header:
+      Multi-Release: $[bnd-multi-release]
+
+      # Add manifests and modules for each multi-release version:
+      -jpms-multi-release: $[bnd-multi-release]
+
+      # Adds certain `Implementation-*` and `Specification-*` entries to the generated `MANIFEST.MF`.
+      # Using these properties is known to be a bad practice: https://github.com/apache/logging-log4j2/issues/1923#issuecomment-1786818254
+      # Users should use `META-INF/maven/<groupId>/<artifactId>/pom.properties` instead.
+      # Yet we support it due to backward compatibility reasons.
+      # The issue was reported to `bnd-maven-plugin` too: https://github.com/bndtools/bnd/issues/5855
+      # We set these values to their Maven Archiver defaults: https://maven.apache.org/shared/maven-archiver/#class_manifest
+      Implementation-Title: ${project.name}
+      Implementation-Vendor: ${project.organization.name}
+      Implementation-Version: ${project.version}
+      Specification-Title: ${project.name}
+      Specification-Vendor: ${project.organization.name}
+      Specification-Version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}
+
+      # Extra configuration provided by the consumer:
+      ${bnd-extra-config}
+    ]]></bnd-common-config>
 
     <!-- VDR coordinates -->
     <vdr.url>https://logging.apache.org/cyclonedx/vdr.xml</vdr.url>
@@ -885,75 +948,32 @@ import org.apache.commons.codec.digest.*;
         <!-- Common configuration that can be used with all the plugin's goals -->
         <configuration>
           <bnd><![CDATA[
-            # `Bundle-DocURL` uses `project.url`.
-            # This is set to `${project.parent.url}${project.artifactId}` through Maven's inheritance assembly[1].
-            # This eventually produces incorrect values.
-            # Hence, we remove them from the produced descriptor.
-            #
-            # `Bundle-SCM` uses `project.scm.url` and suffers from the same inheritance problem `Bundle-DocURL` has.
-            #
-            # [1] https://maven.apache.org/ref/3.9.4/maven-model-builder/#inheritance-assembly
-            #     Inheritance assembly can be disabled for certain properties, e.g., `project.url`.
-            #     Though this would necessitate changes in the root `pom.xml`s of parented projects.
-            #
-            # `Bundle-Developers` is removed, since it is nothing but noise and occupies quite some real estate.
-            -removeheaders: Bundle-DocURL,Bundle-SCM,Bundle-Developers
-
-            # Create OSGi and JPMS module names based on the `groupId` and `artifactId`.
-            # This almost agrees with `maven-bundle-plugin`, but replaces non-alphanumeric characters
-            # with full stops `.`.
-            Bundle-SymbolicName: $[bnd-bundle-symbolicname]
-            -jpms-module-info: $[bnd-jpms-module-info]
-
-            # Prevents an execution error in multi-release jars:
-            -fixupmessages.classes_in_wrong_dir: "Classes found in the wrong directory";restrict:=error;is:=warning
-
-            # Convert API leakage warnings to errors
-            -fixupmessages.priv_refs: "private references";restrict:=warning;is:=error
-
-            # 1. OSGI modules do not make sense in JPMS
-            # 2. BND has a problem detecting the name of multi-release JPMS modules
-            -jpms-module-info-options: \
-              $[bnd-extra-module-options],\
-              org.osgi.core;static=true;transitive=false,\
-              org.osgi.framework;static=true;transitive=false,\
-              org.apache.logging.log4j;substitute="log4j-api",\
-              org.apache.logging.log4j.core;substitute="log4j-core"
-
-            # Import all packages by default:
-            Import-Package: \
-              $[bnd-extra-package-options],\
-              *
-
-            # Allow each project to override the `Multi-Release` header:
-            Multi-Release: $[bnd-multi-release]
-
-            # Add manifests and modules for each multi-release version:
-            -jpms-multi-release: $[bnd-multi-release]
-
-            # Adds certain `Implementation-*` and `Specification-*` entries to the generated `MANIFEST.MF`.
-            # Using these properties is known to be a bad practice: https://github.com/apache/logging-log4j2/issues/1923#issuecomment-1786818254
-            # Users should use `META-INF/maven/<groupId>/<artifactId>/pom.properties` instead.
-            # Yet we support it due to backward compatibility reasons.
-            # The issue was reported to `bnd-maven-plugin` too: https://github.com/bndtools/bnd/issues/5855
-            # We set these values to their Maven Archiver defaults: https://maven.apache.org/shared/maven-archiver/#class_manifest
-            Implementation-Title: ${project.name}
-            Implementation-Vendor: ${project.organization.name}
-            Implementation-Version: ${project.version}
-            Specification-Title: ${project.name}
-            Specification-Vendor: ${project.organization.name}
-            Specification-Version: ${parsedVersion.majorVersion}.${parsedVersion.minorVersion}
-
-            # Extra configuration provided by the consumer:
-            ${bnd-extra-config}
-          ]]></bnd>
+            ${bnd-common-config}
+            ]]></bnd>
         </configuration>
         <executions>
+          <!-- Generates manifest and `META-INF/services` descriptors -->
+          <execution>
+            <id>add-spi-descriptors</id>
+            <goals>
+              <goal>bnd-process</goal>
+            </goals>
+          </execution>
+          <!-- Injects a JPMS descriptor directly to the JAR file-->
           <execution>
             <id>default-jar</id>
             <goals>
               <goal>jar</goal>
             </goals>
+            <configuration>
+              <bnd><![CDATA[
+                # Enables the generation of a JPMS module descriptor
+                # Its module name is identical with the bundle symbolic name
+                -jpms-module-info: $[bnd-jpms-module-info]
+
+                ${bnd-common-config}
+                ]]></bnd>
+            </configuration>
           </execution>
         </executions>
       </plugin>
