@@ -33,10 +33,6 @@ updates:
     open-pull-requests-limit: 10
     registries:
       - maven-central
-    ignore:
-      # Keep the BND baseline (7+ requires Java 17)
-      - dependency-name: "biz.aQute.bnd:*"
-        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: github-actions
     directory: "/"
