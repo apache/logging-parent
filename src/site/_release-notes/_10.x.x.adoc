@@ -40,3 +40,17 @@
 
 This minor release contains several small improvements.
 
+
+==== Changed
+
+* Switch from `bnd:jar` to `bnd:bnd-process` to improve integration with the ecosystem; IDEs, Maven plugins, etc. (https://github.com/apache/logging-parent/issues/69[69])
+* Update `actions/setup-java` to version `4.0.0` (https://github.com/apache/logging-parent/pull/67[67])
+* Update `biz.aQute.bnd:bnd-baseline-maven-plugin` to version `7.0.0` (https://github.com/apache/logging-parent/pull/78[78])
+* Update `com.diffplug.spotless:spotless-maven-plugin` to version `2.41.1` (https://github.com/apache/logging-parent/pull/70[70])
+* Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.2` (https://github.com/apache/logging-parent/pull/68[68])
+* Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.8.2.0` (https://github.com/apache/logging-parent/pull/71[71])
+* Update `github/codeql-action` to version `2.22.9` (https://github.com/apache/logging-parent/pull/76[76])
+* Update `org.apache:apache` to version `31` (https://github.com/apache/logging-parent/pull/73[73])
+* Update `org.apache.logging.log4j:log4j-changelog-maven-plugin` to version `0.6.0` (https://github.com/apache/logging-parent/pull/72[72])
+* Update `org.codehaus.mojo:build-helper-maven-plugin` to version `3.5.0` (https://github.com/apache/logging-parent/pull/65[65])
+* Update `org.eclipse.jgit:org.eclipse.jgit` to version `6.8.0.202311291450-r` (https://github.com/apache/logging-parent/pull/74[74])
