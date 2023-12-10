@@ -289,7 +289,7 @@
     <asciidoctor-maven-plugin.version>2.2.4</asciidoctor-maven-plugin.version>
     <beanshell-maven-plugin.version>1.4</beanshell-maven-plugin.version>
     <bnd-maven-plugin.version>6.4.0</bnd-maven-plugin.version>
-    <bnd-baseline-maven-plugin.version>${bnd-maven-plugin.version}</bnd-baseline-maven-plugin.version>
+    <bnd-baseline-maven-plugin.version>7.0.0</bnd-baseline-maven-plugin.version>
     <build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
     <cyclonedx-maven-plugin.version>2.7.10</cyclonedx-maven-plugin.version>
     <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
