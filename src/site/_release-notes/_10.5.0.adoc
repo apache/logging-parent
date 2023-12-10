@@ -22,25 +22,30 @@
     ██ ███ ██ ██   ██ ██   ██ ██  ██ ██ ██ ██  ██ ██ ██    ██
      ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████  ██
 
-    IF THIS FILE DOESN'T HAVE A `.tmpl.adoc` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT IT!
+    IF THIS FILE DOESN'T HAVE A `.ftl` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT IT!
 
-    `_constants.adoc` is auto-generated from `_constants.tmpl.adoc`.
-    Auto-generation happens during `process-sources` phase of Maven.
+    Version-specific release notes (`7.8.0.adoc`, etc.) are generated from `src/changelog/*/.release-notes.adoc.ftl`.
+    Auto-generation happens during `generate-sources` phase of Maven.
     Hence, you must always
 
-    1. Edit `_constants.tmpl.adoc`
-    2. Run `./mvnw process-sources`
-    3. Commit both `_constants.tmpl.adoc` and the generated `_constants.adoc`
+    1. Find and edit the associated `.release-notes.adoc.ftl`
+    2. Run `./mvnw generate-sources`
+    3. Commit both `.release-notes.adoc.ftl` and the generated `7.8.0.adoc`
 ////
 
-:project-github-url: https://github.com/apache/logging-parent
-:project-version: 10.5.0
-:project-name: Logging Parent
-:project-id: logging-parent
-:java-target-version: 8
-:java-compiler-version: [17,18)
-:website-github-repository-name: logging-parent
-:website-github-url: https://github.com/apache/{website-github-repository-name}
-:website-folder:
-:website-url-staging: https://logging.staged.apache.org/{project-id}
-:website-url: https://logging.apache.org/{project-id}
+[#release-notes-10-5-0]
+=== 10.5.0
+
+Release date:: 2023-12-10
+
+This minor release contains several small improvements.
+
+
+==== Changed
+
+* Switch from `bnd:jar` to `bnd:bnd-process` to improve integration with the ecosystem; IDEs, Maven plugins, etc. (https://github.com/apache/logging-parent/issues/69[69])
+* Update `com.diffplug.spotless:spotless-maven-plugin` to version `2.41.1` (https://github.com/apache/logging-parent/pull/70[70])
+* Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.2` (https://github.com/apache/logging-parent/pull/68[68])
+* Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.8.2.0` (https://github.com/apache/logging-parent/pull/71[71])
+* Update `org.apache:apache` to version `31` (https://github.com/apache/logging-parent/pull/73[73])
+* Update `org.apache.logging.log4j:log4j-changelog-maven-plugin` to version `0.6.0` (https://github.com/apache/logging-parent/pull/72[72])
