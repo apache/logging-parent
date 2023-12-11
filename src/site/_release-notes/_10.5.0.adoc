@@ -36,7 +36,7 @@
 [#release-notes-10-5-0]
 === 10.5.0
 
-Release date:: 2023-12-10
+Release date:: 2023-12-11
 
 This minor release contains dependency updates and a change in the way BND is employed.
 
