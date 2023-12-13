@@ -47,7 +47,7 @@ This minor release contains several small improvements.
 * Update `actions/setup-java` to version `4.0.0` (https://github.com/apache/logging-parent/pull/67[67])
 * Update `biz.aQute.bnd:bnd-baseline-maven-plugin` to version `7.0.0` (https://github.com/apache/logging-parent/pull/78[78])
 * Update `com.diffplug.spotless:spotless-maven-plugin` to version `2.41.1` (https://github.com/apache/logging-parent/pull/70[70])
-* Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.2` (https://github.com/apache/logging-parent/pull/68[68])
+* Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.3` (https://github.com/apache/logging-parent/pull/80[80])
 * Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.8.2.0` (https://github.com/apache/logging-parent/pull/71[71])
 * Update `github/codeql-action` to version `2.22.10` (https://github.com/apache/logging-parent/pull/79[79])
 * Update `org.apache:apache` to version `31` (https://github.com/apache/logging-parent/pull/73[73])
