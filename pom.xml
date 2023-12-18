@@ -293,7 +293,7 @@
     <build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
     <cyclonedx-maven-plugin.version>2.7.10</cyclonedx-maven-plugin.version>
     <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-    <log4j-changelog-maven-plugin.version>0.6.0</log4j-changelog-maven-plugin.version>
+    <log4j-changelog-maven-plugin.version>0.7.0</log4j-changelog-maven-plugin.version>
     <maven-artifact-plugin.version>3.5.0</maven-artifact-plugin.version>
     <sign-maven-plugin.version>1.0.1</sign-maven-plugin.version>
     <spotbugs-maven-plugin.version>4.8.2.0</spotbugs-maven-plugin.version>
