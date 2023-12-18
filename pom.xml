@@ -165,6 +165,9 @@
          `minimalJavaBuildVersion` is used for enforcing the compiler version. -->
     <minimalJavaBuildVersion>[17,18)</minimalJavaBuildVersion>
 
+    <!-- `bnd-maven-plugin` 7.x requires a Maven version `3.8.1` or higher -->
+    <minimalMavenBuildVersion>3.8.1</minimalMavenBuildVersion>
+
     <!-- JPMS and OSGi options -->
     <!-- Overrides some options in multi-release JARs -->
     <bnd-multi-release>false</bnd-multi-release>
@@ -278,7 +281,7 @@
     <!-- dependency versions -->
     <org.eclipse.jgit.version>6.8.0.202311291450-r</org.eclipse.jgit.version>
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
-    <bnd.annotation.version>6.4.1</bnd.annotation.version>
+    <bnd.annotation.version>7.0.0</bnd.annotation.version>
     <osgi.annotation.version>8.1.0</osgi.annotation.version>
     <osgi.annotation.bundle.version>2.0.0</osgi.annotation.bundle.version>
     <osgi.annotation.versioning.version>1.1.2</osgi.annotation.versioning.version>

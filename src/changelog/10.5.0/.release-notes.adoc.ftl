@@ -42,5 +42,6 @@ This minor release contains dependency updates and a change in the way BND is em
 
 BND Maven Plugins are upgraded to version `7.0.0`, which requires Java 17.
 Log4j was the blocker for this upgrade and the issue is resolved in https://github.com/apache/logging-log4j2/pull/2021[apache/logging-log4j2#2021].
+Note that BND Maven Plugins version `7.0.0` increased the minimum required Maven version to `3.8.1`.
 
 <#include "../.changelog.adoc.ftl">

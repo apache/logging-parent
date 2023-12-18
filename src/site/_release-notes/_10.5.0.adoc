@@ -42,16 +42,18 @@ This minor release contains dependency updates and a change in the way BND is em
 
 BND Maven Plugins are upgraded to version `7.0.0`, which requires Java 17.
 Log4j was the blocker for this upgrade and the issue is resolved in https://github.com/apache/logging-log4j2/pull/2021[apache/logging-log4j2#2021].
+Note that BND Maven Plugins version `7.0.0` increased the minimum required Maven version to `3.8.1`.
 
 
 ==== Changed
 
 * Switch from `bnd:jar` to `bnd:bnd-process` to improve integration with the ecosystem; IDEs, Maven plugins, etc. (https://github.com/apache/logging-parent/issues/69[69])
+* Minimum required Maven version is increased to `3.8.1` due to BND Maven Plugin updates
 
 ==== Updated
 
 * Update `biz.aQute.bnd:bnd-baseline-maven-plugin` to version `7.0.0` (https://github.com/apache/logging-parent/pull/78[78])
-* Update `github/codeql-action` to version `3.22.11` (https://github.com/apache/logging-parent/pull/81[81])
+* Update `biz.aQute.bnd:bnd-maven-plugin` to version `7.0.0`
 * Update `com.diffplug.spotless:spotless-maven-plugin` to version `2.41.1` (https://github.com/apache/logging-parent/pull/70[70])
 * Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.3` (https://github.com/apache/logging-parent/pull/80[80])
 * Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.8.2.0` (https://github.com/apache/logging-parent/pull/71[71])
