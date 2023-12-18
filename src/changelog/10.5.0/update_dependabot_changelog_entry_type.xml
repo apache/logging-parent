@@ -2,6 +2,6 @@
 <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="http://logging.apache.org/log4j/changelog"
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.3.xsd"
-       type="changed">
+       type="updated">
   <description format="asciidoc">Replace `log4j-changelog` entry type of `dependabot` updates from `changed` to `updated`</description>
 </entry>

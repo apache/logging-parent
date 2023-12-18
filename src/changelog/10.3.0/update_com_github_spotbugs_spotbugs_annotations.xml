@@ -2,7 +2,7 @@
 <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="http://logging.apache.org/log4j/changelog"
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.3.xsd"
-       type="changed">
+       type="updated">
   <issue id="58" link="https://github.com/apache/logging-parent/pull/58"/>
   <description format="asciidoc">Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.1`</description>
 </entry>
