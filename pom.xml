@@ -282,7 +282,7 @@
     <osgi.annotation.version>8.1.0</osgi.annotation.version>
     <osgi.annotation.bundle.version>2.0.0</osgi.annotation.bundle.version>
     <osgi.annotation.versioning.version>1.1.2</osgi.annotation.versioning.version>
-    <palantir-java-format.version>2.38.0</palantir-java-format.version>
+    <palantir-java-format.version>2.39.0</palantir-java-format.version>
     <spotbugs-annotations.version>4.8.3</spotbugs-annotations.version>
 
     <!-- plugin versions -->
@@ -878,6 +878,15 @@ import org.apache.commons.codec.digest.*;
           </yaml>
           <lineEndings>UNIX</lineEndings>
         </configuration>
+        <dependencies>
+          <!-- `com.palantir.javaformat:palantir-java-format` is a fake dependency to receive updates from `dependabot`, `maven-versions-plugin`, etc.
+               This dependency is not needed to be defined here, it is implied by `<palantirJavaFormat>` element above. -->
+          <dependency>
+            <groupId>com.palantir.javaformat</groupId>
+            <artifactId>palantir-java-format</artifactId>
+            <version>${palantir-java-format.version}</version>
+          </dependency>
+        </dependencies>
         <executions>
           <execution>
             <id>default-spotless</id>
