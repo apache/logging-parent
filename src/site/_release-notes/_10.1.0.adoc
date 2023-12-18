@@ -64,10 +64,10 @@ In particular, we expect the absence of `module-info.java` files to avoid severa
 * Update `org.apache:apache` to version `30`
 * Update `org.osgi:osgi.annotation` to version `8.1.0`
 
-==== Removed
-
-* Removed `project.build.outputTimestamp` override since it is already provided by the parent POM and its old value `0` was causing https://github.com/spring-projects/spring-boot/pull/37438[reproducibility issues] for `spring-boot:repackage`
-
 ==== Fixed
 
 * Replaced incorrect `java.version` Maven property override with `maven.compiler.{source,release,target}`
+
+==== Removed
+
+* Removed `project.build.outputTimestamp` override since it is already provided by the parent POM and its old value `0` was causing https://github.com/spring-projects/spring-boot/pull/37438[reproducibility issues] for `spring-boot:repackage`
