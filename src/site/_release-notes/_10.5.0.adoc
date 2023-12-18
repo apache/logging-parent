@@ -52,5 +52,6 @@ Log4j was the blocker for this upgrade and the issue is resolved in https://gith
 * Update `com.diffplug.spotless:spotless-maven-plugin` to version `2.41.1` (https://github.com/apache/logging-parent/pull/70[70])
 * Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.3` (https://github.com/apache/logging-parent/pull/80[80])
 * Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.8.2.0` (https://github.com/apache/logging-parent/pull/71[71])
+* Replace `log4j-changelog` entry type of `dependabot` updates from `changed` to `updated`
 * Update `org.apache:apache` to version `31` (https://github.com/apache/logging-parent/pull/73[73])
 * Update `org.apache.logging.log4j:log4j-changelog-maven-plugin` to version `0.7.0` (https://github.com/apache/logging-parent/pull/84[84])

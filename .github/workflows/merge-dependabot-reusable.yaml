@@ -107,7 +107,7 @@ jobs:
           <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xmlns="http://logging.apache.org/log4j/changelog"
                  xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.3.xsd"
-                 type="changed">
+                 type="updated">
             <issue id="$PR_ID" link="$PR_URL"/>
             <description format="asciidoc">Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\`</description>
           </entry>
