@@ -109,4 +109,4 @@ jobs:
             **/target/*.buildcompare
             **/target/*.jar
             **/target/*.zip
-            **/target/reference/*
+            **/target/reference/**
