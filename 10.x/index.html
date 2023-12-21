@@ -545,6 +545,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#security">Security</a></li>
 <li><a href="#release-notes">Release Notes</a>
 <ul class="sectlevel2">
+<li><a href="#release-notes-10-5-0">10.5.0</a></li>
 <li><a href="#release-notes-10-4-0">10.4.0</a></li>
 <li><a href="#release-notes-10-3-0">10.3.0</a></li>
 <li><a href="#release-notes-10-2-0">10.2.0</a></li>
@@ -696,7 +697,7 @@ This VDR is accessible through the following URL: <a href="https://logging.apach
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Add <code>org.apache.logging:logging-parent:10.4.0</code> as a <code>parent</code> to your <code>pom.xml</code></p>
+<p>Add <code>org.apache.logging:logging-parent:10.5.0</code> as a <code>parent</code> to your <code>pom.xml</code></p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -793,6 +794,72 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 <h2 id="release-notes">Release Notes</h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="release-notes-10-5-0">10.5.0</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2023-12-18</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This minor release contains dependency updates and a change in the way BND is employed.</p>
+</div>
+<div class="paragraph">
+<p>BND Maven Plugins are upgraded to version <code>7.0.0</code>, which requires Java 17.
+Log4j was the blocker for this upgrade and the issue is resolved in <a href="https://github.com/apache/logging-log4j2/pull/2021">apache/logging-log4j2#2021</a>.
+Note that BND Maven Plugins version <code>7.0.0</code> increased the minimum required Maven version to <code>3.8.1</code>.</p>
+</div>
+<div class="sect3">
+<h4 id="_changed">Changed</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Switch from <code>bnd:jar</code> to <code>bnd:bnd-process</code> to improve integration with the ecosystem; IDEs, Maven plugins, etc. (<a href="https://github.com/apache/logging-parent/issues/69">69</a>)</p>
+</li>
+<li>
+<p>Replace <code>log4j-changelog</code> entry type of <code>dependabot</code> updates from <code>changed</code> to <code>updated</code></p>
+</li>
+<li>
+<p>Minimum required Maven version is increased to <code>3.8.1</code> due to BND Maven Plugin updates</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_updated">Updated</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>biz.aQute.bnd:bnd-baseline-maven-plugin</code> to version <code>7.0.0</code> (<a href="https://github.com/apache/logging-parent/pull/78">78</a>)</p>
+</li>
+<li>
+<p>Update <code>biz.aQute.bnd:bnd-maven-plugin</code> to version <code>7.0.0</code></p>
+</li>
+<li>
+<p>Update <code>com.diffplug.spotless:spotless-maven-plugin</code> to version <code>2.41.1</code> (<a href="https://github.com/apache/logging-parent/pull/70">70</a>)</p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-annotations</code> to version <code>4.8.3</code> (<a href="https://github.com/apache/logging-parent/pull/80">80</a>)</p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.8.2.0</code> (<a href="https://github.com/apache/logging-parent/pull/71">71</a>)</p>
+</li>
+<li>
+<p>Update <code>com.palantir.javaformat:palantir-java-format</code> to version <code>2.39.0</code></p>
+</li>
+<li>
+<p>Update <code>org.apache:apache</code> to version <code>31</code> (<a href="https://github.com/apache/logging-parent/pull/73">73</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache.logging.log4j:log4j-changelog-maven-plugin</code> to version <code>0.7.0</code> (<a href="https://github.com/apache/logging-parent/pull/84">84</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="release-notes-10-4-0">10.4.0</h3>
 <div class="dlist">
 <dl>
@@ -816,7 +883,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed">Changed</h4>
+<h4 id="_changed_2">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -859,7 +926,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_2">Changed</h4>
+<h4 id="_changed_3">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -870,21 +937,6 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 </li>
 <li>
 <p>Convert <code>bnd-maven-plugin</code> API leakage warnings to errors (<a href="https://github.com/apache/logging-log4j2/issues/1895">apache/logging-log4j2#1895</a>)</p>
-</li>
-<li>
-<p>Update <code>com.github.spotbugs:spotbugs-annotations</code> to version <code>4.8.1</code> (<a href="https://github.com/apache/logging-parent/pull/58">58</a>)</p>
-</li>
-<li>
-<p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.8.1.0</code> (<a href="https://github.com/apache/logging-parent/pull/57">57</a>)</p>
-</li>
-<li>
-<p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.23.0</code> (<a href="https://github.com/apache/logging-parent/pull/49">49</a>)</p>
-</li>
-<li>
-<p>Update <code>org.apache.maven.plugins:maven-artifact-plugin</code> to version <code>3.5.0</code></p>
-</li>
-<li>
-<p>Update <code>org.cyclonedx:cyclonedx-maven-plugin</code> to version <code>2.7.10</code> (<a href="https://github.com/apache/logging-parent/pull/54">54</a>)</p>
 </li>
 </ul>
 </div>
@@ -901,6 +953,28 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 </li>
 <li>
 <p>Add missing <code>Implementation-</code> and <code>Specification-</code> entries in <code>MANIFEST.MF</code> to <code>bnd-maven-plugin</code> configuration (<a href="https://github.com/apache/logging-log4j2/issues/1923">apache/logging-log4j2#1923</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_updated_2">Updated</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-annotations</code> to version <code>4.8.1</code> (<a href="https://github.com/apache/logging-parent/pull/58">58</a>)</p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.8.1.0</code> (<a href="https://github.com/apache/logging-parent/pull/57">57</a>)</p>
+</li>
+<li>
+<p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.23.0</code> (<a href="https://github.com/apache/logging-parent/pull/49">49</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache.maven.plugins:maven-artifact-plugin</code> to version <code>3.5.0</code></p>
+</li>
+<li>
+<p>Update <code>org.cyclonedx:cyclonedx-maven-plugin</code> to version <code>2.7.10</code> (<a href="https://github.com/apache/logging-parent/pull/54">54</a>)</p>
 </li>
 </ul>
 </div>
@@ -930,7 +1004,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_3">Changed</h4>
+<h4 id="_changed_4">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -943,13 +1017,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 <p>Moves <code>.flattened-pom.xml</code> to the same directory as <code>pom.xml</code> to preserve the relative parent path. This requires adding <code>.flattened-pom.xml</code> to the <code>.gitignore</code> file of the repository.</p>
 </li>
 <li>
-<p>Update <code>org.apache.logging.log4j:log4j-changelog-maven-plugin</code> to version <code>0.5.0</code></p>
-</li>
-<li>
 <p>Update <code>log4j-changelog</code> XSD (used for validating changelog entries) to version <code>0.1.2</code></p>
-</li>
-<li>
-<p>Update <code>com.github.spotbugs:spotbugs-annotations</code> to version <code>4.8.0</code> (<a href="https://github.com/apache/logging-parent/pull/44">44</a>)</p>
 </li>
 </ul>
 </div>
@@ -972,6 +1040,19 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 </li>
 <li>
 <p>Used specific execution IDs in <code>defaultGoal</code>s to avoid running unwanted plugins</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_updated_3">Updated</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>org.apache.logging.log4j:log4j-changelog-maven-plugin</code> to version <code>0.5.0</code></p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-annotations</code> to version <code>4.8.0</code> (<a href="https://github.com/apache/logging-parent/pull/44">44</a>)</p>
 </li>
 </ul>
 </div>
@@ -1001,7 +1082,7 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_4">Changed</h4>
+<h4 id="_changed_5">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1070,7 +1151,7 @@ In particular, we expect the absence of <code>module-info.java</code> files to a
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_5">Changed</h4>
+<h4 id="_changed_6">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1095,21 +1176,21 @@ In particular, we expect the absence of <code>module-info.java</code> files to a
 </div>
 </div>
 <div class="sect3">
-<h4 id="_removed">Removed</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Removed <code>project.build.outputTimestamp</code> override since it is already provided by the parent POM and its old value <code>0</code> was causing <a href="https://github.com/spring-projects/spring-boot/pull/37438">reproducibility issues</a> for <code>spring-boot:repackage</code></p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
 <h4 id="_fixed_4">Fixed</h4>
 <div class="ulist">
 <ul>
 <li>
 <p>Replaced incorrect <code>java.version</code> Maven property override with <code>maven.compiler.{source,release,target}</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_removed">Removed</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Removed <code>project.build.outputTimestamp</code> override since it is already provided by the parent POM and its old value <code>0</code> was causing <a href="https://github.com/spring-projects/spring-boot/pull/37438">reproducibility issues</a> for <code>spring-boot:repackage</code></p>
 </li>
 </ul>
 </div>
@@ -1166,7 +1247,7 @@ All preparations (release notes, source and binary distributions, vote &amp; ann
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_6">Changed</h4>
+<h4 id="_changed_7">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1261,7 +1342,7 @@ You can iterate on the <code>release/7.8.0</code> branch to perfect it.</p>
 </div>
 </li>
 <li>
-<p><em>Close</em> the repository in <a href="https://repository.apache.org/">repository.apache.org</a></p>
+<p><em>Close</em> the repository in <a href="https://repository.apache.org/">repository.apache.org</a> using a self-explanatory description, e.g., <code>`logging-parent` version `7.8.0` RC1</code></p>
 </li>
 </ol>
 </div>
@@ -1588,7 +1669,7 @@ See the License for the specific language governing permissions and limitations 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-11-13 20:52:45 UTC
+Last updated 2023-12-18 12:23:23 UTC
 </div>
 </div>
 </body>
