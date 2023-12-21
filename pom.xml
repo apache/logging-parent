@@ -145,7 +145,7 @@
   <properties>
 
     <!-- project version -->
-    <revision>10.5.0-SNAPSHOT</revision>
+    <revision>10.5.0</revision>
 
     <!-- `project.build.outputTimestamp` is required to be present for reproducible builds.
          We actually inherit one from the `org.apache:apache` parent.
@@ -154,7 +154,7 @@
          2. This value is employed in various places while creating the distribution
          To mitigate these, we define a *dummy* value here and let the CI replace it during a release.
          Hence, *DO NOT MANUALLY EDIT THIS VALUE*! -->
-    <project.build.outputTimestamp>2023-11-13T20:50:43Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2023-12-18T12:22:03Z</project.build.outputTimestamp>
 
     <!-- target Java 8 -->
     <maven.compiler.source>8</maven.compiler.source>
@@ -164,6 +164,9 @@
     <!-- `minimalJavaBuildVersion` is employed by `org.apache:apache`, which is the parent of us.
          `minimalJavaBuildVersion` is used for enforcing the compiler version. -->
     <minimalJavaBuildVersion>[17,18)</minimalJavaBuildVersion>
+
+    <!-- `bnd-maven-plugin` 7.x requires a Maven version `3.8.1` or higher -->
+    <minimalMavenBuildVersion>3.8.1</minimalMavenBuildVersion>
 
     <!-- JPMS and OSGi options -->
     <!-- Overrides some options in multi-release JARs -->
@@ -282,13 +285,13 @@
     <osgi.annotation.version>8.1.0</osgi.annotation.version>
     <osgi.annotation.bundle.version>2.0.0</osgi.annotation.bundle.version>
     <osgi.annotation.versioning.version>1.1.2</osgi.annotation.versioning.version>
-    <palantir-java-format.version>2.38.0</palantir-java-format.version>
+    <palantir-java-format.version>2.39.0</palantir-java-format.version>
     <spotbugs-annotations.version>4.8.3</spotbugs-annotations.version>
 
     <!-- plugin versions -->
     <asciidoctor-maven-plugin.version>2.2.4</asciidoctor-maven-plugin.version>
     <beanshell-maven-plugin.version>1.4</beanshell-maven-plugin.version>
-    <bnd-maven-plugin.version>6.4.0</bnd-maven-plugin.version>
+    <bnd-maven-plugin.version>7.0.0</bnd-maven-plugin.version>
     <bnd-baseline-maven-plugin.version>7.0.0</bnd-baseline-maven-plugin.version>
     <build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
     <cyclonedx-maven-plugin.version>2.7.10</cyclonedx-maven-plugin.version>
@@ -878,6 +881,15 @@ import org.apache.commons.codec.digest.*;
           </yaml>
           <lineEndings>UNIX</lineEndings>
         </configuration>
+        <dependencies>
+          <!-- `com.palantir.javaformat:palantir-java-format` is a fake dependency to receive updates from `dependabot`, `maven-versions-plugin`, etc.
+               This dependency is not needed to be defined here, it is implied by `<palantirJavaFormat>` element above. -->
+          <dependency>
+            <groupId>com.palantir.javaformat</groupId>
+            <artifactId>palantir-java-format</artifactId>
+            <version>${palantir-java-format.version}</version>
+          </dependency>
+        </dependencies>
         <executions>
           <execution>
             <id>default-spotless</id>
@@ -1064,7 +1076,7 @@ import org.apache.commons.codec.digest.*;
                         <include>**/*.xml</include>
                       </includes>
                       <publicId>http://logging.apache.org/log4j/changelog</publicId>
-                      <systemId>https://logging.apache.org/log4j/changelog-0.1.2.xsd</systemId>
+                      <systemId>https://logging.apache.org/log4j/changelog-0.1.3.xsd</systemId>
                       <validating>true</validating>
                     </validationSet>
                   </validationSets>

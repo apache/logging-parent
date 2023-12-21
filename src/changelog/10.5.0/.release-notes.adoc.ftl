@@ -22,25 +22,26 @@
     ██ ███ ██ ██   ██ ██   ██ ██  ██ ██ ██ ██  ██ ██ ██    ██
      ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████  ██
 
-    IF THIS FILE DOESN'T HAVE A `.tmpl.adoc` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT IT!
+    IF THIS FILE DOESN'T HAVE A `.ftl` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT IT!
 
-    `_constants.adoc` is auto-generated from `_constants.tmpl.adoc`.
-    Auto-generation happens during `process-sources` phase of Maven.
+    Version-specific release notes (`7.8.0.adoc`, etc.) are generated from `src/changelog/*/.release-notes.adoc.ftl`.
+    Auto-generation happens during `generate-sources` phase of Maven.
     Hence, you must always
 
-    1. Edit `_constants.tmpl.adoc`
-    2. Run `./mvnw process-sources`
-    3. Commit both `_constants.tmpl.adoc` and the generated `_constants.adoc`
+    1. Find and edit the associated `.release-notes.adoc.ftl`
+    2. Run `./mvnw generate-sources`
+    3. Commit both `.release-notes.adoc.ftl` and the generated `7.8.0.adoc`
 ////
 
-:project-github-url: https://github.com/apache/logging-parent
-:project-version: 10.5.0
-:project-name: Logging Parent
-:project-id: logging-parent
-:java-target-version: 8
-:java-compiler-version: [17,18)
-:website-github-repository-name: logging-parent
-:website-github-url: https://github.com/apache/{website-github-repository-name}
-:website-folder:
-:website-url-staging: https://logging.staged.apache.org/{project-id}
-:website-url: https://logging.apache.org/{project-id}
+[#release-notes-${release.version?replace("[^a-zA-Z0-9]", "-", "r")}]
+=== ${release.version}
+
+<#if release.date?has_content>Release date:: ${release.date}</#if>
+
+This minor release contains dependency updates and a change in the way BND is employed.
+
+BND Maven Plugins are upgraded to version `7.0.0`, which requires Java 17.
+Log4j was the blocker for this upgrade and the issue is resolved in https://github.com/apache/logging-log4j2/pull/2021[apache/logging-log4j2#2021].
+Note that BND Maven Plugins version `7.0.0` increased the minimum required Maven version to `3.8.1`.
+
+<#include "../.changelog.adoc.ftl">
