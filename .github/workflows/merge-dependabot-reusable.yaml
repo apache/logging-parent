@@ -55,20 +55,17 @@ jobs:
           DEPENDENCY_NAMES: ${{ steps.dependabot-metadata.outputs.dependency-names }}
           DEPENDENCY_VERSION: ${{ steps.dependabot-metadata.outputs.new-version }}
 
-      - name: Download patch
-        shell: bash
-        run: wget "$PATCH_URL" -O /tmp/patch
-        env:
-          PATCH_URL: ${{ github.event.pull_request.patch_url }}
-
       - name: Checkout repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11   # 4.1.1
         with:
           ref: ${{ steps.dependabot-metadata.outputs.target-branch }}
 
-      - name: Apply patch
+      - name: Download and apply patch
         shell: bash
-        run: git apply /tmp/patch
+        run: |
+          curl "$PATCH_URL" | git apply
+        env:
+          PATCH_URL: ${{ github.event.pull_request.patch_url }}
 
       - name: Set up Java & GPG
         uses: actions/setup-java@387ac29b308b003ca37ba93a6cab5eb57c8f5f93   # 4.0.0
@@ -132,13 +129,8 @@ jobs:
           git config user.email private@logging.apache.org
           git commit -S -a -m "Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\` (#$PR_ID)"
           git push origin
-          COMMIT_ID=$(git rev-parse HEAD)
-          echo "COMMIT_ID=$COMMIT_ID" >> $GITHUB_ENV
+          # Pushing the same commit to the Dependebot branch closes the PR
+          git push -f origin "HEAD:$PR_BRANCH"
         env:
           PR_ID: ${{ github.event.pull_request.number }}
-
-      - name: Close the PR
-        run: gh pr close "$PR_URL" -c "Changes are applied by CI in $COMMIT_ID"
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_BRANCH: ${{ github.head_ref }}
