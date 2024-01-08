@@ -63,7 +63,7 @@ jobs:
       - name: Download and apply patch
         shell: bash
         run: |
-          curl "$PATCH_URL" | git apply
+          wget -O- "$PATCH_URL" | git apply
         env:
           PATCH_URL: ${{ github.event.pull_request.patch_url }}
 
