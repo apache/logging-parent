@@ -1026,9 +1026,6 @@ import org.apache.commons.codec.digest.*;
             # Allow each project to override the `Multi-Release` header:
             Multi-Release: $[bnd-multi-release]
 
-            # Add manifests and modules for each multi-release version:
-            -jpms-multi-release: $[bnd-multi-release]
-
             # Adds certain `Implementation-*` and `Specification-*` entries to the generated `MANIFEST.MF`.
             # Using these properties is known to be a bad practice: https://github.com/apache/logging-log4j2/issues/1923#issuecomment-1786818254
             # Users should use `META-INF/maven/<groupId>/<artifactId>/pom.properties` instead.
