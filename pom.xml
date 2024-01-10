@@ -298,6 +298,7 @@
     <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
     <log4j-changelog-maven-plugin.version>0.7.0</log4j-changelog-maven-plugin.version>
     <maven-artifact-plugin.version>3.5.0</maven-artifact-plugin.version>
+    <restrict-imports-enforcer-rule.version>2.4.0</restrict-imports-enforcer-rule.version>
     <sign-maven-plugin.version>1.0.1</sign-maven-plugin.version>
     <spotbugs-maven-plugin.version>4.8.2.0</spotbugs-maven-plugin.version>
     <spotless-maven-plugin.version>2.41.1</spotless-maven-plugin.version>
@@ -644,12 +645,22 @@ import org.apache.commons.codec.digest.*;
         </executions>
       </plugin>
 
-      <!-- Ensure that version for each dependency resolved during a build, is equal to or higher than all transitive dependency declarations.
-           A failure here requires adding the dependency to the dependency management. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <groupId>de.skuzzle.enforcer</groupId>
+            <artifactId>restrict-imports-enforcer-rule</artifactId>
+            <version>${restrict-imports-enforcer-rule.version}</version>
+          </dependency>
+        </dependencies>
         <executions>
+          <!--
+            ~ Ensure that version for each dependency resolved during a build, is equal to or
+            ~ higher than all transitive dependency declarations.
+            ~ A failure here requires adding the dependency to the dependency management.
+            -->
           <execution>
             <id>enforce-upper-bound-deps</id>
             <goals>
@@ -658,6 +669,24 @@ import org.apache.commons.codec.digest.*;
             <configuration>
               <rules>
                 <requireUpperBoundDeps />
+              </rules>
+            </configuration>
+          </execution>
+          <!--
+            ~ Ensures that no wildcard imports are used.
+            ~ Wildcard imports increase the differences between branches and can not be expanded through simple tools.
+            -->
+          <execution>
+            <id>ban-wildcard-imports</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <RestrictImports>
+                  <reason>Expand all wildcard imports</reason>
+                  <bannedImport>**.'*'</bannedImport>
+                </RestrictImports>
               </rules>
             </configuration>
           </execution>
