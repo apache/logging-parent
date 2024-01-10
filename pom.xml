@@ -514,6 +514,36 @@
         </executions>
       </plugin>
 
+      <!--
+        ~ Removes a trailing `module-info.class` before each compilation to prevent `javac` failures.
+        ~
+        ~ See https://github.com/copernik-eu/bug-reproducibility/tree/main/javac-module-info-bug
+        -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>delete-module-descriptor</id>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <phase>process-resources</phase>
+            <configuration>
+              <excludeDefaultDirectories>true</excludeDefaultDirectories>
+              <filesets>
+                <fileset>
+                  <directory>${project.build.outputDirectory}</directory>
+                  <includes>
+                    <include>module-info.class</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
