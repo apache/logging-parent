@@ -402,16 +402,6 @@
           <groupId>org.apache.logging.log4j</groupId>
           <artifactId>log4j-changelog-maven-plugin</artifactId>
           <version>${log4j-changelog-maven-plugin.version}</version>
-          <!-- `log4j-tools` release `0.5.0` has an invalid POM, where the parent is missing.
-               This will be fixed by `<parent>keep` modification to the `flatten-bom` execution we have below.
-               Until then (that is, the next `log4j-tools` release) we need this temporary dependency fix. -->
-          <dependencies>
-            <dependency>
-              <groupId>org.freemarker</groupId>
-              <artifactId>freemarker</artifactId>
-              <version>2.3.32</version>
-            </dependency>
-          </dependencies>
         </plugin>
 
         <plugin>
