@@ -38,7 +38,9 @@
 
 Release date:: 2024-01-11
 
-This minor release contains several small improvements.
+This minor release contains several small changes to the build pipeline.
+
+Most notably it bans wildcard imports from source code, which will require expanding those imports before upgrading `logging-parent`.
 
 
 ==== Added
