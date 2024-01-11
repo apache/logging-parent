@@ -1026,6 +1026,13 @@ import org.apache.commons.codec.digest.*;
             # Allow each project to override the `Multi-Release` header:
             Multi-Release: $[bnd-multi-release]
 
+# Skipping to set `-jpms-multi-release` to `bnd-multi-release`.
+# This would generate descriptors in `META-INF/versions/<version>` directories needed for MRJs.
+# Though we decided to skip it due to following reasons:
+# 1. It is only needed by a handful of files in `-java9`-suffixed modules of `logging-log4j2`.
+#    Hence, it is effectively insignificant.
+# 2. `dependency:unpack` and `bnd:bnd-process` executions must be aligned correctly.
+# See this issue for details: https://github.com/apache/logging-parent/issues/93
             # Adds certain `Implementation-*` and `Specification-*` entries to the generated `MANIFEST.MF`.
             # Using these properties is known to be a bad practice: https://github.com/apache/logging-log4j2/issues/1923#issuecomment-1786818254
             # Users should use `META-INF/maven/<groupId>/<artifactId>/pom.properties` instead.
