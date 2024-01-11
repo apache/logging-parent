@@ -6,7 +6,7 @@
     (the "License"); you may not use this file except in compliance with
     the License.  You may obtain a copy of the License at
 
-         http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
     Unless required by applicable law or agreed to in writing, software
     distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,25 +22,38 @@
     ██ ███ ██ ██   ██ ██   ██ ██  ██ ██ ██ ██  ██ ██ ██    ██
      ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████  ██
 
-    IF THIS FILE IS CALLED `index.adoc`, IT IS AUTO-GENERATED, DO NOT EDIT IT!
+    IF THIS FILE DOESN'T HAVE A `.ftl` SUFFIX, IT IS AUTO-GENERATED, DO NOT EDIT IT!
 
-    Release notes `index.adoc` is generated from `src/changelog/.index.adoc.ftl`.
+    Version-specific release notes (`7.8.0.adoc`, etc.) are generated from `src/changelog/*/.release-notes.adoc.ftl`.
     Auto-generation happens during `generate-sources` phase of Maven.
     Hence, you must always
 
-    1. Edit `.index.adoc.ftl`
+    1. Find and edit the associated `.release-notes.adoc.ftl`
     2. Run `./mvnw generate-sources`
-    3. Commit both `.index.adoc.ftl` and the generated `.index.adoc`
+    3. Commit both `.release-notes.adoc.ftl` and the generated `7.8.0.adoc`
 ////
 
-[#release-notes]
-== Release Notes
+[#release-notes-10-6-0]
+=== 10.6.0
 
-include::_release-notes/_10.6.0.adoc[]
-include::_release-notes/_10.5.0.adoc[]
-include::_release-notes/_10.4.0.adoc[]
-include::_release-notes/_10.3.0.adoc[]
-include::_release-notes/_10.2.0.adoc[]
-include::_release-notes/_10.1.1.adoc[]
-include::_release-notes/_10.1.0.adoc[]
-include::_release-notes/_10.0.0.adoc[]
+Release date:: 2024-01-11
+
+This minor release contains several small improvements.
+
+
+==== Added
+
+* Add JSpecify to dependency management. (https://github.com/apache/logging-parent/pull/88[88])
+* Add enforcer rule to ban wildcard imports. All imports must be expanded to provide better comparison of branches. (https://github.com/apache/logging-parent/pull/63[63])
+
+==== Changed
+
+* Merge Dependabot PRs instead of closing them. (https://github.com/apache/logging-parent/pull/82[82])
+* Disable https://bnd.bndtools.org/instructions/jpms-multi-release.html[`-jpms-multi-release`] BND option. (https://github.com/apache/logging-parent/pull/93[93])
+* Clean up residual `module-info.class` before compilation. (https://github.com/apache/logging-parent/pull/90[90])
+
+==== Updated
+
+* Update `com.google.errorprone:error_prone_core` to version `2.24.1` (https://github.com/apache/logging-parent/pull/89[89])
+* Update `github/codeql-action` to version `3.23.0` (https://github.com/apache/logging-parent/pull/91[91])
+* Update `org.apache.rat:apache-rat-plugin` to version `0.16` (https://github.com/apache/logging-parent/pull/92[92])
