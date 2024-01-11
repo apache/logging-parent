@@ -17,7 +17,32 @@
 
 # `.asf.yaml` documentation: https://cwiki.apache.org/confluence/display/INFRA/Git+-+.asf.yaml+features
 
+github:
+  description: Parent project internally used in Maven-based projects of the Apache Logging Services
+  homepage: https://logging.apache.org/logging-parent/latest
+  labels:
+    - apache
+    - java
+    - log4j
+    - log4j2
+    - logging
+
+  features:
+    issues: true
+
+  # Prevent force pushes to primary branches
+  protected_branches:
+    main:
+      required_signatures: true
+    asf-staging:
+      required_signatures: true
+
 publish:
   profile: ~
   whoami: asf-site
+  subdir: content/logging-parent
+
+staging:
+  profile: ~
+  whoami: asf-staging
   subdir: content/logging-parent
