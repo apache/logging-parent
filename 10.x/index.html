@@ -545,6 +545,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#security">Security</a></li>
 <li><a href="#release-notes">Release Notes</a>
 <ul class="sectlevel2">
+<li><a href="#release-notes-10-6-0">10.6.0</a></li>
 <li><a href="#release-notes-10-5-0">10.5.0</a></li>
 <li><a href="#release-notes-10-4-0">10.4.0</a></li>
 <li><a href="#release-notes-10-3-0">10.3.0</a></li>
@@ -697,14 +698,13 @@ This VDR is accessible through the following URL: <a href="https://logging.apach
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Add <code>org.apache.logging:logging-parent:10.5.0</code> as a <code>parent</code> to your <code>pom.xml</code></p>
-<div class="olist loweralpha">
-<ol class="loweralpha" type="a">
+<p>Add <code>org.apache.logging:logging-parent:10.6.0</code> as a <code>parent</code> to your <code>pom.xml</code></p>
+</li>
+<li>
+<p>You may need to add <code>.mvn/jvm.config</code> to your project. See <a href="https://github.com/apache/logging-log4j2/blob/2.x/.mvn/jvm.config">this</a> as an example.</p>
+</li>
 <li>
 <p>Check if <code>./mvnw verify</code> succeeds, otherwise make necessary changes</p>
-</li>
-</ol>
-</div>
 </li>
 <li>
 <p>Copy and adapt the support files (<code>.gitignore</code>, <code>.github/workflows/build.yaml</code>, etc.)</p>
@@ -794,6 +794,68 @@ See <a href="https://logging.apache.org/log4j/2.x/security.html">the Log4j Secur
 <h2 id="release-notes">Release Notes</h2>
 <div class="sectionbody">
 <div class="sect2">
+<h3 id="release-notes-10-6-0">10.6.0</h3>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2024-01-11</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This minor release contains several small changes to the build pipeline.</p>
+</div>
+<div class="paragraph">
+<p>Most notably it bans wildcard imports from source code, which will require expanding those imports before upgrading <code>logging-parent</code>.</p>
+</div>
+<div class="sect3">
+<h4 id="_added">Added</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Add JSpecify to dependency management. (<a href="https://github.com/apache/logging-parent/pull/88">88</a>)</p>
+</li>
+<li>
+<p>Add enforcer rule to ban wildcard imports. All imports must be expanded to provide better comparison of branches. (<a href="https://github.com/apache/logging-parent/pull/63">63</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_changed">Changed</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Merge Dependabot PRs instead of closing them. (<a href="https://github.com/apache/logging-parent/pull/82">82</a>)</p>
+</li>
+<li>
+<p>Disable <a href="https://bnd.bndtools.org/instructions/jpms-multi-release.html"><code>-jpms-multi-release</code></a> BND option. (<a href="https://github.com/apache/logging-parent/pull/93">93</a>)</p>
+</li>
+<li>
+<p>Clean up residual <code>module-info.class</code> before compilation. (<a href="https://github.com/apache/logging-parent/pull/90">90</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_updated">Updated</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.24.1</code> (<a href="https://github.com/apache/logging-parent/pull/89">89</a>)</p>
+</li>
+<li>
+<p>Update <code>github/codeql-action</code> to version <code>3.23.0</code> (<a href="https://github.com/apache/logging-parent/pull/91">91</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache.rat:apache-rat-plugin</code> to version <code>0.16</code> (<a href="https://github.com/apache/logging-parent/pull/92">92</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
 <h3 id="release-notes-10-5-0">10.5.0</h3>
 <div class="dlist">
 <dl>
@@ -812,7 +874,7 @@ Log4j was the blocker for this upgrade and the issue is resolved in <a href="htt
 Note that BND Maven Plugins version <code>7.0.0</code> increased the minimum required Maven version to <code>3.8.1</code>.</p>
 </div>
 <div class="sect3">
-<h4 id="_changed">Changed</h4>
+<h4 id="_changed_2">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -828,7 +890,7 @@ Note that BND Maven Plugins version <code>7.0.0</code> increased the minimum req
 </div>
 </div>
 <div class="sect3">
-<h4 id="_updated">Updated</h4>
+<h4 id="_updated_2">Updated</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -873,7 +935,7 @@ Note that BND Maven Plugins version <code>7.0.0</code> increased the minimum req
 <p>This minor release contains several small improvements.</p>
 </div>
 <div class="sect3">
-<h4 id="_added">Added</h4>
+<h4 id="_added_2">Added</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -883,7 +945,7 @@ Note that BND Maven Plugins version <code>7.0.0</code> increased the minimum req
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_2">Changed</h4>
+<h4 id="_changed_3">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -907,7 +969,7 @@ Note that BND Maven Plugins version <code>7.0.0</code> increased the minimum req
 <p>This minor release contains several small improvements.</p>
 </div>
 <div class="sect3">
-<h4 id="_added_2">Added</h4>
+<h4 id="_added_3">Added</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -926,7 +988,7 @@ Note that BND Maven Plugins version <code>7.0.0</code> increased the minimum req
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_3">Changed</h4>
+<h4 id="_changed_4">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -958,7 +1020,7 @@ Note that BND Maven Plugins version <code>7.0.0</code> increased the minimum req
 </div>
 </div>
 <div class="sect3">
-<h4 id="_updated_2">Updated</h4>
+<h4 id="_updated_3">Updated</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -994,7 +1056,7 @@ Note that BND Maven Plugins version <code>7.0.0</code> increased the minimum req
 <p>This minor release contains several small improvements.</p>
 </div>
 <div class="sect3">
-<h4 id="_added_3">Added</h4>
+<h4 id="_added_4">Added</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1004,7 +1066,7 @@ Note that BND Maven Plugins version <code>7.0.0</code> increased the minimum req
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_4">Changed</h4>
+<h4 id="_changed_5">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1045,7 +1107,7 @@ Note that BND Maven Plugins version <code>7.0.0</code> increased the minimum req
 </div>
 </div>
 <div class="sect3">
-<h4 id="_updated_3">Updated</h4>
+<h4 id="_updated_4">Updated</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1072,7 +1134,7 @@ Note that BND Maven Plugins version <code>7.0.0</code> increased the minimum req
 <p>This patch release contains minor fixes addressing issues blocking the release of <code>log4j-tools</code>, <code>log4j-kotlin</code>, etc.</p>
 </div>
 <div class="sect3">
-<h4 id="_added_4">Added</h4>
+<h4 id="_added_5">Added</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1082,7 +1144,7 @@ Note that BND Maven Plugins version <code>7.0.0</code> increased the minimum req
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_5">Changed</h4>
+<h4 id="_changed_6">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1129,7 +1191,7 @@ Hence, no need for custom <code>.bnd</code> and/or <code>module-info.java</code>
 In particular, we expect the absence of <code>module-info.java</code> files to avoid several IDE and testing related headaches.</p>
 </div>
 <div class="sect3">
-<h4 id="_added_5">Added</h4>
+<h4 id="_added_6">Added</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1151,7 +1213,7 @@ In particular, we expect the absence of <code>module-info.java</code> files to a
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_6">Changed</h4>
+<h4 id="_changed_7">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1216,7 +1278,7 @@ See <code>README.adoc</code> for the complete list of features and their usage.<
 All preparations (release notes, source and binary distributions, vote &amp; announcement emails, etc.) are staged to both Nexus and SVN and waiting the release manager to proceed.</p>
 </div>
 <div class="sect3">
-<h4 id="_added_6">Added</h4>
+<h4 id="_added_7">Added</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1247,7 +1309,7 @@ All preparations (release notes, source and binary distributions, vote &amp; ann
 </div>
 </div>
 <div class="sect3">
-<h4 id="_changed_7">Changed</h4>
+<h4 id="_changed_8">Changed</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -1669,7 +1731,7 @@ See the License for the specific language governing permissions and limitations 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-12-18 12:23:23 UTC
+Last updated 2024-01-11 10:15:21 UTC
 </div>
 </div>
 </body>
