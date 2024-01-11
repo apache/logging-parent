@@ -38,6 +38,8 @@
 
 <#if release.date?has_content>Release date:: ${release.date}</#if>
 
-This minor release contains several small improvements.
+This minor release contains several small changes to the build pipeline.
+
+Most notably it bans wildcard imports from source code, which will require expanding those imports before upgrading `logging-parent`.
 
 <#include "../.changelog.adoc.ftl">
