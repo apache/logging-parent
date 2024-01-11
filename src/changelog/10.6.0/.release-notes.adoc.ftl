@@ -33,27 +33,13 @@
     3. Commit both `.release-notes.adoc.ftl` and the generated `7.8.0.adoc`
 ////
 
-[#release-notes-10-x-x]
-=== 10.x.x
+[#release-notes-${release.version?replace("[^a-zA-Z0-9]", "-", "r")}]
+=== ${release.version}
 
+<#if release.date?has_content>Release date:: ${release.date}</#if>
 
+This minor release contains several small changes to the build pipeline.
 
-This minor release contains several small improvements.
+Most notably it bans wildcard imports from source code, which will require a expanding those imports before upgrading.
 
-
-==== Added
-
-* Add JSpecify to dependency management. (https://github.com/apache/logging-parent/pull/88[88])
-* Add enforcer rule to ban wildcard imports. All imports must be expanded to provide better comparison of branches. (https://github.com/apache/logging-parent/pull/63[63])
-
-==== Changed
-
-* Merge Dependabot PRs instead of closing them. (https://github.com/apache/logging-parent/pull/82[82])
-* Disable https://bnd.bndtools.org/instructions/jpms-multi-release.html[`-jpms-multi-release`] BND option. (https://github.com/apache/logging-parent/pull/93[93])
-* Clean up residual `module-info.class` before compilation. (https://github.com/apache/logging-parent/pull/90[90])
-
-==== Updated
-
-* Update `com.google.errorprone:error_prone_core` to version `2.24.1` (https://github.com/apache/logging-parent/pull/89[89])
-* Update `github/codeql-action` to version `3.23.0` (https://github.com/apache/logging-parent/pull/91[91])
-* Update `org.apache.rat:apache-rat-plugin` to version `0.16` (https://github.com/apache/logging-parent/pull/92[92])
+<#include "../.changelog.adoc.ftl">
