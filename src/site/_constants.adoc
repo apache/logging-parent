@@ -34,7 +34,7 @@
 ////
 
 :project-github-url: https://github.com/apache/logging-parent
-:project-version: 10.6.0
+:project-version: 10.6.1-SNAPSHOT
 :project-name: Logging Parent
 :project-id: logging-parent
 :java-target-version: 8
