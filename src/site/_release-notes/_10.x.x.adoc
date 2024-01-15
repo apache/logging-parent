@@ -45,3 +45,4 @@ This minor release contains several small improvements.
 
 * Update `com.diffplug.spotless:spotless-maven-plugin` to version `2.42.0` (https://github.com/apache/logging-parent/pull/100[100])
 * Update `org.asciidoctor:asciidoctor-maven-plugin` to version `2.2.5` (https://github.com/apache/logging-parent/pull/99[99])
+* Update `org.codehaus.mojo:flatten-maven-plugin` to version `1.6.0` (https://github.com/apache/logging-parent/pull/102[102])
