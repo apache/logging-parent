@@ -36,13 +36,3 @@ github:
       required_signatures: true
     asf-site:
       required_signatures: true
-
-publish:
-  profile: ~
-  whoami: asf-site
-  subdir: content/logging-parent
-
-staging:
-  profile: ~
-  whoami: asf-staging
-  subdir: content/logging-parent
