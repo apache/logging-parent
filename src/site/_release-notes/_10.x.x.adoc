@@ -45,5 +45,6 @@ This minor release contains several small improvements.
 
 * Update `actions/upload-artifact` to version `4.1.0` (https://github.com/apache/logging-parent/pull/103[103])
 * Update `com.diffplug.spotless:spotless-maven-plugin` to version `2.42.0` (https://github.com/apache/logging-parent/pull/100[100])
+* Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.8.3.0` (https://github.com/apache/logging-parent/pull/101[101])
 * Update `org.asciidoctor:asciidoctor-maven-plugin` to version `2.2.5` (https://github.com/apache/logging-parent/pull/99[99])
 * Update `org.codehaus.mojo:flatten-maven-plugin` to version `1.6.0` (https://github.com/apache/logging-parent/pull/102[102])
