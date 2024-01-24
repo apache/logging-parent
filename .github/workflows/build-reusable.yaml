@@ -80,7 +80,7 @@ jobs:
       # We upload tests results if the build fails.
       - name: Upload test results
         if: failure() && steps.build.conclusion == 'failure'
-        uses: actions/upload-artifact@694cdabd8bdb0f10b2cea11669e1bf5453eed0a6   # 4.2.0
+        uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8   # 4.3.0
         with:
           name: surefire-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
           path: |
@@ -101,7 +101,7 @@ jobs:
       # We reproducibility results if the build fails.
       - name: Upload reproducibility results
         if: failure() && steps.reproducibility.conclusion == 'failure'
-        uses: actions/upload-artifact@694cdabd8bdb0f10b2cea11669e1bf5453eed0a6   # 4.2.0
+        uses: actions/upload-artifact@26f96dfa697d77e81fd5907df203aa23a56210a8   # 4.3.0
         with:
           name: reproducibility-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
           path: |
