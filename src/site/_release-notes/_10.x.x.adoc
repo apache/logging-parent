@@ -48,7 +48,7 @@ This minor release contains several small improvements.
 * Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.8.3.0` (https://github.com/apache/logging-parent/pull/101[101])
 * Update `com.palantir.javaformat:palantir-java-format` to version `2.40.0` (https://github.com/apache/logging-parent/pull/109[109])
 * Update `de.skuzzle.enforcer:restrict-imports-enforcer-rule` to version `2.5.0` (https://github.com/apache/logging-parent/pull/111[111])
-* Update `github/codeql-action` to version `3.23.2` (https://github.com/apache/logging-parent/pull/112[112])
+* Update `github/codeql-action` to version `3.24.0` (https://github.com/apache/logging-parent/pull/113[113])
 * Update `org.asciidoctor:asciidoctor-maven-plugin` to version `2.2.5` (https://github.com/apache/logging-parent/pull/99[99])
 * Update `org.codehaus.mojo:flatten-maven-plugin` to version `1.6.0` (https://github.com/apache/logging-parent/pull/102[102])
 * Update `org.cyclonedx:cyclonedx-maven-plugin` to version `2.7.11` (https://github.com/apache/logging-parent/pull/104[104])
