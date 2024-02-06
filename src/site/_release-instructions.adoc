@@ -149,7 +149,7 @@ git push origin rel/7.8.0
 ====
 The ASF infrastructure treats ``rel/``-prefixed git tags special and ensures they are immutable for provenance reasons.
 ====
-. Merge `release/7.8.0` to `main`
+. Merge the `rel/7.8.0` tag (**not** the `release/7.8.0` branch!) to `main`
 +
 [source,bash]
 ----
