@@ -45,7 +45,7 @@ This minor release contains several small improvements.
 
 * Update `actions/upload-artifact` to version `4.3.1` (https://github.com/apache/logging-parent/pull/114[114])
 * Update `com.diffplug.spotless:spotless-maven-plugin` to version `2.43.0` (https://github.com/apache/logging-parent/pull/108[108])
-* Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.8.3.0` (https://github.com/apache/logging-parent/pull/101[101])
+* Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.8.3.1` (https://github.com/apache/logging-parent/pull/116[116])
 * Update `com.palantir.javaformat:palantir-java-format` to version `2.40.0` (https://github.com/apache/logging-parent/pull/109[109])
 * Update `commons-codec:commons-codec` to version `1.16.1` (https://github.com/apache/logging-parent/pull/115[115])
 * Update `de.skuzzle.enforcer:restrict-imports-enforcer-rule` to version `2.5.0` (https://github.com/apache/logging-parent/pull/111[111])
