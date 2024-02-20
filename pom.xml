@@ -361,7 +361,7 @@
 
         <plugin>
           <groupId>org.asciidoctor</groupId>
-          <artifactId>asciidoctor-maven-plugin</artifactId>
+          <artifactId>asciidoctor-converter-doxia-module</artifactId>
           <version>${asciidoctor-maven-plugin.version}</version>
         </plugin>
 
