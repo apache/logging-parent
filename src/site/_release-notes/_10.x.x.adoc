@@ -54,3 +54,4 @@ This minor release contains several small improvements.
 * Update `org.asciidoctor:asciidoctor-maven-plugin` to version `3.0.0` (https://github.com/apache/logging-parent/pull/119[119])
 * Update `org.codehaus.mojo:flatten-maven-plugin` to version `1.6.0` (https://github.com/apache/logging-parent/pull/102[102])
 * Update `org.cyclonedx:cyclonedx-maven-plugin` to version `2.7.11` (https://github.com/apache/logging-parent/pull/104[104])
+* Update `org.simplify4u.plugins:sign-maven-plugin` to version `1.1.0` (https://github.com/apache/logging-parent/pull/124[124])
