@@ -309,7 +309,7 @@
 
     <!-- plugin dependencies versions -->
     <error-prone.version>2.25.0</error-prone.version>
-    <findsecbugs-plugin.version>1.12.0</findsecbugs-plugin.version>
+    <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
 
   </properties>
 
