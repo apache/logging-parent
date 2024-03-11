@@ -279,7 +279,7 @@
 ]]></sbom.xslt>
 
     <!-- dependency versions -->
-    <org.eclipse.jgit.version>6.8.0.202311291450-r</org.eclipse.jgit.version>
+    <org.eclipse.jgit.version>6.9.0.202403050737-r</org.eclipse.jgit.version>
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
     <bnd.annotation.version>7.0.0</bnd.annotation.version>
     <jspecify.version>0.3.0</jspecify.version>
