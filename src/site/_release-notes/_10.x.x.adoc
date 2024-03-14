@@ -50,7 +50,7 @@ This minor release contains several small improvements.
 * Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.8.3.1` (https://github.com/apache/logging-parent/pull/116[116])
 * Update `com.google.errorprone:error_prone_core` to version `2.26.1` (https://github.com/apache/logging-parent/pull/134[134])
 * Update `com.h3xstream.findsecbugs:findsecbugs-plugin` to version `1.13.0` (https://github.com/apache/logging-parent/pull/127[127])
-* Update `com.palantir.javaformat:palantir-java-format` to version `2.40.0` (https://github.com/apache/logging-parent/pull/109[109])
+* Update `com.palantir.javaformat:palantir-java-format` to version `2.41.0` (https://github.com/apache/logging-parent/pull/136[136])
 * Update `commons-codec:commons-codec` to version `1.16.1` (https://github.com/apache/logging-parent/pull/115[115])
 * Update `de.skuzzle.enforcer:restrict-imports-enforcer-rule` to version `2.5.0` (https://github.com/apache/logging-parent/pull/111[111])
 * Update `github/codeql-action` to version `3.24.7` (https://github.com/apache/logging-parent/pull/133[133])

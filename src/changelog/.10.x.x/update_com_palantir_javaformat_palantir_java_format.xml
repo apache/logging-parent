@@ -3,6 +3,6 @@
        xmlns="http://logging.apache.org/log4j/changelog"
        xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.3.xsd"
        type="updated">
-  <issue id="109" link="https://github.com/apache/logging-parent/pull/109"/>
-  <description format="asciidoc">Update `com.palantir.javaformat:palantir-java-format` to version `2.40.0`</description>
+  <issue id="136" link="https://github.com/apache/logging-parent/pull/136"/>
+  <description format="asciidoc">Update `com.palantir.javaformat:palantir-java-format` to version `2.41.0`</description>
 </entry>
