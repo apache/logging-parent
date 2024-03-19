@@ -145,7 +145,7 @@
   <properties>
 
     <!-- project version -->
-    <revision>10.6.1-SNAPSHOT</revision>
+    <revision>10.7.0-SNAPSHOT</revision>
 
     <!-- `project.build.outputTimestamp` is required to be present for reproducible builds.
          We actually inherit one from the `org.apache:apache` parent.
@@ -224,6 +224,7 @@
     <build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
     <cyclonedx-maven-plugin.version>2.8.0</cyclonedx-maven-plugin.version>
     <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
     <log4j-changelog-maven-plugin.version>0.8.0</log4j-changelog-maven-plugin.version>
     <maven-artifact-plugin.version>3.5.0</maven-artifact-plugin.version>
     <restrict-imports-enforcer-rule.version>2.5.0</restrict-imports-enforcer-rule.version>
@@ -282,6 +283,7 @@
   <build>
 
     <pluginManagement>
+      <!-- Managed plugins ordered alphabetically by `artifactId` -->
       <plugins>
 
         <plugin>
@@ -290,53 +292,10 @@
           <version>${asciidoctor-maven-plugin.version}</version>
         </plugin>
 
-        <!-- `artifact:compare` is used in `.github/workflows/build-reusable.yaml` -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-artifact-plugin</artifactId>
-          <version>${maven-artifact-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>flatten-maven-plugin</artifactId>
-          <version>${flatten-maven-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.simplify4u.plugins</groupId>
-          <artifactId>sign-maven-plugin</artifactId>
-          <version>${sign-maven-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>com.github.spotbugs</groupId>
-          <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>${spotbugs-maven-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>xml-maven-plugin</artifactId>
-          <version>${xml-maven-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>com.diffplug.spotless</groupId>
-          <artifactId>spotless-maven-plugin</artifactId>
-          <version>${spotless-maven-plugin.version}</version>
-        </plugin>
-
         <plugin>
           <groupId>com.github.genthaler</groupId>
           <artifactId>beanshell-maven-plugin</artifactId>
           <version>${beanshell-maven-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.logging.log4j</groupId>
-          <artifactId>log4j-changelog-maven-plugin</artifactId>
-          <version>${log4j-changelog-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
@@ -361,6 +320,55 @@
           <groupId>org.cyclonedx</groupId>
           <artifactId>cyclonedx-maven-plugin</artifactId>
           <version>${cyclonedx-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>flatten-maven-plugin</artifactId>
+          <version>${flatten-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-changelog-maven-plugin</artifactId>
+          <version>${log4j-changelog-maven-plugin.version}</version>
+        </plugin>
+
+        <!-- `artifact:compare` is used in `.github/workflows/build-reusable.yaml` -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-artifact-plugin</artifactId>
+          <version>${maven-artifact-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.simplify4u.plugins</groupId>
+          <artifactId>sign-maven-plugin</artifactId>
+          <version>${sign-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>${spotbugs-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <version>${spotless-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>xml-maven-plugin</artifactId>
+          <version>${xml-maven-plugin.version}</version>
         </plugin>
 
       </plugins>
@@ -1516,6 +1524,49 @@
             <configuration>
               <excludeFilterFile>${maven.multiModuleProjectDirectory}/spotbugs-exclude.xml</excludeFilterFile>
             </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+
+    </profile>
+
+    <!-- Generates coverage information -->
+    <profile>
+
+      <id>coverage</id>
+
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <configuration>
+              <includes>
+                <include>org/apache/flume/**</include>
+                <include>org/apache/log4j/**</include>
+                <include>org/apache/logging/**</include>
+              </includes>
+              <excludes>
+                <!-- Ignore test code -->
+                <exclude>**/test/**</exclude>
+              </excludes>
+            </configuration>
+            <executions>
+              <execution>
+                <id>prepare-jacoco-agent</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>report-test-coverage</id>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
 
         </plugins>
