@@ -297,7 +297,7 @@
     <bnd-maven-plugin.version>7.0.0</bnd-maven-plugin.version>
     <bnd-baseline-maven-plugin.version>7.0.0</bnd-baseline-maven-plugin.version>
     <build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
-    <cyclonedx-maven-plugin.version>2.7.11</cyclonedx-maven-plugin.version>
+    <cyclonedx-maven-plugin.version>2.8.0</cyclonedx-maven-plugin.version>
     <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
     <log4j-changelog-maven-plugin.version>0.7.0</log4j-changelog-maven-plugin.version>
     <maven-artifact-plugin.version>3.5.0</maven-artifact-plugin.version>
