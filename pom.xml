@@ -202,81 +202,6 @@
 
     <!-- VDR coordinates -->
     <vdr.url>https://logging.apache.org/cyclonedx/vdr.xml</vdr.url>
-    <!--
-      ~ This XSLT stylesheet performs three tasks:
-      ~
-      ~ 1. Changes the namespace from SBOM 1.4 to SBOM 1.5
-      ~ 2. Adds a `serialNumber` to the SBOM
-      ~ 3. Adds a reference to the Apache Logging Services VDR
-      -->
-    <sbom.xslt><![CDATA[<xsl:stylesheet version="1.0"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns="http://cyclonedx.org/schema/bom/1.5"
-    xmlns:xalan="http://xml.apache.org/xalan"
-    xmlns:cdx14="http://cyclonedx.org/schema/bom/1.4"
-    xmlns:cdx15="http://cyclonedx.org/schema/bom/1.5"
-    exclude-result-prefixes="xalan cdx14 cdx15">
-
-  <xsl:param name="sbom.serialNumber"/>
-  <xsl:param name="vdr.url"/>
-  <xsl:output method="xml"
-              version="1.0"
-              encoding="UTF-8"
-              indent="yes"
-              xalan:indent-amount="2"
-              xalan:line-separator="&#10;"/>
-
-  <!-- Fixes the license formatting -->
-  <xsl:template match="/">
-    <xsl:text>&#10;</xsl:text>
-    <xsl:apply-templates />
-  </xsl:template>
-
-  <!-- Standard copy template -->
-  <xsl:template match="@*|node()">
-    <xsl:copy>
-      <xsl:apply-templates select="@*" />
-      <xsl:apply-templates />
-    </xsl:copy>
-  </xsl:template>
-
-  <!-- Bump the SBOM schema version from `1.4` to `1.5` -->
-  <xsl:template match="cdx14:*">
-    <xsl:element name="{local-name()}" namespace="http://cyclonedx.org/schema/bom/1.5">
-      <xsl:apply-templates select="@*" />
-      <xsl:apply-templates />
-    </xsl:element>
-  </xsl:template>
-
-  <!-- Add the SBOM `serialNumber` -->
-  <xsl:template match="cdx14:bom">
-    <bom>
-      <xsl:attribute name="version">
-        <xsl:value-of select="1"/>
-      </xsl:attribute>
-      <xsl:attribute name="serialNumber">
-        <xsl:text>urn:uuid:</xsl:text>
-        <xsl:value-of select="$sbom.serialNumber"/>
-      </xsl:attribute>
-      <xsl:apply-templates />
-    </bom>
-  </xsl:template>
-
-  <!-- Add the link to the VDR -->
-  <xsl:template match="cdx14:externalReferences[starts-with(preceding-sibling::cdx14:group, 'org.apache.logging')]">
-    <externalReferences>
-      <xsl:apply-templates/>
-      <reference>
-        <xsl:attribute name="type">vulnerability-assertion</xsl:attribute>
-        <url>
-          <xsl:value-of select="$vdr.url"/>
-        </url>
-      </reference>
-    </externalReferences>
-  </xsl:template>
-
-</xsl:stylesheet>
-]]></sbom.xslt>
 
     <!-- dependency versions -->
     <org.eclipse.jgit.version>6.9.0.202403050737-r</org.eclipse.jgit.version>
@@ -611,74 +536,13 @@
             </goals>
             <phase>package</phase>
             <configuration>
+              <externalReferences>
+                <externalReference>
+                  <type>vulnerability-assertion</type>
+                  <url>${vdr.url}</url>
+                </externalReference>
+              </externalReferences>
               <outputFormat>xml</outputFormat>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>com.github.genthaler</groupId>
-        <artifactId>beanshell-maven-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.16.1</version>
-          </dependency>
-          <dependency>
-            <groupId>xalan</groupId>
-            <artifactId>serializer</artifactId>
-            <version>2.7.3</version>
-          </dependency>
-          <dependency>
-            <groupId>xalan</groupId>
-            <artifactId>xalan</artifactId>
-            <version>2.7.3</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <id>process-sbom</id>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <script><![CDATA[import java.io.*;
-import java.nio.file.*;
-import java.util.*;
-import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
-import org.apache.commons.codec.digest.*;
-
-    // Compute parameters
-    final String xslt = project.getProperties().getProperty("sbom.xslt");
-    final File pomFile = project.getModel().getPomFile();
-    final byte[] digest = new DigestUtils(MessageDigestAlgorithms.SHA_256).digest(pomFile);
-    final UUID bomSerialNumber = UUID.nameUUIDFromBytes(digest);
-    final String vdrUrl = Objects.requireNonNull(project.getProperties().getProperty("vdr.url"), "vdr.url");
-
-    // Move original SBOM file
-    final Path basedir = project.getBasedir().toPath();
-    final Path destPath = basedir.resolve("target/bom.xml");
-    final Path sourcePath = basedir.resolve("target/bom.orig.xml");
-    if (!Files.isReadable(destPath)) {
-      System.out.println("No CycloneDX SBOM file found, skipping transformation.");
-      return;
-    }
-    Files.move(destPath, sourcePath, new CopyOption[] {StandardCopyOption.REPLACE_EXISTING});
-
-    // Apply XSLT transformation
-    final StreamSource xsltSource = new StreamSource(new StringReader(xslt));
-    final TransformerFactory factory = TransformerFactory.newInstance();
-    final Transformer transformer = factory.newTransformer(xsltSource);
-    transformer.setParameter("sbom.serialNumber", bomSerialNumber.toString());
-    transformer.setParameter("vdr.url", vdrUrl);
-    final StreamSource source = new StreamSource(sourcePath.toUri().toASCIIString());
-    final StreamResult result = new StreamResult(destPath.toUri().toASCIIString());
-    transformer.transform(source, result);
-  ]]></script>
             </configuration>
           </execution>
         </executions>
