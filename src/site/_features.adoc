@@ -32,6 +32,7 @@ The provided parent POM features the following conveniences:
 * https://github.com/apache/logging-log4j-tools/tree/main/log4j-changelog-maven-plugin[`log4j-changelog-maven-plugin`] integration for changelog and release note management
 * https://maven.apache.org/enforcer/maven-enforcer-plugin/[`maven-enforcer-plugin`] checks
 * https://github.com/diffplug/spotless/tree/main/plugin-maven[`spotless-maven-plugin`] integration for code formatting
+* https://www.eclemma.org/jacoco/trunk/doc/maven.html[`jacoco-maven-plugin`] integration for test coverage analysis (optional `coverage` profile)
 * https://github.com/bndtools/bnd/blob/master/maven-plugins/bnd-maven-plugin/README.md[`bnd-maven-plugin`] integration for auto-generating OSGi and JPMS descriptors
 * {cyclonedx-maven-plugin-link} integration for auto-generating Software Bill of Materials (SBOM)
 * https://asciidoc.org/[AsciiDoc]-based site generation
