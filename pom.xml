@@ -226,7 +226,7 @@
     <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <log4j-changelog-maven-plugin.version>0.8.0</log4j-changelog-maven-plugin.version>
-    <maven-artifact-plugin.version>3.5.0</maven-artifact-plugin.version>
+    <maven-artifact-plugin.version>3.5.1</maven-artifact-plugin.version>
     <restrict-imports-enforcer-rule.version>2.5.0</restrict-imports-enforcer-rule.version>
     <sign-maven-plugin.version>1.1.0</sign-maven-plugin.version>
     <spotbugs-maven-plugin.version>4.8.3.1</spotbugs-maven-plugin.version>
