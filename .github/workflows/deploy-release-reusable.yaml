@@ -270,12 +270,12 @@ jobs:
           cd "$SVN_DIR"
           svn up --depth files "$PROJECT_ID"
 
-          # Switch to the project folder
-          if [ \! -d "$PROJECT_ID" ]; then
-            mkdir -p "$PROJECT_ID"
-            svn add "$PROJECT_ID"
+          # Switch to the distribution folder
+          if [[ \! -d "$PROJECT_ID" ||  \! -d "$PROJECT_ID/$PROJECT_VERSION" ]]; then
+            mkdir -p "$PROJECT_ID/$PROJECT_VERSION"
+            svn add --force "$PROJECT_ID"
           fi
-          cd "$PROJECT_ID"
+          cd "$PROJECT_ID/$PROJECT_VERSION"
 
           # Clean up old files
           find . -name "${DIST_FILENAME_PREFIX}*" -type f -print0 | xargs -0 -r svn delete
