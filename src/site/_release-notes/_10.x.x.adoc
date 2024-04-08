@@ -48,6 +48,7 @@ This minor release contains several small improvements.
 ==== Changed
 
 * Replace `process-sbom` script with CycloneDX plugin configuration. (https://github.com/apache/logging-parent/issues/105[105])
+* Support parallel releases by uploading the distribution to `<projectId>/<version>` folders. This is needed for parallel Log4j 2 and 3 releases. (https://github.com/apache/logging-parent/issues/139[139])
 
 ==== Updated
 
@@ -58,7 +59,7 @@ This minor release contains several small improvements.
 * Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.8.3.1` (https://github.com/apache/logging-parent/pull/116[116])
 * Update `com.google.errorprone:error_prone_core` to version `2.26.1` (https://github.com/apache/logging-parent/pull/134[134])
 * Update `com.h3xstream.findsecbugs:findsecbugs-plugin` to version `1.13.0` (https://github.com/apache/logging-parent/pull/127[127])
-* Update `com.palantir.javaformat:palantir-java-format` to version `2.41.0` (https://github.com/apache/logging-parent/pull/136[136])
+* Update `com.palantir.javaformat:palantir-java-format` to version `2.42.0` (https://github.com/apache/logging-parent/pull/151[151])
 * Update `commons-codec:commons-codec` to version `1.16.1` (https://github.com/apache/logging-parent/pull/115[115])
 * Update `de.skuzzle.enforcer:restrict-imports-enforcer-rule` to version `2.5.0` (https://github.com/apache/logging-parent/pull/111[111])
 * Update `dependabot/fetch-metadata` to version `2.0.0` (https://github.com/apache/logging-parent/pull/144[144])
