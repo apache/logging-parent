@@ -48,6 +48,7 @@ This minor release contains several small improvements.
 ==== Changed
 
 * Replace `process-sbom` script with CycloneDX plugin configuration. (https://github.com/apache/logging-parent/issues/105[105])
+* Support parallel releases by uploading the distribution to `<projectId>/<version>` folders. This is needed for parallel Log4j 2 and 3 releases. (https://github.com/apache/logging-parent/issues/139[139])
 
 ==== Updated
 
