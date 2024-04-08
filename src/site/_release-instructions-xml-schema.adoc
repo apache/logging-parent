@@ -1,0 +1,84 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to You under the Apache License, Version 2.0
+(the "License"); you may not use this file except in compliance with
+the License. You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+////
+
+// ██     ██  █████  ██████  ███    ██ ██ ███    ██  ██████  ██
+// ██     ██ ██   ██ ██   ██ ████   ██ ██ ████   ██ ██       ██
+// ██  █  ██ ███████ ██████  ██ ██  ██ ██ ██ ██  ██ ██   ███ ██
+// ██ ███ ██ ██   ██ ██   ██ ██  ██ ██ ██ ██  ██ ██ ██    ██
+//  ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████  ██
+//
+// Below instructions are shared by all Maven-based Apache Logging Services projects.
+// Be extremely cautious while making changes!
+
+include::_constants.adoc[]
+
+[#release-instructions-xml-schema]
+== XML schema release instructions
+
+This section explains how to publish XML schemas (i.e., XSD files) of projects.
+It is crucial to understand certain things while doing an XML schema release:
+
+Projects and XML schemas have different lifecycles::
+A new release of a project does not necessarily mean a new release of its XML schemas.
+XML schemas might have been untouched, or they might contain minor changes while the project itself contains breaking changes, etc.
+Hence, the project version and the XML schema version most of the time differ.
+Check if there are indeed changes to the XML schema.
+If so, set its version accordingly.
++
+Consider the following examples:
++
+* Log4j Tools `0.2.0` contains the very first version of Log4j Changelog XSD, that is, `log4j-changelog-0.1.0.xsd`.
+* The next release of Log4j Tools contains a small change to the Log4j Changelog XSD.
+Hence, Log4j Tools `0.3.0` publishes `log4j-changelog-0.1.1.xsd`.
+That is, the project upgraded from `0.2.0` to `0.3.0` (note the minor version bump), whereas the XSD upgraded from `0.1.0` to `0.1.1` (note the patch version bump).
+* Log4j Tools `0.6.0` does not contain any changes to the Log4j Changelog XSD.
+Hence, it does not publish an XSD.
+
++
+[WARNING]
+====
+Log4j XSDs are auto-generated at compile time.
+Members annotated with `@Plugin` et al. will have direct influence on the XSD generated.
+You are strongly advised to compare the new XSD with an earlier version (via https://pypi.org/project/xmldiff/[xmldiff]?) to verify the changes and decide on the XSD version.
+====
+
+XML schemas are generally published earlier than a release::
+Projects containing XML schemas most of the time need to refer to those files in their sources, tests, etc.
+Hence, XML schemas need to be published first so that the project itself can refer to them.
+
+XML schemas are generally published directly to the production (i.e., non-staging) site::
+Once an XML schema is referred using a URL in the sources, the released project artifacts will contain those referrals as is.
+That is, if sources refer to `\https://logging.**staged**.apache.org/xml/ns/foo.xml`, we cannot magically switch them to `\https://logging.apache.org/xml/ns/foo.xml` in the released artifacts.
+Hence, XML schemas are generally published directly to the production site.
+
+The instructions on how to publish XML schemas are shared below:
+
+. Check out the `main` branch of the https://github.com/apache/logging-site/tree/main/xml/ns[`logging-site`] repository
+. Update the contents of the `xml/ns` folder
+.. Adhere to the conventions followed in the existing content there
+.. Make sure that the root elements in the new XSD files contain the correct `version` attribute
+. Commit & push your changes
+. Verify that your changes are visible in https://logging.staged.apache.org/xml/ns[logging.**staged**.apache.org/xml/ns]
++
+[TIP]
+====
+Under the hood, ASF INFRA will compile the Jekyll site, commit & push its changes to the `asf-staging` branch.
+Later on, ASF INFRA will pick up these changes from the `asf-staging` branch and place it into the associated Apache HTTP Server folder.
+====
+. Check out the `asf-site` branch
+. Rebase it from `asf-staging` (i.e., `git rebase origin/asf-staging`) and push it
+. Verify that your changes are visible in https://logging.apache.org/xml/ns[logging.apache.org/xml/ns]

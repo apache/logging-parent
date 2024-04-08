@@ -44,6 +44,7 @@ This minor release contains several small improvements.
 ==== Added
 
 * Add `coverage` profile to generate a test coverage report. (https://github.com/apache/logging-parent/pull/140[140])
+* Add instructions on XML schema publication (https://github.com/apache/logging-parent/issues/138[138])
 
 ==== Changed
 
