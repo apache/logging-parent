@@ -38,6 +38,23 @@ XML schemas might have been untouched, or they might contain minor changes while
 Hence, the project version and the XML schema version most of the time differ.
 Check if there are indeed changes to the XML schema.
 If so, set its version accordingly.
++
+Consider the following examples:
++
+* Log4j Tools `0.2.0` contains the very first version of Log4j Changelog XSD, that is, `log4j-changelog-0.1.0.xsd`.
+* The next release of Log4j Tools contains a small change to the Log4j Changelog XSD.
+Hence, Log4j Tools `0.3.0` publishes `log4j-changelog-0.1.1.xsd`.
+That is, the project upgraded from `0.2.0` to `0.3.0` (note the minor version bump), whereas the XSD upgraded from `0.1.0` to `0.1.1` (note the patch version bump).
+* Log4j Tools `0.6.0` does not contain any changes to the Log4j Changelog XSD.
+Hence, it does not publish an XSD.
+
++
+[WARNING]
+====
+Log4j XSDs are auto-generated at compile time.
+Members annotated with `@Plugin` et al. will have direct influence on the XSD generated.
+You are strongly advised to compare the new XSD with an earlier version (via https://pypi.org/project/xmldiff/[xmldiff]?) to verify the changes and decide on the XSD version.
+====
 
 XML schemas are generally published earlier than a release::
 Projects containing XML schemas most of the time need to refer to those files in their sources, tests, etc.
