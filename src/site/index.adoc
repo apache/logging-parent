@@ -74,7 +74,9 @@ See https://logging.apache.org/log4j/2.x/security.html[the Log4j Security page] 
 
 include::_release-notes.adoc[]
 
-include::_release-instructions.adoc[]
+include::_release-instructions-project.adoc[]
+
+include::_release-instructions-xml-schema.adoc[]
 
 [#license]
 == License

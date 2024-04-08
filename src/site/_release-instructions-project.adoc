@@ -27,16 +27,14 @@ limitations under the License.
 include::_constants.adoc[]
 
 [#release-instructions]
-== Release instructions
+== Project release instructions
+
+This section explains how to publish a new release of projects extending from the `{project-id}` POM and using its reusable CI workflows.
 
 [WARNING]
 ====
-In the code examples below, assuming the version to be released is `7.8.0`.
-====
-
-[WARNING]
-====
-The website-specific instructions are only applicable to projects which employ the reusable CI workflow with `site-enabled` input set to `true`.
+In the code examples below, assuming that the project and its version to be published are `{project-id}` and `7.8.0`, respectively.
+You need to adapt these values for your project and version accordingly.
 ====
 
 [#stage-release]
@@ -70,6 +68,11 @@ If not, commit necessary fixes, push, and repeat.
 
 [#stage-release-website]
 === Stage the release website
+
+[NOTE]
+====
+You can skip this step if the project does not have a website.
+====
 
 . Checkout the `asf-staging` branch of {website-github-url}[the website repository]
 . Override the contents of the `{website-folder}7.x` folder using the website uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}] Subversion repository
@@ -214,6 +217,11 @@ svn commit -m 'Remove `{project-id}` version `7.8.0` files released'
 
 [#publish-release-website]
 === Publish the release website
+
+[NOTE]
+====
+You can skip this step if the project does not have a website.
+====
 
 . Checkout the `asf-site` branch of {website-github-url}[the website repository]
 . Replace the `{website-folder}7.x` folder with the one in `asf-staging` branch
