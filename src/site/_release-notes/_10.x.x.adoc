@@ -56,6 +56,7 @@ This minor release contains several small improvements.
 * Update `actions/setup-java` to version `4.2.1` (https://github.com/apache/logging-parent/pull/137[137])
 * Update `actions/upload-artifact` to version `4.3.1` (https://github.com/apache/logging-parent/pull/114[114])
 * Update `com.diffplug.spotless:spotless-maven-plugin` to version `2.43.0` (https://github.com/apache/logging-parent/pull/108[108])
+* Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.4` (https://github.com/apache/logging-parent/pull/152[152])
 * Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.8.3.1` (https://github.com/apache/logging-parent/pull/116[116])
 * Update `com.google.errorprone:error_prone_core` to version `2.26.1` (https://github.com/apache/logging-parent/pull/134[134])
 * Update `com.h3xstream.findsecbugs:findsecbugs-plugin` to version `1.13.0` (https://github.com/apache/logging-parent/pull/127[127])

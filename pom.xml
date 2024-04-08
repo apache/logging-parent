@@ -212,7 +212,7 @@
     <osgi.annotation.bundle.version>2.0.0</osgi.annotation.bundle.version>
     <osgi.annotation.versioning.version>1.1.2</osgi.annotation.versioning.version>
     <palantir-java-format.version>2.42.0</palantir-java-format.version>
-    <spotbugs-annotations.version>4.8.3</spotbugs-annotations.version>
+    <spotbugs-annotations.version>4.8.4</spotbugs-annotations.version>
 
     <!-- plugin version overriddes -->
     <version.apache-rat-plugin>0.16</version.apache-rat-plugin>
