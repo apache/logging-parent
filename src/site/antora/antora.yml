@@ -24,12 +24,12 @@
 #
 #  THIS FILE IS A STUB!
 #
-#  The actual `antora.yml` that is used in `target/generated-site/antora` is auto-generated from `.antora.yml`.
+#  The actual `antora.yml` that is used in `target/generated-site/antora` is auto-generated from `antora.tmpl.yml`.
 #  Auto-generation happens during `pre-site` phase of Maven.
 #  Hence, you must always
 #
-#  1. Edit `.antora.yml`
-#  2. Edit `antora.yml` to match the fields in `.antora.yml` and fill Maven property placeholders with dummy values
+#  1. Edit `antora.tmpl.yml`
+#  2. Edit `antora.yml` to match the fields in `antora.tmpl.yml` and fill Maven property placeholders with dummy values
 #
 
 name: ROOT

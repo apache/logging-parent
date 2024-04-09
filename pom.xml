@@ -1398,7 +1398,7 @@
             </executions>
           </plugin>
 
-          <!-- Copy `src/site/antora/.antora.yml` to `target/antora-yml/antora.yml` -->
+          <!-- Copy `src/site/antora/antora.tmpl.yml` to `target/antora-yml/antora.yml` -->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
@@ -1411,7 +1411,7 @@
                 <phase>pre-site</phase>
                 <configuration>
                   <target>
-                    <copy file="${project.basedir}/src/site/antora/.antora.yml" overwrite="true" tofile="${project.build.directory}/antora-yml/antora.yml" />
+                    <copy file="${project.basedir}/src/site/antora/antora.tmpl.yml" overwrite="true" tofile="${project.build.directory}/antora-yml/antora.yml" />
                   </target>
                 </configuration>
               </execution>
