@@ -1372,7 +1372,6 @@
           <plugin>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-changelog-maven-plugin</artifactId>
-            <inherited>false</inherited>
             <executions>
               <execution>
                 <id>export-changelog</id>
@@ -1403,7 +1402,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-antrun-plugin</artifactId>
-            <inherited>false</inherited>
             <executions>
               <execution>
                 <id>copy-antora-yml</id>
@@ -1423,7 +1421,6 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-resources-plugin</artifactId>
-            <inherited>false</inherited>
             <executions>
 
               <!-- Process `target/antora-yml` and output to `target/generated-site/antora` -->
@@ -1472,7 +1469,6 @@
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
             <version>${frontend-maven-plugin.version}</version>
-            <inherited>false</inherited>
             <executions>
 
               <!-- Install Node & NPM -->
@@ -1512,7 +1508,6 @@
                   <goal>exec</goal>
                 </goals>
                 <phase>site</phase>
-                <inherited>false</inherited>
                 <configuration>
                   <executable>${project.basedir}/node/node</executable>
                   <arguments>
