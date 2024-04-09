@@ -28,10 +28,6 @@ on:
         description: Identifier used in the distribution artifact and Subversion repository folder filenames (e.g., `logging-parent`)
         required: true
         type: string
-      site-enabled:
-        description: Flag indicating if a website should be generated prior to deployment using `./mvnw site`
-        default: false
-        type: boolean
       distribution-attachment-filepath-pattern:
         description: The regex pattern matched against the full filepath for determining attachments to be included in the distribution
         default: ""
@@ -139,9 +135,6 @@ jobs:
           ./mvnw \
             --non-recursive --batch-mode --errors --no-transfer-progress \
             -P changelog-release
-          ./mvnw \
-            --non-recursive --batch-mode --errors --no-transfer-progress \
-            process-sources
           git add src
           if [ -n "$(git status --porcelain)" ]; then
             git commit -S src -m "Release changelog for version \`$PROJECT_VERSION\`"
@@ -149,7 +142,6 @@ jobs:
           fi
 
       - name: Build the website
-        if: inputs.site-enabled
         shell: bash
         run: |
           export TIMESTAMP=$(./mvnw \
@@ -287,9 +279,7 @@ jobs:
           done
 
           # Copy the site
-          if [ "$SITE_ENABLED" == "true" ]; then
-            cp "$GITHUB_WORKSPACE/target/site.zip" "${DIST_FILENAME_VERSIONED_PREFIX}-site.zip"
-          fi
+          cp "$GITHUB_WORKSPACE/target/site.zip" "${DIST_FILENAME_VERSIONED_PREFIX}-site.zip"
 
           # Copy the distribution
           cp "$DIST_FILEPATH_PREFIX"* .
@@ -305,4 +295,3 @@ jobs:
           PROJECT_ID: ${{ inputs.project-id }}
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-          SITE_ENABLED: ${{ inputs.site-enabled }}

@@ -15,16 +15,15 @@
     limitations under the License.
 ////
 
-include::_constants.adoc[]
 :cyclonedx-maven-plugin-link: https://github.com/CycloneDX/cyclonedx-maven-plugin[cyclonedx-maven-plugin]
 
 [#features]
-== Features
+= Features
 
 {project-name} aims to deliver the following features.
 
 [#parent-pom]
-=== Parent POM
+== Parent POM
 
 The provided parent POM features the following conveniences:
 
@@ -35,10 +34,10 @@ The provided parent POM features the following conveniences:
 * https://www.eclemma.org/jacoco/trunk/doc/maven.html[`jacoco-maven-plugin`] integration for test coverage analysis (optional `coverage` profile)
 * https://github.com/bndtools/bnd/blob/master/maven-plugins/bnd-maven-plugin/README.md[`bnd-maven-plugin`] integration for auto-generating OSGi and JPMS descriptors
 * {cyclonedx-maven-plugin-link} integration for auto-generating Software Bill of Materials (SBOM)
-* https://asciidoc.org/[AsciiDoc]-based site generation
+* https://antora.org/[Antora]-based site generation
 
 [#cyclonedx-sbom]
-==== CycloneDX Software Bill of Materials (SBOM)
+=== CycloneDX Software Bill of Materials (SBOM)
 
 {project-name} streamlines the generation of https://cyclonedx.org/capabilities/vdr[CycloneDX Software Bill of Materials (SBOM)] using {cyclonedx-maven-plugin-link}.
 Plugin execution is configured and activated to generate SBOM files for each module, including the root one.
@@ -48,14 +47,13 @@ Produced SBOMs are enriched with `vulnerability-assertion` references to a https
 This VDR is accessible through the following URL: https://logging.apache.org/cyclonedx/vdr.xml[]
 
 [#reusable-workflows]
-=== Reusable GitHub Actions workflows
+== Reusable GitHub Actions workflows
 
 The provided reusable GitHub Actions workflows feature the following conveniences:
 
 `build-reusable.yaml`::
 * Compiles against Java 8 bytecode using the specified Java compiler version
 * Verifies reproducibility
-* Automatically merges verified `dependabot` PRs
 
 `deploy-snapshot-reusable.yaml`::
 * Deploys SNAPSHOT artifacts
@@ -63,7 +61,6 @@ The provided reusable GitHub Actions workflows feature the following convenience
 `deploy-release-reusable.yaml`::
 * Deploys release artifacts
 * Updates `revision` and `project.build.outputTimestamp` Maven properties
-* Generates the release notes
-* Generates the distribution ZIP containing Git-tracked sources, release notes, binary attachments, `NOTICE.txt`, etc.
+* Generates the distribution ZIP containing Git-tracked sources, binary attachments, `NOTICE.txt`, etc.
 * Generates the release vote & announcement emails
 * Uploads the distribution ZIP and emails to SVN

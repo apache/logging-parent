@@ -24,10 +24,7 @@ limitations under the License.
 // Below instructions are shared by all Maven-based Apache Logging Services projects.
 // Be extremely cautious while making changes!
 
-include::_constants.adoc[]
-
-[#release-instructions]
-== Project release instructions
+= Project release instructions
 
 This section explains how to publish a new release of projects extending from the `{project-id}` POM and using its reusable CI workflows.
 
@@ -38,7 +35,7 @@ You need to adapt these values for your project and version accordingly.
 ====
 
 [#stage-release]
-=== Stage the release
+== Stage the release
 
 . Create and push the release branch:
 +
@@ -67,7 +64,7 @@ If not, commit necessary fixes, push, and repeat.
 . _Close_ the repository in https://repository.apache.org/[repository.apache.org] using a self-explanatory description, e.g., ``\`{project-id}` version \`7.8.0` RC1``
 
 [#stage-release-website]
-=== Stage the release website
+== Stage the release website
 
 [NOTE]
 ====
@@ -101,7 +98,7 @@ git push origin asf-staging
 Changes should be visible in {website-url-staging}[the project **staging** website].
 
 [#vote-release]
-=== Vote the release
+== Vote the release
 
 . Send the vote email uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}] Subversion repository
 +
@@ -127,10 +124,10 @@ With that, the release passes with 3 binding +1 votes from <PMC-member-1>, ..., 
 ----
 
 [#publish-release]
-=== Publish the release
+== Publish the release
 
 [#publish-release-git]
-==== In the git repository
+=== In the git repository
 
 . Pull the most recent changes and tags
 +
@@ -160,7 +157,7 @@ git checkout main
 git rebase origin/main    # Sync with the remote repository
 git merge rel/7.8.0       # Pull changes up to the newly created tag
 ----
-. Set the revision property to the next development version (e.g., `7.9.0-SNAPSHOT`) in xref:pom.xml[`pom.xml`]
+. Set the revision property to the next development version (e.g., `7.9.0-SNAPSHOT`) in `pom.xml`
 . Commit changes and push the `main` branch
 . Delete the local and remote copies of the `release/7.8.0` branch
 +
@@ -171,7 +168,7 @@ git push --delete origin release/7.8.0
 ----
 
 [#publish-release-asf]
-==== In the ASF infrastructure
+=== In the ASF infrastructure
 
 . _Release_ the repository in https://repository.apache.org[repository.apache.org]
 . In https://dist.apache.org/repos/dist/release/logging/{project-id}[dist.apache.org/repos/dist] Subversion repository,
@@ -208,7 +205,7 @@ svn commit -m 'Remove `{project-id}` version `7.8.0` files released'
 . Report the release at https://reporter.apache.org/addrelease.html?logging[reporter.apache.org]
 
 [#publish-release-github]
-==== In GitHub
+=== In GitHub
 
 {project-github-url}/releases/new[Create a new release in GitHub]
 
@@ -216,7 +213,7 @@ svn commit -m 'Remove `{project-id}` version `7.8.0` files released'
 . Copy release notes from the generated emails
 
 [#publish-release-website]
-=== Publish the release website
+== Publish the release website
 
 [NOTE]
 ====
@@ -249,7 +246,7 @@ git push origin asf-site
 Changes should be visible in {website-url}[the project website].
 
 [#announce-release]
-=== Announce the release
+== Announce the release
 
 . Send the announcement email uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}] Subversion repository
 +

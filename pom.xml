@@ -139,13 +139,13 @@
   </ciManagement>
 
   <distributionManagement>
-    <downloadUrl>https://logging.apache.org/logging-parent/latest/#distribution</downloadUrl>
+    <downloadUrl>https://logging.apache.org/logging-parent</downloadUrl>
   </distributionManagement>
 
   <properties>
 
     <!-- project version -->
-    <revision>10.7.0-SNAPSHOT</revision>
+    <revision>11.0.0-SNAPSHOT</revision>
 
     <!-- `project.build.outputTimestamp` is required to be present for reproducible builds.
          We actually inherit one from the `org.apache:apache` parent.
@@ -208,6 +208,8 @@
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
     <bnd.annotation.version>7.0.0</bnd.annotation.version>
     <jspecify.version>0.3.0</jspecify.version>
+    <node.version>21.7.1</node.version>
+    <npm.version>10.5.0</npm.version>
     <osgi.annotation.version>8.1.0</osgi.annotation.version>
     <osgi.annotation.bundle.version>2.0.0</osgi.annotation.bundle.version>
     <osgi.annotation.versioning.version>1.1.2</osgi.annotation.versioning.version>
@@ -216,6 +218,7 @@
 
     <!-- plugin version overriddes -->
     <version.apache-rat-plugin>0.16</version.apache-rat-plugin>
+
     <!-- plugin versions -->
     <asciidoctor-maven-plugin.version>3.0.0</asciidoctor-maven-plugin.version>
     <beanshell-maven-plugin.version>1.4</beanshell-maven-plugin.version>
@@ -223,7 +226,9 @@
     <bnd-baseline-maven-plugin.version>7.0.0</bnd-baseline-maven-plugin.version>
     <build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
     <cyclonedx-maven-plugin.version>2.8.0</cyclonedx-maven-plugin.version>
+    <exec-maven-plugin.version>3.2.0</exec-maven-plugin.version>
     <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
+    <frontend-maven-plugin.version>1.15.0</frontend-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <log4j-changelog-maven-plugin.version>0.8.0</log4j-changelog-maven-plugin.version>
     <maven-artifact-plugin.version>3.5.1</maven-artifact-plugin.version>
@@ -283,6 +288,7 @@
   <build>
 
     <pluginManagement>
+
       <!-- Managed plugins ordered alphabetically by `artifactId` -->
       <plugins>
 
@@ -372,6 +378,7 @@
         </plugin>
 
       </plugins>
+
     </pluginManagement>
 
     <plugins>
@@ -450,8 +457,7 @@
       </plugin>
 
       <!--
-        ~ Removes a trailing `module-info.class` before each compilation to prevent `javac` failures.
-        ~
+        ~ Removes existing `module-info.class` before each compilation to prevent `javac` failures.
         ~ See https://github.com/copernik-eu/bug-reproducibility/tree/main/javac-module-info-bug
         -->
       <plugin>
@@ -567,6 +573,7 @@
           </dependency>
         </dependencies>
         <executions>
+
           <!--
             ~ Ensure that version for each dependency resolved during a build, is equal to or
             ~ higher than all transitive dependency declarations.
@@ -583,6 +590,7 @@
               </rules>
             </configuration>
           </execution>
+
           <!--
             ~ Ensures that no wildcard imports are used.
             ~ Wildcard imports increase the differences between branches and can not be expanded through simple tools.
@@ -601,6 +609,7 @@
               </rules>
             </configuration>
           </execution>
+
         </executions>
       </plugin>
 
@@ -979,7 +988,7 @@
 
   <profiles>
 
-    <!-- `changelog-validate` profile to validate changelog XMLs. -->
+    <!-- `changelog-validate` profile to validate changelog XMLs -->
     <profile>
 
       <id>changelog-validate</id>
@@ -1009,8 +1018,6 @@
                       <includes>
                         <include>**/*.xml</include>
                       </includes>
-                      <publicId>http://logging.apache.org/log4j/changelog</publicId>
-                      <systemId>https://logging.apache.org/log4j/changelog-0.1.3.xsd</systemId>
                       <validating>true</validating>
                     </validationSet>
                   </validationSets>
@@ -1018,55 +1025,6 @@
               </execution>
             </executions>
           </plugin>
-        </plugins>
-      </build>
-
-    </profile>
-
-    <!-- `changelog-export` profile to export changelogs -->
-    <profile>
-
-      <id>changelog-export</id>
-
-      <activation>
-        <file>
-          <exists>src/changelog</exists>
-        </file>
-      </activation>
-
-      <build>
-        <plugins>
-
-          <!-- export release notes to `src/site` -->
-          <plugin>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-changelog-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>export-changelog</id>
-                <goals>
-                  <goal>export</goal>
-                </goals>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <outputDirectory>src/site</outputDirectory>
-                  <indexTemplates>
-                    <template>
-                      <source>.index.adoc.ftl</source>
-                      <target>_release-notes.adoc</target>
-                    </template>
-                  </indexTemplates>
-                  <changelogTemplates>
-                    <template>
-                      <source>.release-notes.adoc.ftl</source>
-                      <target>_release-notes/_%v.adoc</target>
-                    </template>
-                  </changelogTemplates>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
         </plugins>
       </build>
 
@@ -1234,7 +1192,7 @@
 
                     // Find auxiliary files that will go into the binary distribution
                     SortedMap pathByFile = new TreeMap();
-                    pathByFile.put("RELEASE-NOTES.adoc", new File("src/site/_release-notes/_${project.version}.adoc").toPath());
+                    pathByFile.put("RELEASE-NOTES.adoc", new File("${project.build.directory}/generated-site/antora/modules/ROOT/pages/_release-notes/${project.version}.adoc").toPath());
                     pathByFile.put("README.adoc", new File("README.adoc").toPath());
                     pathByFile.put("NOTICE.txt", new File("NOTICE.txt").toPath());
                     pathByFile.put("LICENSE.txt", new File("LICENSE.txt").toPath());
@@ -1370,7 +1328,7 @@
                 <configuration>
                   <rules>
                     <requireReleaseDeps>
-                      <message>SNAPSHOT dependencies are not allowed for releases</message>
+                      <message>A release cannot have SNAPSHOT dependencies</message>
                       <onlyWhenRelease>true</onlyWhenRelease>
                     </requireReleaseDeps>
                     <requireReleaseVersion>
@@ -1388,79 +1346,14 @@
 
     </profile>
 
-    <!-- `constants-tmpl-adoc` profile to generate `src/site/_constants.adoc` from `src/site/_constants.tmpl.adoc` -->
+    <!-- `antora` profile to generate `target/site` from `src/site/antora` -->
     <profile>
 
-      <id>constants-tmpl-adoc</id>
+      <id>antora</id>
 
       <activation>
         <file>
-          <exists>src/site/_constants.tmpl.adoc</exists>
-        </file>
-      </activation>
-
-      <build>
-        <plugins>
-
-          <!-- copy `src/site/_constants.tmpl.adoc` to `target/constants-adoc/_constants.adoc` -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>copy-constants-adoc</id>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <target>
-                    <copy overwrite="true" tofile="${project.build.directory}/constants-adoc/_constants.adoc" verbose="true">
-                      <fileset file="src/site/_constants.tmpl.adoc" />
-                    </copy>
-                  </target>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-          <!-- process `target/constants-adoc` and output to `src/site` -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>filter-constants-adoc</id>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <phase>process-sources</phase>
-                <configuration>
-                  <outputDirectory>src/site</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${project.build.directory}/constants-adoc</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-        </plugins>
-      </build>
-
-    </profile>
-
-    <!-- `asciidoc` profile to generate `target/site` from `src/site` -->
-    <profile>
-
-      <id>asciidoc</id>
-
-      <activation>
-        <file>
-          <exists>src/site</exists>
+          <exists>src/site/antora</exists>
         </file>
       </activation>
 
@@ -1475,25 +1368,170 @@
       <build>
         <plugins>
 
+          <!-- Export release notes to `target/generated-site/antora/modules/ROOT/pages` -->
           <plugin>
-            <groupId>org.asciidoctor</groupId>
-            <artifactId>asciidoctor-maven-plugin</artifactId>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-changelog-maven-plugin</artifactId>
+            <inherited>false</inherited>
             <executions>
               <execution>
-                <id>export-asciidoc-to-html</id>
+                <id>export-changelog</id>
                 <goals>
-                  <goal>process-asciidoc</goal>
+                  <goal>export</goal>
+                </goals>
+                <phase>pre-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/generated-site/antora/modules/ROOT/pages</outputDirectory>
+                  <indexTemplates>
+                    <template>
+                      <source>.index.adoc.ftl</source>
+                      <target>release-notes.adoc</target>
+                    </template>
+                  </indexTemplates>
+                  <changelogTemplates>
+                    <template>
+                      <source>.release-notes.adoc.ftl</source>
+                      <target>_release-notes/%v.adoc</target>
+                    </template>
+                  </changelogTemplates>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!-- Copy `src/site/antora/.antora.yml` to `target/antora-yml/antora.yml` -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <inherited>false</inherited>
+            <executions>
+              <execution>
+                <id>copy-antora-yml</id>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <phase>pre-site</phase>
+                <configuration>
+                  <target>
+                    <copy file="${project.basedir}/src/site/antora/.antora.yml" overwrite="true" tofile="${project.build.directory}/antora-yml/antora.yml" />
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <inherited>false</inherited>
+            <executions>
+
+              <!-- Process `target/antora-yml` and output to `target/generated-site/antora` -->
+              <execution>
+                <id>filter-antora-yml</id>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <phase>pre-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/generated-site/antora</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${project.build.directory}/antora-yml</directory>
+                      <filtering>true</filtering>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+
+              <!-- Copy `src/site` to `target/generated-site` -->
+              <execution>
+                <id>copy-site</id>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <phase>pre-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/generated-site</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${project.basedir}/src/site</directory>
+                      <excludes>
+                        <!-- `filter-antora-yml` execution will populate `antora.yml`, avoid overriding it: -->
+                        <exclude>antora/antora.yml</exclude>
+                      </excludes>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <version>${frontend-maven-plugin.version}</version>
+            <inherited>false</inherited>
+            <executions>
+
+              <!-- Install Node & NPM -->
+              <execution>
+                <id>install-node-and-npm</id>
+                <goals>
+                  <goal>install-node-and-npm</goal>
+                </goals>
+                <phase>pre-site</phase>
+                <configuration>
+                  <nodeVersion>v${node.version}</nodeVersion>
+                  <npmVersion>${npm.version}</npmVersion>
+                </configuration>
+              </execution>
+
+              <!-- Install Antora -->
+              <execution>
+                <id>install-antora</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <phase>pre-site</phase>
+              </execution>
+
+            </executions>
+          </plugin>
+
+          <!-- Run Antora -->
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>${exec-maven-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>run-antora</id>
+                <goals>
+                  <goal>exec</goal>
                 </goals>
                 <phase>site</phase>
+                <inherited>false</inherited>
                 <configuration>
-                  <sourceDirectory>src/site</sourceDirectory>
-                  <outputDirectory>${project.build.directory}/site</outputDirectory>
-                  <preserveDirectories>true</preserveDirectories>
-                  <attributes>
-                    <source-highlighter>coderay</source-highlighter>
-                    <toc>left</toc>
-                    <icons>font</icons>
-                  </attributes>
+                  <executable>${project.basedir}/node/node</executable>
+                  <arguments>
+                    <!-- Running `node/node node_modules/.bin/antora antora-playbook.yaml ...` doesn't work on Windows[1].
+                         I come up with the below solution working on both Linux and Windows.
+                         Pay attention to the following details:
+
+                         1. `@antora/cli` is executed programmatically (this is what `node_modules/.bin/antora` does under the hood)
+                         2. Single-quotes must be used (double-quotes get erased and hence cause syntax errors)
+                         3. Relative paths must be used[2]
+
+                         [1] For some reason, the `node_modules/.bin/antora` script is not properly executed.
+                             The following works though: `cd node_modules/.bin; ../../node/node antora ../../antora-playbook.yaml`.
+                             Motivated by this, tried configuring the `workingDirectory` parameter of the plugin, though it did not help.
+                         [2] `${project.basedir}/antora-playbook.yaml` strangely resolves to `C:\Users\user\logging-log4j2\Usersuserlogging-log4j2/antora-playbook.yaml`.
+                             I tried using `const path = require('path'); ... path.resolve('${project.basedir}', 'antora-playbook.yaml')`, but it failed with the same error too. -->
+                    <argument>--eval</argument>
+                    <argument>require('@antora/cli')(['generate', '--playbook', 'antora-playbook.yaml', '--to-dir', 'target/site'])</argument>
+                  </arguments>
                 </configuration>
               </execution>
             </executions>
