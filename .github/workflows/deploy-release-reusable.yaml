@@ -28,10 +28,6 @@ on:
         description: Identifier used in the distribution artifact and Subversion repository folder filenames (e.g., `logging-parent`)
         required: true
         type: string
-      site-enabled:
-        description: Flag indicating if a website should be generated prior to deployment using `./mvnw site`
-        default: false
-        type: boolean
       distribution-attachment-filepath-pattern:
         description: The regex pattern matched against the full filepath for determining attachments to be included in the distribution
         default: ""
@@ -139,18 +135,38 @@ jobs:
           ./mvnw \
             --non-recursive --batch-mode --errors --no-transfer-progress \
             -P changelog-release
-          ./mvnw \
-            --non-recursive --batch-mode --errors --no-transfer-progress \
-            process-sources
           git add src
           if [ -n "$(git status --porcelain)" ]; then
             git commit -S src -m "Release changelog for version \`$PROJECT_VERSION\`"
             git push -f origin
           fi
 
+      # Node.js cache is needed for Antora
+      - name: Set up Node.js cache
+        id: nodejs-cache
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9   # 4.0.2
+        with:
+          # We should be calculating the cache key using `package-lock.json` instead!
+          # See https://stackoverflow.com/a/48524475/1278899
+          # For that, `package-lock.json` needs to be committed into the repository – right now it is `.gitignore`d.
+          # Once it is there, we should ideally switch from `npm i` to `npm ci`.
+          # For that, we need to configure `dependabot` to update hundreds of dependencies listed in `package-lock.json`.
+          # That translates to a never ending rain of `dependabot` PRs.
+          # I doubt if the wasted CPU cycles worth the gain.
+          key: ${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}
+          # `actions/cache` doesn't recommend caching `node_modules`.
+          # Though none of its recipes fit our bill, since we install Node.js using `frontend-maven-plugin`.
+          # See https://github.com/actions/cache/blob/main/examples.md#node---npm
+          # We settle for this quick-n-dirty solution for the time being.
+          path: |
+            node
+            node_modules
+
       - name: Build the website
-        if: inputs.site-enabled
         shell: bash
+        env:
+          # Making Node.js cache hit visible for debugging purposes
+          NODEJS_CACHE_HIT: ${{ steps.nodejs-cache.outputs.cache-hit }}
         run: |
           export TIMESTAMP=$(./mvnw \
             --non-recursive --quiet --batch-mode \
@@ -264,18 +280,16 @@ jobs:
           # Checkout the SVN repository
           export SVN_DIR="/tmp/svn-repo"
           svn co \
-            --depth files \
-            "https://dist.apache.org/repos/dist/dev/logging" \
+            "https://dist.apache.org/repos/dist/dev/logging/$PROJECT_ID" \
             "$SVN_DIR"
           cd "$SVN_DIR"
-          svn up --depth files "$PROJECT_ID"
 
           # Switch to the distribution folder
-          if [[ \! -d "$PROJECT_ID" ||  \! -d "$PROJECT_ID/$PROJECT_VERSION" ]]; then
-            mkdir -p "$PROJECT_ID/$PROJECT_VERSION"
-            svn add --force "$PROJECT_ID"
-          fi
-          cd "$PROJECT_ID/$PROJECT_VERSION"
+          [ -d "$PROJECT_VERSION" ] || {
+            mkdir "$PROJECT_VERSION"
+            svn add "$PROJECT_VERSION"
+          }
+          cd "$PROJECT_VERSION"
 
           # Clean up old files
           find . -name "${DIST_FILENAME_PREFIX}*" -type f -print0 | xargs -0 -r svn delete
@@ -287,9 +301,7 @@ jobs:
           done
 
           # Copy the site
-          if [ "$SITE_ENABLED" == "true" ]; then
-            cp "$GITHUB_WORKSPACE/target/site.zip" "${DIST_FILENAME_VERSIONED_PREFIX}-site.zip"
-          fi
+          cp "$GITHUB_WORKSPACE/target/site.zip" "${DIST_FILENAME_VERSIONED_PREFIX}-site.zip"
 
           # Copy the distribution
           cp "$DIST_FILEPATH_PREFIX"* .
@@ -305,4 +317,3 @@ jobs:
           PROJECT_ID: ${{ inputs.project-id }}
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-          SITE_ENABLED: ${{ inputs.site-enabled }}

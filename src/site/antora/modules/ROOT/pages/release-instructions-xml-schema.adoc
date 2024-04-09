@@ -24,12 +24,12 @@ limitations under the License.
 // Below instructions are shared by all Maven-based Apache Logging Services projects.
 // Be extremely cautious while making changes!
 
-include::_constants.adoc[]
-
-[#release-instructions-xml-schema]
-== XML schema release instructions
+= XML schema release instructions
 
 This section explains how to publish XML schemas (i.e., XSD files) of projects.
+
+[#preliminaries]
+== Preliminaries
 It is crucial to understand certain things while doing an XML schema release:
 
 Projects and XML schemas have different lifecycles::
@@ -64,6 +64,9 @@ XML schemas are generally published directly to the production (i.e., non-stagin
 Once an XML schema is referred using a URL in the sources, the released project artifacts will contain those referrals as is.
 That is, if sources refer to `\https://logging.**staged**.apache.org/xml/ns/foo.xml`, we cannot magically switch them to `\https://logging.apache.org/xml/ns/foo.xml` in the released artifacts.
 Hence, XML schemas are generally published directly to the production site.
+
+[#instructions]
+== Instructions
 
 The instructions on how to publish XML schemas are shared below:
 

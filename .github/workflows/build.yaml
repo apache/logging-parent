@@ -73,4 +73,3 @@ jobs:
       contents: write
     with:
       project-id: logging-parent
-      site-enabled: true

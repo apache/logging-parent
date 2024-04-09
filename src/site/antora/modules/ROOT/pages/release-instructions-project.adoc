@@ -24,10 +24,7 @@ limitations under the License.
 // Below instructions are shared by all Maven-based Apache Logging Services projects.
 // Be extremely cautious while making changes!
 
-include::_constants.adoc[]
-
-[#release-instructions]
-== Project release instructions
+= Project release instructions
 
 This section explains how to publish a new release of projects extending from the `{project-id}` POM and using its reusable CI workflows.
 
@@ -38,7 +35,7 @@ You need to adapt these values for your project and version accordingly.
 ====
 
 [#stage-release]
-=== Stage the release
+== Stage the release
 
 . Create and push the release branch:
 +
@@ -59,7 +56,7 @@ You can iterate on the `release/7.8.0` branch to perfect it.
 .. `revision` property in `pom.xml` is updated
 .. Changelog is released (i.e., `src/changelog/7.8.0` folder is populated)
 .. *Signed artifacts* are uploaded to the _Staging Repositories_ in https://repository.apache.org/[repository.apache.org]
-.. *Signed distribution and its checksum* (e.g., `apache-{project-id}-7.8.0-{bin,src}.{zip,.zip.asc,.zip.sha512}`) are uploaded to https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}] Subversion repository (along with auxiliary files; website, email texts, etc.)
+.. *Signed distribution and its checksum* (e.g., `apache-{project-id}-7.8.0-{bin,src}.{zip,.zip.asc,.zip.sha512}`) are uploaded to https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}/7.8.0] Subversion repository (along with auxiliary files; website, email texts, etc.)
 
 +
 If not, commit necessary fixes, push, and repeat.
@@ -67,7 +64,7 @@ If not, commit necessary fixes, push, and repeat.
 . _Close_ the repository in https://repository.apache.org/[repository.apache.org] using a self-explanatory description, e.g., ``\`{project-id}` version \`7.8.0` RC1``
 
 [#stage-release-website]
-=== Stage the release website
+== Stage the release website
 
 [NOTE]
 ====
@@ -92,7 +89,7 @@ git checkout -B asf-staging origin/asf-staging
 # Override the website
 git rm -rf {website-folder}7.x
 mkdir {website-folder}7.x
-unzip ../logging-dist-dev/{project-id}/*-7.8.0-site.zip -d {website-folder}7.x
+unzip ../logging-dist-dev/{project-id}/7.8.0/*-site.zip -d {website-folder}7.x
 git add {website-folder}7.x
 git commit -a -m 'Add `{project-id}` version `7.8.0` website'
 git push origin asf-staging
@@ -101,7 +98,7 @@ git push origin asf-staging
 Changes should be visible in {website-url-staging}[the project **staging** website].
 
 [#vote-release]
-=== Vote the release
+== Vote the release
 
 . Send the vote email uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}] Subversion repository
 +
@@ -114,7 +111,7 @@ It changes after every Nexus deployment.
 [WARNING]
 ====
 Make sure your email is sent in plain text, that is, https://infra.apache.org/contrib-email-tips#nohtml[no HTML]!
-If you are using GMail, simply enable the _"Plain text mode"_ while composing your message.
+If you are using GMail, enable the _"Plain text mode"_ while composing your message.
 ====
 
 . Once the consensus is reached within the set time frame, respond to the first post in the thread as follows:
@@ -127,10 +124,10 @@ With that, the release passes with 3 binding +1 votes from <PMC-member-1>, ..., 
 ----
 
 [#publish-release]
-=== Publish the release
+== Publish the release
 
 [#publish-release-git]
-==== In the git repository
+=== In the git repository
 
 . Pull the most recent changes and tags
 +
@@ -160,7 +157,7 @@ git checkout main
 git rebase origin/main    # Sync with the remote repository
 git merge rel/7.8.0       # Pull changes up to the newly created tag
 ----
-. Set the revision property to the next development version (e.g., `7.9.0-SNAPSHOT`) in xref:pom.xml[`pom.xml`]
+. Set the revision property to the next development version (e.g., `7.9.0-SNAPSHOT`) in `pom.xml`
 . Commit changes and push the `main` branch
 . Delete the local and remote copies of the `release/7.8.0` branch
 +
@@ -171,14 +168,14 @@ git push --delete origin release/7.8.0
 ----
 
 [#publish-release-asf]
-==== In the ASF infrastructure
+=== In the ASF infrastructure
 
 . _Release_ the repository in https://repository.apache.org[repository.apache.org]
 . In https://dist.apache.org/repos/dist/release/logging/{project-id}[dist.apache.org/repos/dist] Subversion repository,
-.. create the `*release*/logging/{project-id}/7.8.0` folder, and copy the signed sources and their checksum from `*dev*/logging/{project-id}` to there
+.. create the `*release*/logging/{project-id}/7.8.0` folder, and copy the signed sources and their checksum from `*dev*/logging/{project-id}/7.8.0` to there
 .. delete the folder from an earlier release in `*release*/logging/{project-id}`
 .. commit your changes in `*release*/logging/{project-id}`
-.. delete the `*dev*/logging/{project-id}` folder (stash the generated announcement email somewhere, you will need it later on)
+.. delete the `*dev*/logging/{project-id}/7.8.0` folder (stash the generated announcement email somewhere, you will need it later on)
 .. commit changes your changes in `*dev*/logging/{project-id}`
 
 +
@@ -194,21 +191,21 @@ svn co https://dist.apache.org/repos/dist/release/logging logging-dist-rel
 # Update `release` folder
 cd logging-dist-rel
 mkdir -p {project-id}/7.8.0
-cp ../logging-dist-dev/{project-id}/*-7.8.0-{bin,src}.* {project-id}/7.8.0/
+cp ../logging-dist-dev/{project-id}/7.8.0/*-{bin,src}.* {project-id}/7.8.0/
 svn add {project-id}/7.8.0
 svn commit -m 'Add `{project-id}` version `7.8.0` distribution'
 
 # Update `dev` folder
 cd ../logging-dist-dev
-cp {project-id}/*-7.8.0-email-announce.txt /tmp
-svn rm {project-id}
+cp {project-id}/7.8.0/*-email-announce.txt /tmp
+svn rm {project-id}/7.8.0
 svn commit -m 'Remove `{project-id}` version `7.8.0` files released'
 ----
 --
 . Report the release at https://reporter.apache.org/addrelease.html?logging[reporter.apache.org]
 
 [#publish-release-github]
-==== In GitHub
+=== In GitHub
 
 {project-github-url}/releases/new[Create a new release in GitHub]
 
@@ -216,7 +213,7 @@ svn commit -m 'Remove `{project-id}` version `7.8.0` files released'
 . Copy release notes from the generated emails
 
 [#publish-release-website]
-=== Publish the release website
+== Publish the release website
 
 [NOTE]
 ====
@@ -249,12 +246,12 @@ git push origin asf-site
 Changes should be visible in {website-url}[the project website].
 
 [#announce-release]
-=== Announce the release
+== Announce the release
 
-. Send the announcement email uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}] Subversion repository
+. Send the announcement email uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}/7.8.0] Subversion repository
 +
 [WARNING]
 ====
 Make sure your email is sent in plain text, that is, https://infra.apache.org/contrib-email-tips#nohtml[no HTML]!
-If you are using GMail, simply enable the _"Plain text mode"_ while composing your message.
+If you are using GMail, enable the _"Plain text mode"_ while composing your message.
 ====

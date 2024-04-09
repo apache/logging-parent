@@ -45,7 +45,7 @@ PROJECT_VERSION="$2"
 COMMIT_ID="$3"
 
 # Check release notes file
-RELEASE_NOTES_FILE="$SCRIPT_DIR/../src/site/_release-notes/_$PROJECT_VERSION.adoc"
+RELEASE_NOTES_FILE="$SCRIPT_DIR/../target/generated-site/antora/modules/ROOT/pages/_release-notes/$PROJECT_VERSION.adoc"
 [ -f "$RELEASE_NOTES_FILE" ] || {
     stderr "Couldn't find release notes file: $RELEASE_NOTES_FILE"
     exit 1

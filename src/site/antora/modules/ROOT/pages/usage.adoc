@@ -1,0 +1,38 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+
+= Usage
+
+You can use {project-name} as follows:
+
+. Add `org.apache.logging:logging-parent:{project-version}` as a `parent` to your `pom.xml`
+. You may need to add `.mvn/jvm.config` to your project. See https://github.com/apache/logging-log4j2/blob/2.x/.mvn/jvm.config[this] as an example.
+. Check if `./mvnw verify` succeeds, otherwise make necessary changes
+. Copy and adapt the support files (`.gitignore`, `.github/workflows/build.yaml`, etc.)
+. Copy and adapt Log4j Changelog files:
+*** `src/changelog/.<majorVersion>.x.x/.release-notes.adoc.ftl`
+*** `src/changelog/.changelog.adoc.ftl`
+*** `src/changelog/.index.adoc.ftl`
+. In order to create an Antora-based site:
+.. Copy the following files and adapt them:
+*** `antora-playbook.yaml`
+*** `package.json`
+*** `src/site/antora/antora.yml`
+*** `src/site/antora/.antora.yml`
+*** `src/site/antora/modules/ROOT/pages/release-notes.adoc`
+.. Build the website using `./mvnw site`
+.. Check out the website generated to `target/site` by pointing a browser to it
