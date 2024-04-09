@@ -280,18 +280,16 @@ jobs:
           # Checkout the SVN repository
           export SVN_DIR="/tmp/svn-repo"
           svn co \
-            --depth files \
-            "https://dist.apache.org/repos/dist/dev/logging" \
+            "https://dist.apache.org/repos/dist/dev/logging/$PROJECT_ID" \
             "$SVN_DIR"
           cd "$SVN_DIR"
-          svn up --depth files "$PROJECT_ID"
 
           # Switch to the distribution folder
-          [ -d "$PROJECT_ID/$PROJECT_VERSION" ] || {
-            mkdir -p "$PROJECT_ID/$PROJECT_VERSION"
-            svn add --force "$PROJECT_ID"
+          [ -d "$PROJECT_VERSION" ] || {
+            mkdir "$PROJECT_VERSION"
+            svn add "$PROJECT_VERSION"
           }
-          cd "$PROJECT_ID/$PROJECT_VERSION"
+          cd "$PROJECT_VERSION"
 
           # Clean up old files
           find . -name "${DIST_FILENAME_PREFIX}*" -type f -print0 | xargs -0 -r svn delete
