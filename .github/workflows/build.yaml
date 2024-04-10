@@ -48,6 +48,19 @@ jobs:
     with:
       site-enabled: true
 
+  deploy-site-stg:
+    needs: build
+    if: github.repository == 'apache/logging-parent' && github.ref_name == 'main'
+    uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@main
+    # Secrets for committing the generated site
+    secrets:
+      GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
+    # Write permissions for committing the generated site
+    permissions:
+      contents: write
+    with:
+      target-branch: main-site-stg
+
   deploy-snapshot:
     needs: build
     if: github.repository == 'apache/logging-parent' && github.ref_name == 'main'

@@ -1,0 +1,171 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to you under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: deploy-site-reusable
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: The Java compiler version
+        default: 17
+        type: string
+      install-required:
+        description: Flag indicating if Maven `install` goal should be run before running the `site` goal
+        default: false
+        type: boolean
+      source-branch:
+        description: |
+          The branch, tag or SHA to checkout and run the Maven `site` goal on.
+          When checking out the repository that triggered a workflow, this defaults to the reference or SHA for that event.
+          Otherwise, the default branch of the repository will be used.
+        default: ""
+        type: string
+      target-branch:
+        description: The name of the branch the generated site content will be written to
+        required: true
+        type: string
+      target-path:
+        description: The directory path the generated site content will be placed under
+        default: "."
+        type: string
+    secrets:
+      GPG_SECRET_KEY:
+        description: GPG secret key for signing commits
+        required: true
+
+jobs:
+
+  deploy-site:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout the source branch
+        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633   # 4.1.2
+        with:
+          ref: ${{ inputs.source-branch }}
+
+      - name: Set up Java
+        uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9   # 3.7.0
+        with:
+          distribution: temurin
+          java-version: ${{ inputs.java-version }}
+          java-package: jdk
+          architecture: x64
+          cache: maven
+
+      - name: Build the project
+        shell: bash
+        if: inputs.install-required
+        run: |
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            -Dmaven.test.skip \
+            install
+
+      # Node.js cache is needed for Antora
+      - name: Set up Node.js cache
+        id: nodejs-cache
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9   # 4.0.2
+        with:
+          # We should be calculating the cache key using `package-lock.json` instead!
+          # See https://stackoverflow.com/a/48524475/1278899
+          # For that, `package-lock.json` needs to be committed into the repository – right now it is `.gitignore`d.
+          # Once it is there, we should ideally switch from `npm i` to `npm ci`.
+          # For that, we need to configure `dependabot` to update hundreds of dependencies listed in `package-lock.json`.
+          # That translates to a never ending rain of `dependabot` PRs.
+          # I doubt if the wasted CPU cycles worth the gain.
+          key: ${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}
+          # `actions/cache` doesn't recommend caching `node_modules`.
+          # Though none of its recipes fit our bill, since we install Node.js using `frontend-maven-plugin`.
+          # See https://github.com/actions/cache/blob/main/examples.md#node---npm
+          # We settle for this quick-n-dirty solution for the time being.
+          path: |
+            node
+            node_modules
+
+      - name: Build the website
+        shell: bash
+        env:
+          # Making Node.js cache hit visible for debugging purposes
+          NODEJS_CACHE_HIT: ${{ steps.nodejs-cache.outputs.cache-hit }}
+        run: |
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            site
+          cd target/site
+          find . -empty -type d -delete
+          find . -print0 | sort --zero-terminated | xargs -0 zip -oX /tmp/site.zip
+          echo "SOURCE_COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
+
+      - name: Checkout the target branch
+        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633   # 4.1.2
+        with:
+          ref: ${{ inputs.target-branch }}
+
+      - name: Update the target path
+        shell: bash
+        env:
+          TARGET_PATH: ${{ inputs.target-path }}
+        run: |
+
+          # Clean up the target path
+          if [ "." -eq "$TARGET_PATH" ]; then
+            git ls-files -z | xargs -0 git rm -rf
+          else
+            git rm -rf "$TARGET_PATH"
+          fi
+
+          # Place the generated site
+          unzip /tmp/site.zip -d "$TARGET_PATH"
+          git add "$TARGET_PATH"
+
+          # Recover INFRA fix file, if there was one.
+          # Otherwise `git status` will always show a change even when there are no changes in the website content.
+          INFRA_FIX_FILENAME=".asf-infra-fix"
+          git checkout HEAD "$INFRA_FIX_FILENAME" 1>/dev/null 2>&1
+
+          # Commit changes, if there are any
+          if [ -n "$(git status --porcelain)" ]; then
+
+            # Set up user name and email required for `git commit`
+            git config user.name "ASF Logging Services RM"
+            git config user.email private@logging.apache.org
+
+            # Commit site changes
+            git commit -S -a -m "Add website content generated from \`$SOURCE_COMMIT_ID\`"
+
+            # INFRA fix
+            cat >"$INFRA_FIX_FILENAME" <<EOF
+            INFRA cannot handle change sets bigger than a certain size: https://the-asf.slack.com/archives/CBX4TSBQ8/p1709724983391709
+            This file will be used to push a small commit to help the INFRA to recover.
+
+            Random values to cause a change:
+
+            - Seed: $RANDOM
+            - Commit ID: $SOURCE_COMMIT_ID
+            - Timestamp: $(date --utc '+%Y-%m-%dT%H:%M:%SZ')
+            EOF
+            git add "$INFRA_FIX_FILENAME"
+            git commit -S "$INFRA_FIX_FILENAME" -m "Add INFRA fix for the website content generated from \`$SOURCE_COMMIT_ID\`"
+
+            # Push changes
+            git push -f origin
+
+          fi
