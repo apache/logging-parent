@@ -50,7 +50,7 @@ on:
 
 jobs:
 
-  deploy-site:
+  deploy:
 
     runs-on: ubuntu-latest
 
@@ -126,7 +126,7 @@ jobs:
         run: |
 
           # Clean up the target path
-          if [ "." -eq "$TARGET_PATH" ]; then
+          if [ "." = "$TARGET_PATH" ]; then
             git ls-files -z | xargs -0 git rm -rf
           else
             git rm -rf "$TARGET_PATH"
