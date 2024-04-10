@@ -69,6 +69,7 @@ jobs:
           java-package: jdk
           architecture: x64
           cache: maven
+          gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
 
       - name: Build the project
         shell: bash
@@ -111,7 +112,7 @@ jobs:
             site
           cd target/site
           find . -empty -type d -delete
-          find . -print0 | sort --zero-terminated | xargs -0 zip -oX /tmp/site.zip
+          find . -print0 | sort --zero-terminated | xargs -0 zip -qoX /tmp/site.zip
           echo "SOURCE_COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
       - name: Checkout the target branch
