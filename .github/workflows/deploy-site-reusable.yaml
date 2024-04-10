@@ -158,14 +158,15 @@ jobs:
 
             # INFRA fix
             cat >"$INFRA_FIX_FILENAME" <<EOF
-            INFRA cannot handle change sets bigger than a certain size: https://the-asf.slack.com/archives/CBX4TSBQ8/p1709724983391709
-            This file will be used to push a small commit to help the INFRA to recover.
-            ---
-            Random values to cause a change:
-            - Seed: $RANDOM
-            - Commit ID: $SOURCE_COMMIT_ID
-            - Timestamp: $(date --utc '+%Y-%m-%dT%H:%M:%SZ')
-            EOF
+          INFRA cannot handle change sets bigger than a certain size: https://the-asf.slack.com/archives/CBX4TSBQ8/p1709724983391709
+          This file will be used to push a small commit to help the INFRA to recover.
+
+          Random values to cause a change:
+
+          - Seed: $RANDOM
+          - Commit ID: $SOURCE_COMMIT_ID
+          - Timestamp: $(date --utc '+%Y-%m-%dT%H:%M:%SZ')
+          EOF
             git add "$INFRA_FIX_FILENAME"
             git commit -S "$INFRA_FIX_FILENAME" -m "Add INFRA fix for the website content generated from \`$SOURCE_COMMIT_ID\`"
 
