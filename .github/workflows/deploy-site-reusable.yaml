@@ -125,6 +125,10 @@ jobs:
           TARGET_PATH: ${{ inputs.target-path }}
         run: |
 
+          # Check if there exist an INFRA fix file
+          INFRA_FIX_FILENAME=".asf-infra-fix"
+          INFRA_FIX_FILE_EXISTS=$([ -f "$INFRA_FIX_FILENAME" ] && echo "true" || echo "false")
+
           # Clean up the target path
           if [ "." = "$TARGET_PATH" ]; then
             git ls-files -z | xargs -0 git rm -rf
@@ -138,8 +142,9 @@ jobs:
 
           # Recover INFRA fix file, if there was one.
           # Otherwise `git status` will always show a change even when there are no changes in the website content.
-          INFRA_FIX_FILENAME=".asf-infra-fix"
-          git checkout HEAD "$INFRA_FIX_FILENAME" 1>/dev/null 2>&1
+          if [ "$INFRA_FIX_FILE_EXISTS" = "true" ]; then
+            git checkout HEAD "$INFRA_FIX_FILENAME"
+          fi
 
           # Commit changes, if there are any
           if [ -n "$(git status --porcelain)" ]; then
