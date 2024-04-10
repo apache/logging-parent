@@ -45,15 +45,15 @@ jobs:
 
       - name: Find dependency attributes
         shell: bash
+        env:
+          DEPENDENCY_NAMES: ${{ steps.dependabot-metadata.outputs.dependency-names }}
+          DEPENDENCY_VERSION: ${{ steps.dependabot-metadata.outputs.new-version }}
         run: |
           DEPENDENCY_NAME=$(echo "$DEPENDENCY_NAMES" | tr "," '\n' | head -n 1)
           cat >> $GITHUB_ENV << EOF
           DEPENDENCY_NAME=$DEPENDENCY_NAME
           DEPENDENCY_VERSION=$DEPENDENCY_VERSION
           EOF
-        env:
-          DEPENDENCY_NAMES: ${{ steps.dependabot-metadata.outputs.dependency-names }}
-          DEPENDENCY_VERSION: ${{ steps.dependabot-metadata.outputs.new-version }}
 
       - name: Checkout repository
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633   # 4.1.2
@@ -62,10 +62,10 @@ jobs:
 
       - name: Download and apply patch
         shell: bash
-        run: |
-          wget -O- "$PATCH_URL" | git apply
         env:
           PATCH_URL: ${{ github.event.pull_request.patch_url }}
+        run: |
+          wget -O- "$PATCH_URL" | git apply
 
       - name: Set up Java & GPG
         uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9   # 4.2.1
@@ -93,6 +93,9 @@ jobs:
 
       - name: Create changelog entry
         shell: bash
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_ID: ${{ github.event.pull_request.number }}
         run: |
           if [ -d "src/changelog" ]; then
             RELEASE_CHANGELOG_FILEPATH="src/changelog/.${RELEASE_VERSION_MAJOR}.x.x"
@@ -110,9 +113,6 @@ jobs:
           </entry>
           EOF
           fi
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          PR_ID: ${{ github.event.pull_request.number }}
 
       - name: Generate sources
         shell: bash
@@ -123,6 +123,9 @@ jobs:
 
       - name: Add & commit changes
         shell: bash
+        env:
+          PR_ID: ${{ github.event.pull_request.number }}
+          PR_BRANCH: ${{ github.head_ref }}
         run: |
           git add .
           git config user.name "ASF Logging Services RM"
@@ -131,6 +134,3 @@ jobs:
           git push origin
           # Pushing the same commit to the Dependebot branch closes the PR
           git push -f origin "HEAD:$PR_BRANCH"
-        env:
-          PR_ID: ${{ github.event.pull_request.number }}
-          PR_BRANCH: ${{ github.head_ref }}

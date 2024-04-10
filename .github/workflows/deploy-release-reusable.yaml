@@ -83,6 +83,8 @@ jobs:
 
       - name: Export version
         shell: bash
+        env:
+          GIT_BRANCH_NAME: ${{ github.ref_name }}
         run: |
           [[ "$GIT_BRANCH_NAME" =~ ^release/.+$ ]] || {
             echo "was expecting a \`release/\`-prefixed Git branch name, found: \`$GIT_BRANCH_NAME\`"
@@ -90,8 +92,6 @@ jobs:
           }
           export PROJECT_VERSION=$(echo "$GIT_BRANCH_NAME" | sed 's/^release\///')
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
-        env:
-          GIT_BRANCH_NAME: ${{ github.ref_name }}
 
       - name: Set the Maven `revision` property
         shell: bash
@@ -188,19 +188,22 @@ jobs:
 
       - name: Upload to Nexus
         shell: bash
-        run: |
-          ./mvnw \
-            --show-version --batch-mode --errors --no-transfer-progress \
-            -P deploy,release
         env:
           # `NEXUS_USERNAME` and `NEXUS_PASSWORD` are used in `~/.m2/settings.xml` created by `setup-java` action
           NEXUS_USERNAME: ${{ secrets.LOGGING_STAGE_DEPLOYER_USER }}
           NEXUS_PASSWORD: ${{ secrets.LOGGING_STAGE_DEPLOYER_PW }}
           # `SIGN_KEY` is used by `sign-maven-plugin`
           SIGN_KEY: ${{ secrets.GPG_SECRET_KEY }}
+        run: |
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            -P deploy,release
 
       - name: Stage distribution attachments
         shell: bash
+        env:
+          DIST_ATTACHMENT_FILEPATH_PATTERN: ${{ inputs.distribution-attachment-filepath-pattern }}
+          DIST_ATTACHMENT_COUNT: ${{ inputs.distribution-attachment-count }}
         run: |
 
           # Determine the distribution attachment filepath pattern, if none provided
@@ -227,10 +230,6 @@ jobs:
           DIST_ATTACHMENT_FILEPATH_PATTERN=$DIST_ATTACHMENT_FILEPATH_PATTERN
           DIST_ATTACHMENT_COUNT=$DIST_ATTACHMENT_COUNT
           EOF
-
-        env:
-          DIST_ATTACHMENT_FILEPATH_PATTERN: ${{ inputs.distribution-attachment-filepath-pattern }}
-          DIST_ATTACHMENT_COUNT: ${{ inputs.distribution-attachment-count }}
 
       - name: Create the distribution
         shell: bash
@@ -272,6 +271,10 @@ jobs:
 
       - name: Upload to Subversion
         shell: bash
+        env:
+          PROJECT_ID: ${{ inputs.project-id }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         run: |
 
           # Find the effective Git commit ID
@@ -312,8 +315,3 @@ jobs:
             --username "$SVN_USERNAME" \
             --password "$SVN_PASSWORD" \
             -m "Added \`${DIST_FILENAME_PREFIX}\` artifacts for release \`${PROJECT_VERSION}\`"
-
-        env:
-          PROJECT_ID: ${{ inputs.project-id }}
-          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
