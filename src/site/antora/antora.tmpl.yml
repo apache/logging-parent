@@ -44,11 +44,8 @@ asciidoc:
     project-id: "logging-parent"
     java-target-version: "${maven.compiler.target}"
     java-compiler-version: "${minimalJavaBuildVersion}"
-    website-github-repository-name: logging-parent
-    website-github-url: "https://github.com/apache/{website-github-repository-name}"
-    website-folder: ""
-    website-url-staging: "https://logging.staged.apache.org/{project-id}"
-    website-url: "https://logging.apache.org/{project-id}"
+    site-url-staging: "https://logging.staged.apache.org/{project-id}"
+    site-url: "https://logging.apache.org/{project-id}"
 nav:
   - modules/ROOT/nav.adoc
   - modules/manual/nav.adoc

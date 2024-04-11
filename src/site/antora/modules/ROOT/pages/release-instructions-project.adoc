@@ -68,7 +68,7 @@ You can iterate on the `release/7.8.0` branch to perfect it.
 .. The `project.build.outputTimestamp` property in `pom.xml` is updated
 .. *Signed artifacts* are uploaded to the _Staging Repositories_ in https://repository.apache.org/[repository.apache.org]
 .. *Signed distribution and its checksum* (e.g., `apache-{project-id}-7.8.0-{bin,src}.{zip,.zip.asc,.zip.sha512}`) are uploaded to https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}/7.8.0] Subversion repository (along with auxiliary files; website, email texts, etc.)
-.. {website-url-staging}[The project **staging** website] is deployed
+.. {site-url-staging}[The project **staging** website] is deployed
 
 +
 If not, commit necessary fixes, push, and repeat.
@@ -188,7 +188,7 @@ svn commit -m 'Remove `{project-id}` version `7.8.0` files released'
 
 . Run the {project-github-url}/actions/workflows/deploy-site-pro.yaml[`deploy-site-pro`] GitHub Actions workflow:
 .. Use the `rel/7.8.0` tag
-.. Verify that {website-url}[the project website] is updated
+.. Verify that {site-url}[the project website] is updated
 . {project-github-url}/releases/new[Create a new release in GitHub]
 .. Use the `rel/7.8.0` tag
 .. Copy release notes from the generated emails

@@ -41,14 +41,10 @@ asciidoc:
     project-github-url: "https://github.com/awesome/project"
     project-version: "1.2.3"
     project-name: Logging Parent
-    project-id: "logging-parent"
+    project-id: "awesome-project"
     java-target-version: "8"
     java-compiler-version: "[17,18)"
-    website-github-repository-name: logging-parent
-    website-github-url: "https://github.com/awesome/project-site"
-    website-folder: ""
-    website-url-staging: "https://logging.staged.apache.org/awesome-project"
-    website-url: "https://logging.apache.org/awesome-project"
+    site-url-staging: "https://logging.staged.apache.org/awesome-project"
+    site-url: "https://logging.apache.org/awesome-project"
 nav:
   - modules/ROOT/nav.adoc
-  - modules/manual/nav.adoc
