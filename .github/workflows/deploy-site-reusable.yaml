@@ -20,6 +20,10 @@ name: deploy-site-reusable
 on:
   workflow_call:
     inputs:
+      asf-yaml-content:
+        description: The contents of the `.asf.yaml` that will be created
+        required: true
+        type: string
       java-version:
         description: The Java compiler version
         default: 17
@@ -124,11 +128,11 @@ jobs:
         shell: bash
         env:
           TARGET_PATH: ${{ inputs.target-path }}
+          ASF_YAML_CONTENT: ${{ inputs.asf-yaml-content }}
         run: |
 
-          # Check if there exist an INFRA fix file
-          INFRA_FIX_FILENAME=".asf-infra-fix"
-          INFRA_FIX_FILE_EXISTS=$([ -f "$INFRA_FIX_FILENAME" ] && echo "true" || echo "false")
+          # Check if there already exists an `.asf.yaml`
+          ASF_YAML_EXISTS=$([ -f .asf.yaml ] && echo "true" || echo "false")
 
           # Clean up the target path
           if [ "." = "$TARGET_PATH" ]; then
@@ -141,10 +145,11 @@ jobs:
           unzip /tmp/site.zip -d "$TARGET_PATH"
           git add "$TARGET_PATH"
 
-          # Recover INFRA fix file, if there was one.
+          # Recover `.asf.yaml`, if there was one.
           # Otherwise `git status` will always show a change even when there are no changes in the website content.
-          if [ "$INFRA_FIX_FILE_EXISTS" = "true" ]; then
-            git checkout HEAD "$INFRA_FIX_FILENAME"
+          # That is because we always populate `.asf.yaml` with some random values at the end to fix an INFRA issue.
+          if [ "$ASF_YAML_EXISTS" = "true" ]; then
+            git checkout HEAD .asf.yaml
           fi
 
           # Commit changes, if there are any
@@ -154,24 +159,28 @@ jobs:
             git config user.name "ASF Logging Services RM"
             git config user.email private@logging.apache.org
 
-            # Commit site changes
+            # Commit & push site changes
             git commit -S -a -m "Add website content generated from \`$SOURCE_COMMIT_ID\`"
+            git push -f origin
 
-            # INFRA fix
-            cat >"$INFRA_FIX_FILENAME" <<EOF
-          INFRA cannot handle change sets bigger than a certain size: https://the-asf.slack.com/archives/CBX4TSBQ8/p1709724983391709
-          This file will be used to push a small commit to help the INFRA to recover.
+            # Populate `.asf.yaml`
+            cat >.asf.yaml <<EOF
+          $ASF_YAML_CONTENT
 
-          Random values to cause a change:
-
-          - Seed: $RANDOM
-          - Commit ID: $SOURCE_COMMIT_ID
-          - Timestamp: $(date --utc '+%Y-%m-%dT%H:%M:%SZ')
+          # INFRA cannot handle change sets bigger than a certain size: https://the-asf.slack.com/archives/CBX4TSBQ8/p1709724983391709
+          # This file will be used to push a small commit to help the INFRA to recover.
+          #
+          # Random values to cause a change:
+          #
+          # - Seed: $RANDOM
+          # - Commit ID: $SOURCE_COMMIT_ID
+          # - Timestamp: $(date --utc '+%Y-%m-%dT%H:%M:%SZ')
           EOF
-            git add "$INFRA_FIX_FILENAME"
-            git commit -S "$INFRA_FIX_FILENAME" -m "Add INFRA fix for the website content generated from \`$SOURCE_COMMIT_ID\`"
+            git add .asf.yaml
+            git commit -S .asf.yaml -m "Add `.asf.yaml` along with an INFRA fix for the website content generated from \`$SOURCE_COMMIT_ID\`"
 
-            # Push changes
+            # Push changes *separately*!
+            # A separate small commit push necessary due to the INFRA issue explained above.
             git push -f origin
 
           fi

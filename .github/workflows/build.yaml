@@ -59,6 +59,11 @@ jobs:
     permissions:
       contents: write
     with:
+      asf-yaml-content: |
+        staging:
+          profile: ~
+          whoami: main-site-stg
+          subdir: content/logging-parent
       target-branch: main-site-stg
 
   deploy-snapshot:
