@@ -39,7 +39,7 @@ start_page: index.adoc
 asciidoc:
   attributes:
     project-github-url: "${scm.url}"
-    project-version: "${project.version}"
+    project-version: "${site-project.version}"
     project-name: Logging Parent
     project-id: "logging-parent"
     java-target-version: "${maven.compiler.target}"
@@ -48,4 +48,3 @@ asciidoc:
     site-url: "https://logging.apache.org/{project-id}"
 nav:
   - modules/ROOT/nav.adoc
-  - modules/manual/nav.adoc

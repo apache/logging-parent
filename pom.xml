@@ -242,10 +242,23 @@
     <error-prone.version>2.26.1</error-prone.version>
     <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
 
+    <!-- site-specific versions -->
+    <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project.
+         This will be used in the site and updated automatically by `dependabot`. -->
+    <site-project.version>10.6.0</site-project.version>
+
   </properties>
 
   <dependencyManagement>
     <dependencies>
+
+      <!-- Dummy dependency to trick `dependabot` into updating the `site-project.version` property -->
+      <dependency>
+        <groupId>org.apache.logging</groupId>
+        <artifactId>logging-parent</artifactId>
+        <version>${site-project.version}</version>
+        <type>pom</type>
+      </dependency>
 
       <dependency>
         <groupId>biz.aQute.bnd</groupId>

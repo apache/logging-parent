@@ -47,6 +47,12 @@ git checkout -B release/7.8.0 origin/main
 
 . Prepare sources for the release:
 .. Update the `revision` property in `pom.xml`
++
+[IMPORTANT]
+====
+If your project refers to its own version in the site sources, those need to be updated too.
+For instance, `site-project.version` needs to be updated for `logging-parent`.
+====
 .. Release the changelog: `./mvnw -N changelog-release`
 .. Edit the release notes (i.e., `src/changelog/7.8.0/.release-notes.adoc.ftl`)
 
