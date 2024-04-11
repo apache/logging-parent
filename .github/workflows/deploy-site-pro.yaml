@@ -30,7 +30,6 @@ permissions: read-all
 jobs:
 
   deploy-site-pro:
-    needs: build
     if: github.repository == 'apache/logging-parent'
     uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@main
     # Secrets for committing the generated site
