@@ -37,12 +37,24 @@ You need to adapt these values for your project and version accordingly.
 [#stage-release]
 == Stage the release
 
-. Create and push the release branch:
+. Create the release branch:
 +
 [source,bash]
 ----
 git fetch -p
 git checkout -B release/7.8.0 origin/main
+----
+
+. Prepare sources for the release:
+.. Update the `revision` property in `pom.xml`
+.. Release the changelog: `./mvnw -N changelog-release`
+.. Edit the release notes (i.e., `src/changelog/7.8.0/.release-notes.adoc.ftl`)
+
+. Commit & push your changes:
++
+[source,bash]
+----
+git commit -a -m 'Prepare to release `7.8.0`'
 git push origin release/7.8.0
 ----
 +
@@ -53,49 +65,15 @@ You can iterate on the `release/7.8.0` branch to perfect it.
 ====
 
 . Verify that the associated {project-github-url}/actions[GitHub Actions workflow] succeeds:
-.. `revision` property in `pom.xml` is updated
-.. Changelog is released (i.e., `src/changelog/7.8.0` folder is populated)
+.. The `project.build.outputTimestamp` property in `pom.xml` is updated
 .. *Signed artifacts* are uploaded to the _Staging Repositories_ in https://repository.apache.org/[repository.apache.org]
 .. *Signed distribution and its checksum* (e.g., `apache-{project-id}-7.8.0-{bin,src}.{zip,.zip.asc,.zip.sha512}`) are uploaded to https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}/7.8.0] Subversion repository (along with auxiliary files; website, email texts, etc.)
+.. {website-url-staging}[The project **staging** website] is deployed
 
 +
 If not, commit necessary fixes, push, and repeat.
 
 . _Close_ the repository in https://repository.apache.org/[repository.apache.org] using a self-explanatory description, e.g., ``\`{project-id}` version \`7.8.0` RC1``
-
-[#stage-release-website]
-== Stage the release website
-
-[NOTE]
-====
-You can skip this step if the project does not have a website.
-====
-
-. Checkout the `asf-staging` branch of {website-github-url}[the website repository]
-. Override the contents of the `{website-folder}7.x` folder using the website uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}] Subversion repository
-
-These steps can be summarized as follows in shell:
-
-[source,bash,subs="+attributes"]
-----
-# Clone repositories (unless you already have them!)
-svn co https://dist.apache.org/repos/dist/dev/logging logging-dist-dev
-git clone {website-github-url} {website-github-repository-name}
-
-# Checkout the branch
-cd {website-github-repository-name}
-git checkout -B asf-staging origin/asf-staging
-
-# Override the website
-git rm -rf {website-folder}7.x
-mkdir {website-folder}7.x
-unzip ../logging-dist-dev/{project-id}/7.8.0/*-site.zip -d {website-folder}7.x
-git add {website-folder}7.x
-git commit -a -m 'Add `{project-id}` version `7.8.0` website'
-git push origin asf-staging
-----
-
-Changes should be visible in {website-url-staging}[the project **staging** website].
 
 [#vote-release]
 == Vote the release
@@ -207,43 +185,12 @@ svn commit -m 'Remove `{project-id}` version `7.8.0` files released'
 [#publish-release-github]
 === In GitHub
 
-{project-github-url}/releases/new[Create a new release in GitHub]
-
-. Use the `rel/7.8.0` tag
-. Copy release notes from the generated emails
-
-[#publish-release-website]
-== Publish the release website
-
-[NOTE]
-====
-You can skip this step if the project does not have a website.
-====
-
-. Checkout the `asf-site` branch of {website-github-url}[the website repository]
-. Replace the `{website-folder}7.x` folder with the one in `asf-staging` branch
-
-These steps can be summarized as follows in shell:
-
-[source,bash,subs="+attributes"]
-----
-# Clone the repository (unless you already have it!)
-git clone {website-github-url} {website-github-repository-name}
-
-# Checkout the branch
-cd {website-github-repository-name}
-git checkout -B asf-site origin/asf-site
-
-# Override the website
-git rm -rf {website-folder}7.x
-mkdir {website-folder}7.x
-git checkout origin/asf-staging -- {website-folder}7.x
-git add {website-folder}7.x
-git commit -a -m 'Add `{project-id}` version `7.8.0` website'
-git push origin asf-site
-----
-
-Changes should be visible in {website-url}[the project website].
+. Run the {project-github-url}/actions/workflows/deploy-site-pro.yaml[`deploy-site-pro`] GitHub Actions workflow:
+.. Use the `rel/7.8.0` tag
+.. Verify that {website-url}[the project website] is updated
+. {project-github-url}/releases/new[Create a new release in GitHub]
+.. Use the `rel/7.8.0` tag
+.. Copy release notes from the generated emails
 
 [#announce-release]
 == Announce the release

@@ -55,6 +55,9 @@ The provided reusable GitHub Actions workflows feature the following convenience
 * Compiles against Java 8 bytecode using the specified Java compiler version
 * Verifies reproducibility
 
+`deploy-site-reusable.yaml`::
+* Builds and deploys the website
+
 `deploy-snapshot-reusable.yaml`::
 * Deploys SNAPSHOT artifacts
 
