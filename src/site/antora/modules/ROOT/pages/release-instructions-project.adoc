@@ -122,6 +122,7 @@ git push origin rel/7.8.0
 ----
 +
 <1> You can find the `COMMIT-ID` in the generated vote email.
+
 +
 [IMPORTANT]
 ====
@@ -195,8 +196,8 @@ svn commit -m 'Remove `{project-id}` version `7.8.0` files released'
 [#announce-release]
 == Announce the release
 
-. Send the announcement email uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}/7.8.0] Subversion repository
-+
+Send the announcement email uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}/7.8.0] Subversion repository
+
 [WARNING]
 ====
 Make sure your email is sent in plain text, that is, https://infra.apache.org/contrib-email-tips#nohtml[no HTML]!
