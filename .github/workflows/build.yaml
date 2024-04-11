@@ -23,12 +23,10 @@ on:
       - "main"
       - "release/*"
     paths-ignore:
-      - "**.adoc"
       - "**.md"
       - "**.txt"
   pull_request:
     paths-ignore:
-      - "**.adoc"
       - "**.md"
       - "**.txt"
 
