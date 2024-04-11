@@ -34,5 +34,3 @@ github:
   protected_branches:
     main:
       required_signatures: true
-    asf-site:
-      required_signatures: true
