@@ -34,7 +34,7 @@ on:
         type: boolean
       source-branch:
         description: |
-          The branch, tag or SHA to checkout and run the Maven `site` goal on.
+          The branch, tag, or SHA to checkout and run the Maven `site` goal on.
           When checking out the repository that triggered a workflow, this defaults to the reference or SHA for that event.
           Otherwise, the default branch of the repository will be used.
         default: ""
