@@ -192,18 +192,31 @@ svn commit -m 'Remove `{project-id}` version `7.8.0` files released'
 [#publish-release-github]
 === In GitHub
 
-. Run the {project-github-url}/actions/workflows/deploy-site-pro.yaml[`deploy-site-pro`] GitHub Actions workflow:
-.. Use the `rel/7.8.0` tag
-.. Verify that {site-url}[the project website] is updated
-. {project-github-url}/releases/new[Create a new release in GitHub]
-.. Use the `rel/7.8.0` tag
-.. Copy release notes from the generated emails
+{project-github-url}/releases/new[Create a new release in GitHub]:
+
+* Use the `rel/7.8.0` tag
+* Copy release notes from the generated emails
+
+[#publish-release-website]
+== Publish the release website
+
+. Merge the `rel/7.8.0` tag (**not** the `release/7.8.0` branch!) to `main-site-pro` and push it
++
+[source,bash]
+----
+git checkout main-site-pro
+git rebase origin/main-site-pro    # Sync with the remote repository
+git merge rel/7.8.0                # Pull changes up to the newly created tag
+git push origin main-site-pro
+----
+. Verify that {project-github-url}/actions/workflows/deploy-site.yaml[the `deploy-site` workflow] successfully runs the `deploy-site-pro` job
+. Verify that {site-url}[the project website] is updated
 
 [#announce-release]
 == Announce the release
 
-Send the announcement email uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}/7.8.0] Subversion repository
-
+1. Send the announcement email uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}/7.8.0] Subversion repository
++
 [WARNING]
 ====
 Make sure your email is sent in plain text, that is, https://infra.apache.org/contrib-email-tips#nohtml[no HTML]!
