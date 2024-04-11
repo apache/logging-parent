@@ -177,7 +177,7 @@ jobs:
           # - Timestamp: $(date --utc '+%Y-%m-%dT%H:%M:%SZ')
           EOF
             git add .asf.yaml
-            git commit -S .asf.yaml -m "Add `.asf.yaml` along with an INFRA fix for the website content generated from \`$SOURCE_COMMIT_ID\`"
+            git commit -S .asf.yaml -m "Add \`.asf.yaml\` along with an INFRA fix for the website content generated from \`$SOURCE_COMMIT_ID\`"
 
             # Push changes *separately*!
             # A separate small commit push necessary due to the INFRA issue explained above.
