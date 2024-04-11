@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Usage :: Apache Logging Parent</title>
+    <link rel="canonical" href="https://logging.apache.org/logging-parent/usage.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.4">
+<link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
+<!-- `@asciidoctor/tabs` extension styles -->
+<link rel="stylesheet" href="./_/css/vendor/tabs.css">
+<style>
+  /* `page-toclevels` greater than 4 are not supported by Antora UI, patching it: */
+  .toc .toc-menu li[data-level="4"] a {
+    padding-left: 2.75rem
+  }
+  /* Replace the default highlight.js color for strings from red to green: */
+  .hljs-string {
+    color: #0f8532;
+  }
+</style>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <span class="navbar-item title">Apache Logging Parent</span>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://logging.apache.org">a subproject of&nbsp;<strong>Apache Logging Services</strong></a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Home</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="features.html">Features</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="usage.html">Usage</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-notes.html">Release notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Release instructions</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-project.html">For projects</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-xml-schema.html">For XML schemas</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="usage.html">Usage</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/apache/logging-parent/edit/main/src/site/antora/modules/ROOT/pages/usage.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Usage</h1>
+<div class="paragraph">
+<p>You can use Logging Parent as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add <code>org.apache.logging:logging-parent:10.6.0</code> as a <code>parent</code> to your <code>pom.xml</code></p>
+</li>
+<li>
+<p>You may need to add <code>.mvn/jvm.config</code> to your project. See <a href="https://github.com/apache/logging-log4j2/blob/2.x/.mvn/jvm.config">this</a> as an example.</p>
+</li>
+<li>
+<p>Check if <code>./mvnw verify</code> succeeds, otherwise make necessary changes</p>
+</li>
+<li>
+<p>Copy and adapt the support files (<code>.gitignore</code>, <code>.github/workflows/build.yaml</code>, etc.)</p>
+</li>
+<li>
+<p>Copy and adapt Log4j Changelog files:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>src/changelog/.&lt;majorVersion&gt;.x.x/.release-notes.adoc.ftl</code></p>
+</li>
+<li>
+<p><code>src/changelog/.changelog.adoc.ftl</code></p>
+</li>
+<li>
+<p><code>src/changelog/.index.adoc.ftl</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In order to create an Antora-based site:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Copy the following files and adapt them:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>antora-playbook.yaml</code></p>
+</li>
+<li>
+<p><code>package.json</code></p>
+</li>
+<li>
+<p><code>src/site/antora/antora.yml</code></p>
+</li>
+<li>
+<p><code>src/site/antora/.antora.yml</code></p>
+</li>
+<li>
+<p><code>src/site/antora/modules/ROOT/pages/release-notes.adoc</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Build the website using <code>./mvnw site</code></p>
+</li>
+<li>
+<p>Check out the website generated to <code>target/site</code> by pointing a browser to it</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>
+    Copyright © 1999-2024 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
+    Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
+    Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
+  </p>
+  <p>
+    Apache, Log4j, and the Apache feather logo are trademarks or registered trademarks of The Apache Software Foundation.
+    Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+    Other names may be trademarks of their respective owners.
+  </p>
+</footer>
+<script id="site-script" src="./_/js/site.js" data-ui-root-path="./_"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+<!-- `@asciidoctor/tabs` extension scripts -->
+<script async src="./_/js/vendor/tabs.js"></script>
+  </body>
+</html>

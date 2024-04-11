@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Project release instructions :: Apache Logging Parent</title>
+    <link rel="canonical" href="https://logging.apache.org/logging-parent/release-instructions-project.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.4">
+<link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
+<!-- `@asciidoctor/tabs` extension styles -->
+<link rel="stylesheet" href="./_/css/vendor/tabs.css">
+<style>
+  /* `page-toclevels` greater than 4 are not supported by Antora UI, patching it: */
+  .toc .toc-menu li[data-level="4"] a {
+    padding-left: 2.75rem
+  }
+  /* Replace the default highlight.js color for strings from red to green: */
+  .hljs-string {
+    color: #0f8532;
+  }
+</style>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <span class="navbar-item title">Apache Logging Parent</span>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://logging.apache.org">a subproject of&nbsp;<strong>Apache Logging Services</strong></a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Home</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="features.html">Features</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="usage.html">Usage</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-notes.html">Release notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Release instructions</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="release-instructions-project.html">For projects</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-xml-schema.html">For XML schemas</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li>Release instructions</li>
+    <li><a href="release-instructions-project.html">For projects</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/apache/logging-parent/edit/main/src/site/antora/modules/ROOT/pages/release-instructions-project.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Project release instructions</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section explains how to publish a new release of projects extending from the <code>logging-parent</code> POM and using its reusable CI workflows.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In the code examples below, assuming that the project and its version to be published are <code>logging-parent</code> and <code>7.8.0</code>, respectively.
+You need to adapt these values for your project and version accordingly.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="stage-release"><a class="anchor" href="#stage-release"></a>Stage the release</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create the release branch:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git fetch -p
+git checkout -B release/7.8.0 origin/main</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Prepare sources for the release:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Update the <code>revision</code> property in <code>pom.xml</code></p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If your project refers to its own version in the site sources, those need to be updated too.
+For instance, <code>site-project.version</code> needs to be updated for <code>logging-parent</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Release the changelog: <code>./mvnw -N changelog-release</code></p>
+</li>
+<li>
+<p>Edit the release notes (i.e., <code>src/changelog/7.8.0/.release-notes.adoc.ftl</code>)</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Commit &amp; push your changes:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git commit -a -m 'Prepare to release `7.8.0`'
+git push origin release/7.8.0</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>release/</code>-prefixed branches trigger a particular GitHub Actions workflow and its run is idempotent.
+You can iterate on the <code>release/7.8.0</code> branch to perfect it.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Verify that the associated <a href="https://github.com/apache/logging-parent/actions">GitHub Actions workflow</a> succeeds:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>The <code>project.build.outputTimestamp</code> property in <code>pom.xml</code> is updated</p>
+</li>
+<li>
+<p><strong>Signed artifacts</strong> are uploaded to the <em>Staging Repositories</em> in <a href="https://repository.apache.org/">repository.apache.org</a></p>
+</li>
+<li>
+<p><strong>Signed distribution and its checksum</strong> (e.g., <code>apache-logging-parent-7.8.0-{bin,src}.{zip,.zip.asc,.zip.sha512}</code>) are uploaded to <a href="https://dist.apache.org/repos/dist/dev/logging/logging-parent">dist.apache.org/repos/dist/<strong>dev</strong>/logging/logging-parent/7.8.0</a> Subversion repository (along with auxiliary files; website, email texts, etc.)</p>
+</li>
+<li>
+<p><a href="https://logging.staged.apache.org/logging-parent">The project <strong>staging</strong> website</a> is deployed</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>If not, commit necessary fixes, push, and repeat.</p>
+</div>
+</li>
+<li>
+<p><em>Close</em> the repository in <a href="https://repository.apache.org/">repository.apache.org</a> using a self-explanatory description, e.g., <code>`logging-parent` version `7.8.0` RC1</code></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="vote-release"><a class="anchor" href="#vote-release"></a>Vote the release</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Send the vote email uploaded to the <a href="https://dist.apache.org/repos/dist/dev/logging/logging-parent">dist.apache.org/repos/dist/<strong>dev</strong>/logging/logging-parent</a> Subversion repository</p>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><strong>Fix the cited <a href="https://repository.apache.org">repository.apache.org</a> URL</strong> in the generated email!
+It changes after every Nexus deployment.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Make sure your email is sent in plain text, that is, <a href="https://infra.apache.org/contrib-email-tips#nohtml">no HTML</a>!
+If you are using GMail, enable the <em>"Plain text mode"</em> while composing your message.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Once the consensus is reached within the set time frame, respond to the first post in the thread as follows:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Adding my +1.
+
+With that, the release passes with 3 binding +1 votes from &lt;PMC-member-1&gt;, ..., &lt;PMC-member-N&gt;, and me. I will continue the release process.</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="publish-release"><a class="anchor" href="#publish-release"></a>Publish the release</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="publish-release-git"><a class="anchor" href="#publish-release-git"></a>In the git repository</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Pull the most recent changes and tags</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git fetch -p</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Tag the release (e.g., <code>rel/7.8.0</code>) and push it</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git tag -a rel/7.8.0 &lt;COMMIT-ID&gt; -m 7.8.0     <i class="conum" data-value="1"></i><b>(1)</b>
+git push origin rel/7.8.0</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>You can find the <code>COMMIT-ID</code> in the generated vote email.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The ASF infrastructure treats <code>rel/</code>-prefixed git tags special and ensures they are immutable for provenance reasons.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Merge the <code>rel/7.8.0</code> tag (<strong>not</strong> the <code>release/7.8.0</code> branch!) to <code>main</code></p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git checkout main
+git rebase origin/main    # Sync with the remote repository
+git merge rel/7.8.0       # Pull changes up to the newly created tag</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Set the revision property to the next development version (e.g., <code>7.9.0-SNAPSHOT</code>) in <code>pom.xml</code></p>
+</li>
+<li>
+<p>Commit changes and push the <code>main</code> branch</p>
+</li>
+<li>
+<p>Delete the local and remote copies of the <code>release/7.8.0</code> branch</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">git branch -D release/7.8.0
+git push --delete origin release/7.8.0</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="publish-release-asf"><a class="anchor" href="#publish-release-asf"></a>In the ASF infrastructure</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><em>Release</em> the repository in <a href="https://repository.apache.org">repository.apache.org</a></p>
+</li>
+<li>
+<p>In <a href="https://dist.apache.org/repos/dist/release/logging/logging-parent">dist.apache.org/repos/dist</a> Subversion repository,</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>create the <code><strong>release</strong>/logging/logging-parent/7.8.0</code> folder, and copy the signed sources and their checksum from <code><strong>dev</strong>/logging/logging-parent/7.8.0</code> to there</p>
+</li>
+<li>
+<p>delete the folder from an earlier release in <code><strong>release</strong>/logging/logging-parent</code></p>
+</li>
+<li>
+<p>commit your changes in <code><strong>release</strong>/logging/logging-parent</code></p>
+</li>
+<li>
+<p>delete the <code><strong>dev</strong>/logging/logging-parent/7.8.0</code> folder (stash the generated announcement email somewhere, you will need it later on)</p>
+</li>
+<li>
+<p>commit changes your changes in <code><strong>dev</strong>/logging/logging-parent</code></p>
+</li>
+</ol>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="paragraph">
+<p>These steps can be summarized as follows in shell:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash"># Clone repositories (unless you already have them!)
+svn co https://dist.apache.org/repos/dist/dev/logging logging-dist-dev
+svn co https://dist.apache.org/repos/dist/release/logging logging-dist-rel
+
+# Update `release` folder
+cd logging-dist-rel
+mkdir -p logging-parent/7.8.0
+cp ../logging-dist-dev/logging-parent/7.8.0/*-{bin,src}.* logging-parent/7.8.0/
+svn add logging-parent/7.8.0
+svn commit -m 'Add `logging-parent` version `7.8.0` distribution'
+
+# Update `dev` folder
+cd ../logging-dist-dev
+cp logging-parent/7.8.0/*-email-announce.txt /tmp
+svn rm logging-parent/7.8.0
+svn commit -m 'Remove `logging-parent` version `7.8.0` files released'</code></pre>
+</div>
+</div>
+</div>
+</div>
+</li>
+<li>
+<p>Report the release at <a href="https://reporter.apache.org/addrelease.html?logging">reporter.apache.org</a></p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="publish-release-github"><a class="anchor" href="#publish-release-github"></a>In GitHub</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run the <a href="https://github.com/apache/logging-parent/actions/workflows/deploy-site-pro.yaml"><code>deploy-site-pro</code></a> GitHub Actions workflow:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Use the <code>rel/7.8.0</code> tag</p>
+</li>
+<li>
+<p>Verify that <a href="https://logging.apache.org/logging-parent">the project website</a> is updated</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p><a href="https://github.com/apache/logging-parent/releases/new">Create a new release in GitHub</a></p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Use the <code>rel/7.8.0</code> tag</p>
+</li>
+<li>
+<p>Copy release notes from the generated emails</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="announce-release"><a class="anchor" href="#announce-release"></a>Announce the release</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Send the announcement email uploaded to the <a href="https://dist.apache.org/repos/dist/dev/logging/logging-parent">dist.apache.org/repos/dist/<strong>dev</strong>/logging/logging-parent/7.8.0</a> Subversion repository</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Make sure your email is sent in plain text, that is, <a href="https://infra.apache.org/contrib-email-tips#nohtml">no HTML</a>!
+If you are using GMail, enable the <em>"Plain text mode"</em> while composing your message.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>
+    Copyright © 1999-2024 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
+    Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
+    Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
+  </p>
+  <p>
+    Apache, Log4j, and the Apache feather logo are trademarks or registered trademarks of The Apache Software Foundation.
+    Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+    Other names may be trademarks of their respective owners.
+  </p>
+</footer>
+<script id="site-script" src="./_/js/site.js" data-ui-root-path="./_"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+<!-- `@asciidoctor/tabs` extension scripts -->
+<script async src="./_/js/vendor/tabs.js"></script>
+  </body>
+</html>

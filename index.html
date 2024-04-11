@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Logging Parent :: Apache Logging Parent</title>
+    <link rel="canonical" href="https://logging.apache.org/logging-parent/index.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.4">
+<link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
+<!-- `@asciidoctor/tabs` extension styles -->
+<link rel="stylesheet" href="./_/css/vendor/tabs.css">
+<style>
+  /* `page-toclevels` greater than 4 are not supported by Antora UI, patching it: */
+  .toc .toc-menu li[data-level="4"] a {
+    padding-left: 2.75rem
+  }
+  /* Replace the default highlight.js color for strings from red to green: */
+  .hljs-string {
+    color: #0f8532;
+  }
+</style>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <span class="navbar-item title">Apache Logging Parent</span>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://logging.apache.org">a subproject of&nbsp;<strong>Apache Logging Services</strong></a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Home</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="features.html">Features</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="usage.html">Usage</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-notes.html">Release notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Release instructions</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-project.html">For projects</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-xml-schema.html">For XML schemas</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link is-current"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="index.html">Logging Parent</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/apache/logging-parent/edit/main/src/site/antora/modules/ROOT/pages/index.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Logging Parent</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Logging Parent is the parent project <strong>internally</strong> used in Maven-based projects of <a href="https://logging.apache.org">the Apache Logging Services</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="development"><a class="anchor" href="#development"></a>Development</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Logging Parent uses <a href="https://github.com/apache/logging-parent">GitHub</a> for source code management.</p>
+</div>
+<div class="paragraph">
+<p>The project requires a Java compiler matching the <code>[17,18)</code> range and targets Java <code>8</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can build and verify sources using:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw verify</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can build the website as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw site</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will generate the website to the <code>target/site</code> folder, which you can view with a browser.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="distribution"><a class="anchor" href="#distribution"></a>Distribution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In accordance with the Apache Software Foundation&#8217;s release <a href="https://infra.apache.org/release-distribution.html">distribution policy</a> and <a href="https://infra.apache.org/release-publishing.html">creation process</a>, project artifacts are <em>officially</em> accessible from the following locations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>ASF <a href="https://repository.apache.org/content/repositories/releases">Release</a> and <a href="https://repository.apache.org/content/repositories/snapshots">snapshot</a> repositories (mirrored to <a href="https://central.sonatype.dev/">the Maven Central Repository</a>)</p>
+</li>
+<li>
+<p>ASF <a href="https://downloads.apache.org/logging/logging-parent">Distribution directory</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="support"><a class="anchor" href="#support"></a>Support</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This project is intended for internal usage only.
+You can use GitHub Issues for feature requests and bug reports – not questions!
+See <a href="https://logging.apache.org/support.html">the Logging Services support policy</a> for details.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="security"><a class="anchor" href="#security"></a>Security</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Are you looking for the list of known security vulnerabilities?
+Have you encountered an unlisted security vulnerability or other unexpected behaviour that has a security impact?
+Please refer to <a href="https://logging.apache.org/security/">the Logging Services Security page</a></p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>
+    Copyright © 1999-2024 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
+    Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
+    Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
+  </p>
+  <p>
+    Apache, Log4j, and the Apache feather logo are trademarks or registered trademarks of The Apache Software Foundation.
+    Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+    Other names may be trademarks of their respective owners.
+  </p>
+</footer>
+<script id="site-script" src="./_/js/site.js" data-ui-root-path="./_"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+<!-- `@asciidoctor/tabs` extension scripts -->
+<script async src="./_/js/vendor/tabs.js"></script>
+  </body>
+</html>
