@@ -119,23 +119,36 @@ jobs:
           find . -print0 | sort --zero-terminated | xargs -0 zip -qoX /tmp/site.zip
           echo "SOURCE_COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
-      - name: Checkout the target branch
+      - name: Set up Git user
+        shell: bash
+        run: |
+          # Set up user name and email required for `git commit`
+          git config user.name "ASF Logging Services RM"
+          git config user.email private@logging.apache.org
+
+      - name: Create the target branch
         shell: bash
         env:
           TARGET_BRANCH: ${{ inputs.target-branch }}
         run: |
-          git fetch -p
-          if [ $(git rev-parse --verify "origin/$TARGET_BRANCH" >/dev/null 2>&1) ]; then
-            git checkout -B "$TARGET_BRANCH" "origin/$TARGET_BRANCH"
-          else
-            echo "Branch \`$TARGET_BRANCH\` doesn't exist, creating it"
+          set -x
+          git ls-remote --exit-code --heads origin "refs/heads/$TARGET_BRANCH" >/dev/null 2>&1 || {
+            echo "Remote branch \`$TARGET_BRANCH\` doesn't exist, creating it"
             git checkout --orphan "$TARGET_BRANCH"
-          fi
+            echo "Content for initializing an orphan branch for the website to be generated from \`$SOURCE_COMMIT_ID\`" > README.txt
+            git add README.txt
+            git commit -S README.txt -m "Initial content for the website to be generated from \`$SOURCE_COMMIT_ID\`"
+            git push origin "$TARGET_BRANCH"
+          }
+
+      - name: Checkout the target branch
+        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633   # 4.1.2
+        with:
+          ref: ${{ inputs.target-branch }}
 
       - name: Update the target path
         shell: bash
         env:
-          TARGET_BRANCH: ${{ inputs.target-branch }}
           TARGET_PATH: ${{ inputs.target-path }}
           ASF_YAML_CONTENT: ${{ inputs.asf-yaml-content }}
         run: |
@@ -166,14 +179,9 @@ jobs:
           # Commit changes, if there are any
           if [ -n "$(git status --porcelain)" ]; then
 
-            # Set up user name and email required for `git commit`
-            git config user.name "ASF Logging Services RM"
-            git config user.email private@logging.apache.org
-
             # Commit & push site changes
             git commit -S -a -m "Add website content generated from \`$SOURCE_COMMIT_ID\`"
-            # `push` needs an explicit target branch and `-u` for tracking it, since we might have just created it
-            git push -f -u origin "$TARGET_BRANCH"
+            git push -f origin
 
             # Populate `.asf.yaml`
             cat >.asf.yaml <<EOF
