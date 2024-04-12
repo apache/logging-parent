@@ -131,7 +131,6 @@ jobs:
         env:
           TARGET_BRANCH: ${{ inputs.target-branch }}
         run: |
-          set -x
           git ls-remote --exit-code --heads origin "refs/heads/$TARGET_BRANCH" >/dev/null 2>&1 || {
             echo "Remote branch \`$TARGET_BRANCH\` doesn't exist, creating it"
             git checkout --orphan "$TARGET_BRANCH"
@@ -152,8 +151,6 @@ jobs:
           TARGET_PATH: ${{ inputs.target-path }}
           ASF_YAML_CONTENT: ${{ inputs.asf-yaml-content }}
         run: |
-
-          set -x
 
           # Check if there already exists an `.asf.yaml`
           ASF_YAML_EXISTS=$([ -f .asf.yaml ] && echo "true" || echo "false")

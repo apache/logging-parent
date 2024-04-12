@@ -41,7 +41,7 @@ You can use {project-name} as follows:
 == Website deployment
 
 Using `deploy-site-reusable.yaml` reusable GitHub Actions workflow, you can automate the website deployments for staging and production environments.
-See how {project-github-url}/blob/main/.github/workflows/deploy.yaml[`deploy.yaml`] and {project-github-url}/blob/main/.github/workflows/deploy-site.yaml[`deploy-site.yaml`] of {project-name} achieves that using the following repository branching scheme:
+See how {project-github-url}/blob/main/.github/workflows/deploy-site.yaml[`deploy-site.yaml` of {project-name}] achieves that using the following repository branching scheme:
 
 Staging website:: {site-url-staging}[]
 
