@@ -120,9 +120,17 @@ jobs:
           echo "SOURCE_COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
       - name: Checkout the target branch
-        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633   # 4.1.2
-        with:
-          ref: ${{ inputs.target-branch }}
+        shell: bash
+        env:
+          TARGET_BRANCH: ${{ inputs.target-branch }}
+        run: |
+          git fetch -p
+          if [ $(git rev-parse --verify "origin/$TARGET_BRANCH" >/dev/null 2>&1) ]; then
+            git checkout -B "$TARGET_BRANCH" "origin/$TARGET_BRANCH"
+          else
+            echo "Branch \`$TARGET_BRANCH\` doesn't exist, creating it"
+            git checkout --orphan "$TARGET_BRANCH"
+          fi
 
       - name: Update the target path
         shell: bash
