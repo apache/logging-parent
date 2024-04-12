@@ -57,7 +57,7 @@ For instance, `site-project.version` needs to be updated for `logging-parent`.
 +
 [source,bash]
 ----
-./mvnw -N changelog-release
+./mvnw -N -P changelog-release
 ----
 .. Edit the release notes (i.e., `src/changelog/7.8.0/.release-notes.adoc.ftl`)
 
@@ -65,8 +65,9 @@ For instance, `site-project.version` needs to be updated for `logging-parent`.
 +
 [source,bash]
 ----
+git add .
 git commit -a -m 'Prepare to release `7.8.0`'
-git push origin release/7.8.0
+git push -u origin release/7.8.0
 ----
 +
 [TIP]
