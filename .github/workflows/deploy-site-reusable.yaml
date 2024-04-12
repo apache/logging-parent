@@ -140,6 +140,8 @@ jobs:
           ASF_YAML_CONTENT: ${{ inputs.asf-yaml-content }}
         run: |
 
+          set -x
+
           # Check if there already exists an `.asf.yaml`
           ASF_YAML_EXISTS=$([ -f .asf.yaml ] && echo "true" || echo "false")
 
