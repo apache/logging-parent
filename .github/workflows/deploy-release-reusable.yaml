@@ -146,6 +146,44 @@ jobs:
             --show-version --batch-mode --errors --no-transfer-progress \
             -P deploy,release
 
+      # Node.js cache is needed for Antora
+      - name: Set up Node.js cache
+        id: nodejs-cache
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9   # 4.0.2
+        with:
+          # We should be calculating the cache key using `package-lock.json` instead!
+          # See https://stackoverflow.com/a/48524475/1278899
+          # For that, `package-lock.json` needs to be committed into the repository – right now it is `.gitignore`d.
+          # Once it is there, we should ideally switch from `npm i` to `npm ci`.
+          # For that, we need to configure `dependabot` to update hundreds of dependencies listed in `package-lock.json`.
+          # That translates to a never ending rain of `dependabot` PRs.
+          # I doubt if the wasted CPU cycles worth the gain.
+          key: ${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}
+          # `actions/cache` doesn't recommend caching `node_modules`.
+          # Though none of its recipes fit our bill, since we install Node.js using `frontend-maven-plugin`.
+          # See https://github.com/actions/cache/blob/main/examples.md#node---npm
+          # We settle for this quick-n-dirty solution for the time being.
+          path: |
+            node
+            node_modules
+
+      # Website build is needed to generate the release notes
+      - name: Build the website
+        shell: bash
+        env:
+          # Making Node.js cache hit visible for debugging purposes
+          NODEJS_CACHE_HIT: ${{ steps.nodejs-cache.outputs.cache-hit }}
+        run: |
+          export TIMESTAMP=$(./mvnw \
+            --non-recursive --quiet --batch-mode \
+            -DforceStdout=true \
+            -Dexpression=project.build.outputTimestamp \
+            help:evaluate \
+            | tail -n 1)
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            site
+
       - name: Stage distribution attachments
         shell: bash
         run: |
