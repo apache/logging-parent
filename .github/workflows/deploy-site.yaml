@@ -63,7 +63,6 @@ jobs:
           profile: ~
           whoami: ${{ github.ref_name }}-out
           subdir: content/logging-parent
-      source-branch: ${{ github.ref_name }}
       target-branch: ${{ github.ref_name }}-out
 
   export-version:

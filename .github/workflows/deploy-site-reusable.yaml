@@ -32,13 +32,6 @@ on:
         description: Flag indicating if Maven `install` goal should be run before running the `site` goal
         default: false
         type: boolean
-      source-branch:
-        description: |
-          The branch, tag, or SHA to checkout and run the Maven `site` goal on.
-          When checking out the repository that triggered a workflow, this defaults to the reference or SHA for that event.
-          Otherwise, the default branch of the repository will be used.
-        default: ""
-        type: string
       target-branch:
         description: The name of the branch the generated site content will be written to
         required: true
@@ -62,8 +55,6 @@ jobs:
 
       - name: Checkout the source branch
         uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633   # 4.1.2
-        with:
-          ref: ${{ inputs.source-branch }}
 
       - name: Set up Java
         uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9   # 3.7.0
