@@ -1031,6 +1031,10 @@
                       <includes>
                         <include>**/*.xml</include>
                       </includes>
+                      <!-- Without an explicit `publicId` and `systemId`, `xml:validate` is trying to download every single XSD from every single XML it encounters.
+                           This is causing an extreme slowdown for projects with big changelogs, e.g., Log4j. -->
+                      <publicId>https://logging.apache.org/xml/ns</publicId>
+                      <systemId>https://logging.apache.org/xml/ns/log4j-changelog-0.xsd</systemId>
                       <validating>true</validating>
                     </validationSet>
                   </validationSets>
