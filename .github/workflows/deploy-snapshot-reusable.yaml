@@ -25,10 +25,10 @@ on:
         default: 17
         type: string
     secrets:
-      NEXUS_USER:
+      NEXUS_USERNAME:
         description: Nexus snapshot repository username for deploying artifacts
         required: true
-      NEXUS_PW:
+      NEXUS_PASSWORD:
         description: Nexus snapshot repository password for deploying artifacts
         required: true
 
@@ -66,8 +66,8 @@ jobs:
         shell: bash
         env:
           # `NEXUS_USERNAME` and `NEXUS_PASSWORD` are used in `~/.m2/settings.xml` created by `setup-java` action
-          NEXUS_USERNAME: ${{ secrets.NEXUS_USER }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PW }}
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: |
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \

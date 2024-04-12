@@ -32,10 +32,10 @@ on:
       GPG_SECRET_KEY:
         description: GPG secret key for signing artifacts
         required: true
-      LOGGING_STAGE_DEPLOYER_USER:
+      NEXUS_USERNAME:
         description: Nexus staging repository username for deploying artifacts
         required: true
-      LOGGING_STAGE_DEPLOYER_PW:
+      NEXUS_PASSWORD:
         description: Nexus staging repository password for deploying artifacts
         required: true
       SVN_USERNAME:
@@ -137,8 +137,8 @@ jobs:
         shell: bash
         env:
           # `NEXUS_USERNAME` and `NEXUS_PASSWORD` are used in `~/.m2/settings.xml` created by `setup-java` action
-          NEXUS_USERNAME: ${{ secrets.LOGGING_STAGE_DEPLOYER_USER }}
-          NEXUS_PASSWORD: ${{ secrets.LOGGING_STAGE_DEPLOYER_PW }}
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
           # `SIGN_KEY` is used by `sign-maven-plugin`
           SIGN_KEY: ${{ secrets.GPG_SECRET_KEY }}
         run: |
