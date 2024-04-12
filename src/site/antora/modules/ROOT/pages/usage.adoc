@@ -40,36 +40,78 @@ You can use {project-name} as follows:
 == Website deployment
 
 Using `deploy-site-reusable.yaml` reusable GitHub Actions workflow, you can automate the website deployments for staging and production environments.
-See how {project-github-url}/blob/main/.github/workflows/deploy-site.yaml[`deploy-site.yaml` of {project-name}] achieves that using the following repository branching scheme:
+See how {project-github-url}/blob/main/.github/workflows/deploy.yaml[`deploy.yaml`] and {project-github-url}/blob/main/.github/workflows/deploy-site.yaml[`deploy-site.yaml`] of {project-name} achieves that using the following repository branching scheme:
 
-`main`::
-Contains the _sources_ (i.e., AsciiDoc files) to build {site-url-staging}[the staging website].
+Staging website:: {site-url-staging}[]
 
-`main-site-stg-out`::
-It is populated automatically by the workflow triggered for changes on `main`.
-It contains the _contents_ (i.e., HTML files) of the {site-url-staging}[the staging website].
-In a nutshell, CI builds `main` and copies the generated `target/site` to `main-site-stg-out`.
+Production website:: {site-url}[]
 
-`main-site-pro`::
-Contains the _sources_ (i.e., AsciiDoc files) to build the {site-url}[the production website].
+Release staging website:: {site-url-staging}-<version>[]
+
+Branch `main`::
+Contains the _sources_ (i.e., AsciiDoc files) to build _the staging website_.
+
+Branch `main-site-stg-out`::
+Populated automatically by the workflow triggered for changes on `main`.
+It contains the _contents_ (i.e., HTML files) of the _the staging website_.
+In short, CI builds `main` and copies the generated `target/site` to `main-site-stg-out`.
+
+Branch `main-site-pro`::
+Contains the _sources_ (i.e., AsciiDoc files) to build the _the production website_.
 It is _manually populated_ by maintainers. For instance,
 ** after a release, the release tag is merged to `main-site-pro`
 ** when there are minor website fixes in `main` that can also go to the production website, they are ``cherry-pick``ed onto the `main-site-pro`
 ** when there are production-only website fixes, they are committed to `main-site-pro`
 
-`main-site-pro-out`::
-It is populated automatically by the workflow triggered for changes on `main-site-pro`.
-It contains the _contents_ (i.e., HTML files) of the {site-url}[the production website].
-In a nutshell, CI builds `main-site-pro` and copies the generated `target/site` to `main-site-pro-out`.
+Branch `main-site-pro-out`::
+Populated automatically by the workflow triggered for changes on `main-site-pro`.
+It contains the _contents_ (i.e., HTML files) of _the production website_.
+In short, CI builds `main-site-pro` and copies the generated `target/site` to `main-site-pro-out`.
 
-Note that this branching scheme allows to host multiple websites in a repository.
+Branch `release/<version>`::
+Contains the _sources_ (i.e., AsciiDoc files) to build _the release staging website_.
+It is _manually populated_ by the release manager during a release.
+
+Branch `release/<version>-site-stg-out`::
+Populated automatically by the workflow triggered for changes on `release/<version>`.
+It contains the _contents_ (i.e., HTML files) of _the release staging website_.
+In short, CI builds `release/<version>` and copies the generated `target/site` to `release/<version>-site-stg-out`.
+
+Note that this branching scheme allows to
+
+* host multiple websites in a single repository
+* deploy staging websites of multiple releases in parallel
+
 For instance, the following branching scheme is used for the Log4j project:
 
-`2.x`:: Log4j 2 staging website sources
-`2.x-site-stg-out`:: Log4j 2 staging website contents
-`2.x-site-pro`:: Log4j 2 production website sources
-`2.x-site-pro-out`:: Log4j 2 production website contents
-`main`:: Log4j 3 staging website sources
-`main-site-stg-out`:: Log4j 3 staging website contents
-`main-site-pro`:: Log4j 3 production website sources
-`main-site-pro-out`:: Log4j 3 production website contents
+.Log4j branching scheme for website deployments
+[cols="7,4m,4m"]
+|===
+.2+^.^h|Description
+2+^h|Branch name
+
+^h|Log4j 2
+^h|Log4j 3
+
+|Staging website sources
+|2.x
+|main
+
+|Staging website contents
+|2.x-site-stg-out
+|main-site-stg-out
+
+|Production website sources
+|2.x-site-pro
+|main-site-pro
+
+|Production website contents
+|2.x-site-pro-out
+|main-site-pro-out
+
+|Release staging website sources
+2+|release/<version>
+
+|Release staging website contents
+2+|release/<version>-site-stg-out
+|===

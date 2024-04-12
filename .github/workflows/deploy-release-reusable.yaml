@@ -28,14 +28,6 @@ on:
         description: Identifier used in the distribution artifact and Subversion repository folder filenames (e.g., `logging-parent`)
         required: true
         type: string
-      distribution-attachment-filepath-pattern:
-        description: The regex pattern matched against the full filepath for determining attachments to be included in the distribution
-        default: ""
-        type: string
-      distribution-attachment-count:
-        description: The number of attachments expected to be found
-        default: 0
-        type: number
     secrets:
       GPG_SECRET_KEY:
         description: GPG secret key for signing artifacts
@@ -141,51 +133,6 @@ jobs:
             git push -f origin
           fi
 
-      # Node.js cache is needed for Antora
-      - name: Set up Node.js cache
-        id: nodejs-cache
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9   # 4.0.2
-        with:
-          # We should be calculating the cache key using `package-lock.json` instead!
-          # See https://stackoverflow.com/a/48524475/1278899
-          # For that, `package-lock.json` needs to be committed into the repository – right now it is `.gitignore`d.
-          # Once it is there, we should ideally switch from `npm i` to `npm ci`.
-          # For that, we need to configure `dependabot` to update hundreds of dependencies listed in `package-lock.json`.
-          # That translates to a never ending rain of `dependabot` PRs.
-          # I doubt if the wasted CPU cycles worth the gain.
-          key: ${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}
-          # `actions/cache` doesn't recommend caching `node_modules`.
-          # Though none of its recipes fit our bill, since we install Node.js using `frontend-maven-plugin`.
-          # See https://github.com/actions/cache/blob/main/examples.md#node---npm
-          # We settle for this quick-n-dirty solution for the time being.
-          path: |
-            node
-            node_modules
-
-      - name: Build the website
-        shell: bash
-        env:
-          # Making Node.js cache hit visible for debugging purposes
-          NODEJS_CACHE_HIT: ${{ steps.nodejs-cache.outputs.cache-hit }}
-        run: |
-          export TIMESTAMP=$(./mvnw \
-            --non-recursive --quiet --batch-mode \
-            -DforceStdout=true \
-            -Dexpression=project.build.outputTimestamp \
-            help:evaluate \
-            | tail -n 1)
-          ./mvnw \
-            --show-version --batch-mode --errors --no-transfer-progress \
-            -Dmaven.test.skip \
-            install
-          ./mvnw \
-            --show-version --batch-mode --errors --no-transfer-progress \
-            site
-          cd target/site
-          find . -empty -type d -delete
-          find . -print0 | xargs -0 touch -d "$TIMESTAMP"
-          find . -print0 | sort --zero-terminated | xargs -0 zip -oX ../site.zip
-
       - name: Upload to Nexus
         shell: bash
         env:
@@ -201,29 +148,21 @@ jobs:
 
       - name: Stage distribution attachments
         shell: bash
-        env:
-          DIST_ATTACHMENT_FILEPATH_PATTERN: ${{ inputs.distribution-attachment-filepath-pattern }}
-          DIST_ATTACHMENT_COUNT: ${{ inputs.distribution-attachment-count }}
         run: |
 
-          # Determine the distribution attachment filepath pattern, if none provided
-          if [[ -z "$DIST_ATTACHMENT_FILEPATH_PATTERN" ]]; then
+          # Dump deployed artifacts to a local folder
+          export ALT_DEPLOYMENT_REPO_FILEPATH="target/alt-deployment-repo"
+          mkdir "$ALT_DEPLOYMENT_REPO_FILEPATH"
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            -DaltDeploymentRepository=apache.releases.https::file:"$ALT_DEPLOYMENT_REPO_FILEPATH" \
+            -Dsign.skip \
+            -P deploy
 
-            # Dump deployed artifacts to a local folder
-            export ALT_DEPLOYMENT_REPO_FILEPATH="target/alt-deployment-repo"
-            mkdir "$ALT_DEPLOYMENT_REPO_FILEPATH"
-            ./mvnw \
-              --show-version --batch-mode --errors --no-transfer-progress \
-              -DaltDeploymentRepository=apache.releases.https::file:"$ALT_DEPLOYMENT_REPO_FILEPATH" \
-              -Dsign.skip \
-              -P deploy
-
-            # This regex needs to work for both Java (`distribution` profile) and `find` (while counting attachments)!
-            # Hence, we don't escape dots, etc. with backslashes, which is problematic to get working in both worlds.
-            export DIST_ATTACHMENT_FILEPATH_PATTERN="^$ALT_DEPLOYMENT_REPO_FILEPATH/.+-$PROJECT_VERSION"'((-tests)?.jar|-cyclonedx.xml)$'
-            export DIST_ATTACHMENT_COUNT=$(find "$ALT_DEPLOYMENT_REPO_FILEPATH" -type f -regextype posix-extended -regex "$DIST_ATTACHMENT_FILEPATH_PATTERN" | wc -l)
-
-          fi
+          # This regex needs to work for both Java (`distribution` profile) and `find` (while counting attachments)!
+          # Hence, we don't escape dots, etc. with backslashes, which is problematic to get working in both worlds.
+          export DIST_ATTACHMENT_FILEPATH_PATTERN="^$ALT_DEPLOYMENT_REPO_FILEPATH/.+-$PROJECT_VERSION"'((-tests)?.jar|-cyclonedx.xml)$'
+          export DIST_ATTACHMENT_COUNT=$(find "$ALT_DEPLOYMENT_REPO_FILEPATH" -type f -regextype posix-extended -regex "$DIST_ATTACHMENT_FILEPATH_PATTERN" | wc -l)
 
           # Pass the necessary environment variables
           cat >> $GITHUB_ENV << EOF
@@ -302,9 +241,6 @@ jobs:
             "$GITHUB_WORKSPACE/.github/generate-email.sh" $EMAIL_TYPE $PROJECT_VERSION $COMMIT_ID \
               > "${DIST_FILENAME_VERSIONED_PREFIX}-email-${EMAIL_TYPE}.txt"
           done
-
-          # Copy the site
-          cp "$GITHUB_WORKSPACE/target/site.zip" "${DIST_FILENAME_VERSIONED_PREFIX}-site.zip"
 
           # Copy the distribution
           cp "$DIST_FILEPATH_PREFIX"* .

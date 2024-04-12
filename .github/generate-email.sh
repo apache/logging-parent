@@ -69,15 +69,15 @@ case $1 in
 vote)
     cat <<EOF
 To: dev@logging.apache.org
-Title: [VOTE][LAZY] Release $PROJECT_NAME $PROJECT_VERSION
+Title: [VOTE][LAZY] Release $PROJECT_NAME \`$PROJECT_VERSION\`
 
-This is a lazy-vote to release the $PROJECT_NAME $PROJECT_VERSION.
+This is a lazy-vote to release the $PROJECT_NAME \`$PROJECT_VERSION\`.
 
-Website: $PROJECT_STAGING_SITE
+Website: $PROJECT_STAGING_SITE-$PROJECT_VERSION
 GitHub: $PROJECT_REPO
 Commit: $COMMIT_ID
 Distribution: $PROJECT_DIST_DIR
-Nexus: https://repository.apache.org/content/repositories/orgapachelogging-1113
+Nexus: https://repository.apache.org/content/repositories/orgapachelogging-<FIXME>
 Signing key: 0x077e8893a6dcc33dd4a4d5b256e73ba9a0b592d0
 
 Please download, test, and cast your votes on this mailing list.
@@ -106,9 +106,9 @@ EOF
 announce)
     cat <<EOF
 To: dev@logging.apache.org
-Title: [ANNOUNCE] $PROJECT_NAME $PROJECT_VERSION released
+Title: [ANNOUNCE] $PROJECT_NAME \`$PROJECT_VERSION\` released
 
-${PROJECT_NAME} team is pleased to announce the $PROJECT_VERSION
+${PROJECT_NAME} team is pleased to announce the \`$PROJECT_VERSION\`
 release. This project contains the parent POM for other Maven-based
 Apache Logging Services projects. For further information (support,
 download, etc.) see the project website[1].
