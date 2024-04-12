@@ -37,6 +37,7 @@ You can use {project-name} as follows:
 .. Build the website using `./mvnw site`
 .. Check out the website generated to `target/site` by pointing a browser to it
 
+[#website]
 == Website deployment
 
 Using `deploy-site-reusable.yaml` reusable GitHub Actions workflow, you can automate the website deployments for staging and production environments.
