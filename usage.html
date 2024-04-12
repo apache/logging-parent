@@ -170,8 +170,20 @@
 <h2 id="website"><a class="anchor" href="#website"></a>Website deployment</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Using <code>deploy-site-reusable.yaml</code> reusable GitHub Actions workflow, you can automate the website deployments for staging and production environments.
-See how <a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-site.yaml"><code>deploy-site.yaml</code> of Logging Parent</a> achieves that using the following repository branching scheme:</p>
+<p>Using <code>deploy-site-reusable.yaml</code> reusable GitHub Actions workflow, you can automate the website deployments for staging and production environments.</p>
+</div>
+<div class="sect2">
+<h3 id="website-logging-parent"><a class="anchor" href="#website-logging-parent"></a>Example: Logging Parent branching scheme</h3>
+<div class="paragraph">
+<p>See how <a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-site.yaml"><code>deploy-site.yaml</code> of Logging Parent</a> achieves that using the</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">&lt;source-branch&gt;-site-&lt;environment&gt;-out</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>branch naming convention:</p>
 </div>
 <div class="dlist">
 <dl>
@@ -234,8 +246,10 @@ In short, CI builds <code>release/&lt;version&gt;</code> and copies the generate
 </dd>
 </dl>
 </div>
+<div class="sect3">
+<h4 id="website-logging-parent-rationale"><a class="anchor" href="#website-logging-parent-rationale"></a>Rationale</h4>
 <div class="paragraph">
-<p>Note that this branching scheme allows to</p>
+<p>This branching scheme allows to</p>
 </div>
 <div class="ulist">
 <ul>
@@ -247,6 +261,10 @@ In short, CI builds <code>release/&lt;version&gt;</code> and copies the generate
 </li>
 </ul>
 </div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="website-log4j"><a class="anchor" href="#website-log4j"></a>Example: Log4j website branching scheme</h3>
 <div class="paragraph">
 <p>For instance, the following branching scheme is used for the Log4j project:</p>
 </div>
@@ -296,6 +314,7 @@ In short, CI builds <code>release/&lt;version&gt;</code> and copies the generate
 </tr>
 </tbody>
 </table>
+</div>
 </div>
 </div>
 </article>
