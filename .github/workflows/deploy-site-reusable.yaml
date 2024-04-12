@@ -135,6 +135,7 @@ jobs:
       - name: Update the target path
         shell: bash
         env:
+          TARGET_BRANCH: ${{ inputs.target-branch }}
           TARGET_PATH: ${{ inputs.target-path }}
           ASF_YAML_CONTENT: ${{ inputs.asf-yaml-content }}
         run: |
@@ -144,13 +145,13 @@ jobs:
 
           # Clean up the target path
           if [ "." = "$TARGET_PATH" ]; then
-            git ls-files -z | xargs -0 git rm -rf
+            git ls-files -z | xargs -0 git rm -rfq
           else
-            git rm -rf "$TARGET_PATH"
+            git rm -rfq "$TARGET_PATH"
           fi
 
           # Place the generated site
-          unzip /tmp/site.zip -d "$TARGET_PATH"
+          unzip -q /tmp/site.zip -d "$TARGET_PATH"
           git add "$TARGET_PATH"
 
           # Recover `.asf.yaml`, if there was one.
@@ -169,7 +170,8 @@ jobs:
 
             # Commit & push site changes
             git commit -S -a -m "Add website content generated from \`$SOURCE_COMMIT_ID\`"
-            git push -f origin
+            # `push` needs an explicit target branch and `-u` for tracking it, since we might have just created it
+            git push -f -u origin "$TARGET_BRANCH"
 
             # Populate `.asf.yaml`
             cat >.asf.yaml <<EOF
