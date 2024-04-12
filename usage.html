@@ -92,6 +92,8 @@
 </aside>
 <article class="doc">
 <h1 class="page">Usage</h1>
+<div id="preamble">
+<div class="sectionbody">
 <div class="paragraph">
 <p>You can use Logging Parent as follows:</p>
 </div>
@@ -161,6 +163,140 @@
 </div>
 </li>
 </ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_website_deployment"><a class="anchor" href="#_website_deployment"></a>Website deployment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Using <code>deploy-site-reusable.yaml</code> reusable GitHub Actions workflow, you can automate the website deployments for staging and production environments.
+See how <a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy.yaml"><code>deploy.yaml</code></a> and <a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-site.yaml"><code>deploy-site.yaml</code></a> of Logging Parent achieves that using the following repository branching scheme:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Staging website</dt>
+<dd>
+<p><a href="https://logging.staged.apache.org/logging-parent" class="bare">https://logging.staged.apache.org/logging-parent</a></p>
+</dd>
+<dt class="hdlist1">Production website</dt>
+<dd>
+<p><a href="https://logging.apache.org/logging-parent" class="bare">https://logging.apache.org/logging-parent</a></p>
+</dd>
+<dt class="hdlist1">Release staging website</dt>
+<dd>
+<p><a href="https://logging.staged.apache.org/logging-parent-&lt;version&gt;" class="bare">https://logging.staged.apache.org/logging-parent-&lt;version&gt;</a></p>
+</dd>
+<dt class="hdlist1">Branch <code>main</code></dt>
+<dd>
+<p>Contains the <em>sources</em> (i.e., AsciiDoc files) to build <em>the staging website</em>.</p>
+</dd>
+<dt class="hdlist1">Branch <code>main-site-stg-out</code></dt>
+<dd>
+<p>Populated automatically by the workflow triggered for changes on <code>main</code>.
+It contains the <em>contents</em> (i.e., HTML files) of the <em>the staging website</em>.
+In short, CI builds <code>main</code> and copies the generated <code>target/site</code> to <code>main-site-stg-out</code>.</p>
+</dd>
+<dt class="hdlist1">Branch <code>main-site-pro</code></dt>
+<dd>
+<p>Contains the <em>sources</em> (i.e., AsciiDoc files) to build the <em>the production website</em>.
+It is <em>manually populated</em> by maintainers. For instance,</p>
+<div class="ulist">
+<ul>
+<li>
+<p>after a release, the release tag is merged to <code>main-site-pro</code></p>
+</li>
+<li>
+<p>when there are minor website fixes in <code>main</code> that can also go to the production website, they are <code>cherry-pick</code>ed onto the <code>main-site-pro</code></p>
+</li>
+<li>
+<p>when there are production-only website fixes, they are committed to <code>main-site-pro</code></p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Branch <code>main-site-pro-out</code></dt>
+<dd>
+<p>Populated automatically by the workflow triggered for changes on <code>main-site-pro</code>.
+It contains the <em>contents</em> (i.e., HTML files) of <em>the production website</em>.
+In short, CI builds <code>main-site-pro</code> and copies the generated <code>target/site</code> to <code>main-site-pro-out</code>.</p>
+</dd>
+<dt class="hdlist1">Branch <code>release/&lt;version&gt;</code></dt>
+<dd>
+<p>Contains the <em>sources</em> (i.e., AsciiDoc files) to build <em>the release staging website</em>.
+It is <em>manually populated</em> by the release manager during a release.</p>
+</dd>
+<dt class="hdlist1">Branch <code>release/&lt;version&gt;-site-stg-out</code></dt>
+<dd>
+<p>Populated automatically by the workflow triggered for changes on <code>release/&lt;version&gt;</code>.
+It contains the <em>contents</em> (i.e., HTML files) of <em>the release staging website</em>.
+In short, CI builds <code>release/&lt;version&gt;</code> and copies the generated <code>target/site</code> to <code>release/&lt;version&gt;-site-stg-out</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Note that this branching scheme allows to</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>host multiple websites in a single repository</p>
+</li>
+<li>
+<p>deploy staging websites of multiple releases in parallel</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For instance, the following branching scheme is used for the Log4j project:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Log4j branching scheme for website deployments</caption>
+<colgroup>
+<col style="width: 46.6666%;">
+<col style="width: 26.6666%;">
+<col style="width: 26.6668%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle" rowspan="2"><p class="tableblock">Description</p></th>
+<th class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">Branch name</p></th>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Log4j 2</p></th>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Log4j 3</p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Staging website sources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.x</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>main</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Staging website contents</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.x-site-stg-out</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>main-site-stg-out</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Production website sources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.x-site-pro</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>main-site-pro</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Production website contents</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.x-site-pro-out</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>main-site-pro-out</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Release staging website sources</p></td>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><code>release/&lt;version&gt;</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Release staging website contents</p></td>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><code>release/&lt;version&gt;-site-stg-out</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </article>
   </div>
