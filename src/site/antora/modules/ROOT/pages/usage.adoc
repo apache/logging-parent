@@ -41,7 +41,18 @@ You can use {project-name} as follows:
 == Website deployment
 
 Using `deploy-site-reusable.yaml` reusable GitHub Actions workflow, you can automate the website deployments for staging and production environments.
-See how {project-github-url}/blob/main/.github/workflows/deploy-site.yaml[`deploy-site.yaml` of {project-name}] achieves that using the following repository branching scheme:
+
+[#website-logging-parent]
+=== Example: {project-name} branching scheme
+
+See how {project-github-url}/blob/main/.github/workflows/deploy-site.yaml[`deploy-site.yaml` of {project-name}] achieves that using the
+
+[source]
+----
+<source-branch>-site-<environment>-out
+----
+
+branch naming convention:
 
 Staging website:: {site-url-staging}[]
 
@@ -78,10 +89,17 @@ Populated automatically by the workflow triggered for changes on `release/<versi
 It contains the _contents_ (i.e., HTML files) of _the release staging website_.
 In short, CI builds `release/<version>` and copies the generated `target/site` to `release/<version>-site-stg-out`.
 
-Note that this branching scheme allows to
+
+[#website-logging-parent-rationale]
+==== Rationale
+
+This branching scheme allows to
 
 * host multiple websites in a single repository
 * deploy staging websites of multiple releases in parallel
+
+[#website-log4j]
+=== Example: Log4j website branching scheme
 
 For instance, the following branching scheme is used for the Log4j project:
 

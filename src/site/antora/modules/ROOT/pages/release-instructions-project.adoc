@@ -157,12 +157,6 @@ git merge rel/7.8.0       # Pull changes up to the newly created tag
 git branch -D release/7.8.0
 git push --delete origin release/7.8.0
 ----
-. Delete the release staging website branch:
-+
-[source,bash]
-----
-git push --delete origin release/7.8.0-site-stg-out
-----
 
 [#publish-release-asf]
 === In the ASF infrastructure
@@ -222,6 +216,12 @@ git push origin main-site-pro
 ----
 . Verify that {project-github-url}/actions/workflows/deploy-site.yaml[the `deploy-site` workflow] successfully runs the `deploy-site-pro` job
 . Verify that {site-url}[the project website] is updated
+. Delete the release staging website branch:
++
+[source,bash]
+----
+git push --delete origin release/7.8.0-site-stg-out
+----
 
 [#announce-release]
 == Announce the release
