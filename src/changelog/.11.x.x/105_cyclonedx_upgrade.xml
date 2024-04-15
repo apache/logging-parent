@@ -4,5 +4,5 @@
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="changed">
   <issue id="105" link="https://github.com/apache/logging-parent/issues/105"/>
-  <description format="asciidoc">Replace `process-sbom` script with CycloneDX plugin configuration.</description>
+  <description format="asciidoc">Replace `process-sbom` script with CycloneDX plugin configuration</description>
 </entry>

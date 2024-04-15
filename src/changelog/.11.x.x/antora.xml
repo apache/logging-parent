@@ -2,7 +2,6 @@
 <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
-       type="updated">
-  <issue id="152" link="https://github.com/apache/logging-parent/pull/152"/>
-  <description format="asciidoc">Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.4`</description>
+       type="changed">
+  <description format="asciidoc">Migrate website support from `asciidoctor-maven-plugin` to Antora</description>
 </entry>
