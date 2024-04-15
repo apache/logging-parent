@@ -90,14 +90,14 @@ net negative vote count. All votes are welcome and we encourage
 everyone to test the release, but only the Logging Services PMC
 votes are officially counted.
 
-=== Review kit
+== Review kit
 
 The minimum set of steps needed to review the uploaded distribution
 files in the Subversion repository can be summarized as follows:
 
 $(dump_review_kit)
 
-=== Release notes
+== Release notes
 
 $(dump_release_notes)
 EOF
@@ -115,7 +115,7 @@ download, etc.) see the project website[1].
 
 [1] $PROJECT_SITE
 
-=== Release Notes
+== Release Notes
 EOF
     dump_release_notes
     ;;
