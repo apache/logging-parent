@@ -30,8 +30,16 @@ This section explains how to publish a new release of projects extending from th
 
 [WARNING]
 ====
-In the code examples below, assuming that the project and its version to be published are `{project-id}` and `7.8.0`, respectively.
-You need to adapt these values for your project and version accordingly.
+Shared instructions hardcode the following constants:
+
+Project ID::
+`{project-id}`
+
+Project version::
+`7.8.0`
+
+**You must adapt these values for your project!**
+For instance, project ID needs to be replaced with `log4j` for Log4j, `log4j-kotlin` for Log4j Kotlin, etc.
 ====
 
 [#stage-release]
