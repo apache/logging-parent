@@ -145,7 +145,7 @@
   <properties>
 
     <!-- project version -->
-    <revision>11.0.0-SNAPSHOT</revision>
+    <revision>11.0.0</revision>
 
     <!-- `project.build.outputTimestamp` is required to be present for reproducible builds.
          We actually inherit one from the `org.apache:apache` parent.
@@ -247,7 +247,7 @@
     <!-- site-specific versions -->
     <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project.
          This will be used in the site and updated automatically by `dependabot`. -->
-    <site-project.version>10.6.0</site-project.version>
+    <site-project.version>11.0.0</site-project.version>
 
   </properties>
 
