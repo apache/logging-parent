@@ -103,7 +103,10 @@
 <div class="ulist">
 <ul>
 <li>
-<p>Add <code>coverage</code> profile to generate a test coverage report. (<a href="https://github.com/apache/logging-parent/pull/140">140</a>)</p>
+<p>Add <code>coverage</code> profile to generate a test coverage report (<a href="https://github.com/apache/logging-parent/pull/140">140</a>)</p>
+</li>
+<li>
+<p>Add <code>deploy-site-yaml</code> GitHub actions workflow to automate the website deployment</p>
 </li>
 <li>
 <p>Add instructions on XML schema publication (<a href="https://github.com/apache/logging-parent/issues/138">138</a>)</p>
@@ -116,10 +119,13 @@
 <div class="ulist">
 <ul>
 <li>
-<p>Replace <code>process-sbom</code> script with CycloneDX plugin configuration. (<a href="https://github.com/apache/logging-parent/issues/105">105</a>)</p>
+<p>Replace <code>process-sbom</code> script with CycloneDX plugin configuration (<a href="https://github.com/apache/logging-parent/issues/105">105</a>)</p>
 </li>
 <li>
 <p>Support parallel releases by uploading the distribution to <code>&lt;projectId&gt;/&lt;version&gt;</code> folders. This is needed for parallel Log4j 2 and 3 releases. (<a href="https://github.com/apache/logging-parent/issues/139">139</a>)</p>
+</li>
+<li>
+<p>Migrate website support from <code>asciidoctor-maven-plugin</code> to Antora</p>
 </li>
 </ul>
 </div>
@@ -129,19 +135,7 @@
 <div class="ulist">
 <ul>
 <li>
-<p>Update <code>actions/checkout</code> to version <code>4.1.2</code> (<a href="https://github.com/apache/logging-parent/pull/132">132</a>)</p>
-</li>
-<li>
-<p>Update <code>actions/setup-java</code> to version <code>4.2.1</code> (<a href="https://github.com/apache/logging-parent/pull/137">137</a>)</p>
-</li>
-<li>
-<p>Update <code>actions/upload-artifact</code> to version <code>4.3.1</code> (<a href="https://github.com/apache/logging-parent/pull/114">114</a>)</p>
-</li>
-<li>
 <p>Update <code>com.diffplug.spotless:spotless-maven-plugin</code> to version <code>2.43.0</code> (<a href="https://github.com/apache/logging-parent/pull/108">108</a>)</p>
-</li>
-<li>
-<p>Update <code>com.github.spotbugs:spotbugs-annotations</code> to version <code>4.8.4</code> (<a href="https://github.com/apache/logging-parent/pull/152">152</a>)</p>
 </li>
 <li>
 <p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.8.4.0</code> (<a href="https://github.com/apache/logging-parent/pull/156">156</a>)</p>
@@ -153,40 +147,16 @@
 <p>Update <code>com.palantir.javaformat:palantir-java-format</code> to version <code>2.43.0</code> (<a href="https://github.com/apache/logging-parent/pull/154">154</a>)</p>
 </li>
 <li>
-<p>Update <code>commons-codec:commons-codec</code> to version <code>1.16.1</code> (<a href="https://github.com/apache/logging-parent/pull/115">115</a>)</p>
-</li>
-<li>
-<p>Update <code>de.skuzzle.enforcer:restrict-imports-enforcer-rule</code> to version <code>2.5.0</code> (<a href="https://github.com/apache/logging-parent/pull/111">111</a>)</p>
-</li>
-<li>
-<p>Update <code>dependabot/fetch-metadata</code> to version <code>2.0.0</code> (<a href="https://github.com/apache/logging-parent/pull/144">144</a>)</p>
-</li>
-<li>
-<p>Update <code>github/codeql-action</code> to version <code>3.24.10</code> (<a href="https://github.com/apache/logging-parent/pull/153">153</a>)</p>
-</li>
-<li>
 <p>Update <code>org.apache.logging.log4j:log4j-changelog-maven-plugin</code> to version <code>0.8.0</code> (<a href="https://github.com/apache/logging-parent/pull/146">146</a>)</p>
 </li>
 <li>
 <p>Update <code>org.apache.maven.plugins:maven-artifact-plugin</code> to version <code>3.5.1</code> (<a href="https://github.com/apache/logging-parent/pull/149">149</a>)</p>
 </li>
 <li>
-<p>Update <code>org.asciidoctor:asciidoctor-maven-plugin</code> to version <code>3.0.0</code> (<a href="https://github.com/apache/logging-parent/pull/119">119</a>)</p>
-</li>
-<li>
 <p>Update <code>org.codehaus.mojo:flatten-maven-plugin</code> to version <code>1.6.0</code> (<a href="https://github.com/apache/logging-parent/pull/102">102</a>)</p>
 </li>
 <li>
 <p>Update <code>org.cyclonedx:cyclonedx-maven-plugin</code> to version <code>2.8.0</code> (<a href="https://github.com/apache/logging-parent/pull/145">145</a>)</p>
-</li>
-<li>
-<p>Update <code>org.eclipse.jgit:org.eclipse.jgit</code> to version <code>6.9.0.202403050737-r</code> (<a href="https://github.com/apache/logging-parent/pull/130">130</a>)</p>
-</li>
-<li>
-<p>Update <code>org.jacoco:jacoco-maven-plugin</code> to version <code>0.8.12</code> (<a href="https://github.com/apache/logging-parent/pull/148">148</a>)</p>
-</li>
-<li>
-<p>Update <code>org.simplify4u.plugins:sign-maven-plugin</code> to version <code>1.1.0</code> (<a href="https://github.com/apache/logging-parent/pull/124">124</a>)</p>
 </li>
 </ul>
 </div>
