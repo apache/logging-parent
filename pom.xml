@@ -216,9 +216,6 @@
     <palantir-java-format.version>2.43.0</palantir-java-format.version>
     <spotbugs-annotations.version>4.8.4</spotbugs-annotations.version>
 
-    <!-- plugin version overriddes -->
-    <version.apache-rat-plugin>0.16</version.apache-rat-plugin>
-
     <!-- plugin versions -->
     <asciidoctor-maven-plugin.version>3.0.0</asciidoctor-maven-plugin.version>
     <beanshell-maven-plugin.version>1.4</beanshell-maven-plugin.version>
