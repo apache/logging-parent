@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Usage :: Apache Logging Parent</title>
+    <link rel="canonical" href="https://logging.apache.org/logging-parent/usage.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.4">
+<link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
+<!-- `@asciidoctor/tabs` extension styles -->
+<link rel="stylesheet" href="./_/css/vendor/tabs.css">
+<style>
+  /* `page-toclevels` greater than 4 are not supported by Antora UI, patching it: */
+  .toc .toc-menu li[data-level="4"] a {
+    padding-left: 2.75rem
+  }
+  /* Replace the default highlight.js color for strings from red to green: */
+  .hljs-string {
+    color: #0f8532;
+  }
+</style>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <span class="navbar-item title">Apache Logging Parent</span>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://logging.apache.org">a subproject of&nbsp;<strong>Apache Logging Services</strong></a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Home</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="features.html">Features</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="usage.html">Usage</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-notes.html">Release notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Release instructions</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-project.html">For projects</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-xml-schema.html">For XML schemas</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="usage.html">Usage</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/apache/logging-parent/edit/main/src/site/antora/modules/ROOT/pages/usage.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Usage</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can use Logging Parent as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add <code>org.apache.logging:logging-parent:11.0.0</code> as a <code>parent</code> to your <code>pom.xml</code></p>
+</li>
+<li>
+<p>You may need to add <code>.mvn/jvm.config</code> to your project. See <a href="https://github.com/apache/logging-log4j2/blob/2.x/.mvn/jvm.config">this</a> as an example.</p>
+</li>
+<li>
+<p>Check if <code>./mvnw verify</code> succeeds, otherwise make necessary changes</p>
+</li>
+<li>
+<p>Copy and adapt the support files (<code>.gitignore</code>, <code>.github/workflows/build.yaml</code>, etc.)</p>
+</li>
+<li>
+<p>Copy and adapt Log4j Changelog files:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>src/changelog/.&lt;majorVersion&gt;.x.x/.release-notes.adoc.ftl</code></p>
+</li>
+<li>
+<p><code>src/changelog/.changelog.adoc.ftl</code></p>
+</li>
+<li>
+<p><code>src/changelog/.index.adoc.ftl</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>In order to create an Antora-based site:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Copy the following files and adapt them:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>antora-playbook.yaml</code></p>
+</li>
+<li>
+<p><code>package.json</code></p>
+</li>
+<li>
+<p><code>src/site/antora/antora.yml</code></p>
+</li>
+<li>
+<p><code>src/site/antora/.antora.yml</code></p>
+</li>
+<li>
+<p><code>src/site/antora/modules/ROOT/pages/release-notes.adoc</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Build the website using <code>./mvnw site</code></p>
+</li>
+<li>
+<p>Check out the website generated to <code>target/site</code> by pointing a browser to it</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="website"><a class="anchor" href="#website"></a>Website deployment</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Using <code>deploy-site-reusable.yaml</code> reusable GitHub Actions workflow, you can automate the website deployments for staging and production environments.</p>
+</div>
+<div class="sect2">
+<h3 id="website-logging-parent"><a class="anchor" href="#website-logging-parent"></a>Example: Logging Parent branching scheme</h3>
+<div class="paragraph">
+<p>See how <a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-site.yaml"><code>deploy-site.yaml</code> of Logging Parent</a> achieves that using the</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">&lt;source-branch&gt;-site-&lt;environment&gt;-out</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>branch naming convention:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Staging website</dt>
+<dd>
+<p><a href="https://logging.staged.apache.org/logging-parent" class="bare">https://logging.staged.apache.org/logging-parent</a></p>
+</dd>
+<dt class="hdlist1">Production website</dt>
+<dd>
+<p><a href="https://logging.apache.org/logging-parent" class="bare">https://logging.apache.org/logging-parent</a></p>
+</dd>
+<dt class="hdlist1">Release staging website</dt>
+<dd>
+<p><a href="https://logging.staged.apache.org/logging-parent-&lt;version&gt;" class="bare">https://logging.staged.apache.org/logging-parent-&lt;version&gt;</a></p>
+</dd>
+<dt class="hdlist1">Branch <code>main</code></dt>
+<dd>
+<p>Contains the <em>sources</em> (i.e., AsciiDoc files) to build <em>the staging website</em>.</p>
+</dd>
+<dt class="hdlist1">Branch <code>main-site-stg-out</code></dt>
+<dd>
+<p>Populated automatically by the workflow triggered for changes on <code>main</code>.
+It contains the <em>contents</em> (i.e., HTML files) of the <em>the staging website</em>.
+In short, CI builds <code>main</code> and copies the generated <code>target/site</code> to <code>main-site-stg-out</code>.</p>
+</dd>
+<dt class="hdlist1">Branch <code>main-site-pro</code></dt>
+<dd>
+<p>Contains the <em>sources</em> (i.e., AsciiDoc files) to build the <em>the production website</em>.
+It is <em>manually populated</em> by maintainers. For instance,</p>
+<div class="ulist">
+<ul>
+<li>
+<p>after a release, the release tag is merged to <code>main-site-pro</code></p>
+</li>
+<li>
+<p>when there are minor website fixes in <code>main</code> that can also go to the production website, they are <code>cherry-pick</code>ed onto the <code>main-site-pro</code></p>
+</li>
+<li>
+<p>when there are production-only website fixes, they are committed to <code>main-site-pro</code></p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1">Branch <code>main-site-pro-out</code></dt>
+<dd>
+<p>Populated automatically by the workflow triggered for changes on <code>main-site-pro</code>.
+It contains the <em>contents</em> (i.e., HTML files) of <em>the production website</em>.
+In short, CI builds <code>main-site-pro</code> and copies the generated <code>target/site</code> to <code>main-site-pro-out</code>.</p>
+</dd>
+<dt class="hdlist1">Branch <code>release/&lt;version&gt;</code></dt>
+<dd>
+<p>Contains the <em>sources</em> (i.e., AsciiDoc files) to build <em>the release staging website</em>.
+It is <em>manually populated</em> by the release manager during a release.</p>
+</dd>
+<dt class="hdlist1">Branch <code>release/&lt;version&gt;-site-stg-out</code></dt>
+<dd>
+<p>Populated automatically by the workflow triggered for changes on <code>release/&lt;version&gt;</code>.
+It contains the <em>contents</em> (i.e., HTML files) of <em>the release staging website</em>.
+In short, CI builds <code>release/&lt;version&gt;</code> and copies the generated <code>target/site</code> to <code>release/&lt;version&gt;-site-stg-out</code>.</p>
+</dd>
+</dl>
+</div>
+<div class="sect3">
+<h4 id="website-logging-parent-rationale"><a class="anchor" href="#website-logging-parent-rationale"></a>Rationale</h4>
+<div class="paragraph">
+<p>This branching scheme allows to</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>host multiple websites in a single repository</p>
+</li>
+<li>
+<p>deploy staging websites of multiple releases in parallel</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="website-log4j"><a class="anchor" href="#website-log4j"></a>Example: Log4j website branching scheme</h3>
+<div class="paragraph">
+<p>For instance, the following branching scheme is used for the Log4j project:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 1. Log4j branching scheme for website deployments</caption>
+<colgroup>
+<col style="width: 46.6666%;">
+<col style="width: 26.6666%;">
+<col style="width: 26.6668%;">
+</colgroup>
+<tbody>
+<tr>
+<th class="tableblock halign-center valign-middle" rowspan="2"><p class="tableblock">Description</p></th>
+<th class="tableblock halign-center valign-top" colspan="2"><p class="tableblock">Branch name</p></th>
+</tr>
+<tr>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Log4j 2</p></th>
+<th class="tableblock halign-center valign-top"><p class="tableblock">Log4j 3</p></th>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Staging website sources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.x</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>main</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Staging website contents</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.x-site-stg-out</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>main-site-stg-out</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Production website sources</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.x-site-pro</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>main-site-pro</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Production website contents</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2.x-site-pro-out</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>main-site-pro-out</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Release staging website sources</p></td>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><code>release/&lt;version&gt;</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Release staging website contents</p></td>
+<td class="tableblock halign-left valign-top" colspan="2"><p class="tableblock"><code>release/&lt;version&gt;-site-stg-out</code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>
+    Copyright © 1999-2024 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
+    Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
+    Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
+  </p>
+  <p>
+    Apache, Log4j, and the Apache feather logo are trademarks or registered trademarks of The Apache Software Foundation.
+    Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+    Other names may be trademarks of their respective owners.
+  </p>
+</footer>
+<script id="site-script" src="./_/js/site.js" data-ui-root-path="./_"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+<!-- `@asciidoctor/tabs` extension scripts -->
+<script async src="./_/js/vendor/tabs.js"></script>
+  </body>
+</html>

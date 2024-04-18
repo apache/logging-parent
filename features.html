@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Features :: Apache Logging Parent</title>
+    <link rel="canonical" href="https://logging.apache.org/logging-parent/features.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.4">
+<link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
+<!-- `@asciidoctor/tabs` extension styles -->
+<link rel="stylesheet" href="./_/css/vendor/tabs.css">
+<style>
+  /* `page-toclevels` greater than 4 are not supported by Antora UI, patching it: */
+  .toc .toc-menu li[data-level="4"] a {
+    padding-left: 2.75rem
+  }
+  /* Replace the default highlight.js color for strings from red to green: */
+  .hljs-string {
+    color: #0f8532;
+  }
+</style>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <span class="navbar-item title">Apache Logging Parent</span>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://logging.apache.org">a subproject of&nbsp;<strong>Apache Logging Services</strong></a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Home</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="features.html">Features</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="usage.html">Usage</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-notes.html">Release notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Release instructions</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-project.html">For projects</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-xml-schema.html">For XML schemas</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="features.html">Features</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/apache/logging-parent/edit/main/src/site/antora/modules/ROOT/pages/features.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Features</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Logging Parent aims to deliver the following features.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="parent-pom"><a class="anchor" href="#parent-pom"></a>Parent POM</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The provided parent POM features the following conveniences:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://creadur.apache.org/rat"><code>apache-rat-plugin</code></a> integration for license preamble verification</p>
+</li>
+<li>
+<p><a href="https://github.com/apache/logging-log4j-tools/tree/main/log4j-changelog-maven-plugin"><code>log4j-changelog-maven-plugin</code></a> integration for changelog and release note management</p>
+</li>
+<li>
+<p><a href="https://maven.apache.org/enforcer/maven-enforcer-plugin/"><code>maven-enforcer-plugin</code></a> checks</p>
+</li>
+<li>
+<p><a href="https://github.com/diffplug/spotless/tree/main/plugin-maven"><code>spotless-maven-plugin</code></a> integration for code formatting</p>
+</li>
+<li>
+<p><a href="https://www.eclemma.org/jacoco/trunk/doc/maven.html"><code>jacoco-maven-plugin</code></a> integration for test coverage analysis (optional <code>coverage</code> profile)</p>
+</li>
+<li>
+<p><a href="https://github.com/bndtools/bnd/blob/master/maven-plugins/bnd-maven-plugin/README.md"><code>bnd-maven-plugin</code></a> integration for auto-generating OSGi and JPMS descriptors</p>
+</li>
+<li>
+<p><a href="https://github.com/CycloneDX/cyclonedx-maven-plugin">cyclonedx-maven-plugin</a> integration for auto-generating Software Bill of Materials (SBOM)</p>
+</li>
+<li>
+<p><a href="https://antora.org/">Antora</a>-based site generation</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="cyclonedx-sbom"><a class="anchor" href="#cyclonedx-sbom"></a>CycloneDX Software Bill of Materials (SBOM)</h3>
+<div class="paragraph">
+<p>Logging Parent streamlines the generation of <a href="https://cyclonedx.org/capabilities/vdr">CycloneDX Software Bill of Materials (SBOM)</a> using <a href="https://github.com/CycloneDX/cyclonedx-maven-plugin">cyclonedx-maven-plugin</a>.
+Plugin execution is configured and activated to generate SBOM files for each module, including the root one.
+Generated SBOM files are attached as artifacts with <code>cyclonedx</code> classifier and XML extensions, that is, <code>&lt;artifactId&gt;-&lt;version&gt;-cyclonedx.xml</code>.</p>
+</div>
+<div class="paragraph">
+<p>Produced SBOMs are enriched with <code>vulnerability-assertion</code> references to a <a href="https://cyclonedx.org/capabilities/vdr">CycloneDX Vulnerability Disclosure Report (VDR)</a> that Apache Logging Services uses for all projects it maintains.
+This VDR is accessible through the following URL: <a href="https://logging.apache.org/cyclonedx/vdr.xml" class="bare">https://logging.apache.org/cyclonedx/vdr.xml</a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="reusable-workflows"><a class="anchor" href="#reusable-workflows"></a>Reusable GitHub Actions workflows</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The provided reusable GitHub Actions workflows feature the following conveniences:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>build-reusable.yaml</code></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Compiles against Java 8 bytecode using the specified Java compiler version</p>
+</li>
+<li>
+<p>Verifies reproducibility</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>deploy-site-reusable.yaml</code></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Builds and deploys the website</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>deploy-snapshot-reusable.yaml</code></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Deploys SNAPSHOT artifacts</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><code>deploy-release-reusable.yaml</code></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Deploys release artifacts</p>
+</li>
+<li>
+<p>Updates <code>revision</code> and <code>project.build.outputTimestamp</code> Maven properties</p>
+</li>
+<li>
+<p>Generates the distribution ZIP containing Git-tracked sources, binary attachments, <code>NOTICE.txt</code>, etc.</p>
+</li>
+<li>
+<p>Generates the release vote &amp; announcement emails</p>
+</li>
+<li>
+<p>Uploads the distribution ZIP and emails to SVN</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>
+    Copyright © 1999-2024 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
+    Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
+    Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
+  </p>
+  <p>
+    Apache, Log4j, and the Apache feather logo are trademarks or registered trademarks of The Apache Software Foundation.
+    Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+    Other names may be trademarks of their respective owners.
+  </p>
+</footer>
+<script id="site-script" src="./_/js/site.js" data-ui-root-path="./_"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+<!-- `@asciidoctor/tabs` extension scripts -->
+<script async src="./_/js/vendor/tabs.js"></script>
+  </body>
+</html>

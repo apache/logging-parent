@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>XML schema release instructions :: Apache Logging Parent</title>
+    <link rel="canonical" href="https://logging.apache.org/logging-parent/release-instructions-xml-schema.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.4">
+<link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
+<!-- `@asciidoctor/tabs` extension styles -->
+<link rel="stylesheet" href="./_/css/vendor/tabs.css">
+<style>
+  /* `page-toclevels` greater than 4 are not supported by Antora UI, patching it: */
+  .toc .toc-menu li[data-level="4"] a {
+    padding-left: 2.75rem
+  }
+  /* Replace the default highlight.js color for strings from red to green: */
+  .hljs-string {
+    color: #0f8532;
+  }
+</style>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <span class="navbar-item title">Apache Logging Parent</span>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://logging.apache.org">a subproject of&nbsp;<strong>Apache Logging Services</strong></a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Home</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="features.html">Features</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="usage.html">Usage</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-notes.html">Release notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Release instructions</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-project.html">For projects</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="release-instructions-xml-schema.html">For XML schemas</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li>Release instructions</li>
+    <li><a href="release-instructions-xml-schema.html">For XML schemas</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/apache/logging-parent/edit/main/src/site/antora/modules/ROOT/pages/release-instructions-xml-schema.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">XML schema release instructions</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This section explains how to publish XML schemas (i.e., XSD files) of projects.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="preliminaries"><a class="anchor" href="#preliminaries"></a>Preliminaries</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>It is crucial to understand certain things while doing an XML schema release:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Projects and XML schemas have different lifecycles</dt>
+<dd>
+<p>A new release of a project does not necessarily mean a new release of its XML schemas.
+XML schemas might have been untouched, or they might contain minor changes while the project itself contains breaking changes, etc.
+Hence, the project version and the XML schema version most of the time differ.
+Check if there are indeed changes to the XML schema.
+If so, set its version accordingly.</p>
+<div class="paragraph">
+<p>Consider the following examples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Log4j Tools <code>0.2.0</code> contains the very first version of Log4j Changelog XSD, that is, <code>log4j-changelog-0.1.0.xsd</code>.</p>
+</li>
+<li>
+<p>The next release of Log4j Tools contains a small change to the Log4j Changelog XSD.
+Hence, Log4j Tools <code>0.3.0</code> publishes <code>log4j-changelog-0.1.1.xsd</code>.
+That is, the project upgraded from <code>0.2.0</code> to <code>0.3.0</code> (note the minor version bump), whereas the XSD upgraded from <code>0.1.0</code> to <code>0.1.1</code> (note the patch version bump).</p>
+</li>
+<li>
+<p>Log4j Tools <code>0.6.0</code> does not contain any changes to the Log4j Changelog XSD.
+Hence, it does not publish an XSD.</p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Log4j XSDs are auto-generated at compile time.
+Members annotated with <code>@Plugin</code> et al. will have direct influence on the XSD generated.
+You are strongly advised to compare the new XSD with an earlier version (via <a href="https://pypi.org/project/xmldiff/">xmldiff</a>?) to verify the changes and decide on the XSD version.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</dd>
+<dt class="hdlist1">XML schemas are generally published earlier than a release</dt>
+<dd>
+<p>Projects containing XML schemas most of the time need to refer to those files in their sources, tests, etc.
+Hence, XML schemas need to be published first so that the project itself can refer to them.</p>
+</dd>
+<dt class="hdlist1">XML schemas are generally published directly to the production (i.e., non-staging) site</dt>
+<dd>
+<p>Once an XML schema is referred using a URL in the sources, the released project artifacts will contain those referrals as is.
+That is, if sources refer to <code>https://logging.<strong>staged</strong>.apache.org/xml/ns/foo.xml</code>, we cannot magically switch them to <code>https://logging.apache.org/xml/ns/foo.xml</code> in the released artifacts.
+Hence, XML schemas are generally published directly to the production site.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="instructions"><a class="anchor" href="#instructions"></a>Instructions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The instructions on how to publish XML schemas are shared below:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Check out the <code>main</code> branch of the <a href="https://github.com/apache/logging-site/tree/main/xml/ns"><code>logging-site</code></a> repository</p>
+</li>
+<li>
+<p>Update the contents of the <code>xml/ns</code> folder</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>Adhere to the conventions followed in the existing content there</p>
+</li>
+<li>
+<p>Make sure that the root elements in the new XSD files contain the correct <code>version</code> attribute</p>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Commit &amp; push your changes</p>
+</li>
+<li>
+<p>Verify that your changes are visible in <a href="https://logging.staged.apache.org/xml/ns">logging.<strong>staged</strong>.apache.org/xml/ns</a></p>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Under the hood, ASF INFRA will compile the Jekyll site, commit &amp; push its changes to the <code>asf-staging</code> branch.
+Later on, ASF INFRA will pick up these changes from the <code>asf-staging</code> branch and place it into the associated Apache HTTP Server folder.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Check out the <code>asf-site</code> branch</p>
+</li>
+<li>
+<p>Rebase it from <code>asf-staging</code> (i.e., <code>git rebase origin/asf-staging</code>) and push it</p>
+</li>
+<li>
+<p>Verify that your changes are visible in <a href="https://logging.apache.org/xml/ns">logging.apache.org/xml/ns</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>
+    Copyright © 1999-2024 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
+    Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
+    Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
+  </p>
+  <p>
+    Apache, Log4j, and the Apache feather logo are trademarks or registered trademarks of The Apache Software Foundation.
+    Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+    Other names may be trademarks of their respective owners.
+  </p>
+</footer>
+<script id="site-script" src="./_/js/site.js" data-ui-root-path="./_"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+<!-- `@asciidoctor/tabs` extension scripts -->
+<script async src="./_/js/vendor/tabs.js"></script>
+  </body>
+</html>

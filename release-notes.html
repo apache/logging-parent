@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Release notes :: Apache Logging Parent</title>
+    <link rel="canonical" href="https://logging.apache.org/logging-parent/release-notes.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.4">
+<link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
+<!-- `@asciidoctor/tabs` extension styles -->
+<link rel="stylesheet" href="./_/css/vendor/tabs.css">
+<style>
+  /* `page-toclevels` greater than 4 are not supported by Antora UI, patching it: */
+  .toc .toc-menu li[data-level="4"] a {
+    padding-left: 2.75rem
+  }
+  /* Replace the default highlight.js color for strings from red to green: */
+  .hljs-string {
+    color: #0f8532;
+  }
+</style>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <span class="navbar-item title">Apache Logging Parent</span>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://logging.apache.org">a subproject of&nbsp;<strong>Apache Logging Services</strong></a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Home</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="features.html">Features</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="usage.html">Usage</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="release-notes.html">Release notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Release instructions</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-project.html">For projects</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-xml-schema.html">For XML schemas</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="release-notes.html">Release notes</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/apache/logging-parent/edit/main/src/site/antora/modules/ROOT/pages/release-notes.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="1">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Release notes</h1>
+<div class="sect1">
+<h2 id="release-notes-11-0-0"><a class="anchor" href="#release-notes-11-0-0"></a>11.0.0</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2024-04-15</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This release contains a big revamp to the website build and several other minor enhancements.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-11-0-0-website-build"><a class="anchor" href="#release-notes-11-0-0-website-build"></a>Website build changes</h3>
+<div class="paragraph">
+<p>The website build system is migrated from <code>asciidoctor-maven-plugin</code> to Antora.
+This implies that <code>src/site</code> and <code>generate-email.sh</code> files need to be adapted, and <code>target/site</code> can be viewed without needing a local web server.</p>
+</div>
+<div class="paragraph">
+<p>The Maven <code>site</code> phase is re-engineered such that <em>generated sources</em> (i.e., <code>src/site/_release_notes</code> and <code>src/site/_constants.adoc</code>) will be targeted to <code>target/generated-site</code> and the website will be built from there.
+This avoids the need to commit generated sources to the repository and, hence, works around changelog merge conflict problems.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-11-0-0-website-deployment"><a class="anchor" href="#release-notes-11-0-0-website-deployment"></a>Website deployment changes</h3>
+<div class="paragraph">
+<p>The newly added <code>site-deploy-reusable.yaml</code> GitHub Actions workflow enables to automate the website deployment.
+Using the <code>&lt;source-branch&gt;-site-&lt;environment&gt;-out</code> branch naming convention, the Maven <code>site</code> goal running on</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the <code>main</code> branch populates the <code>main-site-stg-out</code> branch serving the <code>logging.staged.apache.org/logging-parent</code></p>
+</li>
+<li>
+<p>the <code>main-site-pro</code> branch populates the <code>main-site-pro-out</code> branch serving the <code>logging.apache.org/logging-parent</code></p>
+</li>
+<li>
+<p>the <code>release/&lt;version&gt;</code> branch populates the <code>release/&lt;version&gt;-site-stg-out</code> branch serving the <code>logging.staged.apache.org/logging-parent-&lt;version&gt;</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Refer to the usage and project release instructions pages for details.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-11-0-0-added"><a class="anchor" href="#release-notes-11-0-0-added"></a>Added</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Add <code>coverage</code> profile to generate a test coverage report (<a href="https://github.com/apache/logging-parent/pull/140">140</a>)</p>
+</li>
+<li>
+<p>Add <code>deploy-site-yaml</code> GitHub actions workflow to automate the website deployment</p>
+</li>
+<li>
+<p>Add instructions on XML schema publication (<a href="https://github.com/apache/logging-parent/issues/138">138</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-11-0-0-changed"><a class="anchor" href="#release-notes-11-0-0-changed"></a>Changed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Replace <code>process-sbom</code> script with CycloneDX plugin configuration (<a href="https://github.com/apache/logging-parent/issues/105">105</a>)</p>
+</li>
+<li>
+<p>Support parallel releases by uploading the distribution to <code>&lt;projectId&gt;/&lt;version&gt;</code> folders. This is needed for parallel Log4j 2 and 3 releases. (<a href="https://github.com/apache/logging-parent/issues/139">139</a>)</p>
+</li>
+<li>
+<p>Migrate website support from <code>asciidoctor-maven-plugin</code> to Antora</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-11-0-0-updated"><a class="anchor" href="#release-notes-11-0-0-updated"></a>Updated</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>com.diffplug.spotless:spotless-maven-plugin</code> to version <code>2.43.0</code> (<a href="https://github.com/apache/logging-parent/pull/108">108</a>)</p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.8.4.0</code> (<a href="https://github.com/apache/logging-parent/pull/156">156</a>)</p>
+</li>
+<li>
+<p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.26.1</code> (<a href="https://github.com/apache/logging-parent/pull/134">134</a>)</p>
+</li>
+<li>
+<p>Update <code>com.palantir.javaformat:palantir-java-format</code> to version <code>2.43.0</code> (<a href="https://github.com/apache/logging-parent/pull/154">154</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache.logging.log4j:log4j-changelog-maven-plugin</code> to version <code>0.8.0</code> (<a href="https://github.com/apache/logging-parent/pull/146">146</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache.maven.plugins:maven-artifact-plugin</code> to version <code>3.5.1</code> (<a href="https://github.com/apache/logging-parent/pull/149">149</a>)</p>
+</li>
+<li>
+<p>Update <code>org.codehaus.mojo:flatten-maven-plugin</code> to version <code>1.6.0</code> (<a href="https://github.com/apache/logging-parent/pull/102">102</a>)</p>
+</li>
+<li>
+<p>Update <code>org.cyclonedx:cyclonedx-maven-plugin</code> to version <code>2.8.0</code> (<a href="https://github.com/apache/logging-parent/pull/145">145</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="release-notes-10-6-0"><a class="anchor" href="#release-notes-10-6-0"></a>10.6.0</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2024-01-11</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This minor release contains several small changes to the build pipeline.</p>
+</div>
+<div class="paragraph">
+<p>Most notably it bans wildcard imports from source code, which will require expanding those imports before upgrading <code>logging-parent</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-6-0-added"><a class="anchor" href="#release-notes-10-6-0-added"></a>Added</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Add JSpecify to dependency management. (<a href="https://github.com/apache/logging-parent/pull/88">88</a>)</p>
+</li>
+<li>
+<p>Add enforcer rule to ban wildcard imports. All imports must be expanded to provide better comparison of branches. (<a href="https://github.com/apache/logging-parent/pull/63">63</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-6-0-changed"><a class="anchor" href="#release-notes-10-6-0-changed"></a>Changed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Merge Dependabot PRs instead of closing them. (<a href="https://github.com/apache/logging-parent/pull/82">82</a>)</p>
+</li>
+<li>
+<p>Disable <a href="https://bnd.bndtools.org/instructions/jpms-multi-release.html"><code>-jpms-multi-release</code></a> BND option. (<a href="https://github.com/apache/logging-parent/pull/93">93</a>)</p>
+</li>
+<li>
+<p>Clean up residual <code>module-info.class</code> before compilation. (<a href="https://github.com/apache/logging-parent/pull/90">90</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-6-0-updated"><a class="anchor" href="#release-notes-10-6-0-updated"></a>Updated</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.24.1</code> (<a href="https://github.com/apache/logging-parent/pull/89">89</a>)</p>
+</li>
+<li>
+<p>Update <code>github/codeql-action</code> to version <code>3.23.0</code> (<a href="https://github.com/apache/logging-parent/pull/91">91</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache.rat:apache-rat-plugin</code> to version <code>0.16</code> (<a href="https://github.com/apache/logging-parent/pull/92">92</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="release-notes-10-5-0"><a class="anchor" href="#release-notes-10-5-0"></a>10.5.0</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2023-12-18</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This minor release contains dependency updates and a change in the way BND is employed.</p>
+</div>
+<div class="paragraph">
+<p>BND Maven Plugins are upgraded to version <code>7.0.0</code>, which requires Java 17.
+Log4j was the blocker for this upgrade and the issue is resolved in <a href="https://github.com/apache/logging-log4j2/pull/2021">apache/logging-log4j2#2021</a>.
+Note that BND Maven Plugins version <code>7.0.0</code> increased the minimum required Maven version to <code>3.8.1</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-5-0-changed"><a class="anchor" href="#release-notes-10-5-0-changed"></a>Changed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Switch from <code>bnd:jar</code> to <code>bnd:bnd-process</code> to improve integration with the ecosystem; IDEs, Maven plugins, etc. (<a href="https://github.com/apache/logging-parent/issues/69">69</a>)</p>
+</li>
+<li>
+<p>Replace <code>log4j-changelog</code> entry type of <code>dependabot</code> updates from <code>changed</code> to <code>updated</code></p>
+</li>
+<li>
+<p>Minimum required Maven version is increased to <code>3.8.1</code> due to BND Maven Plugin updates</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-5-0-updated"><a class="anchor" href="#release-notes-10-5-0-updated"></a>Updated</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>biz.aQute.bnd:bnd-baseline-maven-plugin</code> to version <code>7.0.0</code> (<a href="https://github.com/apache/logging-parent/pull/78">78</a>)</p>
+</li>
+<li>
+<p>Update <code>biz.aQute.bnd:bnd-maven-plugin</code> to version <code>7.0.0</code></p>
+</li>
+<li>
+<p>Update <code>com.diffplug.spotless:spotless-maven-plugin</code> to version <code>2.41.1</code> (<a href="https://github.com/apache/logging-parent/pull/70">70</a>)</p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-annotations</code> to version <code>4.8.3</code> (<a href="https://github.com/apache/logging-parent/pull/80">80</a>)</p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.8.2.0</code> (<a href="https://github.com/apache/logging-parent/pull/71">71</a>)</p>
+</li>
+<li>
+<p>Update <code>com.palantir.javaformat:palantir-java-format</code> to version <code>2.39.0</code></p>
+</li>
+<li>
+<p>Update <code>org.apache:apache</code> to version <code>31</code> (<a href="https://github.com/apache/logging-parent/pull/73">73</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache.logging.log4j:log4j-changelog-maven-plugin</code> to version <code>0.7.0</code> (<a href="https://github.com/apache/logging-parent/pull/84">84</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="release-notes-10-4-0"><a class="anchor" href="#release-notes-10-4-0"></a>10.4.0</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2023-11-13</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This minor release contains several small improvements.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-4-0-added"><a class="anchor" href="#release-notes-10-4-0-added"></a>Added</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Add deterministic Palantir Java formatter</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-4-0-changed"><a class="anchor" href="#release-notes-10-4-0-changed"></a>Changed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Increase directory scanning depth from 8 to 32 in the distribution BeanShell script</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="release-notes-10-3-0"><a class="anchor" href="#release-notes-10-3-0"></a>10.3.0</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2023-11-09</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This minor release contains several small improvements.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-3-0-added"><a class="anchor" href="#release-notes-10-3-0-added"></a>Added</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Add support to extend the <code>bnd-maven-plugin</code> configuration with <code>bnd-extra-config</code> property (<a href="https://github.com/apache/logging-log4j2/issues/1895">apache/logging-log4j2#1895</a>)</p>
+</li>
+<li>
+<p>Add support to replace <code>project.build.outputTimestamp</code> Maven property in CI (<a href="https://github.com/apache/logging-parent/issues/50">50</a>)</p>
+</li>
+<li>
+<p>Add XSLT transformation step to add a deterministic <code>serialNumber</code> and VDR links to the SBOM</p>
+</li>
+<li>
+<p>Add support for an optional <code>spotbugs-exclude.xml</code> file</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-3-0-changed"><a class="anchor" href="#release-notes-10-3-0-changed"></a>Changed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><code>deploy-release-reusable.yaml</code> is improved to automatically derive deployed artifacts as attachments. This renders both <code>distribution-attachment-filepath-pattern</code> and <code>distribution-attachment-count</code> input arguments redundant for almost all cases.</p>
+</li>
+<li>
+<p>Disable the usage of <code>&lt;distributionManagement&gt;</code> and alpha releases in the <code>bnd-baseline-maven-plugin</code></p>
+</li>
+<li>
+<p>Convert <code>bnd-maven-plugin</code> API leakage warnings to errors (<a href="https://github.com/apache/logging-log4j2/issues/1895">apache/logging-log4j2#1895</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-3-0-fixed"><a class="anchor" href="#release-notes-10-3-0-fixed"></a>Fixed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Fix broken changelog entry validation</p>
+</li>
+<li>
+<p>Attach <code>flatten:clean</code> to <code>clean</code> phase</p>
+</li>
+<li>
+<p>Add missing <code>Implementation-</code> and <code>Specification-</code> entries in <code>MANIFEST.MF</code> to <code>bnd-maven-plugin</code> configuration (<a href="https://github.com/apache/logging-log4j2/issues/1923">apache/logging-log4j2#1923</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-3-0-updated"><a class="anchor" href="#release-notes-10-3-0-updated"></a>Updated</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-annotations</code> to version <code>4.8.1</code> (<a href="https://github.com/apache/logging-parent/pull/58">58</a>)</p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.8.1.0</code> (<a href="https://github.com/apache/logging-parent/pull/57">57</a>)</p>
+</li>
+<li>
+<p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.23.0</code> (<a href="https://github.com/apache/logging-parent/pull/49">49</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache.maven.plugins:maven-artifact-plugin</code> to version <code>3.5.0</code></p>
+</li>
+<li>
+<p>Update <code>org.cyclonedx:cyclonedx-maven-plugin</code> to version <code>2.7.10</code> (<a href="https://github.com/apache/logging-parent/pull/54">54</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="release-notes-10-2-0"><a class="anchor" href="#release-notes-10-2-0"></a>10.2.0</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2023-10-18</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This minor release contains several small improvements.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-2-0-added"><a class="anchor" href="#release-notes-10-2-0-added"></a>Added</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Added support for auto-generating CycloneDX Software Bill of Materials (SBOM)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-2-0-changed"><a class="anchor" href="#release-notes-10-2-0-changed"></a>Changed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Add a compulsory <code>bnd-baseline-maven-plugin</code> execution to check for breaking API changes</p>
+</li>
+<li>
+<p>Apply the default <code>bnd-maven-plugin</code> configuration to all the plugin&#8217;s goals</p>
+</li>
+<li>
+<p>Moves <code>.flattened-pom.xml</code> to the same directory as <code>pom.xml</code> to preserve the relative parent path. This requires adding <code>.flattened-pom.xml</code> to the <code>.gitignore</code> file of the repository.</p>
+</li>
+<li>
+<p>Update <code>log4j-changelog</code> XSD (used for validating changelog entries) to version <code>0.1.2</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-2-0-fixed"><a class="anchor" href="#release-notes-10-2-0-fixed"></a>Fixed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Prioritize definitions in <code>bnd-extra-*</code> variables over those inherited (<a href="https://github.com/apache/logging-parent/issues/39">39</a>)</p>
+</li>
+<li>
+<p>Keep parent in <code>flatten-bom</code> configuration (<a href="https://github.com/apache/logging-parent/issues/37">37</a>)</p>
+</li>
+<li>
+<p>Remove <code>build</code> in <code>flatten-bom</code> configuration</p>
+</li>
+<li>
+<p>Fixed the archiving of symbolically linked directories in the <code>distribution</code> Maven profile (<a href="https://github.com/apache/logging-parent/issues/43">43</a>)</p>
+</li>
+<li>
+<p>Used specific execution IDs in <code>defaultGoal</code>s to avoid running unwanted plugins</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-2-0-updated"><a class="anchor" href="#release-notes-10-2-0-updated"></a>Updated</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>org.apache.logging.log4j:log4j-changelog-maven-plugin</code> to version <code>0.5.0</code></p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-annotations</code> to version <code>4.8.0</code> (<a href="https://github.com/apache/logging-parent/pull/44">44</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="release-notes-10-1-1"><a class="anchor" href="#release-notes-10-1-1"></a>10.1.1</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2023-10-02</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This patch release contains minor fixes addressing issues blocking the release of <code>log4j-tools</code>, <code>log4j-kotlin</code>, etc.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-1-1-added"><a class="anchor" href="#release-notes-10-1-1-added"></a>Added</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Used <code>project.build.outputTimestamp</code> to timestamp generated distribution files</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-1-1-changed"><a class="anchor" href="#release-notes-10-1-1-changed"></a>Changed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Changes the default OSGi and module name to use full stops <code>.</code> instead of non-alphanumeric characters</p>
+</li>
+<li>
+<p>Update <code>com.diffplug.spotless:spotless-maven-plugin</code> to version <code>2.40.0</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-1-1-fixed"><a class="anchor" href="#release-notes-10-1-1-fixed"></a>Fixed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Fixed checksum (i.e., <code>*.sha512</code>) file format</p>
+</li>
+<li>
+<p>Fix BND module name detection on multi-release JARs</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="release-notes-10-1-0"><a class="anchor" href="#release-notes-10-1-0"></a>10.1.0</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2023-09-28</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This minor release focuses on shipping AsciiDoc-based website generation convenience targeting the <code>src/site</code> folder.
+As a part of this effort, <code>logging-parent</code> started publishing <a href="https://logging.apache.org/logging-parent/latest">its own website</a> and <code>log4j-changelog</code> support is switched from Markdown to AsciiDoc.</p>
+</div>
+<div class="paragraph">
+<p>The introduced <a href="https://github.com/bndtools/bnd/blob/master/maven-plugins/bnd-maven-plugin"><code>bnd-maven-plugin</code></a> default auto-generates both OSGi and JPMS descriptors.
+Users only need to annotate packages that are to be exported with <code>org.osgi.annotation.bundle.Export</code>, plugin will do the rest of the magic.
+Hence, no need for custom <code>.bnd</code> and/or <code>module-info.java</code> files anymore.
+In particular, we expect the absence of <code>module-info.java</code> files to avoid several IDE and testing related headaches.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-1-0-added"><a class="anchor" href="#release-notes-10-1-0-added"></a>Added</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Added <code>asciidoc</code> and <code>constants-tmpl-adoc</code> profiles to generate AsciiDoc-based websites from <code>src/site</code></p>
+</li>
+<li>
+<p>Added support to auto-generate changelog entries for <code>dependabot</code> updates</p>
+</li>
+<li>
+<p>Added <code>bnd-maven-plugin</code> defaults to auto-generate both OSGi and JPMS descriptors</p>
+</li>
+<li>
+<p>Added CI report uploading in case of test or reproducibility failures (<a href="https://github.com/apache/logging-parent/issues/28">28</a>)</p>
+</li>
+<li>
+<p>Started publishing <a href="https://logging.apache.org/logging-parent">the project website</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-1-0-changed"><a class="anchor" href="#release-notes-10-1-0-changed"></a>Changed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Switched the default <code>log4j-changelog</code> configuration from Markdown (<code>.release-notes.md.ftl</code> and <code>.index.md.ftl</code>) to AsciiDoc (<code>.release-notes.adoc.ftl</code> and <code>.index.adoc.ftl</code>)</p>
+</li>
+<li>
+<p>Update <code>actions/checkout</code> to version <code>4.1.0</code></p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.7.3.6</code></p>
+</li>
+<li>
+<p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.22.0</code></p>
+</li>
+<li>
+<p>Update <code>org.apache:apache</code> to version <code>30</code></p>
+</li>
+<li>
+<p>Update <code>org.osgi:osgi.annotation</code> to version <code>8.1.0</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-1-0-fixed"><a class="anchor" href="#release-notes-10-1-0-fixed"></a>Fixed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Replaced incorrect <code>java.version</code> Maven property override with <code>maven.compiler.{source,release,target}</code></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-1-0-removed"><a class="anchor" href="#release-notes-10-1-0-removed"></a>Removed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Removed <code>project.build.outputTimestamp</code> override since it is already provided by the parent POM and its old value <code>0</code> was causing <a href="https://github.com/spring-projects/spring-boot/pull/37438">reproducibility issues</a> for <code>spring-boot:repackage</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="release-notes-10-0-0"><a class="anchor" href="#release-notes-10-0-0"></a>10.0.0</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2023-09-08</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This minor release contains various improvements that we expect to relieve the load on <code>pom.xml</code> and GitHub Actions workflows of Maven-based projects we parent.
+This is of particular importance while managing and cutting releases from multiple repositories.
+See <code>README.adoc</code> for the complete list of features and their usage.</p>
+</div>
+<div class="paragraph">
+<p>See <a href="https://github.com/apache/logging-log4j-tools/actions/runs/6120297528">this <code>log4j-tools</code> GitHub Actions workflow run</a> demonstrating a successful release cut using a SNAPSHOT version of this <code>logging-parent</code> release.
+All preparations (release notes, source and binary distributions, vote &amp; announcement emails, etc.) are staged to both Nexus and SVN and waiting the release manager to proceed.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-0-0-added"><a class="anchor" href="#release-notes-10-0-0-added"></a>Added</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Added <code>changelog-export</code> profile to easily export changelogs to Markdown files</p>
+</li>
+<li>
+<p>Added <code>changelog-release</code> profile to easily move <code>src/changelog/.?.x.x</code> contents to their associated release directory</p>
+</li>
+<li>
+<p>Added <code>deploy</code> profile to ease the Maven <code>deploy</code> goal</p>
+</li>
+<li>
+<p>Added <code>asciidoc</code> profile to easily create a distribution file containing Git-tracked sources, release notes, binary attachments, <code>NOTICE.txt</code>, etc.</p>
+</li>
+<li>
+<p>Documented release instructions (i.e., <code>RELEASING.md</code>)</p>
+</li>
+<li>
+<p>Added <code>release</code> profile to share common release-specific Maven configuration</p>
+</li>
+<li>
+<p>Added reusable GitHub Actions workflows to share CI boilerplate for other repositories</p>
+</li>
+<li>
+<p>Switched to using <code>log4j-changelog-maven-plugin</code> for managing changelog and release notes</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-10-0-0-changed"><a class="anchor" href="#release-notes-10-0-0-changed"></a>Changed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Switched to semantic versioning (old version: <code>9</code>, new version: <code>10.0.0</code>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>
+    Copyright © 1999-2024 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
+    Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
+    Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
+  </p>
+  <p>
+    Apache, Log4j, and the Apache feather logo are trademarks or registered trademarks of The Apache Software Foundation.
+    Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+    Other names may be trademarks of their respective owners.
+  </p>
+</footer>
+<script id="site-script" src="./_/js/site.js" data-ui-root-path="./_"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+<!-- `@asciidoctor/tabs` extension scripts -->
+<script async src="./_/js/vendor/tabs.js"></script>
+  </body>
+</html>
