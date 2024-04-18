@@ -99,7 +99,73 @@
 <p>This minor release contains several small improvements.</p>
 </div>
 <div class="sect2">
-<h3 id="release-notes-11-x-x-added"><a class="anchor" href="#release-notes-11-x-x-added"></a>Added</h3>
+<h3 id="release-notes-11-x-x-updated"><a class="anchor" href="#release-notes-11-x-x-updated"></a>Updated</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>com.h3xstream.findsecbugs:findsecbugs-plugin</code> to version <code>1.13.0</code> (<a href="https://github.com/apache/logging-parent/pull/159">159</a>)</p>
+</li>
+<li>
+<p>Update <code>github/codeql-action</code> to version <code>3.25.1</code> (<a href="https://github.com/apache/logging-parent/pull/161">161</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache:apache</code> to version <code>32</code> (<a href="https://github.com/apache/logging-parent/pull/160">160</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="release-notes-11-0-0"><a class="anchor" href="#release-notes-11-0-0"></a>11.0.0</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2024-04-15</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This release contains a big revamp to the website build and several other minor enhancements.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-11-0-0-website-build"><a class="anchor" href="#release-notes-11-0-0-website-build"></a>Website build changes</h3>
+<div class="paragraph">
+<p>The website build system is migrated from <code>asciidoctor-maven-plugin</code> to Antora.
+This implies that <code>src/site</code> and <code>generate-email.sh</code> files need to be adapted, and <code>target/site</code> can be viewed without needing a local web server.</p>
+</div>
+<div class="paragraph">
+<p>The Maven <code>site</code> phase is re-engineered such that <em>generated sources</em> (i.e., <code>src/site/_release_notes</code> and <code>src/site/_constants.adoc</code>) will be targeted to <code>target/generated-site</code> and the website will be built from there.
+This avoids the need to commit generated sources to the repository and, hence, works around changelog merge conflict problems.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-11-0-0-website-deployment"><a class="anchor" href="#release-notes-11-0-0-website-deployment"></a>Website deployment changes</h3>
+<div class="paragraph">
+<p>The newly added <code>site-deploy-reusable.yaml</code> GitHub Actions workflow enables to automate the website deployment.
+Using the <code>&lt;source-branch&gt;-site-&lt;environment&gt;-out</code> branch naming convention, the Maven <code>site</code> goal running on</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>the <code>main</code> branch populates the <code>main-site-stg-out</code> branch serving the <code>logging.staged.apache.org/logging-parent</code></p>
+</li>
+<li>
+<p>the <code>main-site-pro</code> branch populates the <code>main-site-pro-out</code> branch serving the <code>logging.apache.org/logging-parent</code></p>
+</li>
+<li>
+<p>the <code>release/&lt;version&gt;</code> branch populates the <code>release/&lt;version&gt;-site-stg-out</code> branch serving the <code>logging.staged.apache.org/logging-parent-&lt;version&gt;</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Refer to the usage and project release instructions pages for details.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-11-0-0-added"><a class="anchor" href="#release-notes-11-0-0-added"></a>Added</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -115,7 +181,7 @@
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-11-x-x-changed"><a class="anchor" href="#release-notes-11-x-x-changed"></a>Changed</h3>
+<h3 id="release-notes-11-0-0-changed"><a class="anchor" href="#release-notes-11-0-0-changed"></a>Changed</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -131,7 +197,7 @@
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-11-x-x-updated"><a class="anchor" href="#release-notes-11-x-x-updated"></a>Updated</h3>
+<h3 id="release-notes-11-0-0-updated"><a class="anchor" href="#release-notes-11-0-0-updated"></a>Updated</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -144,16 +210,7 @@
 <p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.26.1</code> (<a href="https://github.com/apache/logging-parent/pull/134">134</a>)</p>
 </li>
 <li>
-<p>Update <code>com.h3xstream.findsecbugs:findsecbugs-plugin</code> to version <code>1.13.0</code> (<a href="https://github.com/apache/logging-parent/pull/159">159</a>)</p>
-</li>
-<li>
 <p>Update <code>com.palantir.javaformat:palantir-java-format</code> to version <code>2.43.0</code> (<a href="https://github.com/apache/logging-parent/pull/154">154</a>)</p>
-</li>
-<li>
-<p>Update <code>github/codeql-action</code> to version <code>3.25.0</code> (<a href="https://github.com/apache/logging-parent/pull/158">158</a>)</p>
-</li>
-<li>
-<p>Update <code>org.apache:apache</code> to version <code>32</code> (<a href="https://github.com/apache/logging-parent/pull/160">160</a>)</p>
 </li>
 <li>
 <p>Update <code>org.apache.logging.log4j:log4j-changelog-maven-plugin</code> to version <code>0.8.0</code> (<a href="https://github.com/apache/logging-parent/pull/146">146</a>)</p>
