@@ -46,5 +46,6 @@ asciidoc:
     java-compiler-version: "[17,18)"
     site-url-staging: "https://logging.staged.apache.org/awesome-project"
     site-url: "https://logging.apache.org/awesome-project"
+    logging-services-url: "https://logging.apache.org"
 nav:
   - modules/ROOT/nav.adoc

@@ -15,12 +15,12 @@
     limitations under the License.
 ////
 
-:log4j-url: https://logging.apache.org/log4j/2.x
+:log4j-url: {logging-services-url}/log4j/2.x
 :log4j-api-url: {log4j-url}/manual/api-separation.html
 
 = {project-name}
 
-{project-name} is the parent project **internally** used in Maven-based projects of https://logging.apache.org[the Apache Logging Services].
+{project-name} is the parent project **internally** used in Maven-based projects of {logging-services-url}[the Apache Logging Services].
 
 [#development]
 == Development
@@ -45,24 +45,21 @@ You can build the website as follows:
 
 This will generate the website to the `target/site` folder, which you can view with a browser.
 
-[#distribution]
-== Distribution
+[#download]
+== Download
 
-In accordance with the Apache Software Foundation's release https://infra.apache.org/release-distribution.html[distribution policy] and https://infra.apache.org/release-publishing.html[creation process], project artifacts are _officially_ accessible from the following locations:
-
-* ASF https://repository.apache.org/content/repositories/releases[Release] and https://repository.apache.org/content/repositories/snapshots[snapshot] repositories (mirrored to https://central.sonatype.dev/[the Maven Central Repository])
-* ASF https://downloads.apache.org/logging/{project-id}[Distribution directory]
+Please refer to {logging-services-url}/download.html[the Logging Services Download page].
 
 [#support]
 == Support
 
 This project is intended for internal usage only.
 You can use GitHub Issues for feature requests and bug reports – not questions!
-See https://logging.apache.org/support.html[the Logging Services support policy] for details.
+See {logging-services-url}/support.html[the Logging Services support policy] for details.
 
 [#security]
 == Security
 
 Are you looking for the list of known security vulnerabilities?
 Have you encountered an unlisted security vulnerability or other unexpected behaviour that has a security impact?
-Please refer to https://logging.apache.org/security/[the Logging Services Security page]
+Please refer to {logging-services-url}/security.html[the Logging Services Security page].
