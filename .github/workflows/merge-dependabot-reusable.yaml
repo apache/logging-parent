@@ -39,36 +39,36 @@ jobs:
 
       - name: Fetch metadata
         id: dependabot-metadata
-        uses: dependabot/fetch-metadata@c9c4182bf1b97f5224aee3906fd373f6b61b4526   # 1.6.0
+        uses: dependabot/fetch-metadata@0fb21704c18a42ce5aa8d720ea4b912f5e6babef   # 2.0.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Find dependency attributes
         shell: bash
+        env:
+          DEPENDENCY_NAMES: ${{ steps.dependabot-metadata.outputs.dependency-names }}
+          DEPENDENCY_VERSION: ${{ steps.dependabot-metadata.outputs.new-version }}
         run: |
           DEPENDENCY_NAME=$(echo "$DEPENDENCY_NAMES" | tr "," '\n' | head -n 1)
           cat >> $GITHUB_ENV << EOF
           DEPENDENCY_NAME=$DEPENDENCY_NAME
           DEPENDENCY_VERSION=$DEPENDENCY_VERSION
           EOF
-        env:
-          DEPENDENCY_NAMES: ${{ steps.dependabot-metadata.outputs.dependency-names }}
-          DEPENDENCY_VERSION: ${{ steps.dependabot-metadata.outputs.new-version }}
 
       - name: Checkout repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11   # 4.1.1
+        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633   # 4.1.2
         with:
           ref: ${{ steps.dependabot-metadata.outputs.target-branch }}
 
       - name: Download and apply patch
         shell: bash
-        run: |
-          wget -O- "$PATCH_URL" | git apply
         env:
           PATCH_URL: ${{ github.event.pull_request.patch_url }}
+        run: |
+          wget -O- "$PATCH_URL" | git apply
 
       - name: Set up Java & GPG
-        uses: actions/setup-java@387ac29b308b003ca37ba93a6cab5eb57c8f5f93   # 4.0.0
+        uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9   # 4.2.1
         with:
           distribution: temurin
           java-version: ${{ inputs.java-version }}
@@ -93,6 +93,9 @@ jobs:
 
       - name: Create changelog entry
         shell: bash
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_ID: ${{ github.event.pull_request.number }}
         run: |
           if [ -d "src/changelog" ]; then
             RELEASE_CHANGELOG_FILEPATH="src/changelog/.${RELEASE_VERSION_MAJOR}.x.x"
@@ -102,17 +105,14 @@ jobs:
             cat > "$CHANGELOG_ENTRY_FILEPATH" << EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                 xmlns="http://logging.apache.org/log4j/changelog"
-                 xsi:schemaLocation="http://logging.apache.org/log4j/changelog https://logging.apache.org/log4j/changelog-0.1.3.xsd"
+                 xmlns="https://logging.apache.org/xml/ns"
+                 xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
                  type="updated">
             <issue id="$PR_ID" link="$PR_URL"/>
             <description format="asciidoc">Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\`</description>
           </entry>
           EOF
           fi
-        env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          PR_ID: ${{ github.event.pull_request.number }}
 
       - name: Generate sources
         shell: bash
@@ -123,6 +123,9 @@ jobs:
 
       - name: Add & commit changes
         shell: bash
+        env:
+          PR_ID: ${{ github.event.pull_request.number }}
+          PR_BRANCH: ${{ github.head_ref }}
         run: |
           git add .
           git config user.name "ASF Logging Services RM"
@@ -131,6 +134,3 @@ jobs:
           git push origin
           # Pushing the same commit to the Dependebot branch closes the PR
           git push -f origin "HEAD:$PR_BRANCH"
-        env:
-          PR_ID: ${{ github.event.pull_request.number }}
-          PR_BRANCH: ${{ github.head_ref }}

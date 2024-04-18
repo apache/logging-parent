@@ -25,3 +25,7 @@ target/
 .project
 .classpath
 .settings/
+# Node.js
+node
+node_modules
+package-lock.json

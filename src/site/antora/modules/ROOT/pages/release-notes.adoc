@@ -15,21 +15,7 @@
     limitations under the License.
 ////
 
-include::_constants.adoc[]
+= Release notes
 
-[#usage]
-== Usage
-
-You can use {project-name} as follows:
-
-. Add `org.apache.logging:logging-parent:{project-version}` as a `parent` to your `pom.xml`
-. You may need to add `.mvn/jvm.config` to your project. See https://github.com/apache/logging-log4j2/blob/2.x/.mvn/jvm.config[this] as an example.
-. Check if `./mvnw verify` succeeds, otherwise make necessary changes
-. Copy and adapt the support files (`.gitignore`, `.github/workflows/build.yaml`, etc.)
-. Check out your website:
-+
-[source,bash]
-----
-./mvnw site
-python -m http.server -d target/site
-----
+This file is a stub.
+Its content will be auto-generated during build.

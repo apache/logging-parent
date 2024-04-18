@@ -25,10 +25,10 @@ on:
         default: 17
         type: string
     secrets:
-      NEXUS_USER:
+      NEXUS_USERNAME:
         description: Nexus snapshot repository username for deploying artifacts
         required: true
-      NEXUS_PW:
+      NEXUS_PASSWORD:
         description: Nexus snapshot repository password for deploying artifacts
         required: true
 
@@ -38,10 +38,10 @@ jobs:
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11   # 4.1.1
+        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633   # 4.1.2
 
       - name: Set up Java
-        uses: actions/setup-java@387ac29b308b003ca37ba93a6cab5eb57c8f5f93   # 3.7.0
+        uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9   # 3.7.0
         with:
           distribution: temurin
           java-version: ${{ inputs.java-version }}
@@ -64,11 +64,11 @@ jobs:
 
       - name: Upload to Nexus
         shell: bash
+        env:
+          # `NEXUS_USERNAME` and `NEXUS_PASSWORD` are used in `~/.m2/settings.xml` created by `setup-java` action
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
         run: |
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             -P deploy
-        env:
-          # `NEXUS_USERNAME` and `NEXUS_PASSWORD` are used in `~/.m2/settings.xml` created by `setup-java` action
-          NEXUS_USERNAME: ${{ secrets.NEXUS_USER }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PW }}

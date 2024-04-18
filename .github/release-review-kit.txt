@@ -38,3 +38,4 @@ unzip *-src.zip -d src
 cd src
 export NEXUS_REPO=https://repository.apache.org/content/...
 sh mvnw -Prelease verify artifact:compare -Dreference.repo=$NEXUS_REPO
+# If preferred, augment `mvnw` with `-DskipTests` to speed things up

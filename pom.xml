@@ -139,13 +139,13 @@
   </ciManagement>
 
   <distributionManagement>
-    <downloadUrl>https://logging.apache.org/logging-parent/latest/#distribution</downloadUrl>
+    <downloadUrl>https://logging.apache.org/logging-parent</downloadUrl>
   </distributionManagement>
 
   <properties>
 
     <!-- project version -->
-    <revision>10.6.0</revision>
+    <revision>11.0.0</revision>
 
     <!-- `project.build.outputTimestamp` is required to be present for reproducible builds.
          We actually inherit one from the `org.apache:apache` parent.
@@ -154,7 +154,7 @@
          2. This value is employed in various places while creating the distribution
          To mitigate these, we define a *dummy* value here and let the CI replace it during a release.
          Hence, *DO NOT MANUALLY EDIT THIS VALUE*! -->
-    <project.build.outputTimestamp>2024-01-11T10:10:48Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2024-04-15T10:52:53Z</project.build.outputTimestamp>
 
     <!-- target Java 8 -->
     <maven.compiler.source>8</maven.compiler.source>
@@ -202,119 +202,65 @@
 
     <!-- VDR coordinates -->
     <vdr.url>https://logging.apache.org/cyclonedx/vdr.xml</vdr.url>
-    <!--
-      ~ This XSLT stylesheet performs three tasks:
-      ~
-      ~ 1. Changes the namespace from SBOM 1.4 to SBOM 1.5
-      ~ 2. Adds a `serialNumber` to the SBOM
-      ~ 3. Adds a reference to the Apache Logging Services VDR
-      -->
-    <sbom.xslt><![CDATA[<xsl:stylesheet version="1.0"
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-    xmlns="http://cyclonedx.org/schema/bom/1.5"
-    xmlns:xalan="http://xml.apache.org/xalan"
-    xmlns:cdx14="http://cyclonedx.org/schema/bom/1.4"
-    xmlns:cdx15="http://cyclonedx.org/schema/bom/1.5"
-    exclude-result-prefixes="xalan cdx14 cdx15">
-
-  <xsl:param name="sbom.serialNumber"/>
-  <xsl:param name="vdr.url"/>
-  <xsl:output method="xml"
-              version="1.0"
-              encoding="UTF-8"
-              indent="yes"
-              xalan:indent-amount="2"
-              xalan:line-separator="&#10;"/>
-
-  <!-- Fixes the license formatting -->
-  <xsl:template match="/">
-    <xsl:text>&#10;</xsl:text>
-    <xsl:apply-templates />
-  </xsl:template>
-
-  <!-- Standard copy template -->
-  <xsl:template match="@*|node()">
-    <xsl:copy>
-      <xsl:apply-templates select="@*" />
-      <xsl:apply-templates />
-    </xsl:copy>
-  </xsl:template>
-
-  <!-- Bump the SBOM schema version from `1.4` to `1.5` -->
-  <xsl:template match="cdx14:*">
-    <xsl:element name="{local-name()}" namespace="http://cyclonedx.org/schema/bom/1.5">
-      <xsl:apply-templates select="@*" />
-      <xsl:apply-templates />
-    </xsl:element>
-  </xsl:template>
-
-  <!-- Add the SBOM `serialNumber` -->
-  <xsl:template match="cdx14:bom">
-    <bom>
-      <xsl:attribute name="version">
-        <xsl:value-of select="1"/>
-      </xsl:attribute>
-      <xsl:attribute name="serialNumber">
-        <xsl:text>urn:uuid:</xsl:text>
-        <xsl:value-of select="$sbom.serialNumber"/>
-      </xsl:attribute>
-      <xsl:apply-templates />
-    </bom>
-  </xsl:template>
-
-  <!-- Add the link to the VDR -->
-  <xsl:template match="cdx14:externalReferences[starts-with(preceding-sibling::cdx14:group, 'org.apache.logging')]">
-    <externalReferences>
-      <xsl:apply-templates/>
-      <reference>
-        <xsl:attribute name="type">vulnerability-assertion</xsl:attribute>
-        <url>
-          <xsl:value-of select="$vdr.url"/>
-        </url>
-      </reference>
-    </externalReferences>
-  </xsl:template>
-
-</xsl:stylesheet>
-]]></sbom.xslt>
 
     <!-- dependency versions -->
-    <org.eclipse.jgit.version>6.8.0.202311291450-r</org.eclipse.jgit.version>
+    <org.eclipse.jgit.version>6.9.0.202403050737-r</org.eclipse.jgit.version>
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
     <bnd.annotation.version>7.0.0</bnd.annotation.version>
     <jspecify.version>0.3.0</jspecify.version>
+    <node.version>21.7.1</node.version>
+    <npm.version>10.5.0</npm.version>
     <osgi.annotation.version>8.1.0</osgi.annotation.version>
     <osgi.annotation.bundle.version>2.0.0</osgi.annotation.bundle.version>
     <osgi.annotation.versioning.version>1.1.2</osgi.annotation.versioning.version>
-    <palantir-java-format.version>2.39.0</palantir-java-format.version>
-    <spotbugs-annotations.version>4.8.3</spotbugs-annotations.version>
+    <palantir-java-format.version>2.43.0</palantir-java-format.version>
+    <spotbugs-annotations.version>4.8.4</spotbugs-annotations.version>
 
     <!-- plugin version overriddes -->
     <version.apache-rat-plugin>0.16</version.apache-rat-plugin>
+
     <!-- plugin versions -->
-    <asciidoctor-maven-plugin.version>2.2.4</asciidoctor-maven-plugin.version>
+    <asciidoctor-maven-plugin.version>3.0.0</asciidoctor-maven-plugin.version>
     <beanshell-maven-plugin.version>1.4</beanshell-maven-plugin.version>
     <bnd-maven-plugin.version>7.0.0</bnd-maven-plugin.version>
     <bnd-baseline-maven-plugin.version>7.0.0</bnd-baseline-maven-plugin.version>
     <build-helper-maven-plugin.version>3.5.0</build-helper-maven-plugin.version>
-    <cyclonedx-maven-plugin.version>2.7.10</cyclonedx-maven-plugin.version>
-    <flatten-maven-plugin.version>1.5.0</flatten-maven-plugin.version>
-    <log4j-changelog-maven-plugin.version>0.7.0</log4j-changelog-maven-plugin.version>
-    <maven-artifact-plugin.version>3.5.0</maven-artifact-plugin.version>
-    <restrict-imports-enforcer-rule.version>2.4.0</restrict-imports-enforcer-rule.version>
-    <sign-maven-plugin.version>1.0.1</sign-maven-plugin.version>
-    <spotbugs-maven-plugin.version>4.8.2.0</spotbugs-maven-plugin.version>
-    <spotless-maven-plugin.version>2.41.1</spotless-maven-plugin.version>
+    <cyclonedx-maven-plugin.version>2.8.0</cyclonedx-maven-plugin.version>
+    <exec-maven-plugin.version>3.2.0</exec-maven-plugin.version>
+    <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
+    <frontend-maven-plugin.version>1.15.0</frontend-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+    <log4j-changelog-maven-plugin.version>0.8.0</log4j-changelog-maven-plugin.version>
+    <maven-artifact-plugin.version>3.5.1</maven-artifact-plugin.version>
+    <restrict-imports-enforcer-rule.version>2.5.0</restrict-imports-enforcer-rule.version>
+    <sign-maven-plugin.version>1.1.0</sign-maven-plugin.version>
+    <spotbugs-maven-plugin.version>4.8.4.0</spotbugs-maven-plugin.version>
+    <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
     <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
 
     <!-- plugin dependencies versions -->
-    <error-prone.version>2.24.1</error-prone.version>
+    <error-prone.version>2.26.1</error-prone.version>
+    <!-- `findsecbugs-plugin:1.13.0` contains a bug blocking Log4j compilation: https://github.com/find-sec-bugs/find-sec-bugs/pull/728
+         Hence, pinning the `1.12.0` instead. -->
     <findsecbugs-plugin.version>1.12.0</findsecbugs-plugin.version>
+
+    <!-- site-specific versions -->
+    <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project.
+         This will be used in the site and updated automatically by `dependabot`. -->
+    <site-project.version>11.0.0</site-project.version>
 
   </properties>
 
   <dependencyManagement>
     <dependencies>
+
+      <!-- Dummy dependency to trick `dependabot` into updating the `site-project.version` property -->
+      <dependency>
+        <groupId>org.apache.logging</groupId>
+        <artifactId>logging-parent</artifactId>
+        <version>${site-project.version}</version>
+        <type>pom</type>
+      </dependency>
 
       <dependency>
         <groupId>biz.aQute.bnd</groupId>
@@ -357,6 +303,8 @@
   <build>
 
     <pluginManagement>
+
+      <!-- Managed plugins ordered alphabetically by `artifactId` -->
       <plugins>
 
         <plugin>
@@ -365,53 +313,10 @@
           <version>${asciidoctor-maven-plugin.version}</version>
         </plugin>
 
-        <!-- `artifact:compare` is used in `.github/workflows/build-reusable.yaml` -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-artifact-plugin</artifactId>
-          <version>${maven-artifact-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>flatten-maven-plugin</artifactId>
-          <version>${flatten-maven-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.simplify4u.plugins</groupId>
-          <artifactId>sign-maven-plugin</artifactId>
-          <version>${sign-maven-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>com.github.spotbugs</groupId>
-          <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>${spotbugs-maven-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>xml-maven-plugin</artifactId>
-          <version>${xml-maven-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>com.diffplug.spotless</groupId>
-          <artifactId>spotless-maven-plugin</artifactId>
-          <version>${spotless-maven-plugin.version}</version>
-        </plugin>
-
         <plugin>
           <groupId>com.github.genthaler</groupId>
           <artifactId>beanshell-maven-plugin</artifactId>
           <version>${beanshell-maven-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.logging.log4j</groupId>
-          <artifactId>log4j-changelog-maven-plugin</artifactId>
-          <version>${log4j-changelog-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
@@ -438,7 +343,57 @@
           <version>${cyclonedx-maven-plugin.version}</version>
         </plugin>
 
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>flatten-maven-plugin</artifactId>
+          <version>${flatten-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.jacoco</groupId>
+          <artifactId>jacoco-maven-plugin</artifactId>
+          <version>${jacoco-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-changelog-maven-plugin</artifactId>
+          <version>${log4j-changelog-maven-plugin.version}</version>
+        </plugin>
+
+        <!-- `artifact:compare` is used in `.github/workflows/build-reusable.yaml` -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-artifact-plugin</artifactId>
+          <version>${maven-artifact-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.simplify4u.plugins</groupId>
+          <artifactId>sign-maven-plugin</artifactId>
+          <version>${sign-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>${spotbugs-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>com.diffplug.spotless</groupId>
+          <artifactId>spotless-maven-plugin</artifactId>
+          <version>${spotless-maven-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>xml-maven-plugin</artifactId>
+          <version>${xml-maven-plugin.version}</version>
+        </plugin>
+
       </plugins>
+
     </pluginManagement>
 
     <plugins>
@@ -517,8 +472,7 @@
       </plugin>
 
       <!--
-        ~ Removes a trailing `module-info.class` before each compilation to prevent `javac` failures.
-        ~
+        ~ Removes existing `module-info.class` before each compilation to prevent `javac` failures.
         ~ See https://github.com/copernik-eu/bug-reproducibility/tree/main/javac-module-info-bug
         -->
       <plugin>
@@ -611,74 +565,13 @@
             </goals>
             <phase>package</phase>
             <configuration>
+              <externalReferences>
+                <externalReference>
+                  <type>vulnerability-assertion</type>
+                  <url>${vdr.url}</url>
+                </externalReference>
+              </externalReferences>
               <outputFormat>xml</outputFormat>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>com.github.genthaler</groupId>
-        <artifactId>beanshell-maven-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.16.0</version>
-          </dependency>
-          <dependency>
-            <groupId>xalan</groupId>
-            <artifactId>serializer</artifactId>
-            <version>2.7.3</version>
-          </dependency>
-          <dependency>
-            <groupId>xalan</groupId>
-            <artifactId>xalan</artifactId>
-            <version>2.7.3</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <id>process-sbom</id>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <phase>package</phase>
-            <configuration>
-              <script><![CDATA[import java.io.*;
-import java.nio.file.*;
-import java.util.*;
-import javax.xml.transform.*;
-import javax.xml.transform.stream.*;
-import org.apache.commons.codec.digest.*;
-
-    // Compute parameters
-    final String xslt = project.getProperties().getProperty("sbom.xslt");
-    final File pomFile = project.getModel().getPomFile();
-    final byte[] digest = new DigestUtils(MessageDigestAlgorithms.SHA_256).digest(pomFile);
-    final UUID bomSerialNumber = UUID.nameUUIDFromBytes(digest);
-    final String vdrUrl = Objects.requireNonNull(project.getProperties().getProperty("vdr.url"), "vdr.url");
-
-    // Move original SBOM file
-    final Path basedir = project.getBasedir().toPath();
-    final Path destPath = basedir.resolve("target/bom.xml");
-    final Path sourcePath = basedir.resolve("target/bom.orig.xml");
-    if (!Files.isReadable(destPath)) {
-      System.out.println("No CycloneDX SBOM file found, skipping transformation.");
-      return;
-    }
-    Files.move(destPath, sourcePath, new CopyOption[] {StandardCopyOption.REPLACE_EXISTING});
-
-    // Apply XSLT transformation
-    final StreamSource xsltSource = new StreamSource(new StringReader(xslt));
-    final TransformerFactory factory = TransformerFactory.newInstance();
-    final Transformer transformer = factory.newTransformer(xsltSource);
-    transformer.setParameter("sbom.serialNumber", bomSerialNumber.toString());
-    transformer.setParameter("vdr.url", vdrUrl);
-    final StreamSource source = new StreamSource(sourcePath.toUri().toASCIIString());
-    final StreamResult result = new StreamResult(destPath.toUri().toASCIIString());
-    transformer.transform(source, result);
-  ]]></script>
             </configuration>
           </execution>
         </executions>
@@ -695,6 +588,7 @@ import org.apache.commons.codec.digest.*;
           </dependency>
         </dependencies>
         <executions>
+
           <!--
             ~ Ensure that version for each dependency resolved during a build, is equal to or
             ~ higher than all transitive dependency declarations.
@@ -711,6 +605,7 @@ import org.apache.commons.codec.digest.*;
               </rules>
             </configuration>
           </execution>
+
           <!--
             ~ Ensures that no wildcard imports are used.
             ~ Wildcard imports increase the differences between branches and can not be expanded through simple tools.
@@ -729,22 +624,13 @@ import org.apache.commons.codec.digest.*;
               </rules>
             </configuration>
           </execution>
+
         </executions>
       </plugin>
 
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <configuration>
-          <fork>false</fork>
-          <plugins>
-            <plugin>
-              <groupId>com.h3xstream.findsecbugs</groupId>
-              <artifactId>findsecbugs-plugin</artifactId>
-              <version>${findsecbugs-plugin.version}</version>
-            </plugin>
-          </plugins>
-        </configuration>
         <executions>
           <execution>
             <id>default-spotbugs</id>
@@ -752,6 +638,16 @@ import org.apache.commons.codec.digest.*;
               <goal>check</goal>
             </goals>
             <phase>verify</phase>
+            <configuration>
+              <fork>false</fork>
+              <plugins>
+                <plugin>
+                  <groupId>com.h3xstream.findsecbugs</groupId>
+                  <artifactId>findsecbugs-plugin</artifactId>
+                  <version>${findsecbugs-plugin.version}</version>
+                </plugin>
+              </plugins>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -1107,7 +1003,7 @@ import org.apache.commons.codec.digest.*;
 
   <profiles>
 
-    <!-- `changelog-validate` profile to validate changelog XMLs. -->
+    <!-- `changelog-validate` profile to validate changelog XMLs -->
     <profile>
 
       <id>changelog-validate</id>
@@ -1137,8 +1033,10 @@ import org.apache.commons.codec.digest.*;
                       <includes>
                         <include>**/*.xml</include>
                       </includes>
-                      <publicId>http://logging.apache.org/log4j/changelog</publicId>
-                      <systemId>https://logging.apache.org/log4j/changelog-0.1.3.xsd</systemId>
+                      <!-- Without an explicit `publicId` and `systemId`, `xml:validate` is trying to download every single XSD from every single XML it encounters.
+                           This is causing an extreme slowdown for projects with big changelogs, e.g., Log4j. -->
+                      <publicId>https://logging.apache.org/xml/ns</publicId>
+                      <systemId>https://logging.apache.org/xml/ns/log4j-changelog-0.xsd</systemId>
                       <validating>true</validating>
                     </validationSet>
                   </validationSets>
@@ -1146,55 +1044,6 @@ import org.apache.commons.codec.digest.*;
               </execution>
             </executions>
           </plugin>
-        </plugins>
-      </build>
-
-    </profile>
-
-    <!-- `changelog-export` profile to export changelogs -->
-    <profile>
-
-      <id>changelog-export</id>
-
-      <activation>
-        <file>
-          <exists>src/changelog</exists>
-        </file>
-      </activation>
-
-      <build>
-        <plugins>
-
-          <!-- export release notes to `src/site` -->
-          <plugin>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-changelog-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>export-changelog</id>
-                <goals>
-                  <goal>export</goal>
-                </goals>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <outputDirectory>src/site</outputDirectory>
-                  <indexTemplates>
-                    <template>
-                      <source>.index.adoc.ftl</source>
-                      <target>_release-notes.adoc</target>
-                    </template>
-                  </indexTemplates>
-                  <changelogTemplates>
-                    <template>
-                      <source>.release-notes.adoc.ftl</source>
-                      <target>_release-notes/_%v.adoc</target>
-                    </template>
-                  </changelogTemplates>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
         </plugins>
       </build>
 
@@ -1362,7 +1211,7 @@ import org.apache.commons.codec.digest.*;
 
                     // Find auxiliary files that will go into the binary distribution
                     SortedMap pathByFile = new TreeMap();
-                    pathByFile.put("RELEASE-NOTES.adoc", new File("src/site/_release-notes/_${project.version}.adoc").toPath());
+                    pathByFile.put("RELEASE-NOTES.adoc", new File("${project.build.directory}/generated-site/antora/modules/ROOT/pages/_release-notes/${project.version}.adoc").toPath());
                     pathByFile.put("README.adoc", new File("README.adoc").toPath());
                     pathByFile.put("NOTICE.txt", new File("NOTICE.txt").toPath());
                     pathByFile.put("LICENSE.txt", new File("LICENSE.txt").toPath());
@@ -1498,7 +1347,7 @@ import org.apache.commons.codec.digest.*;
                 <configuration>
                   <rules>
                     <requireReleaseDeps>
-                      <message>SNAPSHOT dependencies are not allowed for releases</message>
+                      <message>A release cannot have SNAPSHOT dependencies</message>
                       <onlyWhenRelease>true</onlyWhenRelease>
                     </requireReleaseDeps>
                     <requireReleaseVersion>
@@ -1516,79 +1365,14 @@ import org.apache.commons.codec.digest.*;
 
     </profile>
 
-    <!-- `constants-tmpl-adoc` profile to generate `src/site/_constants.adoc` from `src/site/_constants.tmpl.adoc` -->
+    <!-- `antora` profile to generate `target/site` from `src/site/antora` -->
     <profile>
 
-      <id>constants-tmpl-adoc</id>
+      <id>antora</id>
 
       <activation>
         <file>
-          <exists>src/site/_constants.tmpl.adoc</exists>
-        </file>
-      </activation>
-
-      <build>
-        <plugins>
-
-          <!-- copy `src/site/_constants.tmpl.adoc` to `target/constants-adoc/_constants.adoc` -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-antrun-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>copy-constants-adoc</id>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <phase>generate-sources</phase>
-                <configuration>
-                  <target>
-                    <copy overwrite="true" tofile="${project.build.directory}/constants-adoc/_constants.adoc" verbose="true">
-                      <fileset file="src/site/_constants.tmpl.adoc" />
-                    </copy>
-                  </target>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-          <!-- process `target/constants-adoc` and output to `src/site` -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-resources-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>filter-constants-adoc</id>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <phase>process-sources</phase>
-                <configuration>
-                  <outputDirectory>src/site</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${project.build.directory}/constants-adoc</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-        </plugins>
-      </build>
-
-    </profile>
-
-    <!-- `asciidoc` profile to generate `target/site` from `src/site` -->
-    <profile>
-
-      <id>asciidoc</id>
-
-      <activation>
-        <file>
-          <exists>src/site</exists>
+          <exists>src/site/antora</exists>
         </file>
       </activation>
 
@@ -1603,25 +1387,165 @@ import org.apache.commons.codec.digest.*;
       <build>
         <plugins>
 
+          <!-- Export release notes to `target/generated-site/antora/modules/ROOT/pages` -->
           <plugin>
-            <groupId>org.asciidoctor</groupId>
-            <artifactId>asciidoctor-maven-plugin</artifactId>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-changelog-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>export-asciidoc-to-html</id>
+                <id>export-changelog</id>
                 <goals>
-                  <goal>process-asciidoc</goal>
+                  <goal>export</goal>
+                </goals>
+                <phase>pre-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/generated-site/antora/modules/ROOT/pages</outputDirectory>
+                  <indexTemplates>
+                    <template>
+                      <source>.index.adoc.ftl</source>
+                      <target>release-notes.adoc</target>
+                    </template>
+                  </indexTemplates>
+                  <changelogTemplates>
+                    <template>
+                      <source>.release-notes.adoc.ftl</source>
+                      <target>_release-notes/%v.adoc</target>
+                    </template>
+                  </changelogTemplates>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!-- Copy `src/site/antora/antora.tmpl.yml` to `target/antora-yml/antora.yml` -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy-antora-yml</id>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <phase>pre-site</phase>
+                <configuration>
+                  <target>
+                    <copy file="${project.basedir}/src/site/antora/antora.tmpl.yml" overwrite="true" tofile="${project.build.directory}/antora-yml/antora.yml" />
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-resources-plugin</artifactId>
+            <executions>
+
+              <!-- Process `target/antora-yml` and output to `target/generated-site/antora` -->
+              <execution>
+                <id>filter-antora-yml</id>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <phase>pre-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/generated-site/antora</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${project.build.directory}/antora-yml</directory>
+                      <filtering>true</filtering>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+
+              <!-- Copy `src/site` to `target/generated-site` -->
+              <execution>
+                <id>copy-site</id>
+                <goals>
+                  <goal>copy-resources</goal>
+                </goals>
+                <phase>pre-site</phase>
+                <configuration>
+                  <outputDirectory>${project.build.directory}/generated-site</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${project.basedir}/src/site</directory>
+                      <excludes>
+                        <!-- `filter-antora-yml` execution will populate `antora.yml`, avoid overriding it: -->
+                        <exclude>antora/antora.yml</exclude>
+                      </excludes>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <version>${frontend-maven-plugin.version}</version>
+            <executions>
+
+              <!-- Install Node & NPM -->
+              <execution>
+                <id>install-node-and-npm</id>
+                <goals>
+                  <goal>install-node-and-npm</goal>
+                </goals>
+                <phase>pre-site</phase>
+                <configuration>
+                  <nodeVersion>v${node.version}</nodeVersion>
+                  <npmVersion>${npm.version}</npmVersion>
+                </configuration>
+              </execution>
+
+              <!-- Install Antora -->
+              <execution>
+                <id>install-antora</id>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <phase>pre-site</phase>
+              </execution>
+
+            </executions>
+          </plugin>
+
+          <!-- Run Antora -->
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>${exec-maven-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>run-antora</id>
+                <goals>
+                  <goal>exec</goal>
                 </goals>
                 <phase>site</phase>
                 <configuration>
-                  <sourceDirectory>src/site</sourceDirectory>
-                  <outputDirectory>${project.build.directory}/site</outputDirectory>
-                  <preserveDirectories>true</preserveDirectories>
-                  <attributes>
-                    <source-highlighter>coderay</source-highlighter>
-                    <toc>left</toc>
-                    <icons>font</icons>
-                  </attributes>
+                  <executable>${project.basedir}/node/node</executable>
+                  <arguments>
+                    <!-- Running `node/node node_modules/.bin/antora antora-playbook.yaml ...` doesn't work on Windows[1].
+                         I come up with the below solution working on both Linux and Windows.
+                         Pay attention to the following details:
+
+                         1. `@antora/cli` is executed programmatically (this is what `node_modules/.bin/antora` does under the hood)
+                         2. Single-quotes must be used (double-quotes get erased and hence cause syntax errors)
+                         3. Relative paths must be used[2]
+
+                         [1] For some reason, the `node_modules/.bin/antora` script is not properly executed.
+                             The following works though: `cd node_modules/.bin; ../../node/node antora ../../antora-playbook.yaml`.
+                             Motivated by this, tried configuring the `workingDirectory` parameter of the plugin, though it did not help.
+                         [2] `${project.basedir}/antora-playbook.yaml` strangely resolves to `C:\Users\user\logging-log4j2\Usersuserlogging-log4j2/antora-playbook.yaml`.
+                             I tried using `const path = require('path'); ... path.resolve('${project.basedir}', 'antora-playbook.yaml')`, but it failed with the same error too. -->
+                    <argument>--eval</argument>
+                    <argument>require('@antora/cli')(['generate', '--playbook', 'antora-playbook.yaml', '--to-dir', 'target/site'])</argument>
+                  </arguments>
                 </configuration>
               </execution>
             </executions>
@@ -1652,6 +1576,48 @@ import org.apache.commons.codec.digest.*;
             <configuration>
               <excludeFilterFile>${maven.multiModuleProjectDirectory}/spotbugs-exclude.xml</excludeFilterFile>
             </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+
+    </profile>
+
+    <!-- Generates coverage information -->
+    <profile>
+
+      <id>coverage</id>
+
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <configuration>
+              <includes>
+                <include>org/apache/log4j/**</include>
+                <include>org/apache/logging/**</include>
+              </includes>
+              <excludes>
+                <!-- Ignore test code -->
+                <exclude>**/test/**</exclude>
+              </excludes>
+            </configuration>
+            <executions>
+              <execution>
+                <id>prepare-jacoco-agent</id>
+                <goals>
+                  <goal>prepare-agent</goal>
+                </goals>
+              </execution>
+              <execution>
+                <id>report-test-coverage</id>
+                <goals>
+                  <goal>report</goal>
+                </goals>
+              </execution>
+            </executions>
           </plugin>
 
         </plugins>

@@ -33,31 +33,32 @@
     3. Commit both `.release-notes.adoc.ftl` and the generated `7.8.0.adoc`
 ////
 
-[#release-notes-10-5-0]
-=== 10.5.0
+[#release-notes-${release.version?replace("[^a-zA-Z0-9]", "-", "r")}]
+== ${release.version}
 
-Release date:: 2023-12-18
+<#if release.date?has_content>Release date:: ${release.date}</#if>
 
-This minor release contains dependency updates and a change in the way BND is employed.
+This release contains a big revamp to the website build and several other minor enhancements.
 
-BND Maven Plugins are upgraded to version `7.0.0`, which requires Java 17.
-Log4j was the blocker for this upgrade and the issue is resolved in https://github.com/apache/logging-log4j2/pull/2021[apache/logging-log4j2#2021].
-Note that BND Maven Plugins version `7.0.0` increased the minimum required Maven version to `3.8.1`.
+[#release-notes-11-0-0-website-build]
+=== Website build changes
 
+The website build system is migrated from `asciidoctor-maven-plugin` to Antora.
+This implies that `src/site` and `generate-email.sh` files need to be adapted, and `target/site` can be viewed without needing a local web server.
 
-==== Changed
+The Maven `site` phase is re-engineered such that _generated sources_ (i.e., `src/site/_release_notes` and `src/site/_constants.adoc`) will be targeted to `target/generated-site` and the website will be built from there.
+This avoids the need to commit generated sources to the repository and, hence, works around changelog merge conflict problems.
 
-* Switch from `bnd:jar` to `bnd:bnd-process` to improve integration with the ecosystem; IDEs, Maven plugins, etc. (https://github.com/apache/logging-parent/issues/69[69])
-* Replace `log4j-changelog` entry type of `dependabot` updates from `changed` to `updated`
-* Minimum required Maven version is increased to `3.8.1` due to BND Maven Plugin updates
+[#release-notes-11-0-0-website-deployment]
+=== Website deployment changes
 
-==== Updated
+The newly added `site-deploy-reusable.yaml` GitHub Actions workflow enables to automate the website deployment.
+Using the `<source-branch>-site-<environment>-out` branch naming convention, the Maven `site` goal running on
 
-* Update `biz.aQute.bnd:bnd-baseline-maven-plugin` to version `7.0.0` (https://github.com/apache/logging-parent/pull/78[78])
-* Update `biz.aQute.bnd:bnd-maven-plugin` to version `7.0.0`
-* Update `com.diffplug.spotless:spotless-maven-plugin` to version `2.41.1` (https://github.com/apache/logging-parent/pull/70[70])
-* Update `com.github.spotbugs:spotbugs-annotations` to version `4.8.3` (https://github.com/apache/logging-parent/pull/80[80])
-* Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.8.2.0` (https://github.com/apache/logging-parent/pull/71[71])
-* Update `com.palantir.javaformat:palantir-java-format` to version `2.39.0`
-* Update `org.apache:apache` to version `31` (https://github.com/apache/logging-parent/pull/73[73])
-* Update `org.apache.logging.log4j:log4j-changelog-maven-plugin` to version `0.7.0` (https://github.com/apache/logging-parent/pull/84[84])
+* the `main` branch populates the `main-site-stg-out` branch serving the `logging.staged.apache.org/logging-parent`
+* the `main-site-pro` branch populates the `main-site-pro-out` branch serving the `logging.apache.org/logging-parent`
+* the `release/<version>` branch populates the `release/<version>-site-stg-out` branch serving the `logging.staged.apache.org/logging-parent-<version>`
+
+Refer to the usage and project release instructions pages for details.
+
+<#include "../.changelog.adoc.ftl">

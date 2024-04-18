@@ -28,26 +28,14 @@ on:
         description: Identifier used in the distribution artifact and Subversion repository folder filenames (e.g., `logging-parent`)
         required: true
         type: string
-      site-enabled:
-        description: Flag indicating if a website should be generated prior to deployment using `./mvnw site`
-        default: false
-        type: boolean
-      distribution-attachment-filepath-pattern:
-        description: The regex pattern matched against the full filepath for determining attachments to be included in the distribution
-        default: ""
-        type: string
-      distribution-attachment-count:
-        description: The number of attachments expected to be found
-        default: 0
-        type: number
     secrets:
       GPG_SECRET_KEY:
         description: GPG secret key for signing artifacts
         required: true
-      LOGGING_STAGE_DEPLOYER_USER:
+      NEXUS_USERNAME:
         description: Nexus staging repository username for deploying artifacts
         required: true
-      LOGGING_STAGE_DEPLOYER_PW:
+      NEXUS_PASSWORD:
         description: Nexus staging repository password for deploying artifacts
         required: true
       SVN_USERNAME:
@@ -63,10 +51,10 @@ jobs:
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11   # 4.1.1
+        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633   # 4.1.2
 
       - name: Set up Java & GPG
-        uses: actions/setup-java@387ac29b308b003ca37ba93a6cab5eb57c8f5f93   # 3.7.0
+        uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9   # 3.7.0
         with:
           distribution: temurin
           java-version: ${{ inputs.java-version }}
@@ -87,6 +75,8 @@ jobs:
 
       - name: Export version
         shell: bash
+        env:
+          GIT_BRANCH_NAME: ${{ github.ref_name }}
         run: |
           [[ "$GIT_BRANCH_NAME" =~ ^release/.+$ ]] || {
             echo "was expecting a \`release/\`-prefixed Git branch name, found: \`$GIT_BRANCH_NAME\`"
@@ -94,8 +84,6 @@ jobs:
           }
           export PROJECT_VERSION=$(echo "$GIT_BRANCH_NAME" | sed 's/^release\///')
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
-        env:
-          GIT_BRANCH_NAME: ${{ github.ref_name }}
 
       - name: Set the Maven `revision` property
         shell: bash
@@ -139,18 +127,52 @@ jobs:
           ./mvnw \
             --non-recursive --batch-mode --errors --no-transfer-progress \
             -P changelog-release
-          ./mvnw \
-            --non-recursive --batch-mode --errors --no-transfer-progress \
-            process-sources
           git add src
           if [ -n "$(git status --porcelain)" ]; then
             git commit -S src -m "Release changelog for version \`$PROJECT_VERSION\`"
             git push -f origin
           fi
 
-      - name: Build the website
-        if: inputs.site-enabled
+      - name: Upload to Nexus
         shell: bash
+        env:
+          # `NEXUS_USERNAME` and `NEXUS_PASSWORD` are used in `~/.m2/settings.xml` created by `setup-java` action
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
+          # `SIGN_KEY` is used by `sign-maven-plugin`
+          SIGN_KEY: ${{ secrets.GPG_SECRET_KEY }}
+        run: |
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            -P deploy,release
+
+      # Node.js cache is needed for Antora
+      - name: Set up Node.js cache
+        id: nodejs-cache
+        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9   # 4.0.2
+        with:
+          # We should be calculating the cache key using `package-lock.json` instead!
+          # See https://stackoverflow.com/a/48524475/1278899
+          # For that, `package-lock.json` needs to be committed into the repository – right now it is `.gitignore`d.
+          # Once it is there, we should ideally switch from `npm i` to `npm ci`.
+          # For that, we need to configure `dependabot` to update hundreds of dependencies listed in `package-lock.json`.
+          # That translates to a never ending rain of `dependabot` PRs.
+          # I doubt if the wasted CPU cycles worth the gain.
+          key: ${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}
+          # `actions/cache` doesn't recommend caching `node_modules`.
+          # Though none of its recipes fit our bill, since we install Node.js using `frontend-maven-plugin`.
+          # See https://github.com/actions/cache/blob/main/examples.md#node---npm
+          # We settle for this quick-n-dirty solution for the time being.
+          path: |
+            node
+            node_modules
+
+      # Website build is needed to generate the release notes
+      - name: Build the website
+        shell: bash
+        env:
+          # Making Node.js cache hit visible for debugging purposes
+          NODEJS_CACHE_HIT: ${{ steps.nodejs-cache.outputs.cache-hit }}
         run: |
           export TIMESTAMP=$(./mvnw \
             --non-recursive --quiet --batch-mode \
@@ -160,61 +182,31 @@ jobs:
             | tail -n 1)
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
-            -Dmaven.test.skip \
-            install
-          ./mvnw \
-            --show-version --batch-mode --errors --no-transfer-progress \
             site
-          cd target/site
-          find . -empty -type d -delete
-          find . -print0 | xargs -0 touch -d "$TIMESTAMP"
-          find . -print0 | sort --zero-terminated | xargs -0 zip -oX ../site.zip
-
-      - name: Upload to Nexus
-        shell: bash
-        run: |
-          ./mvnw \
-            --show-version --batch-mode --errors --no-transfer-progress \
-            -P deploy,release
-        env:
-          # `NEXUS_USERNAME` and `NEXUS_PASSWORD` are used in `~/.m2/settings.xml` created by `setup-java` action
-          NEXUS_USERNAME: ${{ secrets.LOGGING_STAGE_DEPLOYER_USER }}
-          NEXUS_PASSWORD: ${{ secrets.LOGGING_STAGE_DEPLOYER_PW }}
-          # `SIGN_KEY` is used by `sign-maven-plugin`
-          SIGN_KEY: ${{ secrets.GPG_SECRET_KEY }}
 
       - name: Stage distribution attachments
         shell: bash
         run: |
 
-          # Determine the distribution attachment filepath pattern, if none provided
-          if [[ -z "$DIST_ATTACHMENT_FILEPATH_PATTERN" ]]; then
+          # Dump deployed artifacts to a local folder
+          export ALT_DEPLOYMENT_REPO_FILEPATH="target/alt-deployment-repo"
+          mkdir "$ALT_DEPLOYMENT_REPO_FILEPATH"
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            -DaltDeploymentRepository=apache.releases.https::file:"$ALT_DEPLOYMENT_REPO_FILEPATH" \
+            -Dsign.skip \
+            -P deploy
 
-            # Dump deployed artifacts to a local folder
-            export ALT_DEPLOYMENT_REPO_FILEPATH="target/alt-deployment-repo"
-            mkdir "$ALT_DEPLOYMENT_REPO_FILEPATH"
-            ./mvnw \
-              --show-version --batch-mode --errors --no-transfer-progress \
-              -DaltDeploymentRepository=apache.releases.https::file:"$ALT_DEPLOYMENT_REPO_FILEPATH" \
-              -Dsign.skip \
-              -P deploy
-
-            # This regex needs to work for both Java (`distribution` profile) and `find` (while counting attachments)!
-            # Hence, we don't escape dots, etc. with backslashes, which is problematic to get working in both worlds.
-            export DIST_ATTACHMENT_FILEPATH_PATTERN="^$ALT_DEPLOYMENT_REPO_FILEPATH/.+-$PROJECT_VERSION"'((-tests)?.jar|-cyclonedx.xml)$'
-            export DIST_ATTACHMENT_COUNT=$(find "$ALT_DEPLOYMENT_REPO_FILEPATH" -type f -regextype posix-extended -regex "$DIST_ATTACHMENT_FILEPATH_PATTERN" | wc -l)
-
-          fi
+          # This regex needs to work for both Java (`distribution` profile) and `find` (while counting attachments)!
+          # Hence, we don't escape dots, etc. with backslashes, which is problematic to get working in both worlds.
+          export DIST_ATTACHMENT_FILEPATH_PATTERN="^$ALT_DEPLOYMENT_REPO_FILEPATH/.+-$PROJECT_VERSION"'((-tests)?.jar|-cyclonedx.xml)$'
+          export DIST_ATTACHMENT_COUNT=$(find "$ALT_DEPLOYMENT_REPO_FILEPATH" -type f -regextype posix-extended -regex "$DIST_ATTACHMENT_FILEPATH_PATTERN" | wc -l)
 
           # Pass the necessary environment variables
           cat >> $GITHUB_ENV << EOF
           DIST_ATTACHMENT_FILEPATH_PATTERN=$DIST_ATTACHMENT_FILEPATH_PATTERN
           DIST_ATTACHMENT_COUNT=$DIST_ATTACHMENT_COUNT
           EOF
-
-        env:
-          DIST_ATTACHMENT_FILEPATH_PATTERN: ${{ inputs.distribution-attachment-filepath-pattern }}
-          DIST_ATTACHMENT_COUNT: ${{ inputs.distribution-attachment-count }}
 
       - name: Create the distribution
         shell: bash
@@ -256,6 +248,10 @@ jobs:
 
       - name: Upload to Subversion
         shell: bash
+        env:
+          PROJECT_ID: ${{ inputs.project-id }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         run: |
 
           # Find the effective Git commit ID
@@ -264,18 +260,16 @@ jobs:
           # Checkout the SVN repository
           export SVN_DIR="/tmp/svn-repo"
           svn co \
-            --depth files \
-            "https://dist.apache.org/repos/dist/dev/logging" \
+            "https://dist.apache.org/repos/dist/dev/logging/$PROJECT_ID" \
             "$SVN_DIR"
           cd "$SVN_DIR"
-          svn up --depth files "$PROJECT_ID"
 
-          # Switch to the project folder
-          if [ \! -d "$PROJECT_ID" ]; then
-            mkdir -p "$PROJECT_ID"
-            svn add "$PROJECT_ID"
-          fi
-          cd "$PROJECT_ID"
+          # Switch to the distribution folder
+          [ -d "$PROJECT_VERSION" ] || {
+            mkdir "$PROJECT_VERSION"
+            svn add "$PROJECT_VERSION"
+          }
+          cd "$PROJECT_VERSION"
 
           # Clean up old files
           find . -name "${DIST_FILENAME_PREFIX}*" -type f -print0 | xargs -0 -r svn delete
@@ -286,11 +280,6 @@ jobs:
               > "${DIST_FILENAME_VERSIONED_PREFIX}-email-${EMAIL_TYPE}.txt"
           done
 
-          # Copy the site
-          if [ "$SITE_ENABLED" == "true" ]; then
-            cp "$GITHUB_WORKSPACE/target/site.zip" "${DIST_FILENAME_VERSIONED_PREFIX}-site.zip"
-          fi
-
           # Copy the distribution
           cp "$DIST_FILEPATH_PREFIX"* .
 
@@ -300,9 +289,3 @@ jobs:
             --username "$SVN_USERNAME" \
             --password "$SVN_PASSWORD" \
             -m "Added \`${DIST_FILENAME_PREFIX}\` artifacts for release \`${PROJECT_VERSION}\`"
-
-        env:
-          PROJECT_ID: ${{ inputs.project-id }}
-          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
-          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-          SITE_ENABLED: ${{ inputs.site-enabled }}
