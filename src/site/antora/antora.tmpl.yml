@@ -46,5 +46,6 @@ asciidoc:
     java-compiler-version: "${minimalJavaBuildVersion}"
     site-url-staging: "https://logging.staged.apache.org/{project-id}"
     site-url: "https://logging.apache.org/{project-id}"
+    logging-services-url: "https://logging.apache.org"
 nav:
   - modules/ROOT/nav.adoc

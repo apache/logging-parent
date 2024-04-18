@@ -44,7 +44,7 @@ Plugin execution is configured and activated to generate SBOM files for each mod
 Generated SBOM files are attached as artifacts with `cyclonedx` classifier and XML extensions, that is, `<artifactId>-<version>-cyclonedx.xml`.
 
 Produced SBOMs are enriched with `vulnerability-assertion` references to a https://cyclonedx.org/capabilities/vdr[CycloneDX Vulnerability Disclosure Report (VDR)] that Apache Logging Services uses for all projects it maintains.
-This VDR is accessible through the following URL: https://logging.apache.org/cyclonedx/vdr.xml[]
+This VDR is accessible through the following URL: {logging-services-url}/cyclonedx/vdr.xml[]
 
 [#reusable-workflows]
 == Reusable GitHub Actions workflows
