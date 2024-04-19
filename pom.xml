@@ -139,7 +139,7 @@
   </ciManagement>
 
   <distributionManagement>
-    <downloadUrl>https://logging.apache.org/logging-parent</downloadUrl>
+    <downloadUrl>https://logging.apache.org/download.html</downloadUrl>
   </distributionManagement>
 
   <properties>
