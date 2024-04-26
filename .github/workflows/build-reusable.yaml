@@ -20,10 +20,6 @@ name: build-reusable
 on:
   workflow_call:
     inputs:
-      install-java8:
-        description: Flag indicating if JDK 8 should also be installed if possible
-        default: false
-        type: boolean
       java-version:
         description: The Java compiler version
         default: 17
@@ -56,9 +52,7 @@ jobs:
         uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9   # 3.7.0
         with:
           distribution: temurin
-          java-version: |
-            ${{ runner.os != 'macOS' && inputs.install-java8 && '8' || null }}
-            ${{ inputs.java-version }}
+          java-version: ${{ inputs.java-version }}
           cache: maven
 
       # We could have used `verify`, but `clean install` is required while generating the build reproducibility report, which is performed in the next step.
