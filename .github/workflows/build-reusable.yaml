@@ -57,7 +57,7 @@ jobs:
         with:
           distribution: temurin
           java-version: |
-            ${{ runner.os != 'mac' && inputs.install-java8 && '8' || null }}
+            ${{ runner.os != 'macOS' && inputs.install-java8 && '8' || null }}
             ${{ inputs.java-version }}
           cache: maven
 
