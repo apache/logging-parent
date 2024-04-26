@@ -58,8 +58,6 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ inputs.java-version }}
-          java-package: jdk
-          architecture: x64
           cache: maven
           server-id: apache.releases.https
           server-username: NEXUS_USERNAME

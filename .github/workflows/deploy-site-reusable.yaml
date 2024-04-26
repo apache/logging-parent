@@ -61,8 +61,6 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ inputs.java-version }}
-          java-package: jdk
-          architecture: x64
           cache: maven
           gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
 

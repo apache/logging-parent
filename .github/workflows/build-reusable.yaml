@@ -53,8 +53,6 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ inputs.java-version }}
-          java-package: jdk
-          architecture: x64
           cache: maven
 
       # We could have used `verify`, but `clean install` is required while generating the build reproducibility report, which is performed in the next step.
