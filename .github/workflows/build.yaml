@@ -46,7 +46,6 @@ jobs:
     if: github.actor != 'dependabot[bot]'
     uses: apache/logging-parent/.github/workflows/build-reusable.yaml@main
     with:
-      install-java8: true
       site-enabled: true
 
   deploy-snapshot:
