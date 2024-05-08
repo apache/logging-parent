@@ -76,7 +76,7 @@ This is a lazy-vote to release the $PROJECT_NAME \`$PROJECT_VERSION\`.
 Website: $PROJECT_STAGING_SITE-$PROJECT_VERSION
 GitHub: $PROJECT_REPO
 Commit: $COMMIT_ID
-Distribution: $PROJECT_DIST_DIR
+Distribution: $PROJECT_DIST_DIR/$PROJECT_VERSION
 Nexus: https://repository.apache.org/content/repositories/orgapachelogging-<FIXME>
 Signing key: 0x077e8893a6dcc33dd4a4d5b256e73ba9a0b592d0
 
