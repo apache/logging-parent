@@ -98,7 +98,7 @@ If not, commit necessary fixes, push, and repeat.
 [#vote-release]
 == Vote the release
 
-. Send the vote email uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}] Subversion repository
+. Send the vote email uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}/7.8.0[dist.apache.org/repos/dist/**dev**/logging/{project-id}/7.8.0] Subversion repository
 +
 [WARNING]
 ====
@@ -209,6 +209,7 @@ svn commit -m 'Remove `{project-id}` version `7.8.0` files released'
 . {project-github-url}/releases/new[Create a new release in GitHub]:
 ** Use the `rel/7.8.0` tag
 ** Copy release notes from the generated emails
+. Close the associated milestone {project-github-url}/milestones
 
 [#publish-release-website]
 == Publish the release website
@@ -234,7 +235,7 @@ git push --delete origin release/7.8.0-site-stg-out
 [#announce-release]
 == Announce the release
 
-1. Send the announcement email uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}/7.8.0] Subversion repository
+1. Send the announcement email uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}/7.8.0[dist.apache.org/repos/dist/**dev**/logging/{project-id}/7.8.0] Subversion repository
 +
 [WARNING]
 ====
