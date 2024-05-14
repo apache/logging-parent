@@ -74,7 +74,7 @@ For instance, `site-project.version` needs to be updated for `logging-parent`.
 [source,bash]
 ----
 git add .
-git commit -a -m 'Prepare to release `7.8.0`'
+git commit -S -a -m 'Prepare to release `7.8.0`'
 git push -u origin release/7.8.0
 ----
 +
@@ -223,6 +223,20 @@ git rebase origin/main-site-pro    # Sync with the remote repository
 git merge rel/7.8.0                # Pull changes up to the newly created tag
 git push origin main-site-pro
 ----
++
+.If there is no `main-site-pro` branch yet
+[%collapsible]
+====
+Create it from the `rel/7.8.0` tag:
+
+[source,bash]
+----
+git checkout -B main-site-pro rel/7.8.0
+echo "# $RANDOM" >>.asf.yaml
+git commit -S .asf.yaml -m 'Dummy `.asf.yaml` change to trigger the CI'
+git push -u origin main-site-pro
+----
+====
 . Verify that {project-github-url}/actions/workflows/deploy-site.yaml[the `deploy-site` workflow] successfully runs the `deploy-site-pro` job
 . Verify that {site-url}[the project website] is updated
 . Delete the release staging website branch:
