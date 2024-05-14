@@ -55,15 +55,18 @@ The provided reusable GitHub Actions workflows feature the following convenience
 * Compiles using the specified Java compiler version
 * Verifies reproducibility
 
-`deploy-site-reusable.yaml`::
-* Builds and deploys the website
-
-`deploy-snapshot-reusable.yaml`::
-* Deploys SNAPSHOT artifacts
-
 `deploy-release-reusable.yaml`::
 * Deploys release artifacts
 * Updates `revision` and `project.build.outputTimestamp` Maven properties
 * Generates the distribution ZIP containing Git-tracked sources, binary attachments, `NOTICE.txt`, etc.
 * Generates the release vote & announcement emails
 * Uploads the distribution ZIP and emails to SVN
+
+`deploy-site-reusable.yaml`::
+* Builds and deploys the website
+
+`deploy-snapshot-reusable.yaml`::
+* Deploys SNAPSHOT artifacts
+
+`merge-dependabot-reusable.yaml`::
+* Merges `dependabot` PRs changelog entries
