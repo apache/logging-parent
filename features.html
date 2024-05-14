@@ -180,6 +180,28 @@ This VDR is accessible through the following URL: <a href="https://logging.apach
 </ul>
 </div>
 </dd>
+<dt class="hdlist1"><code>deploy-release-reusable.yaml</code></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Deploys release artifacts</p>
+</li>
+<li>
+<p>Updates <code>revision</code> and <code>project.build.outputTimestamp</code> Maven properties</p>
+</li>
+<li>
+<p>Generates the distribution ZIP containing Git-tracked sources, binary attachments, <code>NOTICE.txt</code>, etc.</p>
+</li>
+<li>
+<p>Generates the release vote &amp; announcement emails</p>
+</li>
+<li>
+<p>Uploads the distribution ZIP and emails to SVN</p>
+</li>
+</ul>
+</div>
+</dd>
 <dt class="hdlist1"><code>deploy-site-reusable.yaml</code></dt>
 <dd>
 <div class="ulist">
@@ -200,24 +222,12 @@ This VDR is accessible through the following URL: <a href="https://logging.apach
 </ul>
 </div>
 </dd>
-<dt class="hdlist1"><code>deploy-release-reusable.yaml</code></dt>
+<dt class="hdlist1"><code>merge-dependabot-reusable.yaml</code></dt>
 <dd>
 <div class="ulist">
 <ul>
 <li>
-<p>Deploys release artifacts</p>
-</li>
-<li>
-<p>Updates <code>revision</code> and <code>project.build.outputTimestamp</code> Maven properties</p>
-</li>
-<li>
-<p>Generates the distribution ZIP containing Git-tracked sources, binary attachments, <code>NOTICE.txt</code>, etc.</p>
-</li>
-<li>
-<p>Generates the release vote &amp; announcement emails</p>
-</li>
-<li>
-<p>Uploads the distribution ZIP and emails to SVN</p>
+<p>Merges <code>dependabot</code> PRs changelog entries</p>
 </li>
 </ul>
 </div>
