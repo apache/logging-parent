@@ -2,6 +2,6 @@
 <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
-       type="fixed">
-  <description format="asciidoc">Use default Java SE architecture and packaging (JDK) in workflows.</description>
+       type="changed">
+  <description format="asciidoc">Use default Java SE architecture and packaging (JDK) in workflows</description>
 </entry>

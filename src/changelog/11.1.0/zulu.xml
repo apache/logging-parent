@@ -4,5 +4,5 @@
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="changed">
   <issue id="169" link="https://github.com/apache/logging-parent/pull/169"/>
-  <description format="asciidoc">Change the JDK distribution used in CI from Temurin to Zulu</description>
+  <description format="asciidoc">Change the JDK distribution used in workflows from Temurin to Zulu</description>
 </entry>
