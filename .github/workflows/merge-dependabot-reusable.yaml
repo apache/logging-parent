@@ -112,13 +112,6 @@ jobs:
           EOF
           fi
 
-      - name: Generate sources
-        shell: bash
-        run: |
-          ./mvnw \
-            --non-recursive --show-version --batch-mode --errors --no-transfer-progress \
-            process-sources
-
       - name: Add & commit changes
         shell: bash
         env:
