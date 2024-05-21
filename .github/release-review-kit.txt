@@ -23,7 +23,7 @@ should work universally for all projects using
 
 -----8<-----~( cut here )~-----8<-----
 # Check out the distribution
-svn co https://dist.apache.org/repos/... && cd $_
+svn co https://dist.apache.org/repos/dist/dev/logging/... && cd $_
 
 # Verify checksums
 shasum --check *.sha512

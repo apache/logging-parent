@@ -43,7 +43,7 @@ jobs:
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633   # 4.1.2
+        uses: actions/checkout@44c2b7a8a4ea60a981eaca3cf939b5f4305c123b   # 4.1.5
         with:
           # When running on `pull_request` use the PR branch, not the target branch
           ref: ${{ github.event_name == 'pull_request_target' && github.head_ref || github.ref }}
@@ -51,10 +51,8 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@99b8673ff64fbf99d8d325f52d9a5bdedb8483e9   # 3.7.0
         with:
-          distribution: temurin
+          distribution: zulu
           java-version: ${{ inputs.java-version }}
-          java-package: jdk
-          architecture: x64
           cache: maven
 
       # We could have used `verify`, but `clean install` is required while generating the build reproducibility report, which is performed in the next step.
@@ -105,7 +103,7 @@ jobs:
       # We upload tests results if the build fails.
       - name: Upload test results
         if: failure() && steps.build.conclusion == 'failure'
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3   # 4.3.1
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808   # 4.3.3
         with:
           name: surefire-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
           path: |
@@ -123,10 +121,10 @@ jobs:
             -DskipTests=true \
             clean verify artifact:compare
 
-      # We reproducibility results if the build fails.
+      # Upload reproducibility results if the build fails.
       - name: Upload reproducibility results
         if: failure() && steps.reproducibility.conclusion == 'failure'
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3   # 4.3.1
+        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808   # 4.3.3
         with:
           name: reproducibility-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
           path: |

@@ -27,7 +27,7 @@
   <parent>
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
-    <version>31</version>
+    <version>32</version>
   </parent>
 
   <groupId>org.apache.logging</groupId>
@@ -139,13 +139,13 @@
   </ciManagement>
 
   <distributionManagement>
-    <downloadUrl>https://logging.apache.org/logging-parent</downloadUrl>
+    <downloadUrl>https://logging.apache.org/download.html</downloadUrl>
   </distributionManagement>
 
   <properties>
 
     <!-- project version -->
-    <revision>11.0.0</revision>
+    <revision>11.1.0</revision>
 
     <!-- `project.build.outputTimestamp` is required to be present for reproducible builds.
          We actually inherit one from the `org.apache:apache` parent.
@@ -154,7 +154,7 @@
          2. This value is employed in various places while creating the distribution
          To mitigate these, we define a *dummy* value here and let the CI replace it during a release.
          Hence, *DO NOT MANUALLY EDIT THIS VALUE*! -->
-    <project.build.outputTimestamp>2024-04-15T10:52:53Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2024-05-15T13:12:38Z</project.build.outputTimestamp>
 
     <!-- target Java 8 -->
     <maven.compiler.source>8</maven.compiler.source>
@@ -213,11 +213,8 @@
     <osgi.annotation.version>8.1.0</osgi.annotation.version>
     <osgi.annotation.bundle.version>2.0.0</osgi.annotation.bundle.version>
     <osgi.annotation.versioning.version>1.1.2</osgi.annotation.versioning.version>
-    <palantir-java-format.version>2.43.0</palantir-java-format.version>
-    <spotbugs-annotations.version>4.8.4</spotbugs-annotations.version>
-
-    <!-- plugin version overriddes -->
-    <version.apache-rat-plugin>0.16</version.apache-rat-plugin>
+    <palantir-java-format.version>2.46.0</palantir-java-format.version>
+    <spotbugs-annotations.version>4.8.5</spotbugs-annotations.version>
 
     <!-- plugin versions -->
     <asciidoctor-maven-plugin.version>3.0.0</asciidoctor-maven-plugin.version>
@@ -230,19 +227,19 @@
     <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
     <frontend-maven-plugin.version>1.15.0</frontend-maven-plugin.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
-    <log4j-changelog-maven-plugin.version>0.8.0</log4j-changelog-maven-plugin.version>
+    <log4j-changelog-maven-plugin.version>0.9.0</log4j-changelog-maven-plugin.version>
     <maven-artifact-plugin.version>3.5.1</maven-artifact-plugin.version>
     <restrict-imports-enforcer-rule.version>2.5.0</restrict-imports-enforcer-rule.version>
     <sign-maven-plugin.version>1.1.0</sign-maven-plugin.version>
-    <spotbugs-maven-plugin.version>4.8.4.0</spotbugs-maven-plugin.version>
+    <spotbugs-maven-plugin.version>4.8.5.0</spotbugs-maven-plugin.version>
     <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
     <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
 
     <!-- plugin dependencies versions -->
-    <error-prone.version>2.26.1</error-prone.version>
+    <error-prone.version>2.27.1</error-prone.version>
     <!-- `findsecbugs-plugin:1.13.0` contains a bug blocking Log4j compilation: https://github.com/find-sec-bugs/find-sec-bugs/pull/728
          Hence, pinning the `1.12.0` instead. -->
-    <findsecbugs-plugin.version>1.12.0</findsecbugs-plugin.version>
+    <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
 
     <!-- site-specific versions -->
     <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project.
