@@ -2,7 +2,7 @@
 <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
-       type="updated">
-  <issue id="166" link="https://github.com/apache/logging-parent/pull/166"/>
-  <description format="asciidoc">Update `dependabot/fetch-metadata` to version `2.1.0`</description>
+       type="changed">
+  <issue id="169" link="https://github.com/apache/logging-parent/pull/169"/>
+  <description format="asciidoc">Change the JDK distribution used in workflows from Temurin to Zulu</description>
 </entry>
