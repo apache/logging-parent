@@ -21,6 +21,9 @@
   .doc .colist>table code, .doc p code, .doc thead code { font-size: 0.8em; }
   .doc pre { font-size: 0.7rem; }
   .doc .colist { font-size: 0.75rem; }
+  /* Make links more visible: */
+  .doc a { text-decoration: underline; }
+  .doc a code { text-decoration: underline; color: #1565c0; }
   /* Tab header fonts aren't rendered good, adjusting the font weight: */
   .tablist > ul li { font-weight: 500; }
   /* `page-toclevels` greater than 4 are not supported by Antora UI, patching it: */
@@ -115,7 +118,13 @@
 <div class="ulist">
 <ul>
 <li>
+<p>Update <code>github/codeql-action</code> to version `` (<a href="https://github.com/apache/logging-parent/pull/184">184</a>)</p>
+</li>
+<li>
 <p>Update <code>org.codehaus.mojo:build-helper-maven-plugin</code> to version <code>3.6.0</code> (<a href="https://github.com/apache/logging-parent/pull/183">183</a>)</p>
+</li>
+<li>
+<p>Update <code>org.codehaus.mojo:exec-maven-plugin</code> to version `` (<a href="https://github.com/apache/logging-parent/pull/185">185</a>)</p>
 </li>
 </ul>
 </div>
