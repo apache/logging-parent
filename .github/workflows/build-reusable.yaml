@@ -28,6 +28,10 @@ on:
         description: Flag indicating if Maven `site` goal should be run
         default: false
         type: boolean
+    secrets:
+      GE_ACCESS_TOKEN:
+        description: Access token to Gradle Enterprise
+        required: false
 
 jobs:
 
@@ -60,6 +64,8 @@ jobs:
       - name: Build
         id: build
         shell: bash
+        env:
+          DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
         run: |
           if [[ ! -v DEVELOCITY_ACCESS_KEY ]]; then
             exit 1;
