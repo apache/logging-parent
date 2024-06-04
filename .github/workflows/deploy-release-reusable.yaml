@@ -185,7 +185,6 @@ jobs:
       - name: Stage distribution attachments
         shell: bash
         run: |
-
           # Dump deployed artifacts to a local folder
           export ALT_DEPLOYMENT_REPO_FILEPATH="target/alt-deployment-repo"
           mkdir "$ALT_DEPLOYMENT_REPO_FILEPATH"

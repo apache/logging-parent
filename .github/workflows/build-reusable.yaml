@@ -28,6 +28,18 @@ on:
         description: Flag indicating if Maven `site` goal should be run
         default: false
         type: boolean
+      reproducibility-check-enabled:
+        description: Runs a reproducibility check on the build
+        default: true
+        type: boolean
+      develocity-enabled:
+        description: Enable Develocity Build Scan publication
+        default: false
+        type: boolean
+    secrets:
+      DV_ACCESS_TOKEN:
+        description: Access token to Gradle Enterprise
+        required: false
 
 jobs:
 
@@ -49,11 +61,40 @@ jobs:
           ref: ${{ github.event_name == 'pull_request_target' && github.head_ref || github.ref }}
 
       - name: Set up Java
-        uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018   # 3.7.0
+        uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018   # 4.2.2
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
           cache: maven
+
+      - name: Set up Develocity
+        if: inputs.develocity-enabled
+        shell: bash
+        run: |
+          if [ -f .mvn/develocity.xml -a "$HAS_TOKEN" == "true" ]; then
+            DEVELOCITY_VERSION=$(./mvnw help:evaluate -q -DforceStdout -Dexpression=develocity-maven-plugin.version)
+            USER_DATA_VERSION=$(./mvnw help:evaluate -q -DforceStdout -Dexpression=common-custom-user-data-maven-extension.version)
+            cat >.mvn/extensions.xml <<EOF
+            <extensions>
+              <extension>
+                <groupId>com.gradle</groupId>
+                <artifactId>develocity-maven-extension</artifactId>
+                <version>$DEVELOCITY_VERSION</version>
+              </extension>
+              <extension>
+                <groupId>com.gradle</groupId>
+                <artifactId>common-custom-user-data-maven-extension</artifactId>
+                <version>$USER_DATA_VERSION</version>
+              </extension>
+            </extensions>
+          EOF
+          fi
+
+      - name: Setup Develocity Build Scan capture
+        if: inputs.develocity-enabled
+        uses: gradle/develocity-actions/maven-setup@23b7c25d7e5e4a4dd5bc214d9adb43b837f8917d   # 1
+        with:
+          develocity-access-key: ${{ secrets.DV_ACCESS_TOKEN }}
 
       # We could have used `verify`, but `clean install` is required while generating the build reproducibility report, which is performed in the next step.
       # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
@@ -66,6 +107,24 @@ jobs:
             -DtrimStackTrace=false \
             -DinstallAtEnd=true \
             clean install
+
+      # We upload tests results.
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@89ef406dd8d7e03cfd12d9e0a4a378f454709029   # 4.3.5
+        with:
+          name: surefire-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
+          path: |
+            **/target/surefire-reports
+            **/target/logs
+
+      - name: Clean up Develocity
+        if: inputs.develocity-enabled
+        shell: bash
+        run: |
+          rm -f .mvn/extensions.xml
+          # Clean up changes introduced by gradle/develocity-actions/maven-setup
+          echo "MAVEN_OPTS=" >> "$GITHUB_ENV"
 
       # Node.js cache is needed for Antora
       - name: Set up Node.js cache
@@ -100,19 +159,10 @@ jobs:
             --show-version --batch-mode --errors --no-transfer-progress \
             site
 
-      # We upload tests results if the build fails.
-      - name: Upload test results
-        if: failure() && steps.build.conclusion == 'failure'
-        uses: actions/upload-artifact@89ef406dd8d7e03cfd12d9e0a4a378f454709029   # 4.3.5
-        with:
-          name: surefire-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
-          path: |
-            **/target/surefire-reports
-            **/target/logs
-
       # `clean verify artifact:compare` is required to generate the build reproducibility report.
       # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
       - name: Verify build reproducibility
+        if: inputs.reproducibility-check-enabled
         id: reproducibility
         shell: bash
         run: |
@@ -123,7 +173,7 @@ jobs:
 
       # Upload reproducibility results if the build fails.
       - name: Upload reproducibility results
-        if: failure() && steps.reproducibility.conclusion == 'failure'
+        if: inputs.reproducibility-check-enabled && failure() && steps.reproducibility.conclusion == 'failure'
         uses: actions/upload-artifact@89ef406dd8d7e03cfd12d9e0a4a378f454709029   # 4.3.5
         with:
           name: reproducibility-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
