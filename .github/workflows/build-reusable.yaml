@@ -67,9 +67,6 @@ jobs:
         env:
           DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
         run: |
-          if [[ ! -v DEVELOCITY_ACCESS_KEY ]]; then
-            exit 1;
-          fi
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             -DtrimStackTrace=false \
