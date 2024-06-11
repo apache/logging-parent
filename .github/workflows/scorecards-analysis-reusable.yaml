@@ -19,6 +19,10 @@ name: scorecards-analysis
 
 on:
   workflow_call:
+    secrets:
+      GE_ACCESS_TOKEN:
+        description: Access token to Gradle Enterprise
+        required: false
 
 jobs:
 
