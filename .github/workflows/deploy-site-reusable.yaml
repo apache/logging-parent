@@ -67,6 +67,12 @@ jobs:
           cache: maven
           gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
 
+      - name: Disable Develocity
+        shell: bash
+        if: ${{ ! secrets.GE_ACCESS_TOKEN }}
+        run: |
+          rm -f .mvn/extensions.xml
+
       - name: Build the project
         shell: bash
         if: inputs.install-required
