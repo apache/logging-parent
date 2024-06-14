@@ -28,10 +28,6 @@ on:
         description: Flag indicating if Maven `site` goal should be run
         default: false
         type: boolean
-      predictive-test-selection-enabled:
-        description: Enables Predictive Test Selection for the build
-        default: false
-        type: boolean
     secrets:
       GE_ACCESS_TOKEN:
         description: Access token to Gradle Enterprise
@@ -69,14 +65,12 @@ jobs:
         id: build
         shell: bash
         env:
-          PTS_ENABLED: ${{ inputs.predictive-test-selection-enabled }}
           DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
         run: |
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             -DtrimStackTrace=false \
             -DinstallAtEnd=true \
-            -Dpts.enabled=$PTS_ENABLED \
             clean install
 
       # Node.js cache is needed for Antora
