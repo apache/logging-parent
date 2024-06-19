@@ -28,6 +28,10 @@ on:
         description: Flag indicating if Maven `site` goal should be run
         default: false
         type: boolean
+      reproducibility-check-enabled:
+        description: Runs a reproducibility check on the build
+        default: true
+        type: boolean
     secrets:
       GE_ACCESS_TOKEN:
         description: Access token to Gradle Enterprise
@@ -106,19 +110,10 @@ jobs:
             --show-version --batch-mode --errors --no-transfer-progress \
             site
 
-      # We upload tests results if the build fails.
-      - name: Upload test results
-        if: failure() && steps.build.conclusion == 'failure'
-        uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808   # 4.3.3
-        with:
-          name: surefire-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
-          path: |
-            **/target/surefire-reports
-            **/target/logs
-
       # `clean verify artifact:compare` is required to generate the build reproducibility report.
       # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
       - name: Verify build reproducibility
+        if: inputs.reproducibility-check-enabled
         id: reproducibility
         shell: bash
         run: |
@@ -129,7 +124,7 @@ jobs:
 
       # Upload reproducibility results if the build fails.
       - name: Upload reproducibility results
-        if: failure() && steps.reproducibility.conclusion == 'failure'
+        if: inputs.reproducibility-check-enabled && failure() && steps.reproducibility.conclusion == 'failure'
         uses: actions/upload-artifact@65462800fd760344b1a7b4382951275a0abb4808   # 4.3.3
         with:
           name: reproducibility-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
