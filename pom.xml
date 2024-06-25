@@ -231,7 +231,7 @@
     <maven-artifact-plugin.version>3.5.1</maven-artifact-plugin.version>
     <restrict-imports-enforcer-rule.version>2.5.0</restrict-imports-enforcer-rule.version>
     <sign-maven-plugin.version>1.1.0</sign-maven-plugin.version>
-    <spotbugs-maven-plugin.version>4.8.5.0</spotbugs-maven-plugin.version>
+    <spotbugs-maven-plugin.version>4.8.6.0</spotbugs-maven-plugin.version>
     <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
     <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
 
