@@ -63,6 +63,30 @@ jobs:
           java-version: ${{ inputs.java-version }}
           cache: maven
 
+      - name: Set up Develocity
+        env:
+          HAS_TOKEN: ${{ secrets.GE_ACCESS_TOKEN != null }}
+        shell: bash
+        run: |
+          if [ -f .mvn/develocity.xml -a "$HAS_TOKEN" == "true" ]; then
+            DEVELOCITY_VERSION=$(./mvnw help:evaluate -q -DforceStdout -Dexpression=develocity-maven-plugin.version)
+            USER_DATA_VERSION=$(./mvnw help:evaluate -q -DforceStdout -Dexpression=common-custom-user-data-maven-extension.version)
+            cat >.mvn/extensions.xml <<EOF
+            <extensions>
+              <extension>
+                <groupId>com.gradle</groupId>
+                <artifactId>develocity-maven-extension</artifactId>
+                <version>$DEVELOCITY_VERSION</version>
+              </extension>
+              <extension>
+                <groupId>com.gradle</groupId>
+                <artifactId>common-custom-user-data-maven-extension</artifactId>
+                <version>$USER_DATA_VERSION</version>
+              </extension>
+            </extensions>
+          EOF
+          fi
+
       # We could have used `verify`, but `clean install` is required while generating the build reproducibility report, which is performed in the next step.
       # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
       - name: Build
@@ -76,6 +100,12 @@ jobs:
             -DtrimStackTrace=false \
             -DinstallAtEnd=true \
             clean install
+
+      - name: Clean up Develocity
+        if: always()
+        shell: bash
+        run: |
+          rm -f .mvn/extensions.xml
 
       # Node.js cache is needed for Antora
       - name: Set up Node.js cache
