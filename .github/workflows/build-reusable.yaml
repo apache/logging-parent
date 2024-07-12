@@ -69,19 +69,19 @@ jobs:
         shell: bash
         run: |
           if [ -f .mvn/develocity.xml -a "$HAS_TOKEN" == "true" ]; then
-            DEVELOCITY_VERSION=$(./mvnw help:evaluate -q -DforceStdout -Dexpression=develocity-maven-plugin.version)
-            USER_DATA_VERSION=$(./mvnw help:evaluate -q -DforceStdout -Dexpression=common-custom-user-data-maven-extension.version)
+            # DEVELOCITY_VERSION=$(./mvnw help:evaluate -q -DforceStdout -Dexpression=develocity-maven-plugin.version)
+            # USER_DATA_VERSION=$(./mvnw help:evaluate -q -DforceStdout -Dexpression=common-custom-user-data-maven-extension.version)
             cat >.mvn/extensions.xml <<EOF
             <extensions>
               <extension>
                 <groupId>com.gradle</groupId>
                 <artifactId>develocity-maven-extension</artifactId>
-                <version>$DEVELOCITY_VERSION</version>
+                <version>1.21.5</version>
               </extension>
               <extension>
                 <groupId>com.gradle</groupId>
                 <artifactId>common-custom-user-data-maven-extension</artifactId>
-                <version>$USER_DATA_VERSION</version>
+                <version>2.0</version>
               </extension>
             </extensions>
           EOF
