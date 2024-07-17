@@ -31,9 +31,6 @@ on:
       NEXUS_PASSWORD:
         description: Nexus snapshot repository password for deploying artifacts
         required: true
-      GE_ACCESS_TOKEN:
-        description: Access token to Gradle Enterprise
-        required: false
 
 jobs:
   deploy:
@@ -69,7 +66,6 @@ jobs:
           # `NEXUS_USERNAME` and `NEXUS_PASSWORD` are used in `~/.m2/settings.xml` created by `setup-java` action
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
-          DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
         run: |
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
