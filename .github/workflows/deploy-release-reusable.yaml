@@ -44,9 +44,6 @@ on:
       SVN_PASSWORD:
         description: Subversion password for uploading the release distribution
         required: true
-      GE_ACCESS_TOKEN:
-        description: Access token to Gradle Enterprise
-        required: false
 
 jobs:
   deploy:
@@ -142,7 +139,6 @@ jobs:
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
           # `SIGN_KEY` is used by `sign-maven-plugin`
           SIGN_KEY: ${{ secrets.GPG_SECRET_KEY }}
-          DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
         run: |
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
@@ -175,7 +171,6 @@ jobs:
         env:
           # Making Node.js cache hit visible for debugging purposes
           NODEJS_CACHE_HIT: ${{ steps.nodejs-cache.outputs.cache-hit }}
-          DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
         run: |
           export TIMESTAMP=$(./mvnw \
             --non-recursive --quiet --batch-mode \
@@ -189,8 +184,6 @@ jobs:
 
       - name: Stage distribution attachments
         shell: bash
-        env:
-          DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
         run: |
           # Dump deployed artifacts to a local folder
           export ALT_DEPLOYMENT_REPO_FILEPATH="target/alt-deployment-repo"

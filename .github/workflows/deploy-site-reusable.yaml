@@ -44,9 +44,6 @@ on:
       GPG_SECRET_KEY:
         description: GPG secret key for signing commits
         required: true
-      GE_ACCESS_TOKEN:
-        description: Access token to Gradle Enterprise
-        required: false
 
 jobs:
 
@@ -70,8 +67,6 @@ jobs:
       - name: Build the project
         shell: bash
         if: inputs.install-required
-        env:
-          DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
         run: |
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
@@ -104,7 +99,6 @@ jobs:
         env:
           # Making Node.js cache hit visible for debugging purposes
           NODEJS_CACHE_HIT: ${{ steps.nodejs-cache.outputs.cache-hit }}
-          DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
         run: |
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \

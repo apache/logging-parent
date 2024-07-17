@@ -30,10 +30,6 @@ on:
         description:
         default: java
         type: string
-    secrets:
-      GE_ACCESS_TOKEN:
-        description: Access token to Gradle Enterprise
-        required: false
 
 jobs:
 
@@ -60,8 +56,6 @@ jobs:
 
       - name: Build with Maven
         shell: bash
-        env:
-          DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
         run: |
           ./mvnw \
           --show-version --batch-mode --errors --no-transfer-progress \

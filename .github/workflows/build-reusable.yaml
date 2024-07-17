@@ -32,8 +32,12 @@ on:
         description: Runs a reproducibility check on the build
         default: true
         type: boolean
+      develocity-enabled:
+        description: Enable Develocity Build Scan publication
+        default: false
+        type: boolean
     secrets:
-      GE_ACCESS_TOKEN:
+      DV_ACCESS_TOKEN:
         description: Access token to Gradle Enterprise
         required: false
 
@@ -64,11 +68,10 @@ jobs:
           cache: maven
 
       - name: Set up Develocity
-        env:
-          HAS_TOKEN: ${{ secrets.GE_ACCESS_TOKEN != null }}
+        if: inputs.develocity-enabled
         shell: bash
         run: |
-          if [ -f .mvn/develocity.xml -a "$HAS_TOKEN" == "true" ]; then
+          if [ -f .mvn/develocity.xml ]; then
             # DEVELOCITY_VERSION=$(./mvnw help:evaluate -q -DforceStdout -Dexpression=develocity-maven-plugin.version)
             # USER_DATA_VERSION=$(./mvnw help:evaluate -q -DforceStdout -Dexpression=common-custom-user-data-maven-extension.version)
             cat >.mvn/extensions.xml <<EOF
@@ -87,13 +90,17 @@ jobs:
           EOF
           fi
 
+      - name: Setup Develocity Build Scan capture
+        if: inputs.develocity-enabled
+        uses: gradle/develocity-actions/maven-setup@v1
+        with:
+          develocity-access-key: ${{ secrets.DV_ACCESS_TOKEN }}
+
       # We could have used `verify`, but `clean install` is required while generating the build reproducibility report, which is performed in the next step.
       # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
       - name: Build
         id: build
         shell: bash
-        env:
-          DEVELOCITY_ACCESS_KEY: ${{ secrets.GE_ACCESS_TOKEN }}
         run: |
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \

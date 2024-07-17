@@ -28,9 +28,6 @@ on:
       GPG_SECRET_KEY:
         description: GPG secret key for signing commits
         required: true
-      GE_ACCESS_TOKEN:
-        description: Access token to Gradle Enterprise
-        required: false
 
 jobs:
 
