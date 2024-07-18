@@ -113,6 +113,7 @@ jobs:
         shell: bash
         run: |
           rm -f .mvn/extensions.xml
+          echo "MAVEN_OPTS=" >> "$GITHUB_ENV"
 
       # Node.js cache is needed for Antora
       - name: Set up Node.js cache
