@@ -71,7 +71,7 @@ jobs:
         if: inputs.develocity-enabled
         shell: bash
         run: |
-          if [ -f .mvn/develocity.xml -a "$HAS_TOKEN" == "true" ]; then
+          if [ -f .mvn/develocity.xml ]; then
             DEVELOCITY_VERSION=$(./mvnw help:evaluate -q -DforceStdout -Dexpression=develocity-maven-plugin.version)
             USER_DATA_VERSION=$(./mvnw help:evaluate -q -DforceStdout -Dexpression=develocity-user-data-extension.version)
             cat >.mvn/extensions.xml <<EOF
