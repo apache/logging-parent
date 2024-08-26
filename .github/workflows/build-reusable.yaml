@@ -73,7 +73,7 @@ jobs:
         run: |
           if [ -f .mvn/develocity.xml -a "$HAS_TOKEN" == "true" ]; then
             DEVELOCITY_VERSION=$(./mvnw help:evaluate -q -DforceStdout -Dexpression=develocity-maven-plugin.version)
-            USER_DATA_VERSION=$(./mvnw help:evaluate -q -DforceStdout -Dexpression=common-custom-user-data-maven-extension.version)
+            USER_DATA_VERSION=$(./mvnw help:evaluate -q -DforceStdout -Dexpression=develocity-user-data-extension.version)
             cat >.mvn/extensions.xml <<EOF
             <extensions>
               <extension>
@@ -88,6 +88,8 @@ jobs:
               </extension>
             </extensions>
           EOF
+          # Print file for debugging purposes
+          cat .mvn/extensions.xml
           fi
 
       - name: Setup Develocity Build Scan capture
