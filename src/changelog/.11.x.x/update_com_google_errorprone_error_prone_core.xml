@@ -3,6 +3,6 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="updated">
-  <issue id="222" link="https://github.com/apache/logging-parent/pull/222"/>
-  <description format="asciidoc">Update `com.google.errorprone:error_prone_core` to version `2.30.0`</description>
+  <issue id="231" link="https://github.com/apache/logging-parent/pull/231"/>
+  <description format="asciidoc">Update `com.google.errorprone:error_prone_core` to version `2.31.0`</description>
 </entry>
