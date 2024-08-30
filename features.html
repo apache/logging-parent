@@ -5,18 +5,22 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Features :: Apache Logging Parent</title>
     <link rel="canonical" href="https://logging.apache.org/logging-parent/features.html">
-    <meta name="generator" content="Antora 3.2.0-alpha.4">
+    <meta name="generator" content="Antora 3.2.0-alpha.6">
 <link rel="stylesheet" href="./_/css/site.css">
 <link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
 <!-- `@asciidoctor/tabs` extension styles -->
 <link rel="stylesheet" href="./_/css/vendor/tabs.css">
 <style>
-  /* Default `h4` and `h5` are smaller than the normal text, fix header font sizing: */
+  /* Swap colors of `IMPORTANT` and `WARNING` blocks */
+  .doc .admonitionblock.important .icon { background-color: #f70; }
+  .doc .admonitionblock.warning .icon { background-color: #e40046; }
+  /* Default `h4`, `h5`, and `h6` are smaller than the normal text, fix header font sizing: */
   .doc h1 { font-size: 1.9rem; }
   .doc h2 { font-size: 1.7rem; }
   .doc h3 { font-size: 1.5rem; font-weight: 400; }
   .doc h4 { font-size: 1.3rem; font-weight: 500; }
   .doc h5 { font-size: 1.1rem; font-weight: 500; text-decoration: underline; }
+  .doc h6 { font-size: 0.9rem; font-weight: 500; text-decoration: underline; }
   /* Default `code`, `pre`, and `.colist` (source code annotations) fonts are too big, adjust them: */
   .doc .colist>table code, .doc p code, .doc thead code { font-size: 0.8em; }
   .doc pre { font-size: 0.7rem; }
@@ -180,6 +184,9 @@ This VDR is accessible through the following URL: <a href="https://logging.apach
 <li>
 <p>Verifies reproducibility</p>
 </li>
+<li>
+<p>Submits build scans to the Develocity server</p>
+</li>
 </ul>
 </div>
 </dd>
@@ -236,6 +243,123 @@ This VDR is accessible through the following URL: <a href="https://logging.apach
 </div>
 </dd>
 </dl>
+</div>
+<div class="sect2">
+<h3 id="develocity-configuration"><a class="anchor" href="#develocity-configuration"></a>Develocity configuration</h3>
+<div class="paragraph">
+<p><a href="https://gradle.com/develocity/">Gradle Develocity</a> is a service that provides statistics and other improvements to the development experience.
+Due to an
+<a href="https://gradle.com/blog/apache-software-foundation-standardizes-on-gradle-develocity-to-improve-developer-productivity-experience/">agreement between the ASF and Gradle</a>,
+it is available for all ASF projects as INFRA hosted <a href="https://ge.apache.org/"><code>ge.apache.org</code></a> service.</p>
+</div>
+<div class="paragraph">
+<p>To submit build scans to the <code>ge.apache.org</code> server you need to:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add a <code>.mvn/develocity.xml</code> configuration file to the repository.
+See
+<a href="https://docs.gradle.com/develocity/maven-extension/current/">Develocity Maven Extension User Manual</a>
+for detailed configuration options.</p>
+<div class="paragraph">
+<p>You can use the following example as template:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;develocity&gt;
+  &lt;projectId&gt;logging-log4j2&lt;/projectId&gt;
+  &lt;server&gt;
+    &lt;url&gt;https://ge.apache.org&lt;/url&gt;
+  &lt;/server&gt;
+  &lt;buildScan&gt;
+    &lt;obfuscation&gt;
+      &lt;ipAddresses&gt;0.0.0.0&lt;/ipAddresses&gt;
+    &lt;/obfuscation&gt;
+    &lt;publishing&gt;
+      &lt;onlyIf&gt;
+        &lt;![CDATA[env['CI'] != null]]&gt;
+      &lt;/onlyIf&gt;
+    &lt;/publishing&gt;
+    &lt;backgroundBuildScanUpload&gt;false&lt;/backgroundBuildScanUpload&gt;
+  &lt;/buildScan&gt;
+  &lt;buildCache&gt;
+    &lt;local&gt;
+      &lt;enabled&gt;false&lt;/enabled&gt;
+    &lt;/local&gt;
+    &lt;remote&gt;
+      &lt;enabled&gt;false&lt;/enabled&gt;
+    &lt;/remote&gt;
+  &lt;/buildCache&gt;
+&lt;/develocity&gt;</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do <strong>not</strong> add any <code>.mvn/extensions.xml</code> file to the repository.
+The file will be created by the <code>reusable-build</code> workflow.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Modify the build workflow that should publish build scans:</p>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Pass the <code>secrets.GE_ACCESS_TOKEN</code>, which is defined in all ASF repos as <code>DV_ACCESS_TOKEN</code> secret of the workflow.</p>
+</li>
+<li>
+<p>Set the <code>develocity-enabled</code> parameter to <code>true</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>For example, you can use the snippet below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">build:
+  uses: apache/logging-parent/.github/workflows/build-reusable.yaml@rel/11.0.0
+  secrets:
+    DV_ACCESS_TOKEN: ${{ ! startsWith(github.refname, 'release/') &amp;&amp; secrets.GE_ACCESS_TOKEN }}
+  with:
+    develocity-enabled: ${{ ! startsWith(github.refname, 'release/') }}</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The Maven Develocity Extension is a <strong>closed source</strong> extension, which requires a commercial
+<a href="https://gradle.com/">Gradle Inc</a>
+license to work.
+To guarantee the reproducibility of our builds and the security of our software suplly chain, please disable the extension in our <strong>release</strong> builds.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
 </div>
 </div>
 </div>

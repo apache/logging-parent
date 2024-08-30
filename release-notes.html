@@ -5,18 +5,22 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Release notes :: Apache Logging Parent</title>
     <link rel="canonical" href="https://logging.apache.org/logging-parent/release-notes.html">
-    <meta name="generator" content="Antora 3.2.0-alpha.4">
+    <meta name="generator" content="Antora 3.2.0-alpha.6">
 <link rel="stylesheet" href="./_/css/site.css">
 <link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
 <!-- `@asciidoctor/tabs` extension styles -->
 <link rel="stylesheet" href="./_/css/vendor/tabs.css">
 <style>
-  /* Default `h4` and `h5` are smaller than the normal text, fix header font sizing: */
+  /* Swap colors of `IMPORTANT` and `WARNING` blocks */
+  .doc .admonitionblock.important .icon { background-color: #f70; }
+  .doc .admonitionblock.warning .icon { background-color: #e40046; }
+  /* Default `h4`, `h5`, and `h6` are smaller than the normal text, fix header font sizing: */
   .doc h1 { font-size: 1.9rem; }
   .doc h2 { font-size: 1.7rem; }
   .doc h3 { font-size: 1.5rem; font-weight: 400; }
   .doc h4 { font-size: 1.3rem; font-weight: 500; }
   .doc h5 { font-size: 1.1rem; font-weight: 500; text-decoration: underline; }
+  .doc h6 { font-size: 0.9rem; font-weight: 500; text-decoration: underline; }
   /* Default `code`, `pre`, and `.colist` (source code annotations) fonts are too big, adjust them: */
   .doc .colist>table code, .doc p code, .doc thead code { font-size: 0.8em; }
   .doc pre { font-size: 0.7rem; }
@@ -107,6 +111,91 @@
 </aside>
 <article class="doc">
 <h1 class="page">Release notes</h1>
+<div class="sect1">
+<h2 id="release-notes-11-2-0"><a class="anchor" href="#release-notes-11-2-0"></a>11.2.0</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2024-08-27</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This minor release integrates Gradle Develocity into the reusable workflows.
+See <a href="features.html#develocity-configuration" class="xref page">Develocity Configuration</a> for more details.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-11-2-0-added"><a class="anchor" href="#release-notes-11-2-0-added"></a>Added</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Add option to disable reproducibility check in reusable builds. (<a href="https://github.com/apache/logging-parent/pull/195">195</a>)</p>
+</li>
+<li>
+<p>Add option to enable Develocity in builds.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-11-2-0-updated"><a class="anchor" href="#release-notes-11-2-0-updated"></a>Updated</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>actions/checkout</code> to version <code>4.1.7</code> (<a href="https://github.com/apache/logging-parent/pull/192">192</a>)</p>
+</li>
+<li>
+<p>Update <code>actions/setup-java</code> to version <code>4.2.2</code> (<a href="https://github.com/apache/logging-parent/pull/217">217</a>)</p>
+</li>
+<li>
+<p>Update <code>actions/upload-artifact</code> to version <code>4.3.6</code> (<a href="https://github.com/apache/logging-parent/pull/219">219</a>)</p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-annotations</code> to version <code>4.8.6</code> (<a href="https://github.com/apache/logging-parent/pull/194">194</a>)</p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.8.6.2</code> (<a href="https://github.com/apache/logging-parent/pull/201">201</a>)</p>
+</li>
+<li>
+<p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.31.0</code> (<a href="https://github.com/apache/logging-parent/pull/231">231</a>)</p>
+</li>
+<li>
+<p>Update <code>com.palantir.javaformat:palantir-java-format</code> to version <code>2.50.0</code> (<a href="https://github.com/apache/logging-parent/pull/226">226</a>)</p>
+</li>
+<li>
+<p>Update <code>dependabot/fetch-metadata</code> to version <code>2.2.0</code> (<a href="https://github.com/apache/logging-parent/pull/200">200</a>)</p>
+</li>
+<li>
+<p>Update <code>github/codeql-action</code> to version <code>3.26.5</code> (<a href="https://github.com/apache/logging-parent/pull/230">230</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache:apache</code> to version <code>33</code> (<a href="https://github.com/apache/logging-parent/pull/203">203</a>)</p>
+</li>
+<li>
+<p>Update <code>org.codehaus.mojo:build-helper-maven-plugin</code> to version <code>3.6.0</code> (<a href="https://github.com/apache/logging-parent/pull/183">183</a>)</p>
+</li>
+<li>
+<p>Update <code>org.codehaus.mojo:exec-maven-plugin</code> to version <code>3.4.1</code> (<a href="https://github.com/apache/logging-parent/pull/223">223</a>)</p>
+</li>
+<li>
+<p>Update <code>org.cyclonedx:cyclonedx-maven-plugin</code> to version <code>2.8.1</code> (<a href="https://github.com/apache/logging-parent/pull/216">216</a>)</p>
+</li>
+<li>
+<p>Update <code>org.eclipse.jgit:org.eclipse.jgit</code> to version <code>6.10.0.202406032230-r</code> (<a href="https://github.com/apache/logging-parent/pull/190">190</a>)</p>
+</li>
+<li>
+<p>Update <code>org.jspecify:jspecify</code> to version <code>1.0.0</code> (<a href="https://github.com/apache/logging-parent/pull/206">206</a>)</p>
+</li>
+<li>
+<p>Update <code>ossf/scorecard-action</code> to version <code>2.4.0</code> (<a href="https://github.com/apache/logging-parent/pull/212">212</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 <div class="sect1">
 <h2 id="release-notes-11-1-0"><a class="anchor" href="#release-notes-11-1-0"></a>11.1.0</h2>
 <div class="sectionbody">
