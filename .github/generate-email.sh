@@ -53,7 +53,6 @@ RELEASE_NOTES_FILE="$SCRIPT_DIR/../target/generated-site/antora/modules/ROOT/pag
 }
 
 dump_review_kit() {
-    local shortCommitId="${COMMIT_ID:0:8}"
     cat "$SCRIPT_DIR/release-review-kit.txt" \
         | sed -n '/-----8<-----~( cut here )~-----8<-----/,$p' \
         | tail -n +2 \
@@ -61,7 +60,7 @@ dump_review_kit() {
         | sed -r "s|@PROJECT_ID@|$PROJECT_ID|g"
         | sed -r "s|@PROJECT_VERSION@|$PROJECT_VERSION|g"
         | sed -r "s|@PROJECT_DIST_URL@|$PROJECT_DIST_URL|g"
-        | sed -r "s|@COMMIT_ID@|$shortCommitId|g"
+        | sed -r "s|@COMMIT_ID@|${COMMIT_ID:0:8}|g"
 }
 
 dump_release_notes() {
