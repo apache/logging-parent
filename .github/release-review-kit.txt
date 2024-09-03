@@ -23,19 +23,27 @@ should work universally for all projects using
 
 -----8<-----~( cut here )~-----8<-----
 # Check out the distribution
-svn co https://dist.apache.org/repos/dist/dev/logging/... && cd $_
+wget --cut-dirs=6 \
+     --no-host-directories \
+     --no-parent \
+     --recursive \
+     https://dist.apache.org/repos/dist/dev/logging/@PROJECT_NAME@/@PROJECT_VERSION@
 
 # Verify checksums
-shasum --check *.sha512
+sha512sum --check *.sha512
 
 # Verify signatures
-wget -O - https://downloads.apache.org/logging/KEYS | gpg --import
+#
+# If you didn't import the KEYS previously, run:
+# wget -O - https://downloads.apache.org/logging/KEYS | gpg --import
 for sigFile in *.asc; do gpg --verify $sigFile; done
 
-# Verify reproduciblity
+# Verify reproducibility (only Linux/MacOS X)
 umask 0022
 unzip *-src.zip -d src
 cd src
-export NEXUS_REPO=https://repository.apache.org/content/...
-sh mvnw -Prelease verify artifact:compare -Dreference.repo=$NEXUS_REPO
-# If preferred, augment `mvnw` with `-DskipTests` to speed things up
+export NEXUS_REPO=https://repository.apache.org/content/repositories/orgapachelogging-<CHECK>
+sh mvnw -Prelease clean verify artifact:compare -Dreference.repo=$NEXUS_REPO
+
+# Run tests only (Windows)
+sh mvnw -Prelease clean verify artifact:compare
