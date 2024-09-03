@@ -27,7 +27,7 @@ wget --cut-dirs=6 \
      --no-host-directories \
      --no-parent \
      --recursive \
-     https://dist.apache.org/repos/dist/dev/logging/@PROJECT_NAME@/@PROJECT_VERSION@
+     https://dist.apache.org/repos/dist/dev/logging/@PROJECT_NAME@/@PROJECT_VERSION@/
 
 # Verify checksums
 sha512sum --check *.sha512
