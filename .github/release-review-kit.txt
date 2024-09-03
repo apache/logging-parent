@@ -23,27 +23,23 @@ should work universally for all projects using
 
 -----8<-----~( cut here )~-----8<-----
 # Check out the distribution
-wget --cut-dirs=6 \
-     --no-host-directories \
-     --no-parent \
-     --recursive \
-     @PROJECT_DIST_DIR@/@PROJECT_VERSION@/
+svn co @PROJECT_DIST_URL@ @PROJECT_ID@-@PROJECT_VERSION@-@COMMIT_ID@ && cd $_
 
 # Verify checksums
 sha512sum --check *.sha512
 
 # Verify signatures
-#
-# If you didn't import the KEYS previously, run:
-# wget -O - https://downloads.apache.org/logging/KEYS | gpg --import
+wget -O - https://downloads.apache.org/logging/KEYS | gpg --import
 for sigFile in *.asc; do gpg --verify $sigFile; done
 
-# Verify reproducibility (only Linux/MacOS X)
+# Extract the sources
 umask 0022
 unzip *-src.zip -d src
 cd src
-export NEXUS_REPO=https://repository.apache.org/content/repositories/orgapachelogging-<CHECK>
-sh mvnw -Prelease clean verify artifact:compare -Dreference.repo=$NEXUS_REPO
 
-# Run tests only (Windows)
-sh mvnw -Prelease clean verify artifact:compare
+# [Linux/macOS] Verify the build and its reproducibility
+export NEXUS_REPO=https://repository.apache.org/content/repositories/orgapachelogging-<CHECK>
+sh mvnw -Prelease verify artifact:compare -Dreference.repo=$NEXUS_REPO
+
+# [Windows] Verify the build
+sh mvnw verify
