@@ -38,7 +38,7 @@ unzip *-src.zip -d src
 cd src
 
 # [Linux/macOS] Verify the build and its reproducibility
-export NEXUS_REPO=https://repository.apache.org/content/repositories/orgapachelogging-<CHECK>
+export NEXUS_REPO=https://repository.apache.org/content/repositories/orgapachelogging-<FIXME>
 sh mvnw -Prelease verify artifact:compare -Dreference.repo=$NEXUS_REPO
 
 # [Windows] Verify the build
