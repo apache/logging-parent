@@ -77,13 +77,16 @@
   </li>
   <li class="nav-item" data-depth="0">
     <button class="nav-item-toggle"></button>
-    <span class="nav-text">Release instructions</span>
+    <span class="nav-text">Release support</span>
 <ul class="nav-list">
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="release-instructions-project.html">For projects</a>
+    <a class="nav-link" href="release-review-instructions.html">Project release review instructions</a>
   </li>
   <li class="nav-item" data-depth="1">
-    <a class="nav-link" href="release-instructions-xml-schema.html">For XML schemas</a>
+    <a class="nav-link" href="release-instructions-project.html">Project release instructions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-xml-schema.html">XML schema release instructions</a>
   </li>
 </ul>
   </li>
@@ -174,7 +177,7 @@ This VDR is accessible through the following URL: <a href="https://logging.apach
 </div>
 <div class="dlist">
 <dl>
-<dt class="hdlist1"><code>build-reusable.yaml</code></dt>
+<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/build-reusable.yaml"><code>build-reusable.yaml</code></a></dt>
 <dd>
 <div class="ulist">
 <ul>
@@ -190,7 +193,7 @@ This VDR is accessible through the following URL: <a href="https://logging.apach
 </ul>
 </div>
 </dd>
-<dt class="hdlist1"><code>deploy-release-reusable.yaml</code></dt>
+<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-release-reusable.yaml"><code>deploy-release-reusable.yaml</code></a></dt>
 <dd>
 <div class="ulist">
 <ul>
@@ -212,7 +215,7 @@ This VDR is accessible through the following URL: <a href="https://logging.apach
 </ul>
 </div>
 </dd>
-<dt class="hdlist1"><code>deploy-site-reusable.yaml</code></dt>
+<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-site-reusable.yaml"><code>deploy-site-reusable.yaml</code></a></dt>
 <dd>
 <div class="ulist">
 <ul>
@@ -222,7 +225,7 @@ This VDR is accessible through the following URL: <a href="https://logging.apach
 </ul>
 </div>
 </dd>
-<dt class="hdlist1"><code>deploy-snapshot-reusable.yaml</code></dt>
+<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-snapshot-reusable.yaml"><code>deploy-snapshot-reusable.yaml</code></a></dt>
 <dd>
 <div class="ulist">
 <ul>
@@ -232,17 +235,36 @@ This VDR is accessible through the following URL: <a href="https://logging.apach
 </ul>
 </div>
 </dd>
-<dt class="hdlist1"><code>merge-dependabot-reusable.yaml</code></dt>
+<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/merge-dependabot-reusable.yaml"><code>merge-dependabot-reusable.yaml</code></a></dt>
 <dd>
 <div class="ulist">
 <ul>
 <li>
-<p>Merges <code>dependabot</code> PRs changelog entries</p>
+<p>Merges <code>dependabot</code> PRs along with changelog entries</p>
 </li>
 </ul>
 </div>
 </dd>
 </dl>
+</div>
+<div class="sect2">
+<h3 id="release-instructions"><a class="anchor" href="#release-instructions"></a>Release instructions</h3>
+<div class="paragraph">
+<p>See following guides for projects employing Logging Parent to cut releases:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="release-review-instructions.html" class="xref page">Project release review instructions</a></p>
+</li>
+<li>
+<p><a href="release-instructions-project.html" class="xref page">Project release instructions</a></p>
+</li>
+<li>
+<p><a href="release-instructions-xml-schema.html" class="xref page">XML schema release instructions</a></p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect2">
 <h3 id="develocity-configuration"><a class="anchor" href="#develocity-configuration"></a>Develocity configuration</h3>
@@ -252,9 +274,9 @@ Due to an
 <a href="https://gradle.com/blog/apache-software-foundation-standardizes-on-gradle-develocity-to-improve-developer-productivity-experience/">agreement between the ASF and Gradle</a>,
 it is available for all ASF projects as INFRA hosted <a href="https://ge.apache.org/"><code>ge.apache.org</code></a> service.</p>
 </div>
-<div class="paragraph">
-<p>To submit build scans to the <code>ge.apache.org</code> server you need to:</p>
-</div>
+<details>
+<summary class="title">Click for instructions to submit build scans to the <code>ge.apache.org</code> server</summary>
+<div class="content">
 <div class="olist arabic">
 <ol class="arabic">
 <li>
@@ -360,6 +382,8 @@ To guarantee the reproducibility of our builds and the security of our software 
 </li>
 </ol>
 </div>
+</div>
+</details>
 </div>
 </div>
 </div>
