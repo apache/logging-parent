@@ -347,7 +347,7 @@
         <!-- Fake entry to be upgraded by Dependabot -->
         <plugin>
           <groupId>com.gradle</groupId>
-          <artifactId>develocity-maven-plugin</artifactId>
+          <artifactId>develocity-maven-extension</artifactId>
           <version>${develocity-maven-plugin.version}</version>
         </plugin>
 
