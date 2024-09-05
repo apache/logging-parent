@@ -84,6 +84,7 @@ Commit: $COMMIT_ID
 Distribution: $PROJECT_DIST_URL
 Nexus: https://repository.apache.org/content/repositories/orgapachelogging-<FIXME>
 Signing key: 0x077e8893a6dcc33dd4a4d5b256e73ba9a0b592d0
+Review kit: https://s.apache.org/logging-parent-release-review-kit
 
 Please download, test, and cast your votes on this mailing list.
 
@@ -94,13 +95,6 @@ This vote is open for 72 hours and will pass unless getting a
 net negative vote count. All votes are welcome and we encourage
 everyone to test the release, but only the Logging Services PMC
 votes are officially counted.
-
-== Review kit
-
-The minimum set of steps needed to review the uploaded distribution
-files in the Subversion repository can be summarized as follows:
-
-$(dump_review_kit)
 
 == Release notes
 
