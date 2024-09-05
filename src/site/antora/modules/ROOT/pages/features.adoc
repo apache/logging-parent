@@ -51,26 +51,35 @@ This VDR is accessible through the following URL: {logging-services-url}/cyclone
 
 The provided reusable GitHub Actions workflows feature the following conveniences:
 
-`build-reusable.yaml`::
+{project-github-url}/blob/main/.github/workflows/build-reusable.yaml[`build-reusable.yaml`]::
 * Compiles using the specified Java compiler version
 * Verifies reproducibility
 * Submits build scans to the Develocity server
 
-`deploy-release-reusable.yaml`::
+{project-github-url}/blob/main/.github/workflows/deploy-release-reusable.yaml[`deploy-release-reusable.yaml`]::
 * Deploys release artifacts
 * Updates `revision` and `project.build.outputTimestamp` Maven properties
 * Generates the distribution ZIP containing Git-tracked sources, binary attachments, `NOTICE.txt`, etc.
 * Generates the release vote & announcement emails
 * Uploads the distribution ZIP and emails to SVN
 
-`deploy-site-reusable.yaml`::
+{project-github-url}/blob/main/.github/workflows/deploy-site-reusable.yaml[`deploy-site-reusable.yaml`]::
 * Builds and deploys the website
 
-`deploy-snapshot-reusable.yaml`::
+{project-github-url}/blob/main/.github/workflows/deploy-snapshot-reusable.yaml[`deploy-snapshot-reusable.yaml`]::
 * Deploys SNAPSHOT artifacts
 
-`merge-dependabot-reusable.yaml`::
-* Merges `dependabot` PRs changelog entries
+{project-github-url}/blob/main/.github/workflows/merge-dependabot-reusable.yaml[`merge-dependabot-reusable.yaml`]::
+* Merges `dependabot` PRs along with changelog entries
+
+[#release-instructions]
+=== Release instructions
+
+See following guides for projects employing {project-name} to cut releases:
+
+* xref:release-review-instructions.adoc[]
+* xref:release-instructions-project.adoc[]
+* xref:release-instructions-xml-schema.adoc[]
 
 [#develocity-configuration]
 === Develocity configuration
@@ -80,8 +89,9 @@ Due to an
 https://gradle.com/blog/apache-software-foundation-standardizes-on-gradle-develocity-to-improve-developer-productivity-experience/[agreement between the ASF and Gradle],
 it is available for all ASF projects as INFRA hosted https://ge.apache.org/[`ge.apache.org`] service.
 
-To submit build scans to the `ge.apache.org` server you need to:
-
+.Click for instructions to submit build scans to the `ge.apache.org` server
+[%collapsible]
+====
 . Add a `.mvn/develocity.xml` configuration file to the repository.
 See
 https://docs.gradle.com/develocity/maven-extension/current/[Develocity Maven Extension User Manual]
@@ -95,10 +105,10 @@ include::example$develocity.xml[lines=1;18..-1]
 ----
 +
 [NOTE]
-====
+=====
 Do **not** add any `.mvn/extensions.xml` file to the repository.
 The file will be created by the `reusable-build` workflow.
-====
+=====
 
 . Modify the build workflow that should publish build scans:
 +
@@ -121,9 +131,10 @@ build:
 ----
 +
 [IMPORTANT]
-====
+=====
 The Maven Develocity Extension is a **closed source** extension, which requires a commercial
 https://gradle.com/[Gradle Inc]
 license to work.
 To guarantee the reproducibility of our builds and the security of our software suplly chain, please disable the extension in our **release** builds.
+=====
 ====

@@ -19,6 +19,7 @@
 * xref:usage.adoc[]
 * xref:release-notes.adoc[]
 
-.Release instructions
-** xref:release-instructions-project.adoc[For projects]
-** xref:release-instructions-xml-schema.adoc[For XML schemas]
+.Release support
+* xref:release-review-instructions.adoc[]
+* xref:release-instructions-project.adoc[]
+* xref:release-instructions-xml-schema.adoc[]
