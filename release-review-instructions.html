@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Project release review instructions :: Apache Logging Parent</title>
+    <link rel="canonical" href="https://logging.apache.org/logging-parent/release-review-instructions.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.6">
+<link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
+<!-- `@asciidoctor/tabs` extension styles -->
+<link rel="stylesheet" href="./_/css/vendor/tabs.css">
+<style>
+  /* Swap colors of `IMPORTANT` and `WARNING` blocks */
+  .doc .admonitionblock.important .icon { background-color: #f70; }
+  .doc .admonitionblock.warning .icon { background-color: #e40046; }
+  /* Default `h4`, `h5`, and `h6` are smaller than the normal text, fix header font sizing: */
+  .doc h1 { font-size: 1.9rem; }
+  .doc h2 { font-size: 1.7rem; }
+  .doc h3 { font-size: 1.5rem; font-weight: 400; }
+  .doc h4 { font-size: 1.3rem; font-weight: 500; }
+  .doc h5 { font-size: 1.1rem; font-weight: 500; text-decoration: underline; }
+  .doc h6 { font-size: 0.9rem; font-weight: 500; text-decoration: underline; }
+  /* Default `code`, `pre`, and `.colist` (source code annotations) fonts are too big, adjust them: */
+  .doc .colist>table code, .doc p code, .doc thead code { font-size: 0.8em; }
+  .doc pre { font-size: 0.7rem; }
+  .doc .colist { font-size: 0.75rem; }
+  /* Make links more visible: */
+  .doc a { text-decoration: underline; }
+  .doc a code { text-decoration: underline; color: #1565c0; }
+  /* Tab header fonts aren't rendered good, adjusting the font weight: */
+  .tablist > ul li { font-weight: 500; }
+  /* `page-toclevels` greater than 4 are not supported by Antora UI, patching it: */
+  .toc .toc-menu li[data-level="4"] a {
+    padding-left: 2.75rem;
+  }
+  /* Replace the default highlight.js color for strings from red (unnecessarily signaling something negative) to green: */
+  .hljs-string {
+    color: #0f8532;
+  }
+</style>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <span class="navbar-item title">Apache Logging Parent</span>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://logging.apache.org">a subproject of&nbsp;<strong>Apache Logging Services</strong></a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Home</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="features.html">Features</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="usage.html">Usage</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-notes.html">Release notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Release support</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="release-review-instructions.html">Project release review instructions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-project.html">Project release instructions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-xml-schema.html">XML schema release instructions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li>Release support</li>
+    <li><a href="release-review-instructions.html">Project release review instructions</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/apache/logging-parent/edit/main/src/site/antora/modules/ROOT/pages/release-review-instructions.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Project release review instructions</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Logging Parent provides an extensive CI helper system in the form of <a href="features.html#reusable-workflows" class="xref page">reusable GitHub Action workflows</a>.
+Releases of projects employing these workflows in their CI system can be reviewed using steps shared in this guide.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="verify"><a class="anchor" href="#verify"></a>Release verification</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Releases of projects employing the Logging Parent CI helper system can be verified with following steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Check out the release distribution:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">svn co https://dist.apache.org/repos/dist/dev/logging/&lt;projectName&gt;/&lt;releaseVersion&gt; \
+  &lt;projectName&gt;-&lt;releaseVersion&gt; &amp;&amp; cd $_</code></pre>
+</div>
+</div>
+<details>
+<summary class="title">Click to see how to check out using <code>wget</code> instead of <code>svn</code></summary>
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkdir &lt;projectName&gt;-&lt;releaseVersion&gt; &amp;&amp; cd $_
+wget --cut-dirs=6 \
+     --no-host-directories \
+     --no-parent \
+     --recursive \
+     https://dist.apache.org/repos/dist/dev/logging/&lt;projectName&gt;/&lt;releaseVersion&gt;/</code></pre>
+</div>
+</div>
+</div>
+</details>
+</li>
+<li>
+<p>Verify checksums:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sha512sum --check *.sha512</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Import the release manager GPG keys, unless you haven&#8217;t earlier done so:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">wget -O - https://downloads.apache.org/logging/KEYS | gpg --import</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify signatures:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">for sigFile in *.asc; do gpg --verify $sigFile; done</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Extract sources:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">umask 0022
+unzip -q *-src.zip -d src
+cd src</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Verify the build:</p>
+<div id="_tabs_1" class="openblock tabs is-loading">
+<div class="content">
+<div class="ulist tablist">
+<ul>
+<li id="_tabs_1_linuxmacos" class="tab">
+<p>Linux/macOS</p>
+</li>
+<li id="_tabs_1_windows" class="tab">
+<p>Windows</p>
+</li>
+</ul>
+</div>
+<div id="_tabs_1_linuxmacos--panel" class="tabpanel" aria-labelledby="_tabs_1_linuxmacos">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sh mvnw verify \
+  -Prelease artifact:compare \ <i class="conum" data-value="1"></i><b>(1)</b>
+  -Dreference.repo=https://repository.apache.org/... <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>artifact:compare</code> goal, along with <code>-Prelease</code> instruction, is used to verify <strong>the build reproducibility</strong>.
+That is, to verify that the artifacts generated by CI match the ones you locally generate.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Place here the Nexus repository URL shared in the release vote email</td>
+</tr>
+</table>
+</div>
+</div>
+<div id="_tabs_1_windows--panel" class="tabpanel" aria-labelledby="_tabs_1_windows">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sh mvnw verify</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="troubleshooting"><a class="anchor" href="#troubleshooting"></a>Troubleshooting</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you happen to experience problems while trying to follow <a href="#verify">the verification steps</a>, unless there is a bug in the workflows, <strong>it is most likely due to an unexpected setup in your build host</strong>.
+You can use one of the techniques below to troubleshoot such problems:</p>
+</div>
+<div id="troubleshooting-m2" class="dlist">
+<dl>
+<dt class="hdlist1">Clean up the local Maven repository</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">rm -rf ~/.m2/repository</code></pre>
+</div>
+</div>
+</dd>
+</dl>
+</div>
+<div id="troubleshooting-rerun" class="dlist">
+<dl>
+<dt class="hdlist1">Rerun failing tests</dt>
+<dd>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sh mvnw install -DskipTests
+sh mvnw test \
+  -Dsurefire.rerunFailingTestsCount=3 \
+  -pl &lt;failingModule&gt; -Dtest=&lt;failingTestClassName&gt;</code></pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Use a Java runtime matching the one in CI</dt>
+<dd>
+<div class="paragraph">
+<p>Logging Parent uses <a href="https://docs.azul.com/core/#azul-zulu-builds-of-openjdk">Azul Zulu builds of OpenJDK</a> in <a href="features.html#reusable-workflows" class="xref page">reusable GitHub Action workflows</a>.
+You can try building with Azul Zulu.</p>
+</div>
+</dd>
+</dl>
+</div>
+<div id="troubleshoot-docker" class="dlist">
+<dl>
+<dt class="hdlist1">Use a Docker container for the build</dt>
+<dd>
+<div class="paragraph">
+<p>You can use a Docker container to build the sources as follows:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run the container with project sources and a Maven home mounted:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export DOCKER_IMAGE="azul/zulu-openjdk:17" <i class="conum" data-value="1"></i><b>(1)</b>
+docker pull $DOCKER_IMAGE
+docker run -it --rm \
+  --network host \
+  -v $PWD/src:/src \ <i class="conum" data-value="2"></i><b>(2)</b>
+  -v $PWD/m2:/root/.m2 \ <i class="conum" data-value="3"></i><b>(3)</b>
+  $DOCKER_IMAGE \
+  /bin/bash</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The tag (i.e., <code>17</code>) denotes the Java version and should match the one used by the project you&#8217;re trying to verify</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Mount the project sources</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Mount a local Maven home to avoid repetitive Maven downloads when you start container multiple times</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Build the sources:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">apt update &amp;&amp; apt install -y libcurl4 <i class="conum" data-value="1"></i><b>(1)</b>
+cd /src
+sh mvnw install -DskipTests <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Required only for Log4j builds, which need <code>libcurl4</code> for MongoDB tests</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Only <code>install</code>ing first to allow <a href="#troubleshooting-rerun">re-running tests</a>, if needed</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Verify the build:</p>
+<div class="openblock">
+<div class="content">
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">sh mvnw verify \
+  -Prelease artifact:compare \ <i class="conum" data-value="1"></i><b>(1)</b>
+  -Dreference.repo=https://repository.apache.org/... <i class="conum" data-value="2"></i><b>(2)</b></code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>artifact:compare</code> goal, along with <code>-Prelease</code> instruction, is used to verify <strong>the build reproducibility</strong>.
+That is, to verify that the artifacts generated by CI match the ones you locally generate.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Place here the Nexus repository URL shared in the release vote email</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>
+    Copyright © 1999-2024 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
+    Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
+    Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
+  </p>
+  <p>
+    Apache, Log4j, and the Apache feather logo are trademarks or registered trademarks of The Apache Software Foundation.
+    Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+    Other names may be trademarks of their respective owners.
+  </p>
+</footer>
+<script id="site-script" src="./_/js/site.js" data-ui-root-path="./_"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+<!-- `@asciidoctor/tabs` extension scripts -->
+<script async src="./_/js/vendor/tabs.js"></script>
+  </body>
+</html>
