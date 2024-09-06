@@ -237,7 +237,7 @@
     <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
     <!-- Due to a missing `maven-metadata.xml`, Dependabot does not update this automatically -->
     <develocity-maven-plugin.version>1.22</develocity-maven-plugin.version>
-    <develocity-user-data-extension.version>2.0</develocity-user-data-extension.version>
+    <develocity-user-data-extension.version>2.0.1</develocity-user-data-extension.version>
 
     <!-- plugin dependencies versions -->
     <error-prone.version>2.31.0</error-prone.version>
