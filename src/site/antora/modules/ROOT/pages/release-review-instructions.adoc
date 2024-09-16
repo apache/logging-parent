@@ -94,6 +94,11 @@ Windows::
 sh mvnw verify
 ----
 ====
++
+[NOTE]
+=====
+If the reviewed project happen to have Docker-based tests (e.g., Log4j), you can enable these tests by activating the `docker` Maven profile using the `-Pdocker` option.
+=====
 
 . Verify the build (.Net):
 +
