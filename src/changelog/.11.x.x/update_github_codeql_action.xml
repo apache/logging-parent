@@ -3,6 +3,6 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="updated">
-  <issue id="232" link="https://github.com/apache/logging-parent/pull/232"/>
-  <description format="asciidoc">Update `github/codeql-action` to version `3.26.6`</description>
+  <issue id="243" link="https://github.com/apache/logging-parent/pull/243"/>
+  <description format="asciidoc">Update `github/codeql-action` to version `3.26.7`</description>
 </entry>
