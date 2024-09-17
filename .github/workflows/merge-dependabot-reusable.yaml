@@ -122,6 +122,8 @@ jobs:
           git config user.name "ASF Logging Services RM"
           git config user.email private@logging.apache.org
           git commit -S -a -m "Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\` (#$PR_ID)"
-          git push origin
-          # Pushing the same commit to the Dependebot branch closes the PR
+          # Pushing the same commit to the Dependabot and main branch closes the PR
           git push -f origin "HEAD:$PR_BRANCH"
+          # Allow for GitHub to realize that the PR branch changed
+          sleep 5
+          git push origin
