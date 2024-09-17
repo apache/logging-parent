@@ -83,8 +83,7 @@ Please download, test, and cast your votes on this mailing list.
 This vote is open for 72 hours and will pass unless getting a
 net negative vote count. All votes are welcome and we encourage
 everyone to test the release, but only the Logging Services PMC
-votes are officially counted. At least 3 +1 votes and more
-positive than negative votes are required.
+votes are officially counted.
 
 == Release Notes
 EOF
