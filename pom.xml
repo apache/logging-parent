@@ -1142,7 +1142,7 @@
                   <rules>
                     <requireProperty>
                       <property>attachmentFilepathPattern</property>
-                      <message>You must set an `attachmentFilepathPattern` property for the regex pattern matched against the full filepath for determining attachments to be included in the distribution!</message>
+                      <message>You must set an `attachmentFilepathPattern` property for the regex pattern matched against the filepath relative to `${maven.multiModuleProjectDirectory}` for determining attachments to be included in the distribution!</message>
                     </requireProperty>
                     <requireProperty>
                       <property>attachmentCount</property>
@@ -1173,6 +1173,24 @@
                   <goal>execute</goal>
                 </goals>
                 <configuration>
+                  <!-- List of all the parameters used by the script -->
+                  <properties>
+                    <!-- Output directory for the archives -->
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <!-- Timestamp for the archived file entries -->
+                    <outputTimestamp>${project.build.outputTimestamp}</outputTimestamp>
+                    <!-- Number of attachments expected to be found -->
+                    <attachmentCountString>${attachmentCount}</attachmentCountString>
+                    <!-- Base directory to look for binary attachments -->
+                    <attachmentBaseDirectory>${maven.multiModuleProjectDirectory}</attachmentBaseDirectory>
+                    <!--
+                      ~ Regex pattern for the binary files to include.
+                      ~ The relative path of each file in `attachmentBaseDirectory` is matched against this pattern.
+                      -->
+                    <attachmentFilepathPatternString>${attachmentFilepathPattern}</attachmentFilepathPatternString>
+                    <!-- Path of the release notes -->
+                    <releaseNotes>${project.build.directory}/generated-site/antora/modules/ROOT/pages/_release-notes/${project.version}.adoc</releaseNotes>
+                  </properties>
                   <scripts>
                     <script><![CDATA[import java.io.*;
                       import java.nio.file.*;
@@ -1187,13 +1205,10 @@
                       import org.eclipse.jgit.lib.Repository;
                       import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 
-                      long timestampMillis = Instant.parse(project.properties["project.build.outputTimestamp"]).toEpochMilli()
-                      def getProperty = { String name ->
-                          return session.userProperties[name] ?: session.systemProperties[name]
-                      }
+                      long timestampMillis = Instant.parse(outputTimestamp).toEpochMilli()
                       // These are ensured by the `enforcer` rule
-                      int attachmentCount = getProperty("attachmentCount").toInteger()
-                      Pattern attachmentFilepathPattern = Pattern.compile(getProperty("attachmentFilepathPattern"))
+                      int attachmentCount = attachmentCountString.toInteger()
+                      Pattern attachmentFilepathPattern = Pattern.compile(attachmentFilepathPatternString)
 
                       def zip = { String zipFileName, Map<String, Path> pathByFile ->
                           try (OutputStream outputStream = new FileOutputStream(zipFileName)
@@ -1209,7 +1224,8 @@
                                           zipOutputStream.write(Files.readAllBytes(it.value))
                                           zipOutputStream.closeEntry()
                                       } catch (Exception error) {
-                                          log.error("failed processing file `" + it.key + "` at path `" + it.value + "`", error)
+                                          // The exception is printed by the catch below, no need to attach it here
+                                          log.error("failed processing file `" + it.key + "` at path `" + it.value + "`")
                                           throw error
                                       }
                                   }
@@ -1233,7 +1249,7 @@
                       }
 
                       // Create the source distribution using Git-tracked files
-                      zip(project.build.directory + "/src.zip", pathByFile)
+                      zip(outputDirectory + "/src.zip", pathByFile)
                       log.info("Generated the source distribution (`src.zip`) containing " + pathByFile.size() + " files.")
 
                       // Short-circuit if there is no binary distribution expected
@@ -1243,16 +1259,13 @@
 
                       // Find auxiliary files that will go into the binary distribution
                       pathByFile = new TreeMap()
-                      String releaseNotes = project.build.directory +
-                          "/generated-site/antora/modules/ROOT/pages/_release-notes/" +
-                          project.version + ".adoc"
                       pathByFile.put("RELEASE-NOTES.adoc", Paths.get(releaseNotes))
                       pathByFile.put("README.adoc", Paths.get("README.adoc"))
                       pathByFile.put("NOTICE.txt", Paths.get("NOTICE.txt"))
                       pathByFile.put("LICENSE.txt", Paths.get("LICENSE.txt"))
 
                       // Find attachments that will go into the binary distribution
-                      Path projectDir = Paths.get(getProperty("maven.multiModuleProjectDirectory"))
+                      Path projectDir = Paths.get(attachmentBaseDirectory)
                       log.info("Locating attachments matching the provided pattern: " + attachmentFilepathPattern)
                       SortedMap attachmentPathByFile = new TreeMap()
                       Stream paths = Files.walk(Paths.get(repoDirectoryParent), 32)
@@ -1288,8 +1301,9 @@
 
                       // Create the binary distribution
                       pathByFile.putAll(attachmentPathByFile)
-                      zip("target/bin.zip", pathByFile)
-                      log.info("Generated the binary distribution (`bin.zip`) containing following " + pathByFile.size() + ":" + attachments)
+                      zip(outputDirectory + "/bin.zip", pathByFile)
+                      log.info("Generated the binary distribution (`bin.zip`) containing the following " +
+                          (pathByFile.size() - 4) + " binary files:" + attachments)
 ]]></script>
                   </scripts>
                 </configuration>
