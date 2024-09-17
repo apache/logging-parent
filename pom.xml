@@ -1142,7 +1142,7 @@
                   <rules>
                     <requireProperty>
                       <property>attachmentFilepathPattern</property>
-                      <message>You must set an `attachmentFilepathPattern` property for the regex pattern matched against the filepath relative to `${maven.multiModuleProjectDirectory}` for determining attachments to be included in the distribution!</message>
+                      <message>You must set an `attachmentFilepathPattern` property for the regex pattern matched against the filepath relative to the main project directory for determining attachments to be included in the distribution!</message>
                     </requireProperty>
                     <requireProperty>
                       <property>attachmentCount</property>
@@ -1181,11 +1181,9 @@
                     <outputTimestamp>${project.build.outputTimestamp}</outputTimestamp>
                     <!-- Number of attachments expected to be found -->
                     <attachmentCountString>${attachmentCount}</attachmentCountString>
-                    <!-- Base directory to look for binary attachments -->
-                    <attachmentBaseDirectory>${maven.multiModuleProjectDirectory}</attachmentBaseDirectory>
                     <!--
                       ~ Regex pattern for the binary files to include.
-                      ~ The relative path of each file in `attachmentBaseDirectory` is matched against this pattern.
+                      ~ The filepath of each file, relative to the main project directory, is matched against this pattern.
                       -->
                     <attachmentFilepathPatternString>${attachmentFilepathPattern}</attachmentFilepathPatternString>
                     <!-- Path of the release notes -->
@@ -1241,11 +1239,11 @@
                       SortedMap pathByFile = new TreeMap()
                       Repository repo = new FileRepositoryBuilder().readEnvironment().findGitDir().build()
                       DirCache repoCache = repo.readDirCache()
-                      String repoDirectoryParent = repo.getDirectory().getParent()
+                      Path projectDir = repo.getDirectory().toPath().getParent()
                       for (int repoCacheEntryIndex = 0; repoCacheEntryIndex < repoCache.getEntryCount(); repoCacheEntryIndex++) {
                           DirCacheEntry repoCacheEntry = repoCache.getEntry(repoCacheEntryIndex)
                           String repoCacheEntryPath = repoCacheEntry.getPathString()
-                          pathByFile.put(repoCacheEntryPath, new File(repoDirectoryParent, repoCacheEntryPath).toPath())
+                          pathByFile.put(repoCacheEntryPath, projectDir.resolve(repoCacheEntryPath))
                       }
 
                       // Create the source distribution using Git-tracked files
@@ -1259,16 +1257,15 @@
 
                       // Find auxiliary files that will go into the binary distribution
                       pathByFile = new TreeMap()
-                      pathByFile.put("RELEASE-NOTES.adoc", Paths.get(releaseNotes))
-                      pathByFile.put("README.adoc", Paths.get("README.adoc"))
-                      pathByFile.put("NOTICE.txt", Paths.get("NOTICE.txt"))
-                      pathByFile.put("LICENSE.txt", Paths.get("LICENSE.txt"))
+                      pathByFile.put("RELEASE-NOTES.adoc", projectDir.resolve(releaseNotes))
+                      pathByFile.put("README.adoc", projectDir.resolve("README.adoc"))
+                      pathByFile.put("NOTICE.txt", projectDir.resolve("NOTICE.txt"))
+                      pathByFile.put("LICENSE.txt", projectDir.resolve("LICENSE.txt"))
 
                       // Find attachments that will go into the binary distribution
-                      Path projectDir = Paths.get(attachmentBaseDirectory)
                       log.info("Locating attachments matching the provided pattern: " + attachmentFilepathPattern)
                       SortedMap attachmentPathByFile = new TreeMap()
-                      Stream paths = Files.walk(Paths.get(repoDirectoryParent), 32)
+                      Stream paths = Files.walk(projectDir, 32)
                       try {
                           paths.forEach { path ->
                               if (Files.isRegularFile(path)) {
