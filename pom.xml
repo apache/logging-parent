@@ -231,7 +231,6 @@
     <log4j-changelog-maven-plugin.version>0.9.0</log4j-changelog-maven-plugin.version>
     <maven-artifact-plugin.version>3.5.1</maven-artifact-plugin.version>
     <restrict-imports-enforcer-rule.version>2.5.0</restrict-imports-enforcer-rule.version>
-    <sign-maven-plugin.version>1.1.0</sign-maven-plugin.version>
     <spotbugs-maven-plugin.version>4.8.6.3</spotbugs-maven-plugin.version>
     <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
     <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
@@ -397,12 +396,6 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-artifact-plugin</artifactId>
           <version>${maven-artifact-plugin.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.simplify4u.plugins</groupId>
-          <artifactId>sign-maven-plugin</artifactId>
-          <version>${sign-maven-plugin.version}</version>
         </plugin>
 
         <plugin>
@@ -1321,11 +1314,18 @@
       <id>deploy</id>
 
       <properties>
+
+        <!-- Global configuration -->
         <deployAtEnd>true</deployAtEnd>
         <installAtEnd>true</installAtEnd>
         <skipTests>true</skipTests>
         <spotbugs.skip>true</spotbugs.skip>
         <spotless.check.skip>true</spotless.check.skip>
+
+        <!-- Plugin versions -->
+        <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
+        <sign-maven-plugin.version>1.1.0</sign-maven-plugin.version>
+
       </properties>
 
       <build>
@@ -1337,11 +1337,40 @@
           <plugin>
             <groupId>org.simplify4u.plugins</groupId>
             <artifactId>sign-maven-plugin</artifactId>
+            <version>${sign-maven-plugin.version}</version>
             <executions>
               <execution>
                 <goals>
                   <goal>sign</goal>
                 </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!-- Skip `maven-deploy-plugin`, we will use `org.sonatype.plugins:nexus-staging-maven-plugin` instead -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+          <!-- Using Sonatype plugin, since it reports the resultant Nexus URL -->
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>${nexus-staging-maven-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>default-deploy</id>
+                <goals>
+                  <goal>deploy</goal>
+                </goals>
+                <configuration>
+                  <nexusUrl>https://repository.apache.org</nexusUrl>
+                  <serverId>${distMgmtReleasesId}</serverId>
+                </configuration>
               </execution>
             </executions>
           </plugin>

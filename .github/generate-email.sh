@@ -28,12 +28,12 @@ stderr() {
 
 fail_for_invalid_args() {
     stderr "Invalid arguments!"
-    stderr "Expected arguments: <vote|announce> <version> <commitId>"
+    stderr "Expected arguments: <vote|announce> <version> <commitId> <nexusUrl>"
     exit 1
 }
 
 # Check arguments
-[ $# -ne 3 ] && fail_for_invalid_args
+[ $# -ne 4 ] && fail_for_invalid_args
 
 # Constants
 PROJECT_NAME="Apache Logging Parent"
@@ -43,6 +43,7 @@ PROJECT_STAGING_SITE="${PROJECT_SITE/apache.org/staged.apache.org}"
 PROJECT_REPO="https://github.com/apache/$PROJECT_ID"
 PROJECT_VERSION="$2"
 COMMIT_ID="$3"
+NEXUS_URL="$4"
 PROJECT_DIST_URL="https://dist.apache.org/repos/dist/dev/logging/$PROJECT_ID/$PROJECT_VERSION"
 
 # Check release notes file
@@ -50,17 +51,6 @@ RELEASE_NOTES_FILE="$SCRIPT_DIR/../target/generated-site/antora/modules/ROOT/pag
 [ -f "$RELEASE_NOTES_FILE" ] || {
     stderr "Couldn't find release notes file: $RELEASE_NOTES_FILE"
     exit 1
-}
-
-dump_review_kit() {
-    cat "$SCRIPT_DIR/release-review-kit.txt" \
-        | sed -n '/-----8<-----~( cut here )~-----8<-----/,$p' \
-        | tail -n +2 \
-        | sed -e "s|^|    |g
-                  s|@PROJECT_ID@|$PROJECT_ID|g
-                  s|@PROJECT_VERSION@|$PROJECT_VERSION|g
-                  s|@PROJECT_DIST_URL@|$PROJECT_DIST_URL|g
-                  s|@COMMIT_ID@|${COMMIT_ID:0:8}|g"
 }
 
 dump_release_notes() {
@@ -82,7 +72,7 @@ Website: $PROJECT_STAGING_SITE-$PROJECT_VERSION
 GitHub: $PROJECT_REPO
 Commit: $COMMIT_ID
 Distribution: $PROJECT_DIST_URL
-Nexus: https://repository.apache.org/content/repositories/orgapachelogging-<FIXME>
+Nexus: $NEXUS_URL
 Signing key: 0x077e8893a6dcc33dd4a4d5b256e73ba9a0b592d0
 Review kit: https://s.apache.org/logging-parent-release-review-kit
 

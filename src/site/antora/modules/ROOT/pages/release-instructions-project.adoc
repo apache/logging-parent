@@ -102,12 +102,6 @@ If not, commit necessary fixes, push, and repeat.
 +
 [WARNING]
 ====
-**Fix the cited https://repository.apache.org[repository.apache.org] URL** in the generated email!
-It changes after every Nexus deployment.
-====
-+
-[WARNING]
-====
 Make sure your email is sent in plain text, that is, https://infra.apache.org/contrib-email-tips#nohtml[no HTML]!
 If you are using GMail, enable the _"Plain text mode"_ while composing your message.
 ====
