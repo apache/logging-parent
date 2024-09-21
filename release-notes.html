@@ -115,6 +115,79 @@
 <article class="doc">
 <h1 class="page">Release notes</h1>
 <div class="sect1">
+<h2 id="release-notes-11-3-0"><a class="anchor" href="#release-notes-11-3-0"></a>11.3.0</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2024-09-17</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This minor release migrates the BeanShell distribution archive script to Groovy.</p>
+</div>
+<div class="paragraph">
+<p>The update to the Develocity extensions should fix the lack of test results with Maven Surefire 3.5.0.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-11-3-0-changed"><a class="anchor" href="#release-notes-11-3-0-changed"></a>Changed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Switch the distribution script from BeanShell to Groovy. (<a href="https://github.com/apache/logging-parent/issues/196">196</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-11-3-0-fixed"><a class="anchor" href="#release-notes-11-3-0-fixed"></a>Fixed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Fix race condition, which marks merged Dependabot PRs as closed.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-11-3-0-updated"><a class="anchor" href="#release-notes-11-3-0-updated"></a>Updated</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>actions/setup-java</code> to version <code>4.3.0</code> (<a href="https://github.com/apache/logging-parent/pull/237">237</a>)</p>
+</li>
+<li>
+<p>Update <code>actions/upload-artifact</code> to version <code>4.4.0</code> (<a href="https://github.com/apache/logging-parent/pull/233">233</a>)</p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.8.6.3</code> (<a href="https://github.com/apache/logging-parent/pull/235">235</a>)</p>
+</li>
+<li>
+<p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.32.0</code> (<a href="https://github.com/apache/logging-parent/pull/240">240</a>)</p>
+</li>
+<li>
+<p>Update <code>com.gradle:common-custom-user-data-maven-extension</code> to version <code>2.0.1</code> (<a href="https://github.com/apache/logging-parent/pull/236">236</a>)</p>
+</li>
+<li>
+<p>Update <code>com.gradle:develocity-maven-extension</code> to version <code>1.22.1</code> (<a href="https://github.com/apache/logging-parent/pull/239">239</a>)</p>
+</li>
+<li>
+<p>Update <code>github/codeql-action</code> to version <code>3.26.7</code> (<a href="https://github.com/apache/logging-parent/pull/243">243</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache.groovy:groovy</code> to version <code>4.0.23</code> (<a href="https://github.com/apache/logging-parent/pull/244">244</a>)</p>
+</li>
+<li>
+<p>Update <code>org.eclipse.jgit:org.eclipse.jgit</code> to version <code>7.0.0.202409031743-r</code> (<a href="https://github.com/apache/logging-parent/pull/238">238</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="release-notes-11-2-0"><a class="anchor" href="#release-notes-11-2-0"></a>11.2.0</h2>
 <div class="sectionbody">
 <div class="dlist">
