@@ -68,7 +68,7 @@ jobs:
           wget -O- "$PATCH_URL" | git apply
 
       - name: Set up Java & GPG
-        uses: actions/setup-java@6a0805fcefea3d4657a47ac4c165951e33482018   # 4.2.2
+        uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88   # 4.3.0
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
@@ -122,6 +122,8 @@ jobs:
           git config user.name "ASF Logging Services RM"
           git config user.email private@logging.apache.org
           git commit -S -a -m "Update \`$DEPENDENCY_NAME\` to version \`$DEPENDENCY_VERSION\` (#$PR_ID)"
-          git push origin
-          # Pushing the same commit to the Dependebot branch closes the PR
+          # Pushing the same commit to the Dependabot and main branch closes the PR
           git push -f origin "HEAD:$PR_BRANCH"
+          # Allow for GitHub to realize that the PR branch changed
+          sleep 5
+          git push origin
