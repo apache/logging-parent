@@ -93,8 +93,6 @@ You can iterate on the `release/7.8.0` branch to perfect it.
 +
 If not, commit necessary fixes, push, and repeat.
 
-. _Close_ the repository in https://repository.apache.org/[repository.apache.org] using a self-explanatory description, e.g., ``\`{project-id}` version \`7.8.0` RC1``
-
 [#vote-release]
 == Vote the release
 
