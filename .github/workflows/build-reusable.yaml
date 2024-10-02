@@ -94,7 +94,7 @@ jobs:
 
       - name: Setup Develocity Build Scan capture
         if: inputs.develocity-enabled
-        uses: gradle/develocity-actions/maven-setup@23b7c25d7e5e4a4dd5bc214d9adb43b837f8917d   # 1
+        uses: gradle/develocity-actions/setup-maven@9f1bf05334de7eb619731d5466c35a153742311d   # 1.2
         with:
           develocity-access-key: ${{ secrets.DV_ACCESS_TOKEN }}
 
