@@ -236,7 +236,7 @@
     <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
     <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
     <!-- Due to a missing `maven-metadata.xml`, Dependabot does not update this automatically -->
-    <develocity-maven-plugin.version>1.22.1</develocity-maven-plugin.version>
+    <develocity-maven-plugin.version>1.22.2</develocity-maven-plugin.version>
     <develocity-user-data-extension.version>2.0.1</develocity-user-data-extension.version>
 
     <!-- plugin dependencies versions -->
