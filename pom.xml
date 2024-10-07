@@ -247,22 +247,13 @@
     <groovy.version>4.0.23</groovy.version>
 
     <!-- site-specific versions -->
-    <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project.
-         This will be used in the site and updated automatically by `dependabot`. -->
-    <site-project.version>11.0.0</site-project.version>
+    <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project. -->
+    <site-project.version>11.3.0</site-project.version>
 
   </properties>
 
   <dependencyManagement>
     <dependencies>
-
-      <!-- Dummy dependency to trick `dependabot` into updating the `site-project.version` property -->
-      <dependency>
-        <groupId>org.apache.logging</groupId>
-        <artifactId>logging-parent</artifactId>
-        <version>${site-project.version}</version>
-        <type>pom</type>
-      </dependency>
 
       <dependency>
         <groupId>biz.aQute.bnd</groupId>
