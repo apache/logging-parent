@@ -355,7 +355,7 @@ The file will be created by the <code>reusable-build</code> workflow.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">build:
-  uses: apache/logging-parent/.github/workflows/build-reusable.yaml@rel/11.0.0
+  uses: apache/logging-parent/.github/workflows/build-reusable.yaml@rel/11.3.0
   secrets:
     DV_ACCESS_TOKEN: ${{ ! startsWith(github.refname, 'release/') &amp;&amp; secrets.GE_ACCESS_TOKEN }}
   with:
