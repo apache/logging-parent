@@ -55,13 +55,13 @@ jobs:
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332   # 4.1.7
+        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871   # 4.2.1
         with:
           # When running on `pull_request` use the PR branch, not the target branch
           ref: ${{ github.event_name == 'pull_request_target' && github.head_ref || github.ref }}
 
       - name: Set up Java
-        uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88   # 4.3.0
+        uses: actions/setup-java@b36c23c0d998641eff861008f374ee103c25ac73   # 4.4.0
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
@@ -94,7 +94,7 @@ jobs:
 
       - name: Setup Develocity Build Scan capture
         if: inputs.develocity-enabled
-        uses: gradle/develocity-actions/maven-setup@23b7c25d7e5e4a4dd5bc214d9adb43b837f8917d   # 1
+        uses: gradle/develocity-actions/setup-maven@9f1bf05334de7eb619731d5466c35a153742311d   # 1.2
         with:
           develocity-access-key: ${{ secrets.DV_ACCESS_TOKEN }}
 
@@ -113,7 +113,7 @@ jobs:
       # We upload tests results.
       - name: Upload test reports
         if: always()
-        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874   # 4.4.0
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9   # 4.4.1
         with:
           name: surefire-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
           path: |
@@ -132,7 +132,7 @@ jobs:
       - name: Set up Node.js cache
         if: inputs.site-enabled
         id: nodejs-cache
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9   # 4.0.2
+        uses: actions/cache@3624ceb22c1c5a301c8db4169662070a689d9ea8   # 4.1.1
         with:
           # We should be calculating the cache key using `package-lock.json` instead!
           # See https://stackoverflow.com/a/48524475/1278899
@@ -176,7 +176,7 @@ jobs:
       # Upload reproducibility results if the build fails.
       - name: Upload reproducibility results
         if: inputs.reproducibility-check-enabled && failure() && steps.reproducibility.conclusion == 'failure'
-        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874   # 4.4.0
+        uses: actions/upload-artifact@604373da6381bf24206979c74d06a550515601b9   # 4.4.1
         with:
           name: reproducibility-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
           path: |

@@ -3,6 +3,6 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="updated">
-  <issue id="255" link="https://github.com/apache/logging-parent/pull/255"/>
-  <description format="asciidoc">Update `com.gradle:develocity-maven-extension` to version `1.22.2`</description>
+  <issue id="261" link="https://github.com/apache/logging-parent/pull/261"/>
+  <description format="asciidoc">Update `org.cyclonedx:cyclonedx-maven-plugin` to version `2.9.0`</description>
 </entry>

@@ -40,15 +40,15 @@ jobs:
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332   # 4.1.7
+        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871   # 4.2.1
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@294a9d92911152fe08befb9ec03e240add280cb3    # 3.26.8
+        uses: github/codeql-action/init@c36620d31ac7c881962c3d9dd939c40ec9434f2b    # 3.26.12
         with:
           languages: ${{ inputs.language }}
 
       - name: Setup JDK
-        uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88   # 4.3.0
+        uses: actions/setup-java@b36c23c0d998641eff861008f374ee103c25ac73   # 4.4.0
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
@@ -63,4 +63,4 @@ jobs:
           clean verify
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@294a9d92911152fe08befb9ec03e240add280cb3    # 3.26.8
+        uses: github/codeql-action/analyze@c36620d31ac7c881962c3d9dd939c40ec9434f2b    # 3.26.12
