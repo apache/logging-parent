@@ -93,18 +93,10 @@ You can iterate on the `release/7.8.0` branch to perfect it.
 +
 If not, commit necessary fixes, push, and repeat.
 
-. _Close_ the repository in https://repository.apache.org/[repository.apache.org] using a self-explanatory description, e.g., ``\`{project-id}` version \`7.8.0` RC1``
-
 [#vote-release]
 == Vote the release
 
 . Send the vote email uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}/7.8.0[dist.apache.org/repos/dist/**dev**/logging/{project-id}/7.8.0] Subversion repository
-+
-[WARNING]
-====
-**Fix the cited https://repository.apache.org[repository.apache.org] URL** in the generated email!
-It changes after every Nexus deployment.
-====
 +
 [WARNING]
 ====

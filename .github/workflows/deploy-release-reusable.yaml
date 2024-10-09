@@ -143,6 +143,8 @@ jobs:
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             -P deploy,release
+          export NEXUS_URL=$(awk '/^(stagingRepository.url)/ { gsub(/(^.+=|\\)/, ""); print $1 }' target/nexus-staging/staging/*.properties)
+          echo "NEXUS_URL=$NEXUS_URL" >> $GITHUB_ENV
 
       # Node.js cache is needed for Antora
       - name: Set up Node.js cache
@@ -273,7 +275,8 @@ jobs:
 
           # Generate emails
           for EMAIL_TYPE in vote announce; do
-            "$GITHUB_WORKSPACE/.github/generate-email.sh" $EMAIL_TYPE $PROJECT_VERSION $COMMIT_ID \
+            "$GITHUB_WORKSPACE/.github/generate-email.sh" \
+              "$EMAIL_TYPE" "$PROJECT_VERSION" "$COMMIT_ID" "$NEXUS_URL" \
               > "${DIST_FILENAME_VERSIONED_PREFIX}-email-${EMAIL_TYPE}.txt"
           done
 
