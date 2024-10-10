@@ -20,26 +20,33 @@ name: build-reusable
 on:
   workflow_call:
     inputs:
-      java-version:
-        description: The Java compiler version
-        default: 17
-        type: string
-      site-enabled:
-        description: Flag indicating if Maven `site` goal should be run
-        default: false
-        type: boolean
-      reproducibility-check-enabled:
-        description: Runs a reproducibility check on the build
-        default: true
-        type: boolean
       develocity-enabled:
         description: Enable Develocity Build Scan publication
         default: false
         type: boolean
+      java-version:
+        description: The Java compiler version
+        default: 17
+        type: string
+      maven-args:
+        description: Additional Maven arguments
+        type: string
+      reproducibility-check-enabled:
+        description: Runs a reproducibility check on the build
+        default: true
+        type: boolean
+      site-enabled:
+        description: Flag indicating if Maven `site` goal should be run
+        default: false
+        type: boolean
+
     secrets:
       DV_ACCESS_TOKEN:
         description: Access token to Gradle Enterprise
         required: false
+
+env:
+  MAVEN_ARGS: ${{ inputs.maven-args }}
 
 jobs:
 
@@ -141,7 +148,7 @@ jobs:
           # For that, we need to configure `dependabot` to update hundreds of dependencies listed in `package-lock.json`.
           # That translates to a never ending rain of `dependabot` PRs.
           # I doubt if the wasted CPU cycles worth the gain.
-          key: ${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}
+          key: "${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}"
           # `actions/cache` doesn't recommend caching `node_modules`.
           # Though none of its recipes fit our bill, since we install Node.js using `frontend-maven-plugin`.
           # See https://github.com/actions/cache/blob/main/examples.md#node---npm
