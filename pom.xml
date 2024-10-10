@@ -206,15 +206,9 @@
     <!-- dependency versions -->
     <org.eclipse.jgit.version>7.0.0.202409031743-r</org.eclipse.jgit.version>
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
-    <bnd.annotation.version>7.0.0</bnd.annotation.version>
-    <jspecify.version>1.0.0</jspecify.version>
     <node.version>21.7.1</node.version>
     <npm.version>10.5.0</npm.version>
-    <osgi.annotation.version>8.1.0</osgi.annotation.version>
-    <osgi.annotation.bundle.version>2.0.0</osgi.annotation.bundle.version>
-    <osgi.annotation.versioning.version>1.1.2</osgi.annotation.versioning.version>
     <palantir-java-format.version>2.50.0</palantir-java-format.version>
-    <spotbugs-annotations.version>4.8.6</spotbugs-annotations.version>
 
     <!-- plugin versions -->
     <asciidoctor-maven-plugin.version>3.0.0</asciidoctor-maven-plugin.version>
@@ -254,41 +248,14 @@
   <dependencyManagement>
     <dependencies>
 
-      <dependency>
-        <groupId>biz.aQute.bnd</groupId>
-        <artifactId>biz.aQute.bnd.annotation</artifactId>
-        <version>${bnd.annotation.version}</version>
-      </dependency>
+      <!-- ██     ██  █████  ██████  ███    ██ ██ ███    ██  ██████  ██
+           ██     ██ ██   ██ ██   ██ ████   ██ ██ ████   ██ ██       ██
+           ██  █  ██ ███████ ██████  ██ ██  ██ ██ ██ ██  ██ ██   ███ ██
+           ██ ███ ██ ██   ██ ██   ██ ██  ██ ██ ██ ██  ██ ██ ██    ██
+            ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████  ██
 
-      <dependency>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-annotations</artifactId>
-        <version>${spotbugs-annotations.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.jspecify</groupId>
-        <artifactId>jspecify</artifactId>
-        <version>${jspecify.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>osgi.annotation</artifactId>
-        <version>${osgi.annotation.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>org.osgi.annotation.bundle</artifactId>
-        <version>${osgi.annotation.bundle.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>org.osgi.annotation.versioning</artifactId>
-        <version>${osgi.annotation.versioning.version}</version>
-      </dependency>
+           Do not add entries to this `dependencyManagement > dependencies` block!
+           Otherwise they leak into BOMs: https://github.com/apache/logging-log4j2/issues/3066 -->
 
     </dependencies>
   </dependencyManagement>
@@ -440,47 +407,6 @@
               <goal>clean</goal>
             </goals>
             <phase>clean</phase>
-          </execution>
-
-          <!-- BOMs should ideally _only_ contain dependencies for modules of the project.
-               No invasive properties or plugin/dependency management – either from the BOM itself or its parent.
-               The following `flatten-maven-plugin` exactly performs that trimming operation. -->
-          <execution>
-            <id>flatten-bom</id>
-            <goals>
-              <goal>flatten</goal>
-            </goals>
-            <!-- BOM flattening is disabled by default!
-                 This execution must be manually enabled by the consumer. -->
-            <phase>none</phase>
-            <configuration>
-              <flattenMode>bom</flattenMode>
-              <!-- POM `ElementHandling` is pretty cryptic: https://www.mojohaus.org/flatten-maven-plugin/apidocs/org/codehaus/mojo/flatten/ElementHandling.html
-                   Trial-and-error has shown that we should use either `remove` or `interpolate`.
-                   `remove` simply removes the element.
-                   `interpolate` takes the element from the original POM with variables interpolated.
-                   Avoid using `resolve`, which uses the effective POM where inherited changes from the parent are also incorporated. -->
-              <pomElements>
-                <build>remove</build>
-                <properties>remove</properties>
-                <repositories>remove</repositories>
-                <distributionManagement>remove</distributionManagement>
-                <dependencyManagement>interpolate</dependencyManagement>
-                <!-- Keep the `parent`!
-                     Otherwise, this causes build failures for artifacts whose dependencies need to be resolved at runtime.
-                     Consider the following problem experienced in `log4j-transform-maven-plugin`:
-
-                     1. `log4j-transform-parent` depends on `log4j-transform-bom`
-                     2. `log4j-transform-bom` depends on `logging-parent`
-                     3. `logging-parent` contains `dependencyManagement`, etc. that are used by `log4j-transform-maven-plugin`
-                     4. Dependencies of `log4j-transform-maven-plugin` et al. is resolved *at runtime*
-                     5. Though at runtime, the deployed `log4j-transform-bom` is used, which is flattened and hence doesn't have a parent!
-                     6. Hence, at runtime, all `logging-parent` logic is lost
-
-                     To avoid this, parents should better be kept while flattening BOMs. -->
-                <parent>keep</parent>
-              </pomElements>
-            </configuration>
           </execution>
 
         </executions>
@@ -1017,6 +943,83 @@
   </build>
 
   <profiles>
+
+    <!-- `bom` profile to generate BOMs -->
+    <profile>
+
+      <id>bom</id>
+
+      <!-- Profile gets activated using a file instead of, say, a property defined by the child `pom.xml`.
+           Since a Maven property lookup requires model interpolation and that happens after the profile activation phase.
+           See: https://maven.apache.org/ref/3.9.6/maven-model-builder -->
+      <activation>
+        <file>
+          <exists>.logging-parent-bom-activator</exists>
+        </file>
+      </activation>
+
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>flatten-maven-plugin</artifactId>
+            <executions>
+
+              <!-- Explicitly specifying the `flatten-revision` execution to set its order in execution -->
+              <execution>
+                <id>flatten-revision</id>
+              </execution>
+
+              <!-- BOMs should ideally _only_ contain dependencies for modules of the project.
+                   No invasive properties or plugin/dependency management – either from the BOM itself or its parent.
+                   The following execution exactly performs that trimming operation. -->
+              <execution>
+                <id>flatten-bom</id>
+                <goals>
+                  <goal>flatten</goal>
+                </goals>
+                <phase>process-resources</phase>
+                <configuration>
+                  <flattenMode>bom</flattenMode>
+                  <!-- POM `ElementHandling` is pretty cryptic: https://www.mojohaus.org/flatten-maven-plugin/apidocs/org/codehaus/mojo/flatten/ElementHandling.html
+                       Trial-and-error has shown that we should use either `remove` or `interpolate`.
+                       `remove` simply removes the element.
+                       `interpolate` takes the element from the original POM with variables interpolated.
+                       Avoid using `resolve`, which uses the effective POM where inherited changes from the parent are also incorporated. -->
+                  <pomElements>
+                    <build>remove</build>
+                    <dependencyManagement>interpolate</dependencyManagement>
+                    <distributionManagement>remove</distributionManagement>
+                    <profiles>remove</profiles>
+                    <properties>remove</properties>
+                    <repositories>remove</repositories>
+                    <!-- Keep the `parent`!
+                         Otherwise, this causes build failures for artifacts whose dependencies need to be resolved at runtime.
+                         Consider the following problem experienced in `log4j-changelog-maven-plugin`:
+
+                         1. `log4j-changelog-maven-plugin` depends on `log4j-changelog`
+                         2. `log4j-changelog` inherits from `log4j-tools-parent`
+                         3. `log4j-tools-parent` inherits from `log4j-tools-bom`
+                         4. `log4j-tools-bom` inherits from `logging-parent`
+                         5. `logging-parent` contains `dependencyManagement`, etc. entries that are used by `log4j-changelog-maven-plugin`
+                         6. Dependencies of `log4j-changelog-maven-plugin` et al. is resolved *at runtime*
+                         7. Though at runtime, the deployed `log4j-tools-bom` is used, which is flattened and hence doesn't have a parent!
+                         8. Hence, at runtime, `log4j-transform-maven-plugin` execution fails due to missing logic that should have been inherited from `logging-parent`
+
+                         To avoid this, parents should better be kept while flattening BOMs. -->
+                    <parent>keep</parent>
+                  </pomElements>
+                </configuration>
+              </execution>
+
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+
+    </profile>
 
     <!-- `changelog-validate` profile to validate changelog XMLs -->
     <profile>

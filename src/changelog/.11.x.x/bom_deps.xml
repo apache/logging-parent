@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="removed">
+  <issue id="265" link="https://github.com/apache/logging-parent/pull/265"/>
+  <issue id="apache/logging-log4j2#3066" link="https://github.com/apache/logging-log4j2/issues/3066"/>
+  <description format="asciidoc">Remove following managed dependencies to avoid polluting BOMs:
+** `biz.aQute.bnd:biz.aQute.bnd.annotation`
+** `com.github.spotbugs:spotbugs-annotations`
+** `org.jspecify:jspecify`
+** `org.osgi:osgi.annotation`
+** `org.osgi:org.osgi.annotation.bundle`
+** `org.osgi:org.osgi.annotation.versioning`</description>
+</entry>
