@@ -255,7 +255,10 @@
             ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████  ██
 
            Do not add entries to this `dependencyManagement > dependencies` block!
-           Otherwise they leak into BOMs: https://github.com/apache/logging-log4j2/issues/3066 -->
+           Otherwise, they
+
+           1. leak into BOMs: https://github.com/apache/logging-log4j2/issues/3066
+           2. necessitate keeping the `<parent>` in BOMs: https://github.com/apache/logging-parent/issues/37 -->
 
     </dependencies>
   </dependencyManagement>
@@ -994,21 +997,6 @@
                     <profiles>remove</profiles>
                     <properties>remove</properties>
                     <repositories>remove</repositories>
-                    <!-- Keep the `parent`!
-                         Otherwise, this causes build failures for artifacts whose dependencies need to be resolved at runtime.
-                         Consider the following problem experienced in `log4j-changelog-maven-plugin`:
-
-                         1. `log4j-changelog-maven-plugin` depends on `log4j-changelog`
-                         2. `log4j-changelog` inherits from `log4j-tools-parent`
-                         3. `log4j-tools-parent` inherits from `log4j-tools-bom`
-                         4. `log4j-tools-bom` inherits from `logging-parent`
-                         5. `logging-parent` contains `dependencyManagement`, etc. entries that are used by `log4j-changelog-maven-plugin`
-                         6. Dependencies of `log4j-changelog-maven-plugin` et al. is resolved *at runtime*
-                         7. Though at runtime, the deployed `log4j-tools-bom` is used, which is flattened and hence doesn't have a parent!
-                         8. Hence, at runtime, `log4j-transform-maven-plugin` execution fails due to missing logic that should have been inherited from `logging-parent`
-
-                         To avoid this, parents should better be kept while flattening BOMs. -->
-                    <parent>keep</parent>
                   </pomElements>
                 </configuration>
               </execution>
