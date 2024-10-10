@@ -125,7 +125,23 @@
 <div class="ulist">
 <ul>
 <li>
+<p>Activate <code>flatten-bom</code> execution of <code>flatten-maven-plugin</code> using a <code>.logging-parent-bom-activator</code> file (<a href="https://github.com/apache/logging-parent/pull/265">265</a>)</p>
+</li>
+<li>
+<p>Don&#8217;t keep <code>parent</code> in <code>flatten-bom</code> configuration (<a href="https://github.com/apache/logging-parent/pull/265">265</a>, <a href="https://github.com/apache/logging-parent/issues/37">37</a>)</p>
+</li>
+<li>
 <p>Switch from <code>maven-deploy-plugin</code> to <code>nexus-staging-maven-plugin</code>, which helps with fetching the Nexus repository URL during a release. <code>generate-email.sh</code> will be called with a fourth argument containing the Nexus repository URL. (<a href="https://github.com/apache/logging-parent/pull/246">246</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-11-x-x-removed"><a class="anchor" href="#release-notes-11-x-x-removed"></a>Removed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Remove following managed dependencies to avoid polluting BOMs: <strong> <code>biz.aQute.bnd:biz.aQute.bnd.annotation</code> </strong> <code>com.github.spotbugs:spotbugs-annotations</code> <strong> <code>org.jspecify:jspecify</code> </strong> <code>org.osgi:osgi.annotation</code> <strong> <code>org.osgi:org.osgi.annotation.bundle</code> </strong> <code>org.osgi:org.osgi.annotation.versioning</code> (<a href="https://github.com/apache/logging-parent/pull/265">265</a>, <a href="https://github.com/apache/logging-log4j2/issues/3066">apache/logging-log4j2#3066</a>)</p>
 </li>
 </ul>
 </div>
@@ -145,9 +161,6 @@
 </li>
 <li>
 <p>Update <code>actions/upload-artifact</code> to version <code>4.4.2</code> (<a href="https://github.com/apache/logging-parent/pull/264">264</a>)</p>
-</li>
-<li>
-<p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.8.6.4</code> (<a href="https://github.com/apache/logging-parent/pull/248">248</a>)</p>
 </li>
 <li>
 <p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.33.0</code> (<a href="https://github.com/apache/logging-parent/pull/254">254</a>)</p>
