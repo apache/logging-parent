@@ -24,10 +24,16 @@ on:
         description: The Java compiler version
         default: 17
         type: string
+      maven-args:
+        description: Additional Maven arguments
+        type: string
     secrets:
       GPG_SECRET_KEY:
         description: GPG secret key for signing commits
         required: true
+
+env:
+  MAVEN_ARGS: ${{ inputs.maven-args }}
 
 jobs:
 
