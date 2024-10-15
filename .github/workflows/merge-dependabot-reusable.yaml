@@ -86,8 +86,6 @@ jobs:
 
       - name: Find the release version major
         shell: bash
-        env:
-          MAVEN_ARGS: ${{ inputs.maven-args }}
         run: |
           RELEASE_VERSION_MAJOR=$(./mvnw \
             --non-recursive --quiet --batch-mode \
