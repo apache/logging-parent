@@ -246,7 +246,37 @@ You can iterate on the <code>release/7.8.0</code> branch to perfect it.</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>If not, commit necessary fixes, push, and repeat.</p>
+<p>If not, commit the necessary fixes, push, and repeat.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="verify-release"><a class="anchor" href="#verify-release"></a>Verify the release</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Once the release is staged, the Release Manager should:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Follow the <a href="release-review-instructions.html" class="xref page">Project release review instructions</a> to verify the integrity of the release.</p>
+</li>
+<li>
+<p>Some projects have additional integration tests that need to run on the release candidate artifacts:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>logging-log4j2</code></dt>
+<dd>
+<div class="paragraph">
+<p>Run the
+<a href="https://github.com/apache/logging-log4j-samples/actions/workflows/integration-test.yaml">integration-test.yaml</a>
+workflow using the appropriate version number and URL of the <em>Staging Repository</em> as parameters.</p>
+</div>
+</dd>
+</dl>
 </div>
 </li>
 </ol>
