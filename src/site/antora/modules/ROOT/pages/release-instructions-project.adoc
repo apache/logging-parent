@@ -98,7 +98,6 @@ If not, commit the necessary fixes, push, and repeat.
 
 Once the release is staged, the Release Manager should:
 
-. Close the _Staging Repository_ in https://repository.apache.org/[repository.apache.org] using a message that uniquely identifies the release, for example `awesome-project version 7.8.0 RC1`.
 . Follow the xref:release-review-instructions.adoc[] to verify the integrity of the release.
 . Some projects have additional integration tests that need to run on the release candidate artifacts:
 
