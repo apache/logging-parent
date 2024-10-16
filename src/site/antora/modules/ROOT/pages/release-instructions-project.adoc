@@ -91,7 +91,22 @@ You can iterate on the `release/7.8.0` branch to perfect it.
 .. {site-url-staging}-7.8.0[The release staging website] is deployed using the freshly populated `release/7.8.0-site-stg-out` branch
 
 +
-If not, commit necessary fixes, push, and repeat.
+If not, commit the necessary fixes, push, and repeat.
+
+[#verify-release]
+== Verify the release
+
+Once the release is staged, the Release Manager should:
+
+. Close the _Staging Repository_ in https://repository.apache.org/[repository.apache.org] using a message that uniquely identifies the release, for example `awesome-project version 7.8.0 RC1`.
+. Follow the xref:release-review-instructions.adoc[] to verify the integrity of the release.
+. Some projects have additional integration tests that need to run on the release candidate artifacts:
+
+`logging-log4j2`::
++
+Run the
+https://github.com/apache/logging-log4j-samples/actions/workflows/integration-test.yaml[integration-test.yaml]
+workflow using the appropriate version number and URL of the _Staging Repository_ as parameters.
 
 [#vote-release]
 == Vote the release
