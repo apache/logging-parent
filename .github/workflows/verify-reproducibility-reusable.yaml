@@ -34,8 +34,8 @@ on:
         description: The branch, tag or SHA to checkout
         default: ${{ github.ref }}
         type: string
-      runner:
-        description: The type of runner to use
+      runs-on:
+        description: The type of runners to use
         default: ubuntu-latest
         type: string
 
@@ -46,7 +46,7 @@ jobs:
 
   build:
 
-    runs-on: ${{ inputs.runner }}
+    runs-on: ${{ inputs.runs-on }}
 
     steps:
 
