@@ -30,10 +30,6 @@ on:
       nexus-url:
         description: The URL of the reference Nexus repository
         type: string
-      ref:
-        description: The branch, tag or SHA to checkout
-        default: ${{ github.ref }}
-        type: string
       runs-on:
         description: The type of runners to use as JSON array
         default: '["ubuntu-latest"]'
@@ -57,7 +53,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871   # 4.2.1
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ github.ref }}
 
       - name: Set up Java
         uses: actions/setup-java@b36c23c0d998641eff861008f374ee103c25ac73   # 4.4.0
