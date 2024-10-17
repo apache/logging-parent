@@ -25,6 +25,9 @@ on:
         default: 17
         type: string
     outputs:
+      project-version:
+        description: The version of the project
+        value: ${{ jobs.deploy.outputs.project-version }}
       nexus-url:
         description: The URL of the Nexus repository used
         value: ${{ jobs.deploy.outputs.nexus-url }}
@@ -40,6 +43,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     outputs:
+      project-version: ${{ steps.version.outputs.project-version }}
       nexus-url: ${{ steps.nexus.outputs.nexus-url }}
     steps:
 
@@ -57,6 +61,7 @@ jobs:
           server-password: NEXUS_PASSWORD
 
       - name: Export version
+        id: version
         shell: bash
         run: |
           export PROJECT_VERSION=$(./mvnw \
@@ -65,6 +70,8 @@ jobs:
             help:evaluate \
             | tail -n 1)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+          # Export version to calling workflow
+          echo "project-version=$PROJECT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Upload to Nexus
         id: nexus
