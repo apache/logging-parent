@@ -28,6 +28,13 @@ on:
         description: Identifier used in the distribution artifact and Subversion repository folder filenames (e.g., `logging-parent`)
         required: true
         type: string
+    outputs:
+      project-version:
+        description: The version of the project
+        value: ${{ jobs.deploy.outputs.project-version }}
+      project-repository-url:
+        description: The URL of the Nexus repository used
+        value: ${{ jobs.deploy.outputs.project-repository-url }}
     secrets:
       GPG_SECRET_KEY:
         description: GPG secret key for signing artifacts
@@ -48,6 +55,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    outputs:
+      project-version: ${{ steps.version.outputs.project-version }}
+      project-repository-url: ${{ steps.nexus.outputs.project-repository-url }}
     steps:
 
       - name: Checkout repository
@@ -72,6 +82,7 @@ jobs:
           git config user.email private@logging.apache.org
 
       - name: Export version
+        id: version
         shell: bash
         env:
           GIT_BRANCH_NAME: ${{ github.ref_name }}
@@ -82,6 +93,8 @@ jobs:
           }
           export PROJECT_VERSION=$(echo "$GIT_BRANCH_NAME" | sed 's/^release\///')
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+          # Export version to calling workflow
+          echo "project-version=$PROJECT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Set the Maven `revision` property
         shell: bash
@@ -132,6 +145,7 @@ jobs:
           fi
 
       - name: Upload to Nexus
+        id: nexus
         shell: bash
         env:
           # `NEXUS_USERNAME` and `NEXUS_PASSWORD` are used in `~/.m2/settings.xml` created by `setup-java` action
@@ -145,6 +159,8 @@ jobs:
             -P deploy,release
           export NEXUS_URL=$(awk '/^(stagingRepository.url)/ { gsub(/(^.+=|\\)/, ""); print $1 }' target/nexus-staging/staging/*.properties)
           echo "NEXUS_URL=$NEXUS_URL" >> $GITHUB_ENV
+          # Export repository URL to calling workflow
+          echo "project-repository-url=$NEXUS_URL" >> $GITHUB_OUTPUT
 
       # Node.js cache is needed for Antora
       - name: Set up Node.js cache
@@ -158,7 +174,7 @@ jobs:
           # For that, we need to configure `dependabot` to update hundreds of dependencies listed in `package-lock.json`.
           # That translates to a never ending rain of `dependabot` PRs.
           # I doubt if the wasted CPU cycles worth the gain.
-          key: ${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}
+          key: "${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}"
           # `actions/cache` doesn't recommend caching `node_modules`.
           # Though none of its recipes fit our bill, since we install Node.js using `frontend-maven-plugin`.
           # See https://github.com/actions/cache/blob/main/examples.md#node---npm

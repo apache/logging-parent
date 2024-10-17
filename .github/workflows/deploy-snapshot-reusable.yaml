@@ -24,6 +24,13 @@ on:
         description: The Java compiler version
         default: 17
         type: string
+    outputs:
+      project-version:
+        description: The version of the project
+        value: ${{ jobs.deploy.outputs.project-version }}
+      project-repository-url:
+        description: The URL of the Nexus repository used
+        value: ${{ jobs.deploy.outputs.project-repository-url }}
     secrets:
       NEXUS_USERNAME:
         description: Nexus snapshot repository username for deploying artifacts
@@ -35,6 +42,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    outputs:
+      project-version: ${{ steps.version.outputs.project-version }}
+      project-repository-url: ${{ steps.nexus.outputs.project-repository-url }}
     steps:
 
       - name: Checkout repository
@@ -51,6 +61,7 @@ jobs:
           server-password: NEXUS_PASSWORD
 
       - name: Export version
+        id: version
         shell: bash
         run: |
           export PROJECT_VERSION=$(./mvnw \
@@ -59,8 +70,11 @@ jobs:
             help:evaluate \
             | tail -n 1)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+          # Export version to calling workflow
+          echo "project-version=$PROJECT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Upload to Nexus
+        id: nexus
         shell: bash
         env:
           # `NEXUS_USERNAME` and `NEXUS_PASSWORD` are used in `~/.m2/settings.xml` created by `setup-java` action
@@ -70,3 +84,6 @@ jobs:
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             -P deploy
+          export NEXUS_URL=$(awk '/^(stagingRepository.url)/ { gsub(/(^.+=|\\)/, ""); print $1 }' target/nexus-staging/staging/*.properties)
+          # Export repository URL to calling workflow
+          echo "project-repository-url=$NEXUS_URL" >> $GITHUB_OUTPUT
