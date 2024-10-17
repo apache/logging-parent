@@ -77,7 +77,7 @@ wget -O - https://downloads.apache.org/logging/KEYS | gpg --import
 +
 [source,bash]
 ----
-for sigFile in *.asc; do gpg --verify $sigFile ${sigfile%.asc}; done
+for sigFile in *.asc; do gpg --verify $sigFile ${sigFile%.asc}; done
 ----
 
 . Extract sources:
