@@ -33,7 +33,6 @@ on:
         type: string
       reproducibility-check-enabled:
         description: Runs a reproducibility check on the build
-        deprecationMessage: Use `verify-reproducibility-reusable` instead
         default: true
         type: boolean
       site-enabled:
