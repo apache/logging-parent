@@ -46,7 +46,11 @@ jobs:
 
   build:
 
-    runs-on: ${{ fromJSON(inputs.runs-on) }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: ${{ fromJSON(inputs.runs-on) }}
 
     steps:
 
