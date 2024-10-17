@@ -28,9 +28,10 @@ on:
       project-version:
         description: The version of the project
         value: ${{ jobs.deploy.outputs.project-version }}
+      # Constant output for similarity with `deploy-release-reusable`
       nexus-url:
         description: The URL of the Nexus repository used
-        value: ${{ jobs.deploy.outputs.nexus-url }}
+        value: https://repository.apache.org/content/repositories/snapshots
     secrets:
       NEXUS_USERNAME:
         description: Nexus snapshot repository username for deploying artifacts
@@ -44,7 +45,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       project-version: ${{ steps.version.outputs.project-version }}
-      nexus-url: ${{ steps.nexus.outputs.nexus-url }}
     steps:
 
       - name: Checkout repository
@@ -74,7 +74,6 @@ jobs:
           echo "project-version=$PROJECT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Upload to Nexus
-        id: nexus
         shell: bash
         env:
           # `NEXUS_USERNAME` and `NEXUS_PASSWORD` are used in `~/.m2/settings.xml` created by `setup-java` action
@@ -85,5 +84,3 @@ jobs:
             --show-version --batch-mode --errors --no-transfer-progress \
             -P deploy
           export NEXUS_URL=$(awk '/^(stagingRepository.url)/ { gsub(/(^.+=|\\)/, ""); print $1 }' target/nexus-staging/staging/*.properties)
-          # Export repository URL to calling workflow
-          echo "nexus-url=$NEXUS_URL" >> $GITHUB_OUTPUT
