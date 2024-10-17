@@ -114,8 +114,7 @@ jobs:
         with:
           develocity-access-key: ${{ secrets.DV_ACCESS_TOKEN }}
 
-      # We could have used `verify`, but `clean install` is required while generating the build reproducibility report, which is performed in the next step.
-      # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
+      # We use `install` instead of `verify`, otherwise the build website step below fails
       - name: Build
         id: build
         shell: bash
@@ -124,7 +123,7 @@ jobs:
             --show-version --batch-mode --errors --no-transfer-progress \
             -DtrimStackTrace=false \
             -DinstallAtEnd=true \
-            clean ${{ inputs.reproducibility-check-enabled && 'install' || 'verify' }}
+            clean install
 
       # We upload tests results.
       - name: Upload test reports
