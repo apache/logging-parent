@@ -35,8 +35,8 @@ on:
         default: ${{ github.ref }}
         type: string
       runs-on:
-        description: The type of runners to use
-        default: ubuntu-latest
+        description: The type of runners to use as JSON array
+        default: '["ubuntu-latest"]'
         type: string
 
 env:
@@ -46,7 +46,7 @@ jobs:
 
   build:
 
-    runs-on: ${{ inputs.runs-on }}
+    runs-on: ${{ fromJSON(inputs.runs-on) }}
 
     steps:
 
