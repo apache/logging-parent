@@ -127,10 +127,11 @@ jobs:
 
       # We upload tests results.
       - name: Upload test reports
+        id: surefire
         if: always()
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882   # 4.4.3
         with:
-          name: surefire-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
+          name: "${{github.action}}-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}"
           path: |
             **/target/surefire-reports
             **/target/logs
