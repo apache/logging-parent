@@ -5,6 +5,6 @@
        type="changed">
   <issue id="246" link="https://github.com/apache/logging-parent/pull/246"/>
   <description format="asciidoc">
-    The `deploy-*-reusable` workflows export the project version and URL of the staging repository as `project-version` and `project-repository-url` workflow outputs.
+    The `deploy-*-reusable` workflows export the URL of the Nexus repository as `nexus-url` workflow output.
   </description>
 </entry>
