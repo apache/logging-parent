@@ -175,7 +175,7 @@ wget --cut-dirs=6 \
 <p>Verify signatures:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">for sigFile in *.asc; do gpg --verify $sigFile; done</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">for sigFile in *.asc; do gpg --verify $sigFile ${sigFile%.asc}; done</code></pre>
 </div>
 </div>
 </li>
