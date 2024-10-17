@@ -48,6 +48,14 @@ on:
         description: Flag indicating if Maven `site` goal should be run
         default: false
         type: boolean
+      test-report-enabled:
+        description: Enables the upload of test reports
+        default: true
+        type: boolean
+      test-report-suffix:
+        description: Suffix to add to the uploaded artifacts
+        default: ''
+        type: string
 
     secrets:
       DV_ACCESS_TOKEN:
@@ -127,11 +135,10 @@ jobs:
 
       # We upload tests results.
       - name: Upload test reports
-        id: surefire
-        if: always()
+        if: ${{ always() && inputs.test-report-enabled }}
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882   # 4.4.3
         with:
-          name: "${{github.action}}-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}"
+          name: "test-report-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}${{inputs.test-report-suffix}}"
           path: |
             **/target/surefire-reports
             **/target/logs
