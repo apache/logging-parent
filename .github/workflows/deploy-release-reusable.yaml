@@ -29,12 +29,9 @@ on:
         required: true
         type: string
     outputs:
-      project-version:
-        description: The version of the project
-        value: ${{ jobs.deploy.outputs.project-version }}
-      project-repository-url:
+      nexus-url:
         description: The URL of the Nexus repository used
-        value: ${{ jobs.deploy.outputs.project-repository-url }}
+        value: ${{ jobs.deploy.outputs.nexus-url }}
     secrets:
       GPG_SECRET_KEY:
         description: GPG secret key for signing artifacts
@@ -56,8 +53,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     outputs:
-      project-version: ${{ steps.version.outputs.project-version }}
-      project-repository-url: ${{ steps.nexus.outputs.project-repository-url }}
+      nexus-url: ${{ steps.nexus.outputs.nexus-url }}
     steps:
 
       - name: Checkout repository
@@ -82,7 +78,6 @@ jobs:
           git config user.email private@logging.apache.org
 
       - name: Export version
-        id: version
         shell: bash
         env:
           GIT_BRANCH_NAME: ${{ github.ref_name }}
@@ -93,8 +88,6 @@ jobs:
           }
           export PROJECT_VERSION=$(echo "$GIT_BRANCH_NAME" | sed 's/^release\///')
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
-          # Export version to calling workflow
-          echo "project-version=$PROJECT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Set the Maven `revision` property
         shell: bash
@@ -160,7 +153,7 @@ jobs:
           export NEXUS_URL=$(awk '/^(stagingRepository.url)/ { gsub(/(^.+=|\\)/, ""); print $1 }' target/nexus-staging/staging/*.properties)
           echo "NEXUS_URL=$NEXUS_URL" >> $GITHUB_ENV
           # Export repository URL to calling workflow
-          echo "project-repository-url=$NEXUS_URL" >> $GITHUB_OUTPUT
+          echo "nexus-url=$NEXUS_URL" >> $GITHUB_OUTPUT
 
       # Node.js cache is needed for Antora
       - name: Set up Node.js cache
