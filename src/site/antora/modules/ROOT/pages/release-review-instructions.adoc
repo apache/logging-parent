@@ -49,10 +49,22 @@ wget --cut-dirs=6 \
 
 . Verify checksums:
 +
+[tabs]
+====
+Linux/macOS::
++
 [source,bash]
 ----
 sha512sum --check *.sha512
 ----
+
+Windows::
++
+[source,shell]
+----
+certUtil -hashfile <FILE> SHA512
+----
+====
 
 . Import the release manager GPG keys, unless you haven't earlier done so:
 +
@@ -65,7 +77,7 @@ wget -O - https://downloads.apache.org/logging/KEYS | gpg --import
 +
 [source,bash]
 ----
-for sigFile in *.asc; do gpg --verify $sigFile; done
+for sigFile in *.asc; do gpg --verify $sigFile ${sigfile%.asc}; done
 ----
 
 . Extract sources:
