@@ -3,6 +3,6 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="updated">
-  <issue id="259" link="https://github.com/apache/logging-parent/pull/259"/>
-  <description format="asciidoc">Update `actions/checkout` to version `4.2.1`</description>
+  <issue id="278" link="https://github.com/apache/logging-parent/pull/278"/>
+  <description format="asciidoc">Update `actions/checkout` to version `4.2.2`</description>
 </entry>
