@@ -237,7 +237,7 @@
     <!-- `findsecbugs-plugin:1.13.0` contains a bug blocking Log4j compilation: https://github.com/find-sec-bugs/find-sec-bugs/pull/728
          Hence, pinning the `1.12.0` instead. -->
     <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
-    <groovy.version>4.0.23</groovy.version>
+    <groovy.version>4.0.24</groovy.version>
 
     <!-- site-specific versions -->
     <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project. -->
