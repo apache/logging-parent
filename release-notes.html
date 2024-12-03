@@ -134,6 +134,9 @@
 <p>Switch from <code>maven-deploy-plugin</code> to <code>nexus-staging-maven-plugin</code>, which helps with fetching the Nexus repository URL during a release. <code>generate-email.sh</code> will be called with a fourth argument containing the Nexus repository URL. (<a href="https://github.com/apache/logging-parent/pull/246">246</a>)</p>
 </li>
 <li>
+<p>The <code>deploy-*-reusable</code> workflows export the URL of the Nexus repository as <code>nexus-url</code> workflow output and the project version as <code>project-version</code>. (<a href="https://github.com/apache/logging-parent/pull/246">246</a>)</p>
+</li>
+<li>
 <p>Add <code>maven-args</code> input to <code>build-reusable</code> and <code>merge-dependabot-reusable</code>. (<a href="https://github.com/apache/logging-parent/pull/266">266</a>)</p>
 </li>
 </ul>
@@ -157,16 +160,19 @@
 <p>Update <code>actions/cache</code> to version <code>4.1.1</code> (<a href="https://github.com/apache/logging-parent/pull/263">263</a>)</p>
 </li>
 <li>
-<p>Update <code>actions/checkout</code> to version <code>4.2.1</code> (<a href="https://github.com/apache/logging-parent/pull/259">259</a>)</p>
+<p>Update <code>actions/checkout</code> to version <code>4.2.2</code> (<a href="https://github.com/apache/logging-parent/pull/278">278</a>)</p>
 </li>
 <li>
-<p>Update <code>actions/setup-java</code> to version <code>4.4.0</code> (<a href="https://github.com/apache/logging-parent/pull/249">249</a>)</p>
+<p>Update <code>actions/setup-java</code> to version <code>4.5.0</code> (<a href="https://github.com/apache/logging-parent/pull/279">279</a>)</p>
 </li>
 <li>
 <p>Update <code>actions/upload-artifact</code> to version <code>4.4.3</code> (<a href="https://github.com/apache/logging-parent/pull/267">267</a>)</p>
 </li>
 <li>
-<p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.33.0</code> (<a href="https://github.com/apache/logging-parent/pull/254">254</a>)</p>
+<p>Update <code>biz.aQute.bnd:bnd-maven-plugin</code> to version <code>7.1.0</code> (<a href="https://github.com/apache/logging-parent/pull/289">289</a>)</p>
+</li>
+<li>
+<p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.36.0</code> (<a href="https://github.com/apache/logging-parent/pull/287">287</a>)</p>
 </li>
 <li>
 <p>Update <code>com.gradle:develocity-maven-extension</code> to version <code>1.22.2</code> (<a href="https://github.com/apache/logging-parent/pull/255">255</a>)</p>
@@ -175,13 +181,22 @@
 <p>Update <code>de.skuzzle.enforcer:restrict-imports-enforcer-rule</code> to version <code>2.6.0</code> (<a href="https://github.com/apache/logging-parent/pull/253">253</a>)</p>
 </li>
 <li>
-<p>Update <code>github/codeql-action</code> to version <code>3.26.13</code> (<a href="https://github.com/apache/logging-parent/pull/268">268</a>)</p>
+<p>Update <code>github/codeql-action</code> to version <code>3.27.5</code> (<a href="https://github.com/apache/logging-parent/pull/288">288</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache.groovy:groovy</code> to version <code>4.0.24</code> (<a href="https://github.com/apache/logging-parent/pull/282">282</a>)</p>
+</li>
+<li>
+<p>Update <code>org.asciidoctor:asciidoctor-maven-plugin</code> to version <code>3.1.1</code> (<a href="https://github.com/apache/logging-parent/pull/285">285</a>)</p>
 </li>
 <li>
 <p>Update <code>org.codehaus.gmavenplus:gmavenplus-plugin</code> to version <code>4.0.1</code> (<a href="https://github.com/apache/logging-parent/pull/257">257</a>)</p>
 </li>
 <li>
-<p>Update <code>org.cyclonedx:cyclonedx-maven-plugin</code> to version <code>2.9.0</code> (<a href="https://github.com/apache/logging-parent/pull/261">261</a>)</p>
+<p>Update <code>org.codehaus.mojo:exec-maven-plugin</code> to version <code>3.5.0</code> (<a href="https://github.com/apache/logging-parent/pull/274">274</a>)</p>
+</li>
+<li>
+<p>Update <code>org.cyclonedx:cyclonedx-maven-plugin</code> to version <code>2.9.1</code> (<a href="https://github.com/apache/logging-parent/pull/291">291</a>)</p>
 </li>
 </ul>
 </div>
