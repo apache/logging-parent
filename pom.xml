@@ -211,13 +211,13 @@
     <palantir-java-format.version>2.50.0</palantir-java-format.version>
 
     <!-- plugin versions -->
-    <asciidoctor-maven-plugin.version>3.0.0</asciidoctor-maven-plugin.version>
-    <bnd-maven-plugin.version>7.0.0</bnd-maven-plugin.version>
+    <asciidoctor-maven-plugin.version>3.1.1</asciidoctor-maven-plugin.version>
+    <bnd-maven-plugin.version>7.1.0</bnd-maven-plugin.version>
     <bnd-baseline-maven-plugin.version>7.0.0</bnd-baseline-maven-plugin.version>
     <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
-    <cyclonedx-maven-plugin.version>2.9.0</cyclonedx-maven-plugin.version>
+    <cyclonedx-maven-plugin.version>2.9.1</cyclonedx-maven-plugin.version>
     <exec-maven-plugin.version>3.4.1</exec-maven-plugin.version>
-    <exec-maven-plugin.version>3.3.0</exec-maven-plugin.version>
+    <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
     <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
     <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
     <gmavenplus-plugin.version>4.0.1</gmavenplus-plugin.version>
@@ -233,11 +233,11 @@
     <develocity-user-data-extension.version>2.0.1</develocity-user-data-extension.version>
 
     <!-- plugin dependencies versions -->
-    <error-prone.version>2.33.0</error-prone.version>
+    <error-prone.version>2.36.0</error-prone.version>
     <!-- `findsecbugs-plugin:1.13.0` contains a bug blocking Log4j compilation: https://github.com/find-sec-bugs/find-sec-bugs/pull/728
          Hence, pinning the `1.12.0` instead. -->
     <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
-    <groovy.version>4.0.23</groovy.version>
+    <groovy.version>4.0.24</groovy.version>
 
     <!-- site-specific versions -->
     <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project. -->

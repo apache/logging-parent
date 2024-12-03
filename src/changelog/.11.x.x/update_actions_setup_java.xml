@@ -3,6 +3,6 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="updated">
-  <issue id="249" link="https://github.com/apache/logging-parent/pull/249"/>
-  <description format="asciidoc">Update `actions/setup-java` to version `4.4.0`</description>
+  <issue id="279" link="https://github.com/apache/logging-parent/pull/279"/>
+  <description format="asciidoc">Update `actions/setup-java` to version `4.5.0`</description>
 </entry>
