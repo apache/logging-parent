@@ -53,7 +53,6 @@ The provided reusable GitHub Actions workflows feature the following convenience
 
 {project-github-url}/blob/main/.github/workflows/build-reusable.yaml[`build-reusable.yaml`]::
 * Compiles using the specified Java compiler version
-* Verifies reproducibility
 * Submits build scans to the Develocity server
 
 {project-github-url}/blob/main/.github/workflows/deploy-release-reusable.yaml[`deploy-release-reusable.yaml`]::
@@ -71,6 +70,9 @@ The provided reusable GitHub Actions workflows feature the following convenience
 
 {project-github-url}/blob/main/.github/workflows/merge-dependabot-reusable.yaml[`merge-dependabot-reusable.yaml`]::
 * Merges `dependabot` PRs along with changelog entries
+
+{project-github-url}/blob/main/.github/workflows/merge-dependabot-reusable.yaml[`verify-reproducibility-reusable.yaml`]::
+* Verifies reproducibility of a previous deployment workflow.
 
 [#release-instructions]
 === Release instructions

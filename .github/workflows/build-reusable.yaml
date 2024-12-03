@@ -31,6 +31,15 @@ on:
       maven-args:
         description: Additional Maven arguments
         type: string
+      ref:
+        description: The branch, tag or SHA to checkout
+        # When running on `pull_request_target` use the PR branch, not the target branch
+        default: ${{ github.event_name == 'pull_request_target' && github.head_ref || github.ref }}
+        type: string
+      repository:
+        description: GitHub repository name with owner
+        default: ${{ github.repository }}
+        type: string
       reproducibility-check-enabled:
         description: Runs a reproducibility check on the build
         default: true
@@ -39,6 +48,14 @@ on:
         description: Flag indicating if Maven `site` goal should be run
         default: false
         type: boolean
+      test-report-enabled:
+        description: Enables the upload of test reports
+        default: true
+        type: boolean
+      test-report-suffix:
+        description: Suffix to add to the uploaded artifacts
+        default: ''
+        type: string
 
     secrets:
       DV_ACCESS_TOKEN:
@@ -64,8 +81,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
         with:
-          # When running on `pull_request` use the PR branch, not the target branch
-          ref: ${{ github.event_name == 'pull_request_target' && github.head_ref || github.ref }}
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.ref }}
 
       - name: Set up Java
         uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b   # 4.5.0
@@ -105,8 +122,7 @@ jobs:
         with:
           develocity-access-key: ${{ secrets.DV_ACCESS_TOKEN }}
 
-      # We could have used `verify`, but `clean install` is required while generating the build reproducibility report, which is performed in the next step.
-      # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
+      # We use `install` instead of `verify`, otherwise the build website step below fails
       - name: Build
         id: build
         shell: bash
@@ -119,10 +135,10 @@ jobs:
 
       # We upload tests results.
       - name: Upload test reports
-        if: always()
+        if: ${{ always() && inputs.test-report-enabled }}
         uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882   # 4.4.3
         with:
-          name: surefire-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
+          name: "test-report-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}${{inputs.test-report-suffix}}"
           path: |
             **/target/surefire-reports
             **/target/logs
