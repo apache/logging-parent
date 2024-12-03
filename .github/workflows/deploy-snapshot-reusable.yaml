@@ -24,6 +24,14 @@ on:
         description: The Java compiler version
         default: 17
         type: string
+    outputs:
+      project-version:
+        description: The version of the project
+        value: ${{ jobs.deploy.outputs.project-version }}
+      # Constant output for similarity with `deploy-release-reusable`
+      nexus-url:
+        description: The URL of the Nexus repository used
+        value: https://repository.apache.org/content/repositories/snapshots
     secrets:
       NEXUS_USERNAME:
         description: Nexus snapshot repository username for deploying artifacts
@@ -35,6 +43,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    outputs:
+      project-version: ${{ steps.version.outputs.project-version }}
     steps:
 
       - name: Checkout repository
@@ -51,6 +61,7 @@ jobs:
           server-password: NEXUS_PASSWORD
 
       - name: Export version
+        id: version
         shell: bash
         run: |
           export PROJECT_VERSION=$(./mvnw \
@@ -59,6 +70,8 @@ jobs:
             help:evaluate \
             | tail -n 1)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+          # Export version to calling workflow
+          echo "project-version=$PROJECT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Upload to Nexus
         shell: bash
