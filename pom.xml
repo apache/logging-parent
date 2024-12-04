@@ -204,7 +204,7 @@
     <vdr.url>https://logging.apache.org/cyclonedx/vdr.xml</vdr.url>
 
     <!-- dependency versions -->
-    <org.eclipse.jgit.version>7.0.0.202409031743-r</org.eclipse.jgit.version>
+    <org.eclipse.jgit.version>7.1.0.202411261347-r</org.eclipse.jgit.version>
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
     <node.version>21.7.1</node.version>
     <npm.version>10.5.0</npm.version>
