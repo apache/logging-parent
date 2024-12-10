@@ -135,8 +135,10 @@ Releases of projects employing these workflows in their CI system can be reviewe
 <p>Check out the release distribution:</p>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">svn co https://dist.apache.org/repos/dist/dev/logging/&lt;projectName&gt;/&lt;releaseVersion&gt; \
-  &lt;projectName&gt;-&lt;releaseVersion&gt; &amp;&amp; cd $_</code></pre>
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">export projectName=...
+export releaseVersion=...
+svn co https://dist.apache.org/repos/dist/dev/logging/$projectName/$releaseVersion \
+  $projectName-$releaseVersion &amp;&amp; cd $_</code></pre>
 </div>
 </div>
 <details>
@@ -144,12 +146,12 @@ Releases of projects employing these workflows in their CI system can be reviewe
 <div class="content">
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkdir &lt;projectName&gt;-&lt;releaseVersion&gt; &amp;&amp; cd $_
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">mkdir $projectName-$releaseVersion&gt; &amp;&amp; cd $_
 wget --cut-dirs=6 \
      --no-host-directories \
      --no-parent \
      --recursive \
-     https://dist.apache.org/repos/dist/dev/logging/&lt;projectName&gt;/&lt;releaseVersion&gt;/</code></pre>
+     https://dist.apache.org/repos/dist/dev/logging/$projectName/$releaseVersion/</code></pre>
 </div>
 </div>
 </div>
