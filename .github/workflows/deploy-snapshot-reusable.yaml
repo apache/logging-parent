@@ -28,10 +28,6 @@ on:
       project-version:
         description: The version of the project
         value: ${{ jobs.deploy.outputs.project-version }}
-      # Constant output for similarity with `deploy-release-reusable`
-      nexus-url:
-        description: The URL of the Nexus repository used
-        value: https://repository.apache.org/content/repositories/snapshots
     secrets:
       NEXUS_USERNAME:
         description: Nexus snapshot repository username for deploying artifacts
