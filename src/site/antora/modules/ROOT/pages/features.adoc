@@ -89,9 +89,9 @@ See following guides for projects employing {project-name} to cut releases:
 https://gradle.com/develocity/[Gradle Develocity] is a service that provides statistics and other improvements to the development experience.
 Due to an
 https://gradle.com/blog/apache-software-foundation-standardizes-on-gradle-develocity-to-improve-developer-productivity-experience/[agreement between the ASF and Gradle],
-it is available for all ASF projects as INFRA hosted https://ge.apache.org/[`ge.apache.org`] service.
+it is available for all ASF projects as INFRA hosted https://develocity.apache.org/[`develocity.apache.org`] service.
 
-.Click for instructions to submit build scans to the `ge.apache.org` server
+.Click for instructions to submit build scans to the `develocity.apache.org` server
 [%collapsible]
 ====
 . Add a `.mvn/develocity.xml` configuration file to the repository.
