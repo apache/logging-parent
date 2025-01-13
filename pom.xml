@@ -223,7 +223,7 @@
     <gmavenplus-plugin.version>4.1.1</gmavenplus-plugin.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <log4j-changelog-maven-plugin.version>0.9.0</log4j-changelog-maven-plugin.version>
-    <maven-artifact-plugin.version>3.5.3</maven-artifact-plugin.version>
+    <maven-artifact-plugin.version>3.6.0</maven-artifact-plugin.version>
     <restrict-imports-enforcer-rule.version>2.6.0</restrict-imports-enforcer-rule.version>
     <spotbugs-maven-plugin.version>4.8.6.6</spotbugs-maven-plugin.version>
     <spotless-maven-plugin.version>2.44.1</spotless-maven-plugin.version>
