@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="https://logging.apache.org/xml/ns"
+       xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+       type="changed">
+  <issue id="313" link="https://github.com/apache/logging-parent/pull/313"/>
+  <description format="asciidoc">
+    Move from `ge.apache.org` to new `develocity.apache.org` server.
+  </description>
+</entry>
