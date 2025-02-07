@@ -268,6 +268,9 @@ jobs:
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         run: |
 
+          # Install Subversion
+          sudo apt install --assume-yes --no-install-recommends subversion
+
           # Find the effective Git commit ID
           export COMMIT_ID=$(git rev-parse HEAD)
 
