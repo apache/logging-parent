@@ -5,7 +5,7 @@
        type="changed">
   <issue id="246" link="https://github.com/apache/logging-parent/pull/246"/>
   <description format="asciidoc">
-    Adds a `verify_reproducibility-reusable.yaml` workflow to check reproducibility of artifacts in a Maven repo.
-    Deprecates the reproducibility check in `build-reusable.yaml`.
+    Add the `verify-reproducibility-reusable.yaml` workflow to check reproducibility of artifacts in a Maven repository.
+    Deprecate the reproducibility check in `build-reusable.yaml`.
   </description>
 </entry>
