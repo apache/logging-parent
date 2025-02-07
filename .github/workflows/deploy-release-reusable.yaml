@@ -209,8 +209,7 @@ jobs:
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             -DaltDeploymentRepository=apache.releases.https::file:"$ALT_DEPLOYMENT_REPO_FILEPATH" \
-            -Dsign.skip \
-            -P deploy
+            deploy:deploy
 
           # This regex needs to work for both Java (`distribution` profile) and `find` (while counting attachments)!
           # Hence, we don't escape dots, etc. with backslashes, which is problematic to get working in both worlds.
