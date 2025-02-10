@@ -4,7 +4,8 @@
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="changed">
   <issue id="246" link="https://github.com/apache/logging-parent/pull/246"/>
-  <description format="asciidoc">Switch from `maven-deploy-plugin` to `nexus-staging-maven-plugin`, which helps with fetching the Nexus repository URL during a release.
-`generate-email.sh` will be called with a fourth argument containing the Nexus repository URL.
+  <description format="asciidoc">
+    Add the `verify-reproducibility-reusable.yaml` workflow to check reproducibility of artifacts in a Maven repository.
+    Deprecate the reproducibility check in `build-reusable.yaml`.
   </description>
 </entry>

@@ -5,6 +5,7 @@
        type="changed">
   <issue id="246" link="https://github.com/apache/logging-parent/pull/246"/>
   <description format="asciidoc">
-    The `deploy-*-reusable` workflows export the URL of the Nexus repository as `nexus-url` workflow output and the project version as `project-version`.
+    Switch from `maven-deploy-plugin` to `nexus-staging-maven-plugin`, which helps with fetching the Nexus repository URL during a release.
+    `generate-email.sh` will be called with a fourth argument containing the Nexus repository URL.
   </description>
 </entry>
