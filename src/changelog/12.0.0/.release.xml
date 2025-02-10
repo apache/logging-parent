@@ -15,28 +15,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<develocity>
-  <projectId>logging-log4j2</projectId>
-  <server>
-    <url>https://develocity.apache.org</url>
-  </server>
-  <buildScan>
-    <obfuscation>
-      <ipAddresses>0.0.0.0</ipAddresses>
-    </obfuscation>
-    <publishing>
-      <onlyIf>
-        <![CDATA[env['CI'] != null]]>
-      </onlyIf>
-    </publishing>
-    <backgroundBuildScanUpload>false</backgroundBuildScanUpload>
-  </buildScan>
-  <buildCache>
-    <local>
-      <enabled>false</enabled>
-    </local>
-    <remote>
-      <enabled>false</enabled>
-    </remote>
-  </buildCache>
-</develocity>
+<release xmlns="https://logging.apache.org/xml/ns"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+         date="2025-02-07" version="12.0.0"/>

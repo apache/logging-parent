@@ -20,26 +20,50 @@ name: build-reusable
 on:
   workflow_call:
     inputs:
-      java-version:
-        description: The Java compiler version
-        default: 17
-        type: string
-      site-enabled:
-        description: Flag indicating if Maven `site` goal should be run
-        default: false
-        type: boolean
-      reproducibility-check-enabled:
-        description: Runs a reproducibility check on the build
-        default: true
-        type: boolean
       develocity-enabled:
         description: Enable Develocity Build Scan publication
         default: false
         type: boolean
+      java-version:
+        description: The Java compiler version
+        default: 17
+        type: string
+      maven-args:
+        description: Additional Maven arguments
+        type: string
+      ref:
+        description: The branch, tag or SHA to checkout
+        # When running on `pull_request_target` use the PR branch, not the target branch
+        default: ${{ github.event_name == 'pull_request_target' && github.head_ref || github.ref }}
+        type: string
+      repository:
+        description: GitHub repository name with owner
+        default: ${{ github.repository }}
+        type: string
+      reproducibility-check-enabled:
+        description: Runs a reproducibility check on the build
+        default: true
+        type: boolean
+      site-enabled:
+        description: Flag indicating if Maven `site` goal should be run
+        default: false
+        type: boolean
+      test-report-enabled:
+        description: Enables the upload of test reports
+        default: true
+        type: boolean
+      test-report-suffix:
+        description: Suffix to add to the uploaded artifacts
+        default: ''
+        type: string
+
     secrets:
       DV_ACCESS_TOKEN:
         description: Access token to Gradle Enterprise
         required: false
+
+env:
+  MAVEN_ARGS: ${{ inputs.maven-args }}
 
 jobs:
 
@@ -55,13 +79,13 @@ jobs:
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332   # 4.1.7
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
         with:
-          # When running on `pull_request` use the PR branch, not the target branch
-          ref: ${{ github.event_name == 'pull_request_target' && github.head_ref || github.ref }}
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.ref }}
 
       - name: Set up Java
-        uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88   # 4.3.0
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12   # 4.7.0
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
@@ -94,12 +118,11 @@ jobs:
 
       - name: Setup Develocity Build Scan capture
         if: inputs.develocity-enabled
-        uses: gradle/develocity-actions/maven-setup@23b7c25d7e5e4a4dd5bc214d9adb43b837f8917d   # 1
+        uses: gradle/develocity-actions/setup-maven@b8d3a572314ffff3b940a2c1b7b384d4983d422d   # 1.3
         with:
           develocity-access-key: ${{ secrets.DV_ACCESS_TOKEN }}
 
-      # We could have used `verify`, but `clean install` is required while generating the build reproducibility report, which is performed in the next step.
-      # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
+      # We use `install` instead of `verify`, otherwise the build website step below fails
       - name: Build
         id: build
         shell: bash
@@ -112,10 +135,10 @@ jobs:
 
       # We upload tests results.
       - name: Upload test reports
-        if: always()
-        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874   # 4.4.0
+        if: ${{ always() && inputs.test-report-enabled }}
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08   # 4.6.0
         with:
-          name: surefire-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
+          name: "test-report-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}${{inputs.test-report-suffix}}"
           path: |
             **/target/surefire-reports
             **/target/logs
@@ -132,7 +155,7 @@ jobs:
       - name: Set up Node.js cache
         if: inputs.site-enabled
         id: nodejs-cache
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9   # 4.0.2
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57   # 4.2.0
         with:
           # We should be calculating the cache key using `package-lock.json` instead!
           # See https://stackoverflow.com/a/48524475/1278899
@@ -141,7 +164,7 @@ jobs:
           # For that, we need to configure `dependabot` to update hundreds of dependencies listed in `package-lock.json`.
           # That translates to a never ending rain of `dependabot` PRs.
           # I doubt if the wasted CPU cycles worth the gain.
-          key: ${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}
+          key: "${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}"
           # `actions/cache` doesn't recommend caching `node_modules`.
           # Though none of its recipes fit our bill, since we install Node.js using `frontend-maven-plugin`.
           # See https://github.com/actions/cache/blob/main/examples.md#node---npm
@@ -176,7 +199,7 @@ jobs:
       # Upload reproducibility results if the build fails.
       - name: Upload reproducibility results
         if: inputs.reproducibility-check-enabled && failure() && steps.reproducibility.conclusion == 'failure'
-        uses: actions/upload-artifact@50769540e7f4bd5e21e526ee35c689e35e0d6874   # 4.4.0
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08   # 4.6.0
         with:
           name: reproducibility-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
           path: |

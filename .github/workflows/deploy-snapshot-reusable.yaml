@@ -24,6 +24,10 @@ on:
         description: The Java compiler version
         default: 17
         type: string
+    outputs:
+      project-version:
+        description: The version of the project
+        value: ${{ jobs.deploy.outputs.project-version }}
     secrets:
       NEXUS_USERNAME:
         description: Nexus snapshot repository username for deploying artifacts
@@ -35,13 +39,15 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    outputs:
+      project-version: ${{ steps.version.outputs.project-version }}
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332   # 4.1.7
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
 
       - name: Set up Java
-        uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88   # 3.7.0
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12   # 3.7.0
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
@@ -51,6 +57,7 @@ jobs:
           server-password: NEXUS_PASSWORD
 
       - name: Export version
+        id: version
         shell: bash
         run: |
           export PROJECT_VERSION=$(./mvnw \
@@ -59,6 +66,8 @@ jobs:
             help:evaluate \
             | tail -n 1)
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+          # Export version to calling workflow
+          echo "project-version=$PROJECT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Upload to Nexus
         shell: bash

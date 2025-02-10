@@ -91,20 +91,26 @@ You can iterate on the `release/7.8.0` branch to perfect it.
 .. {site-url-staging}-7.8.0[The release staging website] is deployed using the freshly populated `release/7.8.0-site-stg-out` branch
 
 +
-If not, commit necessary fixes, push, and repeat.
+If not, commit the necessary fixes, push, and repeat.
 
-. _Close_ the repository in https://repository.apache.org/[repository.apache.org] using a self-explanatory description, e.g., ``\`{project-id}` version \`7.8.0` RC1``
+[#verify-release]
+== Verify the release
+
+Once the release is staged, the Release Manager should:
+
+. Follow the xref:release-review-instructions.adoc[] to verify the integrity of the release.
+. Some projects have additional integration tests that need to run on the release candidate artifacts:
+
+`logging-log4j2`::
++
+Run the
+https://github.com/apache/logging-log4j-samples/actions/workflows/integration-test.yaml[integration-test.yaml]
+workflow using the appropriate version number and URL of the _Staging Repository_ as parameters.
 
 [#vote-release]
 == Vote the release
 
 . Send the vote email uploaded to the https://dist.apache.org/repos/dist/dev/logging/{project-id}/7.8.0[dist.apache.org/repos/dist/**dev**/logging/{project-id}/7.8.0] Subversion repository
-+
-[WARNING]
-====
-**Fix the cited https://repository.apache.org[repository.apache.org] URL** in the generated email!
-It changes after every Nexus deployment.
-====
 +
 [WARNING]
 ====

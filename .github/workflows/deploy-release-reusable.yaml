@@ -28,6 +28,13 @@ on:
         description: Identifier used in the distribution artifact and Subversion repository folder filenames (e.g., `logging-parent`)
         required: true
         type: string
+    outputs:
+      project-version:
+        description: The version of the project
+        value: ${{ jobs.deploy.outputs.project-version }}
+      nexus-url:
+        description: The URL of the Nexus repository used
+        value: ${{ jobs.deploy.outputs.nexus-url }}
     secrets:
       GPG_SECRET_KEY:
         description: GPG secret key for signing artifacts
@@ -48,13 +55,16 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    outputs:
+      project-version: ${{ steps.version.outputs.project-version }}
+      nexus-url: ${{ steps.nexus.outputs.nexus-url }}
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332   # 4.1.7
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
 
       - name: Set up Java & GPG
-        uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88   # 3.7.0
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12   # 3.7.0
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
@@ -72,6 +82,7 @@ jobs:
           git config user.email private@logging.apache.org
 
       - name: Export version
+        id: version
         shell: bash
         env:
           GIT_BRANCH_NAME: ${{ github.ref_name }}
@@ -82,6 +93,8 @@ jobs:
           }
           export PROJECT_VERSION=$(echo "$GIT_BRANCH_NAME" | sed 's/^release\///')
           echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+          # Export version to calling workflow
+          echo "project-version=$PROJECT_VERSION" >> $GITHUB_OUTPUT
 
       - name: Set the Maven `revision` property
         shell: bash
@@ -132,6 +145,7 @@ jobs:
           fi
 
       - name: Upload to Nexus
+        id: nexus
         shell: bash
         env:
           # `NEXUS_USERNAME` and `NEXUS_PASSWORD` are used in `~/.m2/settings.xml` created by `setup-java` action
@@ -143,11 +157,15 @@ jobs:
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             -P deploy,release
+          export NEXUS_URL=$(awk '/^(stagingRepository.url)/ { gsub(/(^.+=|\\)/, ""); print $1 }' target/nexus-staging/staging/*.properties)
+          echo "NEXUS_URL=$NEXUS_URL" >> $GITHUB_ENV
+          # Export repository URL to calling workflow
+          echo "nexus-url=$NEXUS_URL" >> $GITHUB_OUTPUT
 
       # Node.js cache is needed for Antora
       - name: Set up Node.js cache
         id: nodejs-cache
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9   # 4.0.2
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57   # 4.2.0
         with:
           # We should be calculating the cache key using `package-lock.json` instead!
           # See https://stackoverflow.com/a/48524475/1278899
@@ -156,7 +174,7 @@ jobs:
           # For that, we need to configure `dependabot` to update hundreds of dependencies listed in `package-lock.json`.
           # That translates to a never ending rain of `dependabot` PRs.
           # I doubt if the wasted CPU cycles worth the gain.
-          key: ${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}
+          key: "${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}"
           # `actions/cache` doesn't recommend caching `node_modules`.
           # Though none of its recipes fit our bill, since we install Node.js using `frontend-maven-plugin`.
           # See https://github.com/actions/cache/blob/main/examples.md#node---npm
@@ -191,8 +209,7 @@ jobs:
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             -DaltDeploymentRepository=apache.releases.https::file:"$ALT_DEPLOYMENT_REPO_FILEPATH" \
-            -Dsign.skip \
-            -P deploy
+            deploy:deploy
 
           # This regex needs to work for both Java (`distribution` profile) and `find` (while counting attachments)!
           # Hence, we don't escape dots, etc. with backslashes, which is problematic to get working in both worlds.
@@ -251,6 +268,9 @@ jobs:
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         run: |
 
+          # Install Subversion
+          sudo apt install --assume-yes --no-install-recommends subversion
+
           # Find the effective Git commit ID
           export COMMIT_ID=$(git rev-parse HEAD)
 
@@ -273,7 +293,8 @@ jobs:
 
           # Generate emails
           for EMAIL_TYPE in vote announce; do
-            "$GITHUB_WORKSPACE/.github/generate-email.sh" $EMAIL_TYPE $PROJECT_VERSION $COMMIT_ID \
+            "$GITHUB_WORKSPACE/.github/generate-email.sh" \
+              "$EMAIL_TYPE" "$PROJECT_VERSION" "$COMMIT_ID" "$NEXUS_URL" \
               > "${DIST_FILENAME_VERSIONED_PREFIX}-email-${EMAIL_TYPE}.txt"
           done
 

@@ -53,7 +53,6 @@ The provided reusable GitHub Actions workflows feature the following convenience
 
 {project-github-url}/blob/main/.github/workflows/build-reusable.yaml[`build-reusable.yaml`]::
 * Compiles using the specified Java compiler version
-* Verifies reproducibility
 * Submits build scans to the Develocity server
 
 {project-github-url}/blob/main/.github/workflows/deploy-release-reusable.yaml[`deploy-release-reusable.yaml`]::
@@ -72,6 +71,9 @@ The provided reusable GitHub Actions workflows feature the following convenience
 {project-github-url}/blob/main/.github/workflows/merge-dependabot-reusable.yaml[`merge-dependabot-reusable.yaml`]::
 * Merges `dependabot` PRs along with changelog entries
 
+{project-github-url}/blob/main/.github/workflows/merge-dependabot-reusable.yaml[`verify-reproducibility-reusable.yaml`]::
+* Verifies reproducibility of a previous deployment workflow.
+
 [#release-instructions]
 === Release instructions
 
@@ -87,9 +89,9 @@ See following guides for projects employing {project-name} to cut releases:
 https://gradle.com/develocity/[Gradle Develocity] is a service that provides statistics and other improvements to the development experience.
 Due to an
 https://gradle.com/blog/apache-software-foundation-standardizes-on-gradle-develocity-to-improve-developer-productivity-experience/[agreement between the ASF and Gradle],
-it is available for all ASF projects as INFRA hosted https://ge.apache.org/[`ge.apache.org`] service.
+it is available for all ASF projects as INFRA hosted https://develocity.apache.org/[`develocity.apache.org`] service.
 
-.Click for instructions to submit build scans to the `ge.apache.org` server
+.Click for instructions to submit build scans to the `develocity.apache.org` server
 [%collapsible]
 ====
 . Add a `.mvn/develocity.xml` configuration file to the repository.
@@ -113,7 +115,7 @@ The file will be created by the `reusable-build` workflow.
 . Modify the build workflow that should publish build scans:
 +
 --
-* Pass the `secrets.GE_ACCESS_TOKEN`, which is defined in all ASF repos as `DV_ACCESS_TOKEN` secret of the workflow.
+* Pass the `secrets.DEVELOCITY_ACCESS_KEY`, which is defined in all ASF repos as `DV_ACCESS_TOKEN` secret of the workflow.
 
 * Set the `develocity-enabled` parameter to `true`.
 --
@@ -125,7 +127,7 @@ For example, you can use the snippet below:
 build:
   uses: apache/logging-parent/.github/workflows/build-reusable.yaml@rel/{project-version}
   secrets:
-    DV_ACCESS_TOKEN: ${{ ! startsWith(github.refname, 'release/') && secrets.GE_ACCESS_TOKEN }}
+    DV_ACCESS_TOKEN: ${{ ! startsWith(github.refname, 'release/') && secrets.DEVELOCITY_ACCESS_KEY }}
   with:
     develocity-enabled: ${{ ! startsWith(github.refname, 'release/') }}
 ----

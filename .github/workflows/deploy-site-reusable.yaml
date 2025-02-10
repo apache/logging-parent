@@ -54,10 +54,10 @@ jobs:
     steps:
 
       - name: Checkout the source branch
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332   # 4.1.7
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
 
       - name: Set up Java
-        uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88   # 3.7.0
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12   # 3.7.0
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
@@ -76,7 +76,7 @@ jobs:
       # Node.js cache is needed for Antora
       - name: Set up Node.js cache
         id: nodejs-cache
-        uses: actions/cache@0c45773b623bea8c8e75f6c82b208c3cf94ea4f9   # 4.0.2
+        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57   # 4.2.0
         with:
           # We should be calculating the cache key using `package-lock.json` instead!
           # See https://stackoverflow.com/a/48524475/1278899
@@ -130,7 +130,7 @@ jobs:
           }
 
       - name: Checkout the target branch
-        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332   # 4.1.7
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
         with:
           ref: ${{ inputs.target-branch }}
 

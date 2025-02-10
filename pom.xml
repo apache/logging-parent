@@ -145,7 +145,7 @@
   <properties>
 
     <!-- project version -->
-    <revision>11.3.0</revision>
+    <revision>12.0.0</revision>
 
     <!-- `project.build.outputTimestamp` is required to be present for reproducible builds.
          We actually inherit one from the `org.apache:apache` parent.
@@ -154,7 +154,7 @@
          2. This value is employed in various places while creating the distribution
          To mitigate these, we define a *dummy* value here and let the CI replace it during a release.
          Hence, *DO NOT MANUALLY EDIT THIS VALUE*! -->
-    <project.build.outputTimestamp>2024-09-17T15:46:19Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2025-02-07T19:59:33Z</project.build.outputTimestamp>
 
     <!-- target Java 8 -->
     <maven.compiler.source>8</maven.compiler.source>
@@ -204,101 +204,61 @@
     <vdr.url>https://logging.apache.org/cyclonedx/vdr.xml</vdr.url>
 
     <!-- dependency versions -->
-    <org.eclipse.jgit.version>7.0.0.202409031743-r</org.eclipse.jgit.version>
+    <org.eclipse.jgit.version>7.1.0.202411261347-r</org.eclipse.jgit.version>
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
-    <bnd.annotation.version>7.0.0</bnd.annotation.version>
-    <jspecify.version>1.0.0</jspecify.version>
     <node.version>21.7.1</node.version>
     <npm.version>10.5.0</npm.version>
-    <osgi.annotation.version>8.1.0</osgi.annotation.version>
-    <osgi.annotation.bundle.version>2.0.0</osgi.annotation.bundle.version>
-    <osgi.annotation.versioning.version>1.1.2</osgi.annotation.versioning.version>
     <palantir-java-format.version>2.50.0</palantir-java-format.version>
-    <spotbugs-annotations.version>4.8.6</spotbugs-annotations.version>
 
     <!-- plugin versions -->
-    <asciidoctor-maven-plugin.version>3.0.0</asciidoctor-maven-plugin.version>
-    <bnd-maven-plugin.version>7.0.0</bnd-maven-plugin.version>
-    <bnd-baseline-maven-plugin.version>7.0.0</bnd-baseline-maven-plugin.version>
+    <asciidoctor-maven-plugin.version>3.1.1</asciidoctor-maven-plugin.version>
+    <bnd-maven-plugin.version>7.1.0</bnd-maven-plugin.version>
+    <bnd-baseline-maven-plugin.version>7.1.0</bnd-baseline-maven-plugin.version>
     <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
-    <cyclonedx-maven-plugin.version>2.8.1</cyclonedx-maven-plugin.version>
+    <cyclonedx-maven-plugin.version>2.9.1</cyclonedx-maven-plugin.version>
     <exec-maven-plugin.version>3.4.1</exec-maven-plugin.version>
-    <exec-maven-plugin.version>3.3.0</exec-maven-plugin.version>
+    <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
     <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
-    <frontend-maven-plugin.version>1.15.0</frontend-maven-plugin.version>
-    <gmavenplus-plugin.version>3.0.2</gmavenplus-plugin.version>
+    <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
+    <gmavenplus-plugin.version>4.1.1</gmavenplus-plugin.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <log4j-changelog-maven-plugin.version>0.9.0</log4j-changelog-maven-plugin.version>
-    <maven-artifact-plugin.version>3.5.1</maven-artifact-plugin.version>
-    <restrict-imports-enforcer-rule.version>2.5.0</restrict-imports-enforcer-rule.version>
-    <sign-maven-plugin.version>1.1.0</sign-maven-plugin.version>
-    <spotbugs-maven-plugin.version>4.8.6.3</spotbugs-maven-plugin.version>
-    <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
+    <maven-artifact-plugin.version>3.6.0</maven-artifact-plugin.version>
+    <restrict-imports-enforcer-rule.version>2.6.0</restrict-imports-enforcer-rule.version>
+    <spotbugs-maven-plugin.version>4.8.6.6</spotbugs-maven-plugin.version>
+    <spotless-maven-plugin.version>2.44.2</spotless-maven-plugin.version>
     <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
     <!-- Due to a missing `maven-metadata.xml`, Dependabot does not update this automatically -->
-    <develocity-maven-plugin.version>1.22.1</develocity-maven-plugin.version>
+    <develocity-maven-plugin.version>1.23.1</develocity-maven-plugin.version>
     <develocity-user-data-extension.version>2.0.1</develocity-user-data-extension.version>
 
     <!-- plugin dependencies versions -->
-    <error-prone.version>2.32.0</error-prone.version>
+    <error-prone.version>2.36.0</error-prone.version>
     <!-- `findsecbugs-plugin:1.13.0` contains a bug blocking Log4j compilation: https://github.com/find-sec-bugs/find-sec-bugs/pull/728
          Hence, pinning the `1.12.0` instead. -->
     <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
-    <groovy.version>4.0.23</groovy.version>
+    <groovy.version>4.0.25</groovy.version>
 
     <!-- site-specific versions -->
-    <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project.
-         This will be used in the site and updated automatically by `dependabot`. -->
-    <site-project.version>11.0.0</site-project.version>
+    <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project. -->
+    <site-project.version>11.3.0</site-project.version>
 
   </properties>
 
   <dependencyManagement>
     <dependencies>
 
-      <!-- Dummy dependency to trick `dependabot` into updating the `site-project.version` property -->
-      <dependency>
-        <groupId>org.apache.logging</groupId>
-        <artifactId>logging-parent</artifactId>
-        <version>${site-project.version}</version>
-        <type>pom</type>
-      </dependency>
+      <!-- ██     ██  █████  ██████  ███    ██ ██ ███    ██  ██████  ██
+           ██     ██ ██   ██ ██   ██ ████   ██ ██ ████   ██ ██       ██
+           ██  █  ██ ███████ ██████  ██ ██  ██ ██ ██ ██  ██ ██   ███ ██
+           ██ ███ ██ ██   ██ ██   ██ ██  ██ ██ ██ ██  ██ ██ ██    ██
+            ███ ███  ██   ██ ██   ██ ██   ████ ██ ██   ████  ██████  ██
 
-      <dependency>
-        <groupId>biz.aQute.bnd</groupId>
-        <artifactId>biz.aQute.bnd.annotation</artifactId>
-        <version>${bnd.annotation.version}</version>
-      </dependency>
+           Do not add entries to this `dependencyManagement > dependencies` block!
+           Otherwise, they
 
-      <dependency>
-        <groupId>com.github.spotbugs</groupId>
-        <artifactId>spotbugs-annotations</artifactId>
-        <version>${spotbugs-annotations.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.jspecify</groupId>
-        <artifactId>jspecify</artifactId>
-        <version>${jspecify.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>osgi.annotation</artifactId>
-        <version>${osgi.annotation.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>org.osgi.annotation.bundle</artifactId>
-        <version>${osgi.annotation.bundle.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.osgi</groupId>
-        <artifactId>org.osgi.annotation.versioning</artifactId>
-        <version>${osgi.annotation.versioning.version}</version>
-      </dependency>
+           1. leak into BOMs: https://github.com/apache/logging-log4j2/issues/3066
+           2. necessitate keeping the `<parent>` in BOMs: https://github.com/apache/logging-parent/issues/37 -->
 
     </dependencies>
   </dependencyManagement>
@@ -400,12 +360,6 @@
         </plugin>
 
         <plugin>
-          <groupId>org.simplify4u.plugins</groupId>
-          <artifactId>sign-maven-plugin</artifactId>
-          <version>${sign-maven-plugin.version}</version>
-        </plugin>
-
-        <plugin>
           <groupId>com.github.spotbugs</groupId>
           <artifactId>spotbugs-maven-plugin</artifactId>
           <version>${spotbugs-maven-plugin.version}</version>
@@ -456,47 +410,6 @@
               <goal>clean</goal>
             </goals>
             <phase>clean</phase>
-          </execution>
-
-          <!-- BOMs should ideally _only_ contain dependencies for modules of the project.
-               No invasive properties or plugin/dependency management – either from the BOM itself or its parent.
-               The following `flatten-maven-plugin` exactly performs that trimming operation. -->
-          <execution>
-            <id>flatten-bom</id>
-            <goals>
-              <goal>flatten</goal>
-            </goals>
-            <!-- BOM flattening is disabled by default!
-                 This execution must be manually enabled by the consumer. -->
-            <phase>none</phase>
-            <configuration>
-              <flattenMode>bom</flattenMode>
-              <!-- POM `ElementHandling` is pretty cryptic: https://www.mojohaus.org/flatten-maven-plugin/apidocs/org/codehaus/mojo/flatten/ElementHandling.html
-                   Trial-and-error has shown that we should use either `remove` or `interpolate`.
-                   `remove` simply removes the element.
-                   `interpolate` takes the element from the original POM with variables interpolated.
-                   Avoid using `resolve`, which uses the effective POM where inherited changes from the parent are also incorporated. -->
-              <pomElements>
-                <build>remove</build>
-                <properties>remove</properties>
-                <repositories>remove</repositories>
-                <distributionManagement>remove</distributionManagement>
-                <dependencyManagement>interpolate</dependencyManagement>
-                <!-- Keep the `parent`!
-                     Otherwise, this causes build failures for artifacts whose dependencies need to be resolved at runtime.
-                     Consider the following problem experienced in `log4j-transform-maven-plugin`:
-
-                     1. `log4j-transform-parent` depends on `log4j-transform-bom`
-                     2. `log4j-transform-bom` depends on `logging-parent`
-                     3. `logging-parent` contains `dependencyManagement`, etc. that are used by `log4j-transform-maven-plugin`
-                     4. Dependencies of `log4j-transform-maven-plugin` et al. is resolved *at runtime*
-                     5. Though at runtime, the deployed `log4j-transform-bom` is used, which is flattened and hence doesn't have a parent!
-                     6. Hence, at runtime, all `logging-parent` logic is lost
-
-                     To avoid this, parents should better be kept while flattening BOMs. -->
-                <parent>keep</parent>
-              </pomElements>
-            </configuration>
           </execution>
 
         </executions>
@@ -1034,6 +947,68 @@
 
   <profiles>
 
+    <!-- `bom` profile to generate BOMs -->
+    <profile>
+
+      <id>bom</id>
+
+      <!-- Profile gets activated using a file instead of, say, a property defined by the child `pom.xml`.
+           Since a Maven property lookup requires model interpolation and that happens after the profile activation phase.
+           See: https://maven.apache.org/ref/3.9.6/maven-model-builder -->
+      <activation>
+        <file>
+          <exists>.logging-parent-bom-activator</exists>
+        </file>
+      </activation>
+
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>flatten-maven-plugin</artifactId>
+            <executions>
+
+              <!-- Explicitly specifying the `flatten-revision` execution to set its order in execution -->
+              <execution>
+                <id>flatten-revision</id>
+              </execution>
+
+              <!-- BOMs should ideally _only_ contain dependencies for modules of the project.
+                   No invasive properties or plugin/dependency management – either from the BOM itself or its parent.
+                   The following execution exactly performs that trimming operation. -->
+              <execution>
+                <id>flatten-bom</id>
+                <goals>
+                  <goal>flatten</goal>
+                </goals>
+                <phase>process-resources</phase>
+                <configuration>
+                  <flattenMode>bom</flattenMode>
+                  <!-- POM `ElementHandling` is pretty cryptic: https://www.mojohaus.org/flatten-maven-plugin/apidocs/org/codehaus/mojo/flatten/ElementHandling.html
+                       Trial-and-error has shown that we should use either `remove` or `interpolate`.
+                       `remove` simply removes the element.
+                       `interpolate` takes the element from the original POM with variables interpolated.
+                       Avoid using `resolve`, which uses the effective POM where inherited changes from the parent are also incorporated. -->
+                  <pomElements>
+                    <build>remove</build>
+                    <dependencyManagement>interpolate</dependencyManagement>
+                    <distributionManagement>remove</distributionManagement>
+                    <profiles>remove</profiles>
+                    <properties>remove</properties>
+                    <repositories>remove</repositories>
+                  </pomElements>
+                </configuration>
+              </execution>
+
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+
+    </profile>
+
     <!-- `changelog-validate` profile to validate changelog XMLs -->
     <profile>
 
@@ -1321,11 +1296,18 @@
       <id>deploy</id>
 
       <properties>
+
+        <!-- Global configuration -->
         <deployAtEnd>true</deployAtEnd>
         <installAtEnd>true</installAtEnd>
         <skipTests>true</skipTests>
         <spotbugs.skip>true</spotbugs.skip>
         <spotless.check.skip>true</spotless.check.skip>
+
+        <!-- Plugin versions -->
+        <nexus-staging-maven-plugin.version>1.7.0</nexus-staging-maven-plugin.version>
+        <sign-maven-plugin.version>1.1.0</sign-maven-plugin.version>
+
       </properties>
 
       <build>
@@ -1337,11 +1319,40 @@
           <plugin>
             <groupId>org.simplify4u.plugins</groupId>
             <artifactId>sign-maven-plugin</artifactId>
+            <version>${sign-maven-plugin.version}</version>
             <executions>
               <execution>
                 <goals>
                   <goal>sign</goal>
                 </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <!-- Skip `maven-deploy-plugin`, we will use `org.sonatype.plugins:nexus-staging-maven-plugin` instead -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+          <!-- Using Sonatype plugin, since it reports the resultant Nexus URL -->
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>${nexus-staging-maven-plugin.version}</version>
+            <executions>
+              <execution>
+                <id>default-deploy</id>
+                <goals>
+                  <goal>deploy</goal>
+                </goals>
+                <configuration>
+                  <nexusUrl>https://repository.apache.org</nexusUrl>
+                  <serverId>${distMgmtReleasesId}</serverId>
+                </configuration>
               </execution>
             </executions>
           </plugin>

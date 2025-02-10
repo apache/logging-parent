@@ -1,0 +1,87 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to you under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: verify-reproducibility-reusable
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: The Java compiler version
+        default: 17
+        type: string
+      maven-args:
+        description: Additional Maven arguments
+        type: string
+      nexus-url:
+        description: The URL of the reference Nexus repository
+        type: string
+      runs-on:
+        description: The type of runners to use as JSON array
+        default: '["ubuntu-latest"]'
+        type: string
+
+env:
+  MAVEN_ARGS: ${{ inputs.maven-args }}
+
+jobs:
+
+  build:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: ${{ fromJSON(inputs.runs-on) }}
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Java
+        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12   # 4.7.0
+        with:
+          distribution: zulu
+          java-version: ${{ inputs.java-version }}
+          cache: maven
+
+      # `clean verify artifact:compare` is required to generate the build reproducibility report.
+      # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
+      - name: Verify build reproducibility
+        shell: bash
+        run: |
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            -DskipTests=true \
+            -Dreference.repo=${{ inputs.nexus-url }} \
+            clean verify artifact:compare
+
+      # Upload reproducibility results if the build fails.
+      - name: Upload reproducibility results
+        if: failure()
+        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08   # 4.6.0
+        with:
+          name: reproducibility-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
+          path: |
+            **/target/bom.xml
+            **/target/*.buildcompare
+            **/target/*.jar
+            **/target/*.zip
+            **/target/reference/**

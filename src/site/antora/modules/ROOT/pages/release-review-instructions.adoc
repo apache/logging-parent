@@ -29,8 +29,10 @@ Releases of projects employing the {project-name} CI helper system can be verifi
 +
 [source,bash]
 ----
-svn co https://dist.apache.org/repos/dist/dev/logging/<projectName>/<releaseVersion> \
-  <projectName>-<releaseVersion> && cd $_
+export projectName=...
+export releaseVersion=...
+svn co https://dist.apache.org/repos/dist/dev/logging/$projectName/$releaseVersion \
+  $projectName-$releaseVersion && cd $_
 ----
 +
 [%collapsible]
@@ -38,21 +40,33 @@ svn co https://dist.apache.org/repos/dist/dev/logging/<projectName>/<releaseVers
 ====
 [source,bash]
 ----
-mkdir <projectName>-<releaseVersion> && cd $_
+mkdir $projectName-$releaseVersion> && cd $_
 wget --cut-dirs=6 \
      --no-host-directories \
      --no-parent \
      --recursive \
-     https://dist.apache.org/repos/dist/dev/logging/<projectName>/<releaseVersion>/
+     https://dist.apache.org/repos/dist/dev/logging/$projectName/$releaseVersion/
 ----
 ====
 
 . Verify checksums:
 +
+[tabs]
+====
+Linux/macOS::
++
 [source,bash]
 ----
 sha512sum --check *.sha512
 ----
+
+Windows::
++
+[source,shell]
+----
+certUtil -hashfile <FILE> SHA512
+----
+====
 
 . Import the release manager GPG keys, unless you haven't earlier done so:
 +

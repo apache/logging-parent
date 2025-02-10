@@ -2,7 +2,7 @@
 <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
-       type="updated">
-  <issue id="245" link="https://github.com/apache/logging-parent/pull/245"/>
-  <description format="asciidoc">Update `github/codeql-action` to version `3.26.8`</description>
+       type="changed">
+  <issue id="313" link="https://github.com/apache/logging-parent/pull/313"/>
+  <description format="asciidoc">Move from `ge.apache.org` to new `develocity.apache.org` server</description>
 </entry>
