@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Release notes :: Apache Logging Parent</title>
     <link rel="canonical" href="https://logging.apache.org/logging-parent/release-notes.html">
-    <meta name="generator" content="Antora 3.2.0-alpha.6">
+    <meta name="generator" content="Antora 3.2.0-alpha.8">
 <link rel="stylesheet" href="./_/css/site.css">
 <link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
 <!-- `@asciidoctor/tabs` extension styles -->
@@ -115,6 +115,100 @@
 <article class="doc">
 <h1 class="page">Release notes</h1>
 <div class="sect1">
+<h2 id="release-notes-12-0-0"><a class="anchor" href="#release-notes-12-0-0"></a>12.0.0</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2025-02-07</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This major release contains several small improvements and certain backward incompatible changes.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-12-0-0-changed"><a class="anchor" href="#release-notes-12-0-0-changed"></a>Changed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Activate <code>flatten-bom</code> execution of <code>flatten-maven-plugin</code> using a <code>.logging-parent-bom-activator</code> file (<a href="https://github.com/apache/logging-parent/pull/265">265</a>)</p>
+</li>
+<li>
+<p>Don&#8217;t keep <code>parent</code> in <code>flatten-bom</code> configuration (<a href="https://github.com/apache/logging-parent/pull/265">265</a>, <a href="https://github.com/apache/logging-parent/issues/37">37</a>)</p>
+</li>
+<li>
+<p>Switch from <code>maven-deploy-plugin</code> to <code>nexus-staging-maven-plugin</code>, which helps with fetching the Nexus repository URL during a release. <code>generate-email.sh</code> will be called with a fourth argument containing the Nexus repository URL. (<a href="https://github.com/apache/logging-parent/pull/246">246</a>)</p>
+</li>
+<li>
+<p>Update <code>deploy-*-reusable</code> workflows to export the URL of the Nexus repository and the project version as <code>nexus-url</code> and <code>project-version</code> workflow outputs, respectively (<a href="https://github.com/apache/logging-parent/pull/246">246</a>)</p>
+</li>
+<li>
+<p>Add <code>maven-args</code> input to <code>build-reusable</code> and <code>merge-dependabot-reusable</code> (<a href="https://github.com/apache/logging-parent/pull/266">266</a>)</p>
+</li>
+<li>
+<p>Move from <code>ge.apache.org</code> to new <code>develocity.apache.org</code> server (<a href="https://github.com/apache/logging-parent/pull/313">313</a>)</p>
+</li>
+<li>
+<p>Add the <code>verify-reproducibility-reusable.yaml</code> workflow to check reproducibility of artifacts in a Maven repository. Deprecate the reproducibility check in <code>build-reusable.yaml</code>. (<a href="https://github.com/apache/logging-parent/pull/246">246</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-12-0-0-removed"><a class="anchor" href="#release-notes-12-0-0-removed"></a>Removed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Remove following managed dependencies to avoid polluting BOMs: <code>biz.aQute.bnd:biz.aQute.bnd.annotation</code>, <code>com.github.spotbugs:spotbugs-annotations</code>, <code>org.jspecify:jspecify</code>, <code>org.osgi:osgi.annotation</code>, <code>org.osgi:org.osgi.annotation.bundle</code>, <code>org.osgi:org.osgi.annotation.versioning</code> (<a href="https://github.com/apache/logging-parent/pull/265">265</a>, <a href="https://github.com/apache/logging-log4j2/issues/3066">apache/logging-log4j2#3066</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-12-0-0-updated"><a class="anchor" href="#release-notes-12-0-0-updated"></a>Updated</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>biz.aQute.bnd:bnd-baseline-maven-plugin</code> to version <code>7.1.0</code> (<a href="https://github.com/apache/logging-parent/pull/290">290</a>)</p>
+</li>
+<li>
+<p>Update <code>biz.aQute.bnd:bnd-maven-plugin</code> to version <code>7.1.0</code> (<a href="https://github.com/apache/logging-parent/pull/289">289</a>)</p>
+</li>
+<li>
+<p>Update <code>com.diffplug.spotless:spotless-maven-plugin</code> to version <code>2.44.2</code> (<a href="https://github.com/apache/logging-parent/pull/314">314</a>)</p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.8.6.6</code> (<a href="https://github.com/apache/logging-parent/pull/293">293</a>)</p>
+</li>
+<li>
+<p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.36.0</code> (<a href="https://github.com/apache/logging-parent/pull/287">287</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache.groovy:groovy</code> to version <code>4.0.25</code> (<a href="https://github.com/apache/logging-parent/pull/320">320</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache.maven.plugins:maven-artifact-plugin</code> to version <code>3.6.0</code> (<a href="https://github.com/apache/logging-parent/pull/312">312</a>)</p>
+</li>
+<li>
+<p>Update <code>org.asciidoctor:asciidoctor-maven-plugin</code> to version <code>3.1.1</code> (<a href="https://github.com/apache/logging-parent/pull/285">285</a>)</p>
+</li>
+<li>
+<p>Update <code>org.codehaus.gmavenplus:gmavenplus-plugin</code> to version <code>4.1.1</code> (<a href="https://github.com/apache/logging-parent/pull/307">307</a>)</p>
+</li>
+<li>
+<p>Update <code>org.codehaus.mojo:exec-maven-plugin</code> to version <code>3.5.0</code> (<a href="https://github.com/apache/logging-parent/pull/274">274</a>)</p>
+</li>
+<li>
+<p>Update <code>org.cyclonedx:cyclonedx-maven-plugin</code> to version <code>2.9.1</code> (<a href="https://github.com/apache/logging-parent/pull/291">291</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="release-notes-11-3-0"><a class="anchor" href="#release-notes-11-3-0"></a>11.3.0</h2>
 <div class="sectionbody">
 <div class="dlist">
@@ -174,7 +268,7 @@
 <p>Update <code>com.gradle:develocity-maven-extension</code> to version <code>1.22.1</code> (<a href="https://github.com/apache/logging-parent/pull/239">239</a>)</p>
 </li>
 <li>
-<p>Update <code>github/codeql-action</code> to version <code>3.26.7</code> (<a href="https://github.com/apache/logging-parent/pull/243">243</a>)</p>
+<p>Update <code>github/codeql-action</code> to version <code>3.26.8</code> (<a href="https://github.com/apache/logging-parent/pull/245">245</a>)</p>
 </li>
 <li>
 <p>Update <code>org.apache.groovy:groovy</code> to version <code>4.0.23</code> (<a href="https://github.com/apache/logging-parent/pull/244">244</a>)</p>
@@ -990,7 +1084,7 @@ All preparations (release notes, source and binary distributions, vote &amp; ann
 </div>
 <footer class="footer">
   <p>
-    Copyright © 1999-2024 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
+    Copyright © 1999-2025 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
     Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
     Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
   </p>

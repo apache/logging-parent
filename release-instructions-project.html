@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Project release instructions :: Apache Logging Parent</title>
     <link rel="canonical" href="https://logging.apache.org/logging-parent/release-instructions-project.html">
-    <meta name="generator" content="Antora 3.2.0-alpha.6">
+    <meta name="generator" content="Antora 3.2.0-alpha.8">
 <link rel="stylesheet" href="./_/css/site.css">
 <link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
 <!-- `@asciidoctor/tabs` extension styles -->
@@ -246,11 +246,38 @@ You can iterate on the <code>release/7.8.0</code> branch to perfect it.</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>If not, commit necessary fixes, push, and repeat.</p>
+<p>If not, commit the necessary fixes, push, and repeat.</p>
 </div>
 </li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="verify-release"><a class="anchor" href="#verify-release"></a>Verify the release</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Once the release is staged, the Release Manager should:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
 <li>
-<p><em>Close</em> the repository in <a href="https://repository.apache.org/">repository.apache.org</a> using a self-explanatory description, e.g., <code>`logging-parent` version `7.8.0` RC1</code></p>
+<p>Follow the <a href="release-review-instructions.html" class="xref page">Project release review instructions</a> to verify the integrity of the release.</p>
+</li>
+<li>
+<p>Some projects have additional integration tests that need to run on the release candidate artifacts:</p>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>logging-log4j2</code></dt>
+<dd>
+<div class="paragraph">
+<p>Run the
+<a href="https://github.com/apache/logging-log4j-samples/actions/workflows/integration-test.yaml">integration-test.yaml</a>
+workflow using the appropriate version number and URL of the <em>Staging Repository</em> as parameters.</p>
+</div>
+</dd>
+</dl>
+</div>
 </li>
 </ol>
 </div>
@@ -263,21 +290,6 @@ You can iterate on the <code>release/7.8.0</code> branch to perfect it.</p>
 <ol class="arabic">
 <li>
 <p>Send the vote email uploaded to the <a href="https://dist.apache.org/repos/dist/dev/logging/logging-parent/7.8.0">dist.apache.org/repos/dist/<strong>dev</strong>/logging/logging-parent/7.8.0</a> Subversion repository</p>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p><strong>Fix the cited <a href="https://repository.apache.org">repository.apache.org</a> URL</strong> in the generated email!
-It changes after every Nexus deployment.</p>
-</div>
-</td>
-</tr>
-</table>
-</div>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -552,7 +564,7 @@ If you are using GMail, enable the <em>"Plain text mode"</em> while composing yo
 </div>
 <footer class="footer">
   <p>
-    Copyright © 1999-2024 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
+    Copyright © 1999-2025 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
     Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
     Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
   </p>
