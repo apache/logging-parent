@@ -400,6 +400,17 @@
             <configuration>
               <updatePomFile>true</updatePomFile>
               <flattenMode>resolveCiFriendliesOnly</flattenMode>
+              <pomElements>
+                <!--
+                  ~ Flatten Maven Plugin removes the `child.project.url.inherit.append.path` attribute on this POM.
+                  ~
+                  ~ This causes a difference between the effective model of children built on this POM
+                  ~ and those built on the flattened version.
+                  ~
+                  ~ Until https://github.com/mojohaus/flatten-maven-plugin/issues/412 is resolved, we must expand `url`
+                  -->
+                <url>expand</url>
+              </pomElements>
             </configuration>
           </execution>
 
