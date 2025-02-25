@@ -136,7 +136,7 @@ jobs:
       # We upload tests results.
       - name: Upload test reports
         if: ${{ always() && inputs.test-report-enabled }}
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08   # 4.6.0
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1   # 4.6.1
         with:
           name: "test-report-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}${{inputs.test-report-suffix}}"
           path: |
@@ -199,7 +199,7 @@ jobs:
       # Upload reproducibility results if the build fails.
       - name: Upload reproducibility results
         if: inputs.reproducibility-check-enabled && failure() && steps.reproducibility.conclusion == 'failure'
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08   # 4.6.0
+        uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1   # 4.6.1
         with:
           name: reproducibility-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
           path: |
