@@ -55,6 +55,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      PROJECT_ID: ${{ inputs.project-id }}
     outputs:
       project-version: ${{ steps.version.outputs.project-version }}
       nexus-url: ${{ steps.nexus.outputs.nexus-url }}
@@ -235,7 +237,7 @@ jobs:
             -DattachmentCount="$DIST_ATTACHMENT_COUNT"
 
           # Rename distribution files
-          export DIST_FILENAME_PREFIX="apache-${{ inputs.project-id }}"
+          export DIST_FILENAME_PREFIX="apache-${PROJECT_ID}"
           export DIST_FILENAME_VERSIONED_PREFIX="${DIST_FILENAME_PREFIX}-${PROJECT_VERSION}"
           export DIST_FILEPATH_PREFIX="/tmp/${DIST_FILENAME_VERSIONED_PREFIX}"
           export DIST_FILEPATH_SRC="${DIST_FILEPATH_PREFIX}-src.zip"
@@ -263,7 +265,6 @@ jobs:
       - name: Upload to Subversion
         shell: bash
         env:
-          PROJECT_ID: ${{ inputs.project-id }}
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         run: |
