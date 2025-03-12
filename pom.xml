@@ -208,7 +208,7 @@
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
     <node.version>21.7.1</node.version>
     <npm.version>10.5.0</npm.version>
-    <palantir-java-format.version>2.57.0</palantir-java-format.version>
+    <palantir-java-format.version>2.58.0</palantir-java-format.version>
 
     <!-- plugin versions -->
     <asciidoctor-maven-plugin.version>3.1.1</asciidoctor-maven-plugin.version>
