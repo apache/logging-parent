@@ -37,6 +37,7 @@ on:
 
 env:
   MAVEN_ARGS: ${{ inputs.maven-args }}
+  NEXUS_URL: ${{ inputs.nexus-url }}
 
 jobs:
 
@@ -70,7 +71,7 @@ jobs:
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             -DskipTests=true \
-            -Dreference.repo=${{ inputs.nexus-url }} \
+            -Dreference.repo="${NEXUS_URL}" \
             clean verify artifact:compare
 
       # Upload reproducibility results if the build fails.

@@ -73,8 +73,10 @@ jobs:
     steps:
       - name: Export version
         id: export-version
+        env:
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          version=$(echo "${{ github.ref_name }}" | sed 's/^release\///')
+          version=$(echo "$REF_NAME" | sed 's/^release\///' | tr -d '\r\n')
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
   deploy-site-rel:
