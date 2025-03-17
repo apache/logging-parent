@@ -225,7 +225,7 @@
     <log4j-changelog-maven-plugin.version>0.9.0</log4j-changelog-maven-plugin.version>
     <maven-artifact-plugin.version>3.6.0</maven-artifact-plugin.version>
     <restrict-imports-enforcer-rule.version>2.6.0</restrict-imports-enforcer-rule.version>
-    <spotbugs-maven-plugin.version>4.9.2.0</spotbugs-maven-plugin.version>
+    <spotbugs-maven-plugin.version>4.9.3.0</spotbugs-maven-plugin.version>
     <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
     <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
     <!-- Due to a missing `maven-metadata.xml`, Dependabot does not update this automatically -->

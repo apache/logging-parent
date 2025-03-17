@@ -3,6 +3,6 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="updated">
-  <issue id="342" link="https://github.com/apache/logging-parent/pull/342"/>
-  <description format="asciidoc">Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.9.2.0`</description>
+  <issue id="349" link="https://github.com/apache/logging-parent/pull/349"/>
+  <description format="asciidoc">Update `com.github.spotbugs:spotbugs-maven-plugin` to version `4.9.3.0`</description>
 </entry>
