@@ -55,8 +55,6 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      PROJECT_ID: ${{ inputs.project-id }}
     outputs:
       project-version: ${{ steps.version.outputs.project-version }}
       nexus-url: ${{ steps.nexus.outputs.nexus-url }}
@@ -226,6 +224,8 @@ jobs:
 
       - name: Create the distribution
         shell: bash
+        env:
+          PROJECT_ID: ${{ inputs.project-id }}
         run: |
 
           # Generate the distribution (i.e., `src.zip` and optional `bin.zip`)
@@ -265,6 +265,7 @@ jobs:
       - name: Upload to Subversion
         shell: bash
         env:
+          PROJECT_ID: ${{ inputs.project-id }}
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
         run: |
