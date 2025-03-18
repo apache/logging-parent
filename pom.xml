@@ -46,12 +46,70 @@
   <developers>
 
     <developer>
+      <id>pkarwasz</id>
+      <name>Piotr P. Karwasz</name>
+      <email>pkarwasz@apache.org</email>
+      <url>https://github.com/sponsors/ppkarwasz</url>
+      <organization>The Apache Software Foundation</organization>
+      <roles>
+        <role>PMC Chair</role>
+      </roles>
+      <timezone>Europe/Warsaw</timezone>
+    </developer>
+
+    <developer>
+      <id>ckozak</id>
+      <name>Carter Kozak</name>
+      <email>ckozak@apache.org</email>
+      <url>https://github.com/sponsors/carterkozak</url>
+      <organization>The Apache Software Foundation</organization>
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+      <timezone>America/New York</timezone>
+    </developer>
+
+    <developer>
+      <id>grobmeier</id>
+      <name>Christian Grobmeier</name>
+      <email>grobmeier@apache.org</email>
+      <url>https://github.com/sponsors/grobmeier</url>
+      <organization>The Apache Software Foundation</organization>
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+      <timezone>Europe/Berlin</timezone>
+    </developer>
+
+    <developer>
+      <id>davydm</id>
+      <name>Davyd McColl</name>
+      <email>davydm@apache.org</email>
+      <url>https://github.com/sponsors/fluffynuts</url>
+      <organization>The Apache Software Foundation</organization>
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+      <timezone>Africa/Johannesburg</timezone>
+    </developer>
+
+    <developer>
+      <id>dpsenner</id>
+      <name>Dominik Psenner</name>
+      <email>dpsenner@apache.org</email>
+      <url>https://github.com/sponsors/dpsenner</url>
+      <organization>The Apache Software Foundation</organization>
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+    </developer>
+
+    <developer>
       <id>ggregory</id>
       <name>Gary Gregory</name>
       <email>ggregory@apache.org</email>
-      <url>https://www.garygregory.com</url>
+      <url>https://github.com/sponsors/garydgregory</url>
       <organization>The Apache Software Foundation</organization>
-      <organizationUrl>https://www.apache.org/</organizationUrl>
       <roles>
         <role>PMC Member</role>
       </roles>
@@ -59,9 +117,11 @@
     </developer>
 
     <developer>
-      <id>grobmeier</id>
-      <name>Christian Grobmeier</name>
-      <email>grobmeier@apache.org</email>
+      <id>freeandnil</id>
+      <name>Jan Friedrich</name>
+      <email>freeandnil@apache.org</email>
+      <url>https://github.com/sponsors/FreeAndNil</url>
+      <organization>The Apache Software Foundation</organization>
       <roles>
         <role>PMC Member</role>
       </roles>
@@ -72,7 +132,8 @@
       <id>mattsicker</id>
       <name>Matt Sicker</name>
       <email>mattsicker@apache.org</email>
-      <organization>Apple</organization>
+      <url>https://github.com/sponsors/jvz</url>
+      <organization>The Apache Software Foundation</organization>
       <roles>
         <role>PMC Member</role>
       </roles>
@@ -80,25 +141,133 @@
     </developer>
 
     <developer>
-      <id>pkarwasz</id>
-      <name>Piotr P. Karwasz</name>
-      <email>pkarwasz@apache.org</email>
+      <id>rgoers</id>
+      <name>Ralph Goers</name>
+      <email>rgoers@apache.org</email>
+      <url>https://github.com/sponsors/rgoers</url>
+      <organization>The Apache Software Foundation</organization>
       <roles>
         <role>PMC Member</role>
       </roles>
-      <timezone>Europe/Warsaw</timezone>
+      <timezone>America/Phoenix</timezone>
+    </developer>
+
+    <developer>
+      <id>rpopma</id>
+      <name>Remko Popma</name>
+      <email>rpopma@apache.org</email>
+      <url>https://github.com/sponsors/remkop</url>
+      <organization>The Apache Software Foundation</organization>
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+      <timezone>Asia/Tokyo</timezone>
+    </developer>
+
+    <developer>
+      <id>rmiddleton</id>
+      <name>Robert Middleton</name>
+      <email>rmiddleton@apache.org</email>
+      <url>https://github.com/sponsors/rm5248</url>
+      <organization>The Apache Software Foundation</organization>
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <id>rgrabowski</id>
+      <name>Ron Grabowski</name>
+      <email>rgrabowski@apache.org</email>
+      <url>https://github.com/sponsors/ronosaurus</url>
+      <organization>The Apache Software Foundation</organization>
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <id>sdeboy</id>
+      <name>Scott Deboy</name>
+      <email>sdeboy@apache.org</email>
+      <url>https://github.com/sponsors/scottdeboy</url>
+      <organization>The Apache Software Foundation</organization>
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+    </developer>
+
+    <developer>
+      <id>swebb2066</id>
+      <name>Stephen Webb</name>
+      <email>swebb2066@apache.org</email>
+      <url>https://github.com/sponsors/swebb2066</url>
+      <organization>The Apache Software Foundation</organization>
+      <roles>
+        <role>PMC Member</role>
+      </roles>
+      <timezone>Australia/Sydney</timezone>
     </developer>
 
     <developer>
       <id>vy</id>
       <name>Volkan Yazıcı</name>
       <email>vy@apache.org</email>
+      <url>https://github.com/sponsors/vy</url>
+      <organization>The Apache Software Foundation</organization>
       <roles>
-        <role>PMC Chair</role>
+        <role>PMC Member</role>
       </roles>
       <timezone>Europe/Amsterdam</timezone>
     </developer>
 
+    <developer>
+      <id>jaykatariya</id>
+      <name>Jay Katariya</name>
+      <email>jaykatariya@apache.org</email>
+      <url>https://github.com/sponsors/jaykataria1111</url>
+      <organization>The Apache Software Foundation</organization>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>America/Los_Angeles</timezone>
+    </developer>
+
+    <developer>
+      <id>jwthomas</id>
+      <name>Jeff Thomas</name>
+      <email>jwthomas@apache.org</email>
+      <url>https://github.com/sponsors/JWT007</url>
+      <organization>The Apache Software Foundation</organization>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>Europe/Berlin</timezone>
+    </developer>
+
+    <developer>
+      <id>rgupta</id>
+      <name>Raman Gupta</name>
+      <email>rgupta@apache.org</email>
+      <url>https://github.com/sponsors/rocketraman</url>
+      <organization>The Apache Software Foundation</organization>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>America/Toronto</timezone>
+    </developer>
+
+    <developer>
+      <id>tschoening</id>
+      <name>Thorsten Schöning</name>
+      <email>tschoening@apache.org</email>
+      <url>https://github.com/sponsors/ams-tschoening</url>
+      <organization>The Apache Software Foundation</organization>
+      <roles>
+        <role>Committer</role>
+      </roles>
+      <timezone>Europe/Berlin</timezone>
+    </developer>
   </developers>
 
   <mailingLists>
