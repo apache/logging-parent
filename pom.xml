@@ -233,7 +233,7 @@
     <develocity-user-data-extension.version>2.0.1</develocity-user-data-extension.version>
 
     <!-- plugin dependencies versions -->
-    <error-prone.version>2.36.0</error-prone.version>
+    <error-prone.version>2.37.0</error-prone.version>
     <!-- `findsecbugs-plugin:1.13.0` contains a bug blocking Log4j compilation: https://github.com/find-sec-bugs/find-sec-bugs/pull/728
          Hence, pinning the `1.12.0` instead. -->
     <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
