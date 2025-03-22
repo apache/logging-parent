@@ -168,6 +168,9 @@
     <!-- `bnd-maven-plugin` 7.x requires a Maven version `3.8.1` or higher -->
     <minimalMavenBuildVersion>3.8.1</minimalMavenBuildVersion>
 
+    <!-- The same property will be used by `maven-deploy-plugin` and `nexus-staging-maven-plugin` -->
+    <maven.deploy.skip>false</maven.deploy.skip>
+
     <!-- JPMS and OSGi options -->
     <!-- Overrides some options in multi-release JARs -->
     <bnd-multi-release>false</bnd-multi-release>
@@ -1363,6 +1366,7 @@
                 </goals>
                 <configuration>
                   <nexusUrl>https://repository.apache.org</nexusUrl>
+                  <skipNexusStagingDeployMojo>${maven.deploy.skip}</skipNexusStagingDeployMojo>
                   <serverId>${distMgmtReleasesId}</serverId>
                 </configuration>
               </execution>
