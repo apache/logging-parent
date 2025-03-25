@@ -153,7 +153,8 @@ jobs:
 
       # Node.js cache is needed for Antora
       - name: Set up Node.js cache
-        if: inputs.site-enabled
+        # Only build the website on the fastest runner
+        if: inputs.site-enabled && runner.os == 'ubuntu-latest'
         id: nodejs-cache
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684   # 4.2.3
         with:
@@ -164,7 +165,7 @@ jobs:
           # For that, we need to configure `dependabot` to update hundreds of dependencies listed in `package-lock.json`.
           # That translates to a never ending rain of `dependabot` PRs.
           # I doubt if the wasted CPU cycles worth the gain.
-          key: "${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}"
+          key: "nodejs-cache-${{ hashFiles('node', 'node_modules') }}"
           # `actions/cache` doesn't recommend caching `node_modules`.
           # Though none of its recipes fit our bill, since we install Node.js using `frontend-maven-plugin`.
           # See https://github.com/actions/cache/blob/main/examples.md#node---npm
@@ -174,7 +175,8 @@ jobs:
             node_modules
 
       - name: Build the website
-        if: inputs.site-enabled
+        # Only build the website on the fastest runner
+        if: inputs.site-enabled && runner.os == 'ubuntu-latest'
         shell: bash
         env:
           # Making Node.js cache hit visible for debugging purposes
