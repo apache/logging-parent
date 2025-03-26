@@ -1,4 +1,5 @@
 {
+  "name": "@org.apache.logging/logging-parent",
   "dependencies": {
     "@antora/cli": "^3.2.0-alpha.4",
     "@antora/site-generator-default": "^3.2.0-alpha.4",
