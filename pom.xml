@@ -1576,7 +1576,8 @@
                 </goals>
                 <phase>pre-site</phase>
                 <configuration>
-                  <arguments>install github:apache/logging-parent#rel/${stable-project.version}</arguments>
+                  <arguments>install github:apache/logging-parent#feature/366-npm-shrinkwrap</arguments>
+                  <!--<arguments>install github:apache/logging-parent#rel/${stable-project.version}</arguments>-->
                 </configuration>
               </execution>
 
