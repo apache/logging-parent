@@ -121,11 +121,51 @@
 <p>This minor release contains several small improvements.</p>
 </div>
 <div class="sect2">
-<h3 id="release-notes-12-x-x-changed"><a class="anchor" href="#release-notes-12-x-x-changed"></a>Changed</h3>
+<h3 id="release-notes-12-x-x-updated"><a class="anchor" href="#release-notes-12-x-x-updated"></a>Updated</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>org.jacoco:jacoco-maven-plugin</code> to version <code>0.8.13</code> (<a href="https://github.com/apache/logging-parent/pull/368">368</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="release-notes-12-1-0"><a class="anchor" href="#release-notes-12-1-0"></a>12.1.0</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2025-04-01</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This minor release adds CodeQL checks for GitHub Actions.
+It also fixes a breaking change in Error Prone that prevented projects from migrating to version <code>12.0.0</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-12-1-0-added"><a class="anchor" href="#release-notes-12-1-0-added"></a>Added</h3>
 <div class="ulist">
 <ul>
 <li>
 <p>Add "GitHub Actions" to the list of languages analyzed by CodeQL.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-12-1-0-fixed"><a class="anchor" href="#release-notes-12-1-0-fixed"></a>Fixed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Use the <code>maven.deploy.skip</code> Maven property in <code>nexus-staging-maven-plugin</code>. This effectively fixes the skipping of test artifacts' deployments. (<a href="https://github.com/apache/logging-parent/pull/360">360</a>)</p>
+</li>
+<li>
+<p>Fix Error Prone arguments breaking <code>maven-compiler-plugin:compile</code>.</p>
 </li>
 <li>
 <p>Fix inheritance of <code>url</code> elements in children POMs.</p>
@@ -134,17 +174,7 @@
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-12-x-x-fixed"><a class="anchor" href="#release-notes-12-x-x-fixed"></a>Fixed</h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Use the <code>maven.deploy.skip</code> Maven property in <code>nexus-staging-maven-plugin</code>. This effectively fixes the skipping of test artifacts' deployments. (<a href="https://github.com/apache/logging-parent/pull/360">360</a>)</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-12-x-x-updated"><a class="anchor" href="#release-notes-12-x-x-updated"></a>Updated</h3>
+<h3 id="release-notes-12-1-0-updated"><a class="anchor" href="#release-notes-12-1-0-updated"></a>Updated</h3>
 <div class="ulist">
 <ul>
 <li>
@@ -154,7 +184,7 @@
 <p>Update <code>actions/upload-artifact</code> to version <code>4.6.2</code> (<a href="https://github.com/apache/logging-parent/pull/359">359</a>)</p>
 </li>
 <li>
-<p>Update <code>com.diffplug.spotless:spotless-maven-plugin</code> to version <code>2.44.3</code> (<a href="https://github.com/apache/logging-parent/pull/333">333</a>)</p>
+<p>Update <code>com.diffplug.spotless:spotless-maven-plugin</code> to version <code>2.44.4</code> (<a href="https://github.com/apache/logging-parent/pull/372">372</a>)</p>
 </li>
 <li>
 <p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.9.3.0</code> (<a href="https://github.com/apache/logging-parent/pull/349">349</a>)</p>
@@ -166,13 +196,13 @@
 <p>Update <code>com.gradle:develocity-maven-extension</code> to version <code>1.23.2</code> (<a href="https://github.com/apache/logging-parent/pull/338">338</a>)</p>
 </li>
 <li>
-<p>Update <code>com.palantir.javaformat:palantir-java-format</code> to version <code>2.61.0</code> (<a href="https://github.com/apache/logging-parent/pull/361">361</a>)</p>
+<p>Update <code>com.palantir.javaformat:palantir-java-format</code> to version <code>2.62.0</code> (<a href="https://github.com/apache/logging-parent/pull/370">370</a>)</p>
 </li>
 <li>
 <p>Update <code>de.skuzzle.enforcer:restrict-imports-enforcer-rule</code> to version <code>2.6.1</code> (<a href="https://github.com/apache/logging-parent/pull/365">365</a>)</p>
 </li>
 <li>
-<p>Update <code>github/codeql-action</code> to version <code>3.28.13</code> (<a href="https://github.com/apache/logging-parent/pull/364">364</a>)</p>
+<p>Update <code>github/codeql-action</code> to version <code>3.28.15</code> (<a href="https://github.com/apache/logging-parent/pull/371">371</a>)</p>
 </li>
 <li>
 <p>Update <code>org.apache:apache</code> to version <code>34</code> (<a href="https://github.com/apache/logging-parent/pull/353">353</a>)</p>
