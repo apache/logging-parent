@@ -2,6 +2,6 @@
 <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
-       type="changed">
-  <description format="asciidoc">Add "GitHub Actions" to the list of languages analyzed by CodeQL.</description>
+       type="fixed">
+  <description format="asciidoc">Fix inheritance of `url` elements in children POMs.</description>
 </entry>
