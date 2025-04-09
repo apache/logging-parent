@@ -115,6 +115,101 @@
 <article class="doc">
 <h1 class="page">Release notes</h1>
 <div class="sect1">
+<h2 id="release-notes-12-1-0"><a class="anchor" href="#release-notes-12-1-0"></a>12.1.0</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2025-04-01</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This minor release adds CodeQL checks for GitHub Actions.
+It also fixes a breaking change in Error Prone that prevented projects from migrating to version <code>12.0.0</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-12-1-0-added"><a class="anchor" href="#release-notes-12-1-0-added"></a>Added</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Add "GitHub Actions" to the list of languages analyzed by CodeQL.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-12-1-0-fixed"><a class="anchor" href="#release-notes-12-1-0-fixed"></a>Fixed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Use the <code>maven.deploy.skip</code> Maven property in <code>nexus-staging-maven-plugin</code>. This effectively fixes the skipping of test artifacts' deployments. (<a href="https://github.com/apache/logging-parent/pull/360">360</a>)</p>
+</li>
+<li>
+<p>Fix Error Prone arguments breaking <code>maven-compiler-plugin:compile</code>.</p>
+</li>
+<li>
+<p>Fix inheritance of <code>url</code> elements in children POMs.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-12-1-0-updated"><a class="anchor" href="#release-notes-12-1-0-updated"></a>Updated</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>actions/cache</code> to version <code>4.2.3</code> (<a href="https://github.com/apache/logging-parent/pull/357">357</a>)</p>
+</li>
+<li>
+<p>Update <code>actions/upload-artifact</code> to version <code>4.6.2</code> (<a href="https://github.com/apache/logging-parent/pull/359">359</a>)</p>
+</li>
+<li>
+<p>Update <code>com.diffplug.spotless:spotless-maven-plugin</code> to version <code>2.44.3</code> (<a href="https://github.com/apache/logging-parent/pull/333">333</a>)</p>
+</li>
+<li>
+<p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.9.3.0</code> (<a href="https://github.com/apache/logging-parent/pull/349">349</a>)</p>
+</li>
+<li>
+<p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.37.0</code> (<a href="https://github.com/apache/logging-parent/pull/356">356</a>)</p>
+</li>
+<li>
+<p>Update <code>com.gradle:develocity-maven-extension</code> to version <code>1.23.2</code> (<a href="https://github.com/apache/logging-parent/pull/338">338</a>)</p>
+</li>
+<li>
+<p>Update <code>com.palantir.javaformat:palantir-java-format</code> to version <code>2.61.0</code> (<a href="https://github.com/apache/logging-parent/pull/361">361</a>)</p>
+</li>
+<li>
+<p>Update <code>de.skuzzle.enforcer:restrict-imports-enforcer-rule</code> to version <code>2.6.1</code> (<a href="https://github.com/apache/logging-parent/pull/365">365</a>)</p>
+</li>
+<li>
+<p>Update <code>github/codeql-action</code> to version <code>3.28.13</code> (<a href="https://github.com/apache/logging-parent/pull/364">364</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache:apache</code> to version <code>34</code> (<a href="https://github.com/apache/logging-parent/pull/353">353</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache.groovy:groovy</code> to version <code>4.0.26</code> (<a href="https://github.com/apache/logging-parent/pull/340">340</a>)</p>
+</li>
+<li>
+<p>Update <code>org.asciidoctor:asciidoctor-maven-plugin</code> to version <code>3.2.0</code> (<a href="https://github.com/apache/logging-parent/pull/362">362</a>)</p>
+</li>
+<li>
+<p>Update <code>org.codehaus.mojo:flatten-maven-plugin</code> to version <code>1.7.0</code> (<a href="https://github.com/apache/logging-parent/pull/339">339</a>)</p>
+</li>
+<li>
+<p>Update <code>org.eclipse.jgit:org.eclipse.jgit</code> to version <code>7.2.0.202503040940-r</code> (<a href="https://github.com/apache/logging-parent/pull/355">355</a>)</p>
+</li>
+<li>
+<p>Update <code>ossf/scorecard-action</code> to version <code>2.4.1</code> (<a href="https://github.com/apache/logging-parent/pull/335">335</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="release-notes-12-0-0"><a class="anchor" href="#release-notes-12-0-0"></a>12.0.0</h2>
 <div class="sectionbody">
 <div class="dlist">
