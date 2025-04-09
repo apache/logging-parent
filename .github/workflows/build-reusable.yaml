@@ -136,7 +136,7 @@ jobs:
       # We upload tests results.
       - name: Upload test reports
         if: ${{ always() && inputs.test-report-enabled }}
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08   # 4.6.0
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02   # 4.6.2
         with:
           name: "test-report-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}${{inputs.test-report-suffix}}"
           path: |
@@ -155,7 +155,7 @@ jobs:
       - name: Set up Node.js cache
         if: inputs.site-enabled
         id: nodejs-cache
-        uses: actions/cache@1bd1e32a3bdc45362d1e726936510720a7c30a57   # 4.2.0
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684   # 4.2.3
         with:
           # We should be calculating the cache key using `package-lock.json` instead!
           # See https://stackoverflow.com/a/48524475/1278899
@@ -199,7 +199,7 @@ jobs:
       # Upload reproducibility results if the build fails.
       - name: Upload reproducibility results
         if: inputs.reproducibility-check-enabled && failure() && steps.reproducibility.conclusion == 'failure'
-        uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08   # 4.6.0
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02   # 4.6.2
         with:
           name: reproducibility-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
           path: |

@@ -15,27 +15,30 @@
 # limitations under the License.
 #
 
+##
+# Perform CodeQL analysis of GitHub Actions
 name: codeql-analysis
 
 on:
-  workflow_call:
-    inputs:
-      java-version:
-        description: The Java compiler version
-        default: 17
-        type: string
-      # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'kotlin', 'python', 'ruby' ]
-      # Learn more about CodeQL language support at https://git.io/codeql-language-support
-      language:
-        description: Language used in the repository
-        default: java
-        type: string
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '32 12 * * 5'
+
+permissions: {}
 
 jobs:
 
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    # Permissions required to publish Security Alerts
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
 
     steps:
 
@@ -45,23 +48,7 @@ jobs:
       - name: Initialize CodeQL
         uses: github/codeql-action/init@1b549b9259bda1cb5ddde3b41741a82a2d15a841    # 3.28.13
         with:
-          # Also check GitHub Actions
-          languages: ${{ inputs.language }}, actions
-
-      - name: Setup JDK
-        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12   # 4.7.0
-        with:
-          distribution: zulu
-          java-version: ${{ inputs.java-version }}
-          cache: maven
-
-      - name: Build with Maven
-        shell: bash
-        run: |
-          ./mvnw \
-          --show-version --batch-mode --errors --no-transfer-progress \
-          -DskipTests \
-          clean verify
+          languages: actions
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@1b549b9259bda1cb5ddde3b41741a82a2d15a841    # 3.28.13

@@ -215,7 +215,7 @@ svn commit -m 'Remove `{project-id}` version `7.8.0` files released'
 . {project-github-url}/releases/new[Create a new release in GitHub]:
 ** Use the `rel/7.8.0` tag
 ** Copy release notes from the generated emails
-. Close the associated milestone {project-github-url}/milestones
+. Close the associated {project-github-url}/milestones[milestone]
 
 [#publish-release-website]
 == Publish the release website

@@ -27,7 +27,7 @@
   <parent>
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
-    <version>33</version>
+    <version>34</version>
   </parent>
 
   <groupId>org.apache.logging</groupId>
@@ -145,7 +145,7 @@
   <properties>
 
     <!-- project version -->
-    <revision>12.0.0</revision>
+    <revision>12.1.0</revision>
 
     <!-- `project.build.outputTimestamp` is required to be present for reproducible builds.
          We actually inherit one from the `org.apache:apache` parent.
@@ -154,7 +154,7 @@
          2. This value is employed in various places while creating the distribution
          To mitigate these, we define a *dummy* value here and let the CI replace it during a release.
          Hence, *DO NOT MANUALLY EDIT THIS VALUE*! -->
-    <project.build.outputTimestamp>2025-02-07T19:59:33Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2025-04-01T16:05:41Z</project.build.outputTimestamp>
 
     <!-- target Java 8 -->
     <maven.compiler.source>8</maven.compiler.source>
@@ -167,6 +167,9 @@
 
     <!-- `bnd-maven-plugin` 7.x requires a Maven version `3.8.1` or higher -->
     <minimalMavenBuildVersion>3.8.1</minimalMavenBuildVersion>
+
+    <!-- The same property will be used by `maven-deploy-plugin` and `nexus-staging-maven-plugin` -->
+    <maven.deploy.skip>false</maven.deploy.skip>
 
     <!-- JPMS and OSGi options -->
     <!-- Overrides some options in multi-release JARs -->
@@ -204,40 +207,40 @@
     <vdr.url>https://logging.apache.org/cyclonedx/vdr.xml</vdr.url>
 
     <!-- dependency versions -->
-    <org.eclipse.jgit.version>7.1.0.202411261347-r</org.eclipse.jgit.version>
+    <org.eclipse.jgit.version>7.2.0.202503040940-r</org.eclipse.jgit.version>
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
     <node.version>21.7.1</node.version>
     <npm.version>10.5.0</npm.version>
-    <palantir-java-format.version>2.50.0</palantir-java-format.version>
+    <palantir-java-format.version>2.61.0</palantir-java-format.version>
 
     <!-- plugin versions -->
-    <asciidoctor-maven-plugin.version>3.1.1</asciidoctor-maven-plugin.version>
+    <asciidoctor-maven-plugin.version>3.2.0</asciidoctor-maven-plugin.version>
     <bnd-maven-plugin.version>7.1.0</bnd-maven-plugin.version>
     <bnd-baseline-maven-plugin.version>7.1.0</bnd-baseline-maven-plugin.version>
     <build-helper-maven-plugin.version>3.6.0</build-helper-maven-plugin.version>
     <cyclonedx-maven-plugin.version>2.9.1</cyclonedx-maven-plugin.version>
     <exec-maven-plugin.version>3.4.1</exec-maven-plugin.version>
     <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
-    <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
+    <flatten-maven-plugin.version>1.7.0</flatten-maven-plugin.version>
     <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
     <gmavenplus-plugin.version>4.1.1</gmavenplus-plugin.version>
     <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
     <log4j-changelog-maven-plugin.version>0.9.0</log4j-changelog-maven-plugin.version>
     <maven-artifact-plugin.version>3.6.0</maven-artifact-plugin.version>
-    <restrict-imports-enforcer-rule.version>2.6.0</restrict-imports-enforcer-rule.version>
-    <spotbugs-maven-plugin.version>4.8.6.6</spotbugs-maven-plugin.version>
-    <spotless-maven-plugin.version>2.44.2</spotless-maven-plugin.version>
+    <restrict-imports-enforcer-rule.version>2.6.1</restrict-imports-enforcer-rule.version>
+    <spotbugs-maven-plugin.version>4.9.3.0</spotbugs-maven-plugin.version>
+    <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
     <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
     <!-- Due to a missing `maven-metadata.xml`, Dependabot does not update this automatically -->
-    <develocity-maven-plugin.version>1.23.1</develocity-maven-plugin.version>
+    <develocity-maven-plugin.version>1.23.2</develocity-maven-plugin.version>
     <develocity-user-data-extension.version>2.0.1</develocity-user-data-extension.version>
 
     <!-- plugin dependencies versions -->
-    <error-prone.version>2.36.0</error-prone.version>
+    <error-prone.version>2.37.0</error-prone.version>
     <!-- `findsecbugs-plugin:1.13.0` contains a bug blocking Log4j compilation: https://github.com/find-sec-bugs/find-sec-bugs/pull/728
          Hence, pinning the `1.12.0` instead. -->
     <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
-    <groovy.version>4.0.25</groovy.version>
+    <groovy.version>4.0.26</groovy.version>
 
     <!-- site-specific versions -->
     <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project. -->
@@ -400,6 +403,17 @@
             <configuration>
               <updatePomFile>true</updatePomFile>
               <flattenMode>resolveCiFriendliesOnly</flattenMode>
+              <pomElements>
+                <!--
+                  ~ Flatten Maven Plugin removes the `child.project.url.inherit.append.path` attribute on this POM.
+                  ~
+                  ~ This causes a difference between the effective model of children built on this POM
+                  ~ and those built on the flattened version.
+                  ~
+                  ~ Until https://github.com/mojohaus/flatten-maven-plugin/issues/412 is resolved, we must expand `url`
+                  -->
+                <url>expand</url>
+              </pomElements>
             </configuration>
           </execution>
 
@@ -456,6 +470,7 @@
           <compilerArgs>
             <arg>-Xlint:all</arg>
             <arg>-XDcompilePolicy=simple</arg>
+            <arg>--should-stop=ifError=FLOW</arg>
             <arg>-Xplugin:ErrorProne</arg>
           </compilerArgs>
           <annotationProcessorPaths>
@@ -1351,6 +1366,7 @@
                 </goals>
                 <configuration>
                   <nexusUrl>https://repository.apache.org</nexusUrl>
+                  <skipNexusStagingDeployMojo>${maven.deploy.skip}</skipNexusStagingDeployMojo>
                   <serverId>${distMgmtReleasesId}</serverId>
                 </configuration>
               </execution>
