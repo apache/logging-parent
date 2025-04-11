@@ -16,6 +16,7 @@
 # Maven
 target/
 .flattened-pom.xml
+/.mvn/extensions.xml
 /.mvn/wrapper/maven-wrapper.jar
 # IDEA
 .idea/
