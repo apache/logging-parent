@@ -21,34 +21,18 @@ name: codeql-analysis
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "non-default" ]
   pull_request:
-    branches: [ "main" ]
-  schedule:
-    - cron: '32 12 * * 5'
+    branches: [ "non-default" ]
 
 permissions: {}
 
 jobs:
 
   analyze:
-    name: Analyze
-    runs-on: ubuntu-latest
+    uses: apache/logging-parent/.github/workflows/codeql-analysis-reusable.yaml@rel/12.1.0
     # Permissions required to publish Security Alerts
     permissions:
       actions: read
       contents: read
       security-events: write
-
-    steps:
-
-      - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@45775bd8235c68ba998cffa5171334d58593da47    # 3.28.15
-        with:
-          languages: actions
-
-      - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@45775bd8235c68ba998cffa5171334d58593da47    # 3.28.15
