@@ -72,4 +72,4 @@ github:
         checks:
           # The GitHub Actions app: 15368
           - app_id: 15368
-            context: "analyze / Analyze"
+            context: "build / build (ubuntu-latest)"
