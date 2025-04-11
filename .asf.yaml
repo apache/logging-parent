@@ -57,3 +57,19 @@ github:
   protected_branches:
     main:
       required_signatures: true
+    #
+    # Branch to test the branch protection settings.
+    #
+    # We need a non-default branch to prevent a typo from preventing us from pushing `.asf.yaml`
+    #
+    non-default:
+      # All commits must be signed
+      required_signatures: true
+      # All reviews must be addressed before merging
+      required_conversation_resolution: true
+      # Require checks to pass before merging
+      required_status_checks:
+        checks:
+          # The GitHub Actions app: 15368
+          - app_id: 15368
+            context: "analyze / Analyze"
