@@ -2,6 +2,7 @@
 <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
-       type="changed">
-  <description format="asciidoc">Fix inheritance of `url` elements in children POMs.</description>
+       type="updated">
+  <issue id="371" link="https://github.com/apache/logging-parent/pull/371"/>
+  <description format="asciidoc">Update `github/codeql-action` to version `3.28.15`</description>
 </entry>

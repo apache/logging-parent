@@ -145,7 +145,7 @@
   <properties>
 
     <!-- project version -->
-    <revision>12.1.0-SNAPSHOT</revision>
+    <revision>12.1.1-SNAPSHOT</revision>
 
     <!-- `project.build.outputTimestamp` is required to be present for reproducible builds.
          We actually inherit one from the `org.apache:apache` parent.
@@ -154,7 +154,7 @@
          2. This value is employed in various places while creating the distribution
          To mitigate these, we define a *dummy* value here and let the CI replace it during a release.
          Hence, *DO NOT MANUALLY EDIT THIS VALUE*! -->
-    <project.build.outputTimestamp>2025-02-07T19:59:33Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2025-04-01T16:05:41Z</project.build.outputTimestamp>
 
     <!-- target Java 8 -->
     <maven.compiler.source>8</maven.compiler.source>
@@ -211,7 +211,7 @@
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
     <node.version>21.7.1</node.version>
     <npm.version>10.5.0</npm.version>
-    <palantir-java-format.version>2.61.0</palantir-java-format.version>
+    <palantir-java-format.version>2.63.0</palantir-java-format.version>
 
     <!-- plugin versions -->
     <asciidoctor-maven-plugin.version>3.2.0</asciidoctor-maven-plugin.version>
@@ -224,15 +224,15 @@
     <flatten-maven-plugin.version>1.7.0</flatten-maven-plugin.version>
     <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
     <gmavenplus-plugin.version>4.1.1</gmavenplus-plugin.version>
-    <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
     <log4j-changelog-maven-plugin.version>0.9.0</log4j-changelog-maven-plugin.version>
     <maven-artifact-plugin.version>3.6.0</maven-artifact-plugin.version>
     <restrict-imports-enforcer-rule.version>2.6.1</restrict-imports-enforcer-rule.version>
     <spotbugs-maven-plugin.version>4.9.3.0</spotbugs-maven-plugin.version>
-    <spotless-maven-plugin.version>2.44.3</spotless-maven-plugin.version>
+    <spotless-maven-plugin.version>2.44.4</spotless-maven-plugin.version>
     <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
     <!-- Due to a missing `maven-metadata.xml`, Dependabot does not update this automatically -->
-    <develocity-maven-plugin.version>1.23.2</develocity-maven-plugin.version>
+    <develocity-maven-plugin.version>2.0</develocity-maven-plugin.version>
     <develocity-user-data-extension.version>2.0.1</develocity-user-data-extension.version>
 
     <!-- plugin dependencies versions -->

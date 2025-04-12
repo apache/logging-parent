@@ -2,6 +2,7 @@
 <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
-       type="changed">
-  <description format="asciidoc">Add "GitHub Actions" to the list of languages analyzed by CodeQL.</description>
+       type="updated">
+  <issue id="370" link="https://github.com/apache/logging-parent/pull/370"/>
+  <description format="asciidoc">Update `com.palantir.javaformat:palantir-java-format` to version `2.62.0`</description>
 </entry>
