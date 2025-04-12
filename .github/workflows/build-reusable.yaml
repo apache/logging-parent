@@ -81,7 +81,7 @@ jobs:
       - name: Output diagnostic variables
         shell: bash
         env:
-          WORKFLOW_REF: ${{ github.workflow_ref }}
+          WORKFLOW_REF: ${{ toJSON(github) }}
         run: |
           echo workflow_ref=$WORKFLOW_REF
 
