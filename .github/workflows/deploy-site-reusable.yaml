@@ -82,11 +82,10 @@ jobs:
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684   # 4.2.3
         with:
           # The cache needs to be updated only when `logging-parent` is updated
-          # Except the Node.js binary itself, the cache is also OS independent
-          key: "${{ runner.os }}-antora-${{ env.logging-parent-version }}"
-          path: |
-            node
-            node_modules
+          # The cache is also OS independent
+          key: "nodejs-cache-${{ env.logging-parent-version }}"
+          # Only the NPM modules need to be cached, since Node.js and NPM are retrieved from the Maven local repository
+          path: node_modules
 
       - name: Build the website
         shell: bash
