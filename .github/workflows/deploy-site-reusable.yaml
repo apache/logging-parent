@@ -45,6 +45,9 @@ on:
         description: GPG secret key for signing commits
         required: true
 
+env:
+  logging-parent-version: "12.2.0"
+
 jobs:
 
   deploy:
@@ -80,7 +83,7 @@ jobs:
         with:
           # The cache needs to be updated only when `logging-parent` is updated
           # Except the Node.js binary itself, the cache is also OS independent
-          key: "${{ runner.os }}-antora-${{ github.workflow_ref }}"
+          key: "${{ runner.os }}-antora-${{ env.logging-parent-version }}"
           path: |
             node
             node_modules
