@@ -44,7 +44,7 @@ jobs:
 
   build:
     if: github.actor != 'dependabot[bot]'
-    uses: apache/logging-parent/.github/workflows/build-reusable.yaml@main
+    uses: apache/logging-parent/.github/workflows/build-reusable.yaml@feature/366-npm-shrinkwrap
     with:
       site-enabled: true
 
