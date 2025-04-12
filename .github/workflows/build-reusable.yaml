@@ -78,6 +78,13 @@ jobs:
 
     steps:
 
+      - name: Output diagnostic variables
+        shell: bash
+        env:
+          WORKFLOW_REF: ${{ github.workflow_ref }}
+        run: |
+          echo workflow_ref=$WORKFLOW_REF
+
       - name: Checkout repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
         with:
