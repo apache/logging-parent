@@ -139,11 +139,7 @@ jobs:
           ASF_YAML_EXISTS=$([ -f .asf.yaml ] && echo "true" || echo "false")
 
           # Clean up the target path
-          if [ "." = "$TARGET_PATH" ]; then
-            git ls-files -z | xargs -0 git rm -rfq
-          else
-            git rm -rfq "$TARGET_PATH"
-          fi
+          git ls-files -z -- "$TARGET_PATH" | xargs -0 git rm -rfq
 
           # Place the generated site
           unzip -q /tmp/site.zip -d "$TARGET_PATH"
@@ -184,5 +180,3 @@ jobs:
             git push -f origin
 
           fi
-          # FIXME: List the contents of the GitHub Workspace to check if `node_modules` is there
-          ls "$GITHUB_WORKSPACE"
