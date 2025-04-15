@@ -81,8 +81,9 @@ jobs:
         id: nodejs-cache
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684   # 4.2.3
         with:
+          # The cache is OS independent
+          enableCrossOsArchive: true
           # The cache needs to be updated only when `logging-parent` is updated
-          # The cache is also OS independent
           key: "nodejs-cache-${{ env.logging-parent-version }}"
           # Only the NPM modules need to be cached, since Node.js and NPM are retrieved from the Maven local repository
           path: node_modules
