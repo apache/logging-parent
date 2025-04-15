@@ -78,7 +78,6 @@ jobs:
 
       # Node.js cache is needed for Antora
       - name: Set up Node.js cache
-        id: nodejs-cache
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684   # 4.2.3
         with:
           # The cache is OS independent
@@ -90,16 +89,13 @@ jobs:
 
       - name: Build the website
         shell: bash
-        env:
-          # Making Node.js cache hit visible for debugging purposes
-          NODEJS_CACHE_HIT: ${{ steps.nodejs-cache.outputs.cache-hit }}
         run: |
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             site
           cd target/site
           find . -empty -type d -delete
-          find . -print0 | sort --zero-terminated | xargs -0 zip -qoX /tmp/site.zip
+          find . -print0 | sort --zero-terminated | xargs -0 zip -qoX "$RUNNER_TEMP/site.zip"
           echo "SOURCE_COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
       - name: Set up Git user
@@ -108,6 +104,12 @@ jobs:
           # Set up user name and email required for `git commit`
           git config user.name "ASF Logging Services RM"
           git config user.email private@logging.apache.org
+
+      # Checking out a new branch will delete the `node_modules` folder
+      - name: Save Node.js modules
+        shell: bash
+        run: |
+          zip -qX "$RUNNER_TEMP"/node_modules.zip node_modules
 
       - name: Create the target branch
         shell: bash
@@ -134,10 +136,6 @@ jobs:
           TARGET_PATH: ${{ inputs.target-path }}
           ASF_YAML_CONTENT: ${{ inputs.asf-yaml-content }}
         run: |
-          
-          # FIXME: List the contents of the GitHub Workspace to check if `node_modules` is there
-          ls "$GITHUB_WORKSPACE"
-
           # Check if there already exists an `.asf.yaml`
           ASF_YAML_EXISTS=$([ -f .asf.yaml ] && echo "true" || echo "false")
 
@@ -183,3 +181,8 @@ jobs:
             git push -f origin
 
           fi
+
+      - name: Restore Node.js modules
+        shell: bash
+        run: |
+          unzip -q "$RUNNER_TEMP"/node_modules.zip
