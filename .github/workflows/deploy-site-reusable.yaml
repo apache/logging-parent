@@ -143,7 +143,7 @@ jobs:
           git ls-files -z -- "$TARGET_PATH" | xargs -0 git rm -rfq
 
           # Place the generated site
-          unzip -q /tmp/site.zip -d "$TARGET_PATH"
+          unzip -q "$RUNNER_TEMP/site.zip" -d "$TARGET_PATH"
           git add "$TARGET_PATH"
 
           # Recover `.asf.yaml`, if there was one.
