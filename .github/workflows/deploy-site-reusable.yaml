@@ -134,6 +134,9 @@ jobs:
           TARGET_PATH: ${{ inputs.target-path }}
           ASF_YAML_CONTENT: ${{ inputs.asf-yaml-content }}
         run: |
+          
+          # FIXME: List the contents of the GitHub Workspace to check if `node_modules` is there
+          ls "$GITHUB_WORKSPACE"
 
           # Check if there already exists an `.asf.yaml`
           ASF_YAML_EXISTS=$([ -f .asf.yaml ] && echo "true" || echo "false")
