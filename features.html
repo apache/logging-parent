@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Features :: Apache Logging Parent</title>
+    <link rel="canonical" href="https://logging.apache.org/logging-parent/features.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.8">
+<link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
+<!-- `@asciidoctor/tabs` extension styles -->
+<link rel="stylesheet" href="./_/css/vendor/tabs.css">
+<style>
+  /* Swap colors of `IMPORTANT` and `WARNING` blocks */
+  .doc .admonitionblock.important .icon { background-color: #f70; }
+  .doc .admonitionblock.warning .icon { background-color: #e40046; }
+  /* Default `h4`, `h5`, and `h6` are smaller than the normal text, fix header font sizing: */
+  .doc h1 { font-size: 1.9rem; }
+  .doc h2 { font-size: 1.7rem; }
+  .doc h3 { font-size: 1.5rem; font-weight: 400; }
+  .doc h4 { font-size: 1.3rem; font-weight: 500; }
+  .doc h5 { font-size: 1.1rem; font-weight: 500; text-decoration: underline; }
+  .doc h6 { font-size: 0.9rem; font-weight: 500; text-decoration: underline; }
+  /* Default `code`, `pre`, and `.colist` (source code annotations) fonts are too big, adjust them: */
+  .doc .colist>table code, .doc p code, .doc thead code { font-size: 0.8em; }
+  .doc pre { font-size: 0.7rem; }
+  .doc .colist { font-size: 0.75rem; }
+  /* Make links more visible: */
+  .doc a { text-decoration: underline; }
+  .doc a code { text-decoration: underline; color: #1565c0; }
+  /* Tab header fonts aren't rendered good, adjusting the font weight: */
+  .tablist > ul li { font-weight: 500; }
+  /* `page-toclevels` greater than 4 are not supported by Antora UI, patching it: */
+  .toc .toc-menu li[data-level="4"] a {
+    padding-left: 2.75rem;
+  }
+  /* Replace the default highlight.js color for strings from red (unnecessarily signaling something negative) to green: */
+  .hljs-string {
+    color: #0f8532;
+  }
+</style>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <span class="navbar-item title">Apache Logging Parent</span>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://logging.apache.org">a subproject of&nbsp;<strong>Apache Logging Services</strong></a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Home</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="features.html">Features</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="usage.html">Usage</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-notes.html">Release notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Release support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-review-instructions.html">Project release review instructions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-project.html">Project release instructions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-xml-schema.html">XML schema release instructions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="features.html">Features</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/apache/logging-parent/edit/main/src/site/antora/modules/ROOT/pages/features.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Features</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Logging Parent aims to deliver the following features.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="parent-pom"><a class="anchor" href="#parent-pom"></a>Parent POM</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The provided parent POM features the following conveniences:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://creadur.apache.org/rat"><code>apache-rat-plugin</code></a> integration for license preamble verification</p>
+</li>
+<li>
+<p><a href="https://github.com/apache/logging-log4j-tools/tree/main/log4j-changelog-maven-plugin"><code>log4j-changelog-maven-plugin</code></a> integration for changelog and release note management</p>
+</li>
+<li>
+<p><a href="https://maven.apache.org/enforcer/maven-enforcer-plugin/"><code>maven-enforcer-plugin</code></a> checks</p>
+</li>
+<li>
+<p><a href="https://github.com/diffplug/spotless/tree/main/plugin-maven"><code>spotless-maven-plugin</code></a> integration for code formatting</p>
+</li>
+<li>
+<p><a href="https://www.eclemma.org/jacoco/trunk/doc/maven.html"><code>jacoco-maven-plugin</code></a> integration for test coverage analysis (optional <code>coverage</code> profile)</p>
+</li>
+<li>
+<p><a href="https://github.com/bndtools/bnd/blob/master/maven-plugins/bnd-maven-plugin/README.md"><code>bnd-maven-plugin</code></a> integration for auto-generating OSGi and JPMS descriptors</p>
+</li>
+<li>
+<p><a href="https://github.com/CycloneDX/cyclonedx-maven-plugin">cyclonedx-maven-plugin</a> integration for auto-generating Software Bill of Materials (SBOM)</p>
+</li>
+<li>
+<p><a href="https://antora.org/">Antora</a>-based site generation</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="cyclonedx-sbom"><a class="anchor" href="#cyclonedx-sbom"></a>CycloneDX Software Bill of Materials (SBOM)</h3>
+<div class="paragraph">
+<p>Logging Parent streamlines the generation of <a href="https://cyclonedx.org/capabilities/vdr">CycloneDX Software Bill of Materials (SBOM)</a> using <a href="https://github.com/CycloneDX/cyclonedx-maven-plugin">cyclonedx-maven-plugin</a>.
+Plugin execution is configured and activated to generate SBOM files for each module, including the root one.
+Generated SBOM files are attached as artifacts with <code>cyclonedx</code> classifier and XML extensions, that is, <code>&lt;artifactId&gt;-&lt;version&gt;-cyclonedx.xml</code>.</p>
+</div>
+<div class="paragraph">
+<p>Produced SBOMs are enriched with <code>vulnerability-assertion</code> references to a <a href="https://cyclonedx.org/capabilities/vdr">CycloneDX Vulnerability Disclosure Report (VDR)</a> that Apache Logging Services uses for all projects it maintains.
+This VDR is accessible through the following URL: <a href="https://logging.apache.org/cyclonedx/vdr.xml" class="bare">https://logging.apache.org/cyclonedx/vdr.xml</a></p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="reusable-workflows"><a class="anchor" href="#reusable-workflows"></a>Reusable GitHub Actions workflows</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The provided reusable GitHub Actions workflows feature the following conveniences:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/build-reusable.yaml"><code>build-reusable.yaml</code></a></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Compiles using the specified Java compiler version</p>
+</li>
+<li>
+<p>Submits build scans to the Develocity server</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-release-reusable.yaml"><code>deploy-release-reusable.yaml</code></a></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Deploys release artifacts</p>
+</li>
+<li>
+<p>Updates <code>revision</code> and <code>project.build.outputTimestamp</code> Maven properties</p>
+</li>
+<li>
+<p>Generates the distribution ZIP containing Git-tracked sources, binary attachments, <code>NOTICE.txt</code>, etc.</p>
+</li>
+<li>
+<p>Generates the release vote &amp; announcement emails</p>
+</li>
+<li>
+<p>Uploads the distribution ZIP and emails to SVN</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-site-reusable.yaml"><code>deploy-site-reusable.yaml</code></a></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Builds and deploys the website</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-snapshot-reusable.yaml"><code>deploy-snapshot-reusable.yaml</code></a></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Deploys SNAPSHOT artifacts</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/merge-dependabot-reusable.yaml"><code>merge-dependabot-reusable.yaml</code></a></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Merges <code>dependabot</code> PRs along with changelog entries</p>
+</li>
+</ul>
+</div>
+</dd>
+<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/merge-dependabot-reusable.yaml"><code>verify-reproducibility-reusable.yaml</code></a></dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p>Verifies reproducibility of a previous deployment workflow.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="sect2">
+<h3 id="release-instructions"><a class="anchor" href="#release-instructions"></a>Release instructions</h3>
+<div class="paragraph">
+<p>See following guides for projects employing Logging Parent to cut releases:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="release-review-instructions.html" class="xref page">Project release review instructions</a></p>
+</li>
+<li>
+<p><a href="release-instructions-project.html" class="xref page">Project release instructions</a></p>
+</li>
+<li>
+<p><a href="release-instructions-xml-schema.html" class="xref page">XML schema release instructions</a></p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="develocity-configuration"><a class="anchor" href="#develocity-configuration"></a>Develocity configuration</h3>
+<div class="paragraph">
+<p><a href="https://gradle.com/develocity/">Gradle Develocity</a> is a service that provides statistics and other improvements to the development experience.
+Due to an
+<a href="https://gradle.com/blog/apache-software-foundation-standardizes-on-gradle-develocity-to-improve-developer-productivity-experience/">agreement between the ASF and Gradle</a>,
+it is available for all ASF projects as INFRA hosted <a href="https://develocity.apache.org/"><code>develocity.apache.org</code></a> service.</p>
+</div>
+<details>
+<summary class="title">Click for instructions to submit build scans to the <code>develocity.apache.org</code> server</summary>
+<div class="content">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Add a <code>.mvn/develocity.xml</code> configuration file to the repository.
+See
+<a href="https://docs.gradle.com/develocity/maven-extension/current/">Develocity Maven Extension User Manual</a>
+for detailed configuration options.</p>
+<div class="paragraph">
+<p>You can use the following example as template:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;develocity&gt;
+  &lt;projectId&gt;logging-log4j2&lt;/projectId&gt;
+  &lt;server&gt;
+    &lt;url&gt;https://develocity.apache.org&lt;/url&gt;
+  &lt;/server&gt;
+  &lt;buildScan&gt;
+    &lt;obfuscation&gt;
+      &lt;ipAddresses&gt;0.0.0.0&lt;/ipAddresses&gt;
+    &lt;/obfuscation&gt;
+    &lt;publishing&gt;
+      &lt;onlyIf&gt;
+        &lt;![CDATA[env['CI'] != null]]&gt;
+      &lt;/onlyIf&gt;
+    &lt;/publishing&gt;
+    &lt;backgroundBuildScanUpload&gt;false&lt;/backgroundBuildScanUpload&gt;
+  &lt;/buildScan&gt;
+  &lt;buildCache&gt;
+    &lt;local&gt;
+      &lt;enabled&gt;false&lt;/enabled&gt;
+    &lt;/local&gt;
+    &lt;remote&gt;
+      &lt;enabled&gt;false&lt;/enabled&gt;
+    &lt;/remote&gt;
+  &lt;/buildCache&gt;
+&lt;/develocity&gt;</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Do <strong>not</strong> add any <code>.mvn/extensions.xml</code> file to the repository.
+The file will be created by the <code>reusable-build</code> workflow.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>Modify the build workflow that should publish build scans:</p>
+<div class="openblock">
+<div class="content">
+<div class="ulist">
+<ul>
+<li>
+<p>Pass the <code>secrets.DEVELOCITY_ACCESS_KEY</code>, which is defined in all ASF repos as <code>DV_ACCESS_TOKEN</code> secret of the workflow.</p>
+</li>
+<li>
+<p>Set the <code>develocity-enabled</code> parameter to <code>true</code>.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>For example, you can use the snippet below:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">build:
+  uses: apache/logging-parent/.github/workflows/build-reusable.yaml@rel/${site-project.version}
+  secrets:
+    DV_ACCESS_TOKEN: ${{ ! startsWith(github.refname, 'release/') &amp;&amp; secrets.DEVELOCITY_ACCESS_KEY }}
+  with:
+    develocity-enabled: ${{ ! startsWith(github.refname, 'release/') }}</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The Maven Develocity Extension is a <strong>closed source</strong> extension, which requires a commercial
+<a href="https://gradle.com/">Gradle Inc</a>
+license to work.
+To guarantee the reproducibility of our builds and the security of our software suplly chain, please disable the extension in our <strong>release</strong> builds.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</details>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>
+    Copyright © 1999-2025 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
+    Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
+    Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
+  </p>
+  <p>
+    Apache, Log4j, and the Apache feather logo are trademarks or registered trademarks of The Apache Software Foundation.
+    Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+    Other names may be trademarks of their respective owners.
+  </p>
+</footer>
+<script id="site-script" src="./_/js/site.js" data-ui-root-path="./_"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+<!-- `@asciidoctor/tabs` extension scripts -->
+<script async src="./_/js/vendor/tabs.js"></script>
+  </body>
+</html>
