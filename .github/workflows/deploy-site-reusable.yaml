@@ -184,3 +184,5 @@ jobs:
             git push -f origin
 
           fi
+          # FIXME: List the contents of the GitHub Workspace to check if `node_modules` is there
+          ls "$GITHUB_WORKSPACE"
