@@ -45,6 +45,7 @@ jobs:
           # Publish the results for public repositories to enable scorecard badges.
           # For more details: https://github.com/ossf/scorecard-action#publishing-results
           publish_results: true
+          internal_publish_base_url: "https://api-staging.scorecard.dev"
 
       - name: "Upload artifact"
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02    # 4.6.2
