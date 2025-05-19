@@ -227,6 +227,7 @@
     <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
     <log4j-changelog-maven-plugin.version>0.9.0</log4j-changelog-maven-plugin.version>
     <maven-artifact-plugin.version>3.6.0</maven-artifact-plugin.version>
+    <mimir.version>0.7.4</mimir.version>
     <restrict-imports-enforcer-rule.version>2.6.1</restrict-imports-enforcer-rule.version>
     <spotbugs-maven-plugin.version>4.9.3.0</spotbugs-maven-plugin.version>
     <spotless-maven-plugin.version>2.44.4</spotless-maven-plugin.version>
@@ -360,6 +361,12 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-artifact-plugin</artifactId>
           <version>${maven-artifact-plugin.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>eu.maveniverse.maven.mimir</groupId>
+          <artifactId>extension</artifactId>
+          <version>${mimir.version}</version>
         </plugin>
 
         <plugin>
@@ -954,6 +961,16 @@
             </goals>
           </execution>
         </executions>
+      </plugin>
+
+      <!--
+        ~ Use Mimir as Maven cache:
+        ~ See: https://maveniverse.eu/docs/mimir/
+        -->
+      <plugin>
+        <groupId>eu.maveniverse.maven.mimir</groupId>
+        <artifactId>extension</artifactId>
+        <extensions>true</extensions>
       </plugin>
 
     </plugins>

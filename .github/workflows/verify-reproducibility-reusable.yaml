@@ -61,7 +61,35 @@ jobs:
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
-          cache: maven
+
+      #
+      # Sets up Mimír (https://maveniverse.eu/docs/mimir/) to cache artifacts from remote repositories
+      #
+      # Unlike the local Maven repository, Mimír cannot be used to stage locally generated artifacts or snapshots.
+      # Therefore, it can be reused between builds, even on different architectures.
+      # Since the size of the cache increases in time, as we download new dependency versions, we reset the cache
+      # once a month.
+      #
+      # WARNING: Currently it is not possible to reuse GitHub workflow steps, therefore, these two steps must be
+      #          copied to multiple workflows.
+      #          All copies should be synchronized with the original: build-reusable.yaml
+      #
+      - name: Set up Mimír configuration
+        shell: bash
+        run: |
+          # Compute the key cache
+          echo MIMIR_KEY="mimir-cache-$(date +'%Y-%m')" >> $GITHUB_ENV
+          # Mimir currently does not support relative paths, so we need to compute the absolute path of `mimir`.
+          echo MAVEN_OPTS="-Dmimir.daemon.passOnBasedir=true -Dmimir.basedir=$GITHUB_WORKSPACE/.mimir" >> $GITHUB_ENV
+
+      - name: Set up Mimír cache
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # 4.2.3
+        with:
+          # Mimir contains an exact copy of part of Maven Central.
+          # Therefore, we only need to clean it from time to time to remove old versions.
+          key: ${{ env.MIMIR_KEY }}
+          path: .mimir/local
+          enableCrossOsArchive: true
 
       # `clean verify artifact:compare` is required to generate the build reproducibility report.
       # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
