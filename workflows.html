@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Reusable GitHub Actions workflows :: Apache Logging Parent</title>
+    <link rel="canonical" href="https://logging.apache.org/logging-parent/workflows.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.8">
+<link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
+<!-- `@asciidoctor/tabs` extension styles -->
+<link rel="stylesheet" href="./_/css/vendor/tabs.css">
+<style>
+  /* Swap colors of `IMPORTANT` and `WARNING` blocks */
+  .doc .admonitionblock.important .icon { background-color: #f70; }
+  .doc .admonitionblock.warning .icon { background-color: #e40046; }
+  /* Default `h4`, `h5`, and `h6` are smaller than the normal text, fix header font sizing: */
+  .doc h1 { font-size: 1.9rem; }
+  .doc h2 { font-size: 1.7rem; }
+  .doc h3 { font-size: 1.5rem; font-weight: 400; }
+  .doc h4 { font-size: 1.3rem; font-weight: 500; }
+  .doc h5 { font-size: 1.1rem; font-weight: 500; text-decoration: underline; }
+  .doc h6 { font-size: 0.9rem; font-weight: 500; text-decoration: underline; }
+  /* Default `code`, `pre`, and `.colist` (source code annotations) fonts are too big, adjust them: */
+  .doc .colist>table code, .doc p code, .doc thead code { font-size: 0.8em; }
+  .doc pre { font-size: 0.7rem; }
+  .doc .colist { font-size: 0.75rem; }
+  /* Make links more visible: */
+  .doc a { text-decoration: underline; }
+  .doc a code { text-decoration: underline; color: #1565c0; }
+  /* Tab header fonts aren't rendered good, adjusting the font weight: */
+  .tablist > ul li { font-weight: 500; }
+  /* `page-toclevels` greater than 4 are not supported by Antora UI, patching it: */
+  .toc .toc-menu li[data-level="4"] a {
+    padding-left: 2.75rem;
+  }
+  /* Replace the default highlight.js color for strings from red (unnecessarily signaling something negative) to green: */
+  .hljs-string {
+    color: #0f8532;
+  }
+</style>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <span class="navbar-item title">Apache Logging Parent</span>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://logging.apache.org">a subproject of&nbsp;<strong>Apache Logging Services</strong></a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Home</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="features.html">Features</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="usage.html">Usage</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-notes.html">Release notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Release support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-review-instructions.html">Project release review instructions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-project.html">Project release instructions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-xml-schema.html">XML schema release instructions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="workflows.html">Reusable GitHub Actions workflows</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/apache/logging-parent/edit/main/src/site/antora/modules/ROOT/pages/workflows.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Reusable GitHub Actions workflows</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Logging Parent project provides the following reusable GitHub Actions workflows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#build"><code>build-reusable.yaml</code></a></p>
+</li>
+<li>
+<p><a href="#deploy-release"><code>deploy-release-reusable.yaml</code></a></p>
+</li>
+<li>
+<p><a href="#deploy-site"><code>deploy-site-reusable.yaml</code></a></p>
+</li>
+<li>
+<p><a href="#deploy-snapshot"><code>deploy-snapshot-reusable.yaml</code></a></p>
+</li>
+<li>
+<p><a href="#merge-dependabot"><code>merge-dependabot-reusable.yaml</code></a></p>
+</li>
+<li>
+<p><a href="#verify-reproducibility"><code>verify-reproducibility-reusable.yaml</code></a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="build"><a class="anchor" href="#build"></a><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/build-reusable.yaml"><code>build-reusable.yaml</code></a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This workflow:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Compiles using the specified Java compiler version</p>
+</li>
+<li>
+<p>Submits build scans to the Develocity server</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="build-examples"><a class="anchor" href="#build-examples"></a>Examples</h3>
+<div class="listingblock">
+<div class="title">Snippet from an <a href="https://github.com/apache/logging-parent/tree/main/src/site/antora/modules/ROOT/examples/build.yaml">example <code>build.yaml</code></a> using this workflow</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">build:
+  uses: apache/logging-parent/.github/workflows/build-reusable.yaml@rel/${site-project.version}
+  secrets:
+    DV_ACCESS_TOKEN: ${{ startsWith(github.ref_name, 'release/') &amp;&amp; '' || secrets.DEVELOCITY_ACCESS_KEY }}
+  with:
+    site-enabled: true
+    reproducibility-check-enabled: false
+    develocity-enabled: ${{ ! startsWith(github.ref_name, 'release/') }}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploy-snapshot"><a class="anchor" href="#deploy-snapshot"></a><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-snapshot-reusable.yaml"><code>deploy-snapshot-reusable.yaml</code></a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This workflow deploys SNAPSHOT artifacts.</p>
+</div>
+<div class="sect2">
+<h3 id="deploy-snapshot-examples"><a class="anchor" href="#deploy-snapshot-examples"></a>Examples</h3>
+<div class="listingblock">
+<div class="title">Snippet from an <a href="https://github.com/apache/logging-parent/tree/main/src/site/antora/modules/ROOT/examples/build.yaml">example <code>build.yaml</code></a> using this workflow</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">deploy-snapshot:
+  needs: build
+  if: github.repository == 'apache/logging-log4j2' &amp;&amp; github.ref_name == '2.x'
+  uses: apache/logging-parent/.github/workflows/deploy-snapshot-reusable.yaml@rel/${site-project.version}
+  # Secrets for deployments
+  secrets:
+    NEXUS_USERNAME: ${{ secrets.NEXUS_USER }}
+    NEXUS_PASSWORD: ${{ secrets.NEXUS_PW }}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploy-release"><a class="anchor" href="#deploy-release"></a><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-release-reusable.yaml"><code>deploy-release-reusable.yaml</code></a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This workflow:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Deploys release artifacts</p>
+</li>
+<li>
+<p>Updates <code>revision</code> and <code>project.build.outputTimestamp</code> Maven properties</p>
+</li>
+<li>
+<p>Generates the distribution ZIP containing Git-tracked sources, binary attachments, <code>NOTICE.txt</code>, etc.</p>
+</li>
+<li>
+<p>Generates the release vote &amp; announcement emails</p>
+</li>
+<li>
+<p>Uploads the distribution ZIP and emails to SVN</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="deploy-release-examples"><a class="anchor" href="#deploy-release-examples"></a>Examples</h3>
+<div class="listingblock">
+<div class="title">Snippet from an <a href="https://github.com/apache/logging-parent/tree/main/src/site/antora/modules/ROOT/examples/build.yaml">example <code>build.yaml</code></a> using this workflow</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">deploy-release:
+  needs: build
+  if: github.repository == 'apache/logging-log4j2' &amp;&amp; startsWith(github.ref_name, 'release/')
+  uses: apache/logging-parent/.github/workflows/deploy-release-reusable.yaml@rel/${site-project.version}
+  # Secrets for deployments
+  secrets:
+    GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
+    NEXUS_USERNAME: ${{ secrets.LOGGING_STAGE_DEPLOYER_USER }}
+    NEXUS_PASSWORD: ${{ secrets.LOGGING_STAGE_DEPLOYER_PW }}
+    SVN_USERNAME: ${{ secrets.LOGGING_SVN_DEV_USERNAME }}
+    SVN_PASSWORD: ${{ secrets.LOGGING_SVN_DEV_PASSWORD }}
+  # Write permissions to allow the Maven `revision` property update, changelog release, etc.
+  permissions:
+    contents: write
+  with:
+    project-id: log4j</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="verify-reproducibility"><a class="anchor" href="#verify-reproducibility"></a><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/merge-dependabot-reusable.yaml"><code>verify-reproducibility-reusable.yaml</code></a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This workflow verifies the reproducibility of a previous <a href="#deploy-snapshot"><code>deploy-snapshot-reusable.yaml</code></a> or <a href="#deploy-release"><code>deploy-release-reusable.yaml</code></a> workflow.</p>
+</div>
+<div class="sect2">
+<h3 id="verify-reproducibility-examples"><a class="anchor" href="#verify-reproducibility-examples"></a>Examples</h3>
+<div class="paragraph">
+<p>To verify the reproducibility of a snapshot, you can use:</p>
+</div>
+<div class="listingblock">
+<div class="title">Snippet from an <a href="https://github.com/apache/logging-parent/tree/main/src/site/antora/modules/ROOT/examples/build.yaml">example <code>build.yaml</code></a> using this workflow</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">verify-reproducibility-snapshot:
+  needs: deploy-snapshot
+  name: "verify-reproducibility (${{ needs.deploy-snapshot.outputs.project-version }})"
+  uses: apache/logging-parent/.github/workflows/verify-reproducibility-reusable.yaml@rel/${site-project.version}
+  with:
+    # Reference repository
+    nexus-url: https://repository.apache.org/content/groups/snapshots
+    # Encode the `runs-on` input as JSON array
+    runs-on: '["ubuntu-latest", "macos-latest"]'</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To verify the reproducibility of a release, you can use:</p>
+</div>
+<div class="listingblock">
+<div class="title">Snippet from an <a href="https://github.com/apache/logging-parent/tree/main/src/site/antora/modules/ROOT/examples/build.yaml">example <code>build.yaml</code></a> using this workflow</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">verify-reproducibility-release:
+  needs: deploy-release
+  name: "verify-reproducibility (${{ needs.deploy-release.outputs.project-version }})"
+  uses: apache/logging-parent/.github/workflows/verify-reproducibility-reusable.yaml@rel/${site-project.version}
+  with:
+    # Reference repository
+    nexus-url: ${{ needs.deploy-release.outputs.nexus-url }}
+    # Encode the `runs-on` input as JSON array
+    runs-on: '["ubuntu-latest", "macos-latest"]'</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="merge-dependabot"><a class="anchor" href="#merge-dependabot"></a><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/merge-dependabot-reusable.yaml"><code>merge-dependabot-reusable.yaml</code></a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Merges Dependabot PRs along with changelog entries.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="deploy-site"><a class="anchor" href="#deploy-site"></a><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-site-reusable.yaml"><code>deploy-site-reusable.yaml</code></a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This workflow builds and deploys the website.</p>
+</div>
+<div class="sect2">
+<h3 id="deploy-site-examples"><a class="anchor" href="#deploy-site-examples"></a>Examples</h3>
+<div class="paragraph">
+<p>To update the staging website, you can use:</p>
+</div>
+<div class="listingblock">
+<div class="title">Snippet from an <a href="https://github.com/apache/logging-parent/tree/main/src/site/antora/modules/ROOT/examples/deploy-site.yaml">example <code>deploy-site.yaml</code></a> using this workflow</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">deploy-site-stg:
+  if: github.repository == 'apache/logging-log4j2' &amp;&amp; github.ref_name == '2.x'
+  uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@rel/${site-project.version}
+  # Secrets for committing the generated site
+  secrets:
+    GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
+  # Write permissions for committing the generated site
+  permissions:
+    contents: write
+  with:
+    asf-yaml-content: |
+      staging:
+        profile: ~
+        whoami: ${{ github.ref_name }}-site-stg-out
+        subdir: content/log4j/2.x
+    install-required: true
+    target-branch: ${{ github.ref_name }}-site-stg-out</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To stage a separate website for a release candidate, you can use:</p>
+</div>
+<div class="listingblock">
+<div class="title">Snippet from an <a href="https://github.com/apache/logging-parent/tree/main/src/site/antora/modules/ROOT/examples/deploy-site.yaml">example <code>deploy-site.yaml</code></a> using this workflow</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">export-version:
+  if: github.repository == 'apache/logging-log4j2' &amp;&amp; startsWith(github.ref_name, 'release/')
+  runs-on: ubuntu-latest
+  outputs:
+    version: ${{ steps.export-version.outputs.version }}
+  steps:
+    - name: Export version
+      id: export-version
+      run: |
+        version=$(echo "${{ github.ref_name }}" | sed 's/^release\///')
+        echo "version=$version" &gt;&gt; "$GITHUB_OUTPUT"
+
+deploy-site-rel:
+  needs: export-version
+  uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@rel/${site-project.version}
+  # Secrets for committing the generated site
+  secrets:
+    GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
+  # Write permissions for committing the generated site
+  permissions:
+    contents: write
+  with:
+    asf-yaml-content: |
+      staging:
+        profile: ~
+        whoami: ${{ github.ref_name }}-site-stg-out
+        subdir: content/log4j/${{ needs.export-version.outputs.version }}
+    install-required: true
+    target-branch: ${{ github.ref_name }}-site-stg-out</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>To update the production website after a release, you can use:</p>
+</div>
+<div class="listingblock">
+<div class="title">Snippet from an <a href="https://github.com/apache/logging-parent/tree/main/src/site/antora/modules/ROOT/examples/deploy-site.yaml">example <code>deploy-site.yaml</code></a> using this workflow</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">deploy-site-pro:
+  if: github.repository == 'apache/logging-log4j2' &amp;&amp; github.ref_name == '2.x-site-pro'
+  uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@rel/12.1.0
+  # Secrets for committing the generated site
+  secrets:
+    GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
+  # Write permissions for committing the generated site
+  permissions:
+    contents: write
+  with:
+    asf-yaml-content: |
+      publish:
+        profile: ~
+        whoami: ${{ github.ref_name }}-out
+        subdir: content/log4j/2.x
+    install-required: true
+    target-branch: ${{ github.ref_name }}-out</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>
+    Copyright © 1999-2025 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
+    Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
+    Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
+  </p>
+  <p>
+    Apache, Log4j, and the Apache feather logo are trademarks or registered trademarks of The Apache Software Foundation.
+    Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+    Other names may be trademarks of their respective owners.
+  </p>
+</footer>
+<script id="site-script" src="./_/js/site.js" data-ui-root-path="./_"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+<!-- `@asciidoctor/tabs` extension scripts -->
+<script async src="./_/js/vendor/tabs.js"></script>
+  </body>
+</html>
