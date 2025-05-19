@@ -109,7 +109,7 @@ jobs:
       - name: Save Node.js modules
         shell: bash
         run: |
-          zip -qX "$RUNNER_TEMP"/node_modules.zip node_modules
+          zip -q0X "$RUNNER_TEMP"/node_modules.zip node_modules
 
       - name: Create the target branch
         shell: bash
