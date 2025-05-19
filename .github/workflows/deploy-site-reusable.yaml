@@ -45,6 +45,9 @@ on:
         description: GPG secret key for signing commits
         required: true
 
+env:
+  logging-parent-version: "12.2.0"
+
 jobs:
 
   deploy:
@@ -75,37 +78,24 @@ jobs:
 
       # Node.js cache is needed for Antora
       - name: Set up Node.js cache
-        id: nodejs-cache
         uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684   # 4.2.3
         with:
-          # We should be calculating the cache key using `package-lock.json` instead!
-          # See https://stackoverflow.com/a/48524475/1278899
-          # For that, `package-lock.json` needs to be committed into the repository – right now it is `.gitignore`d.
-          # Once it is there, we should ideally switch from `npm i` to `npm ci`.
-          # For that, we need to configure `dependabot` to update hundreds of dependencies listed in `package-lock.json`.
-          # That translates to a never ending rain of `dependabot` PRs.
-          # I doubt if the wasted CPU cycles worth the gain.
-          key: ${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}
-          # `actions/cache` doesn't recommend caching `node_modules`.
-          # Though none of its recipes fit our bill, since we install Node.js using `frontend-maven-plugin`.
-          # See https://github.com/actions/cache/blob/main/examples.md#node---npm
-          # We settle for this quick-n-dirty solution for the time being.
-          path: |
-            node
-            node_modules
+          # The cache is OS independent
+          enableCrossOsArchive: true
+          # The cache needs to be updated only when `logging-parent` is updated
+          key: "nodejs-cache-${{ env.logging-parent-version }}"
+          # Only the NPM modules need to be cached, since Node.js and NPM are retrieved from the Maven local repository
+          path: node_modules
 
       - name: Build the website
         shell: bash
-        env:
-          # Making Node.js cache hit visible for debugging purposes
-          NODEJS_CACHE_HIT: ${{ steps.nodejs-cache.outputs.cache-hit }}
         run: |
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             site
           cd target/site
           find . -empty -type d -delete
-          find . -print0 | sort --zero-terminated | xargs -0 zip -qoX /tmp/site.zip
+          find . -print0 | sort --zero-terminated | xargs -0 zip -qoX "$RUNNER_TEMP/site.zip"
           echo "SOURCE_COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
       - name: Set up Git user
@@ -114,6 +104,12 @@ jobs:
           # Set up user name and email required for `git commit`
           git config user.name "ASF Logging Services RM"
           git config user.email private@logging.apache.org
+
+      # Checking out a new branch will delete the `node_modules` folder
+      - name: Save Node.js modules
+        shell: bash
+        run: |
+          zip -q0X "$RUNNER_TEMP"/node_modules.zip node_modules
 
       - name: Create the target branch
         shell: bash
@@ -140,19 +136,14 @@ jobs:
           TARGET_PATH: ${{ inputs.target-path }}
           ASF_YAML_CONTENT: ${{ inputs.asf-yaml-content }}
         run: |
-
           # Check if there already exists an `.asf.yaml`
           ASF_YAML_EXISTS=$([ -f .asf.yaml ] && echo "true" || echo "false")
 
           # Clean up the target path
-          if [ "." = "$TARGET_PATH" ]; then
-            git ls-files -z | xargs -0 git rm -rfq
-          else
-            git rm -rfq "$TARGET_PATH"
-          fi
+          git ls-files -z -- "$TARGET_PATH" | xargs -0 git rm -rfq
 
           # Place the generated site
-          unzip -q /tmp/site.zip -d "$TARGET_PATH"
+          unzip -q "$RUNNER_TEMP/site.zip" -d "$TARGET_PATH"
           git add "$TARGET_PATH"
 
           # Recover `.asf.yaml`, if there was one.
@@ -190,3 +181,8 @@ jobs:
             git push -f origin
 
           fi
+
+      - name: Restore Node.js modules
+        shell: bash
+        run: |
+          unzip -q "$RUNNER_TEMP"/node_modules.zip
