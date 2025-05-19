@@ -243,7 +243,7 @@
     <groovy.version>4.0.26</groovy.version>
 
     <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project. -->
-    <stable-project.version>12.0.0</stable-project.version>
+    <stable-project.version>12.1.0</stable-project.version>
 
   </properties>
 
@@ -1576,8 +1576,7 @@
                 </goals>
                 <phase>pre-site</phase>
                 <configuration>
-                  <arguments>install github:apache/logging-parent#feature/366-npm-shrinkwrap</arguments>
-                  <!--<arguments>install github:apache/logging-parent#rel/${stable-project.version}</arguments>-->
+                  <arguments>install github:apache/logging-parent#rel/${stable-project.version}</arguments>
                 </configuration>
               </execution>
 
