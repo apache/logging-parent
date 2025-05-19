@@ -42,4 +42,8 @@ updates:
   - package-ecosystem: npm
     directory: "/"
     schedule:
-      interval: daily
+      interval: monthly
+    groups:
+      all:
+        patterns:
+          - "*"
