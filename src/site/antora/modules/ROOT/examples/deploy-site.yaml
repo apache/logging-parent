@@ -20,11 +20,9 @@ name: deploy-site
 on:
   push:
     branches:
-      - "main"
-      - "main-site-pro"
-      - "release/*"
-      # FIXME: Remove before a merge
-      - "feature/366-npm-shrinkwrap"
+      - "2.x"
+      - "2.x-site-pro"
+      - "release/2*"
     paths-ignore:
       - "**.md"
       - "**.txt"
@@ -33,27 +31,10 @@ permissions: read-all
 
 jobs:
 
-  # FIXME: This job was only created for PR #367 and should be removed before the PR is merged
-  deploy-site-test:
-    if: github.repository == 'apache/logging-parent' && github.ref_name == 'feature/366-npm-shrinkwrap'
-    uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@feature/366-npm-shrinkwrap
-    # Secrets for committing the generated site
-    secrets:
-      GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
-    # Write permissions for committing the generated site
-    permissions:
-      contents: write
-    with:
-      asf-yaml-content: |
-        staging:
-          profile: test
-          whoami: test-site-stg-out
-          subdir: content/logging-parent-test
-      target-branch: test-site-stg-out
-
+# tag::snapshot[]
   deploy-site-stg:
-    if: github.repository == 'apache/logging-parent' && github.ref_name == 'main'
-    uses: ./.github/workflows/deploy-site-reusable.yaml
+    if: github.repository == 'apache/logging-log4j2' && github.ref_name == '2.x'
+    uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@rel/{project-version}
     # Secrets for committing the generated site
     secrets:
       GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
@@ -65,12 +46,15 @@ jobs:
         staging:
           profile: ~
           whoami: ${{ github.ref_name }}-site-stg-out
-          subdir: content/logging-parent
+          subdir: content/log4j/2.x
+      install-required: true
       target-branch: ${{ github.ref_name }}-site-stg-out
+# end::snapshot[]
 
+# tag::production[]
   deploy-site-pro:
-    if: github.repository == 'apache/logging-parent' && github.ref_name == 'main-site-pro'
-    uses: ./.github/workflows/deploy-site-reusable.yaml
+    if: github.repository == 'apache/logging-log4j2' && github.ref_name == '2.x-site-pro'
+    uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@rel/12.1.0
     # Secrets for committing the generated site
     secrets:
       GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
@@ -82,26 +66,27 @@ jobs:
         publish:
           profile: ~
           whoami: ${{ github.ref_name }}-out
-          subdir: content/logging-parent
+          subdir: content/log4j/2.x
+      install-required: true
       target-branch: ${{ github.ref_name }}-out
+# end::production[]
 
+# tag::release-candidate[]
   export-version:
-    if: github.repository == 'apache/logging-parent' && startsWith(github.ref_name, 'release/')
+    if: github.repository == 'apache/logging-log4j2' && startsWith(github.ref_name, 'release/')
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.export-version.outputs.version }}
     steps:
       - name: Export version
         id: export-version
-        env:
-          REF_NAME: ${{ github.ref_name }}
         run: |
-          version=$(echo "$REF_NAME" | sed 's/^release\///' | tr -d '\r\n')
+          version=$(echo "${{ github.ref_name }}" | sed 's/^release\///')
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
   deploy-site-rel:
     needs: export-version
-    uses: ./.github/workflows/deploy-site-reusable.yaml
+    uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@rel/{project-version}
     # Secrets for committing the generated site
     secrets:
       GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
@@ -113,5 +98,7 @@ jobs:
         staging:
           profile: ~
           whoami: ${{ github.ref_name }}-site-stg-out
-          subdir: content/logging-parent-${{ needs.export-version.outputs.version }}
+          subdir: content/log4j/${{ needs.export-version.outputs.version }}
+      install-required: true
       target-branch: ${{ github.ref_name }}-site-stg-out
+# end::release-candidate[]
