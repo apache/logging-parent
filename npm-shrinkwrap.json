@@ -3,6 +3,16 @@
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
+    "": {
+      "dependencies": {
+        "@antora/cli": "^3.2.0-alpha.4",
+        "@antora/site-generator-default": "^3.2.0-alpha.4",
+        "@asciidoctor/tabs": "^1.0.0-beta.6",
+        "asciidoctor-kroki": "^0.18.1",
+        "fast-xml-parser": "^5.2.3",
+        "handlebars": "^4.7.8"
+      }
+    },
     "node_modules/@antora/asciidoc-loader": {
       "version": "3.2.0-alpha.8",
       "resolved": "https://registry.npmjs.org/@antora/asciidoc-loader/-/asciidoc-loader-3.2.0-alpha.8.tgz",
@@ -767,9 +777,9 @@
       "license": "MIT"
     },
     "node_modules/fast-xml-parser": {
-      "version": "5.0.9",
-      "resolved": "https://registry.npmjs.org/fast-xml-parser/-/fast-xml-parser-5.0.9.tgz",
-      "integrity": "sha512-2mBwCiuW3ycKQQ6SOesSB8WeF+fIGb6I/GG5vU5/XEptwFFhp9PE8b9O7fbs2dpq9fXn4ULR3UsfydNUCntf5A==",
+      "version": "5.2.3",
+      "resolved": "https://registry.npmjs.org/fast-xml-parser/-/fast-xml-parser-5.2.3.tgz",
+      "integrity": "sha512-OdCYfRqfpuLUFonTNjvd30rCBZUneHpSQkCqfaeWQ9qrKcl6XlWeDBNVwGb+INAIxRshuN2jF+BE0L6gbBO2mw==",
       "funding": [
         {
           "type": "github",
@@ -778,7 +788,7 @@
       ],
       "license": "MIT",
       "dependencies": {
-        "strnum": "^2.0.5"
+        "strnum": "^2.1.0"
       },
       "bin": {
         "fxparser": "src/cli/cli.js"
@@ -1616,9 +1626,9 @@
       }
     },
     "node_modules/strnum": {
-      "version": "2.0.5",
-      "resolved": "https://registry.npmjs.org/strnum/-/strnum-2.0.5.tgz",
-      "integrity": "sha512-YAT3K/sgpCUxhxNMrrdhtod3jckkpYwH6JAuwmUdXZsmzH1wUyzTMrrK2wYCEEqlKwrWDd35NeuUkbBy/1iK+Q==",
+      "version": "2.1.1",
+      "resolved": "https://registry.npmjs.org/strnum/-/strnum-2.1.1.tgz",
+      "integrity": "sha512-7ZvoFTiCnGxBtDqJ//Cu6fWtZtc7Y3x+QOirG15wztbdngGSkht27o2pyGWrVy0b4WAy3jbKmnoK6g5VlVNUUw==",
       "funding": [
         {
           "type": "github",
