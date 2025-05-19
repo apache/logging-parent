@@ -1,0 +1,142 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+
+:examples-base-link: https://github.com/apache/logging-parent/tree/main/src/site/antora/modules/ROOT/examples
+
+[#reusable-workflows]
+= Reusable GitHub Actions workflows
+
+The Logging Parent project provides the following reusable GitHub Actions workflows:
+
+* <<build>>
+* <<deploy-release>>
+* <<deploy-site>>
+* <<deploy-snapshot>>
+* <<merge-dependabot>>
+* <<verify-reproducibility>>
+
+[#build]
+== {project-github-url}/blob/main/.github/workflows/build-reusable.yaml[`build-reusable.yaml`]
+
+This workflow:
+
+* Compiles using the specified Java compiler version
+* Submits build scans to the Develocity server
+
+[#build-examples]
+=== Examples
+
+.Snippet from an {examples-base-link}/build.yaml[example `build.yaml`] using this workflow
+[source,yaml,subs=+attributes]
+----
+include::example$build.yaml[tag=build,indent=0]
+----
+
+[#deploy-snapshot]
+== {project-github-url}/blob/main/.github/workflows/deploy-snapshot-reusable.yaml[`deploy-snapshot-reusable.yaml`]
+
+This workflow deploys SNAPSHOT artifacts.
+
+[#deploy-snapshot-examples]
+=== Examples
+
+.Snippet from an {examples-base-link}/build.yaml[example `build.yaml`] using this workflow
+[source,yaml,subs=+attributes]
+----
+include::example$build.yaml[tag=deploy-snapshot,indent=0]
+----
+
+[#deploy-release]
+== {project-github-url}/blob/main/.github/workflows/deploy-release-reusable.yaml[`deploy-release-reusable.yaml`]
+
+This workflow:
+
+* Deploys release artifacts
+* Updates `revision` and `project.build.outputTimestamp` Maven properties
+* Generates the distribution ZIP containing Git-tracked sources, binary attachments, `NOTICE.txt`, etc.
+* Generates the release vote & announcement emails
+* Uploads the distribution ZIP and emails to SVN
+
+[#deploy-release-examples]
+=== Examples
+
+.Snippet from an {examples-base-link}/build.yaml[example `build.yaml`] using this workflow
+[source,yaml,subs=+attributes]
+----
+include::example$build.yaml[tag=deploy-release,indent=0]
+----
+
+[#verify-reproducibility]
+== {project-github-url}/blob/main/.github/workflows/merge-dependabot-reusable.yaml[`verify-reproducibility-reusable.yaml`]
+
+This workflow verifies the reproducibility of a previous <<deploy-snapshot>> or <<deploy-release>> workflow.
+
+[#verify-reproducibility-examples]
+=== Examples
+
+To verify the reproducibility of a snapshot, you can use:
+
+.Snippet from an {examples-base-link}/build.yaml[example `build.yaml`] using this workflow
+[source,yaml,subs=+attributes]
+----
+include::example$build.yaml[tag=verify-reproducibility-snapshot,indent=0]
+----
+
+To verify the reproducibility of a release, you can use:
+
+.Snippet from an {examples-base-link}/build.yaml[example `build.yaml`] using this workflow
+[source,yaml,subs=+attributes]
+----
+include::example$build.yaml[tag=verify-reproducibility-release,indent=0]
+----
+
+[#merge-dependabot]
+== {project-github-url}/blob/main/.github/workflows/merge-dependabot-reusable.yaml[`merge-dependabot-reusable.yaml`]
+
+Merges Dependabot PRs along with changelog entries.
+
+[#deploy-site]
+== {project-github-url}/blob/main/.github/workflows/deploy-site-reusable.yaml[`deploy-site-reusable.yaml`]
+
+This workflow builds and deploys the website.
+
+[#deploy-site-examples]
+=== Examples
+
+To update the staging website, you can use:
+
+.Snippet from an {examples-base-link}/deploy-site.yaml[example `deploy-site.yaml`] using this workflow
+[source,yaml,subs=+attributes]
+----
+include::example$deploy-site.yaml[tag=snapshot,indent=0]
+----
+
+To stage a separate website for a release candidate, you can use:
+
+.Snippet from an {examples-base-link}/deploy-site.yaml[example `deploy-site.yaml`] using this workflow
+[source,yaml,subs=+attributes]
+----
+include::example$deploy-site.yaml[tag=release-candidate,indent=0]
+----
+
+To update the production website after a release, you can use:
+
+.Snippet from an {examples-base-link}/deploy-site.yaml[example `deploy-site.yaml`] using this workflow
+[source,yaml,subs=+attributes]
+----
+include::example$deploy-site.yaml[tag=production,indent=0]
+----
