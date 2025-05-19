@@ -93,7 +93,8 @@ jobs:
       #
       # WARNING: Currently it is not possible to reuse GitHub workflow steps, therefore, these two steps must be
       #          copied to multiple workflows.
-      #          All copies should be synchronized with the original: build-reusable.yaml
+      #          The `build-reusable` workflow uses `actions/cache`,
+      #          while the other workflows only use `actions/cache/restore`
       #
       - name: Set up Mimír configuration
         shell: bash
@@ -101,16 +102,20 @@ jobs:
           # Compute the key cache
           echo MIMIR_KEY="mimir-cache-$(date +'%Y-%m')" >> $GITHUB_ENV
           # Mimir currently does not support relative paths, so we need to compute the absolute path of `mimir`.
-          echo MAVEN_OPTS="-Dmimir.daemon.passOnBasedir=true -Dmimir.basedir=$GITHUB_WORKSPACE/.mimir" >> $GITHUB_ENV
+          echo MAVEN_OPTS="-Dmimir.daemon.passOnBasedir=true -Dmimir.daemon.autostop=true -Dmimir.basedir=$GITHUB_WORKSPACE/.mimir" >> $GITHUB_ENV
 
       - name: Set up Mimír cache
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # 4.2.3
+        uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684 # 4.2.3
         with:
-          # Mimir contains an exact copy of part of Maven Central.
+          # Mimir is a partial mirror of Maven Central.
           # Therefore, we only need to clean it from time to time to remove old versions.
-          key: ${{ env.MIMIR_KEY }}
+          #
+          # However, GitHub caches are immutable, and we need a unique key to update them.
+          # If no cache hit occurs for this key, we fall back to any other cache.
+          key: "${{ env.MIMIR_KEY }}-${{ hashFiles('**/pom.xml') }}"
+          restore-keys: |
+            ${{ env.MIMIR_KEY }}-
           path: .mimir/local
-          enableCrossOsArchive: true
 
       - name: Find the release version major
         shell: bash
