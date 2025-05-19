@@ -1,0 +1,94 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to you under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: build
+
+on:
+  push:
+    branches:
+      - "2.x"
+      - "release/2*"
+  pull_request:
+
+permissions: read-all
+
+jobs:
+
+# tag::build[]
+  build:
+    uses: apache/logging-parent/.github/workflows/build-reusable.yaml@rel/{project-version}
+    secrets:
+      DV_ACCESS_TOKEN: ${{ startsWith(github.ref_name, 'release/') && '' || secrets.DEVELOCITY_ACCESS_KEY }}
+    with:
+      site-enabled: true
+      reproducibility-check-enabled: false
+      develocity-enabled: ${{ ! startsWith(github.ref_name, 'release/') }}
+# end::build[]
+
+# tag::deploy-snapshot[]
+  deploy-snapshot:
+    needs: build
+    if: github.repository == 'apache/logging-log4j2' && github.ref_name == '2.x'
+    uses: apache/logging-parent/.github/workflows/deploy-snapshot-reusable.yaml@rel/{project-version}
+    # Secrets for deployments
+    secrets:
+      NEXUS_USERNAME: ${{ secrets.NEXUS_USER }}
+      NEXUS_PASSWORD: ${{ secrets.NEXUS_PW }}
+# end::deploy-snapshot[]
+
+# tag::deploy-release[]
+  deploy-release:
+    needs: build
+    if: github.repository == 'apache/logging-log4j2' && startsWith(github.ref_name, 'release/')
+    uses: apache/logging-parent/.github/workflows/deploy-release-reusable.yaml@rel/{project-version}
+    # Secrets for deployments
+    secrets:
+      GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
+      NEXUS_USERNAME: ${{ secrets.LOGGING_STAGE_DEPLOYER_USER }}
+      NEXUS_PASSWORD: ${{ secrets.LOGGING_STAGE_DEPLOYER_PW }}
+      SVN_USERNAME: ${{ secrets.LOGGING_SVN_DEV_USERNAME }}
+      SVN_PASSWORD: ${{ secrets.LOGGING_SVN_DEV_PASSWORD }}
+    # Write permissions to allow the Maven `revision` property update, changelog release, etc.
+    permissions:
+      contents: write
+    with:
+      project-id: log4j
+# end::deploy-release[]
+
+# tag::verify-reproducibility-snapshot[]
+  verify-reproducibility-snapshot:
+    needs: deploy-snapshot
+    name: "verify-reproducibility (${{ needs.deploy-snapshot.outputs.project-version }})"
+    uses: apache/logging-parent/.github/workflows/verify-reproducibility-reusable.yaml@rel/{project-version}
+    with:
+      # Reference repository
+      nexus-url: https://repository.apache.org/content/groups/snapshots
+      # Encode the `runs-on` input as JSON array
+      runs-on: '["ubuntu-latest", "macos-latest"]'
+# end::verify-reproducibility-snapshot[]
+
+# tag::verify-reproducibility-release[]
+  verify-reproducibility-release:
+    needs: deploy-release
+    name: "verify-reproducibility (${{ needs.deploy-release.outputs.project-version }})"
+    uses: apache/logging-parent/.github/workflows/verify-reproducibility-reusable.yaml@rel/{project-version}
+    with:
+      # Reference repository
+      nexus-url: ${{ needs.deploy-release.outputs.nexus-url }}
+      # Encode the `runs-on` input as JSON array
+      runs-on: '["ubuntu-latest", "macos-latest"]'
+# end::verify-reproducibility-release[]

@@ -49,30 +49,11 @@ This VDR is accessible through the following URL: {logging-services-url}/cyclone
 [#reusable-workflows]
 == Reusable GitHub Actions workflows
 
-The provided reusable GitHub Actions workflows feature the following conveniences:
+Logging Parent publishes several
+https://docs.github.com/en/actions/sharing-automations/reusing-workflows[reusable workflows]
+that can be used from other repositories.
 
-{project-github-url}/blob/main/.github/workflows/build-reusable.yaml[`build-reusable.yaml`]::
-* Compiles using the specified Java compiler version
-* Submits build scans to the Develocity server
-
-{project-github-url}/blob/main/.github/workflows/deploy-release-reusable.yaml[`deploy-release-reusable.yaml`]::
-* Deploys release artifacts
-* Updates `revision` and `project.build.outputTimestamp` Maven properties
-* Generates the distribution ZIP containing Git-tracked sources, binary attachments, `NOTICE.txt`, etc.
-* Generates the release vote & announcement emails
-* Uploads the distribution ZIP and emails to SVN
-
-{project-github-url}/blob/main/.github/workflows/deploy-site-reusable.yaml[`deploy-site-reusable.yaml`]::
-* Builds and deploys the website
-
-{project-github-url}/blob/main/.github/workflows/deploy-snapshot-reusable.yaml[`deploy-snapshot-reusable.yaml`]::
-* Deploys SNAPSHOT artifacts
-
-{project-github-url}/blob/main/.github/workflows/merge-dependabot-reusable.yaml[`merge-dependabot-reusable.yaml`]::
-* Merges `dependabot` PRs along with changelog entries
-
-{project-github-url}/blob/main/.github/workflows/merge-dependabot-reusable.yaml[`verify-reproducibility-reusable.yaml`]::
-* Verifies reproducibility of a previous deployment workflow.
+See xref:workflows.adoc[] for details.
 
 [#release-instructions]
 === Release instructions
