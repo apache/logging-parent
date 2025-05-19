@@ -236,15 +236,14 @@
     <develocity-user-data-extension.version>2.0.2</develocity-user-data-extension.version>
 
     <!-- plugin dependencies versions -->
-    <error-prone.version>2.37.0</error-prone.version>
+    <error-prone.version>2.38.0</error-prone.version>
     <!-- `findsecbugs-plugin:1.13.0` contains a bug blocking Log4j compilation: https://github.com/find-sec-bugs/find-sec-bugs/pull/728
          Hence, pinning the `1.12.0` instead. -->
     <findsecbugs-plugin.version>1.13.0</findsecbugs-plugin.version>
     <groovy.version>4.0.26</groovy.version>
 
-    <!-- site-specific versions -->
     <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project. -->
-    <site-project.version>11.3.0</site-project.version>
+    <stable-project.version>12.1.0</stable-project.version>
 
   </properties>
 
@@ -1576,6 +1575,9 @@
                   <goal>npm</goal>
                 </goals>
                 <phase>pre-site</phase>
+                <configuration>
+                  <arguments>install github:apache/logging-parent#rel/${stable-project.version}</arguments>
+                </configuration>
               </execution>
 
             </executions>
