@@ -200,7 +200,7 @@ jobs:
             --show-version --batch-mode --errors --no-transfer-progress \
             site
 
-      - name: Stage distribution attachments
+      - name: Collect distribution attachments information
         shell: bash
         run: |
           # Folder where the Nexus Staging Maven plugin places the staged artifacts
