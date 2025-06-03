@@ -203,13 +203,8 @@ jobs:
       - name: Stage distribution attachments
         shell: bash
         run: |
-          # Dump deployed artifacts to a local folder
-          export ALT_DEPLOYMENT_REPO_FILEPATH="target/alt-deployment-repo"
-          mkdir "$ALT_DEPLOYMENT_REPO_FILEPATH"
-          ./mvnw \
-            --show-version --batch-mode --errors --no-transfer-progress \
-            -DaltDeploymentRepository=apache.releases.https::file:"$ALT_DEPLOYMENT_REPO_FILEPATH" \
-            deploy:deploy
+          # Folder where the Nexus Staging Maven plugin places the staged artifacts
+          export ALT_DEPLOYMENT_REPO_FILEPATH="target/nexus-staging/staging"
 
           # This regex needs to work for both Java (`distribution` profile) and `find` (while counting attachments)!
           # Hence, we don't escape dots, etc. with backslashes, which is problematic to get working in both worlds.
