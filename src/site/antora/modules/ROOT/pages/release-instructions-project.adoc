@@ -83,6 +83,19 @@ git push -u origin release/7.8.0
 `release/`-prefixed branches trigger a particular GitHub Actions workflow and its run is idempotent.
 You can iterate on the `release/7.8.0` branch to perfect it.
 ====
++
+[NOTE]
+====
+Releasing `logging-parent` requires a workaround due to a circular dependency: the website build should depend on the `rel/7.8.0` tag, but that tag can only be created after the release has been approved.
+
+To break the cycle, the NPM dependencies for building the site use a different tag, `site-deps/7.8.0`, which is hardcoded in `pom.xml`.
+You need to create this tag before staging the release.
+[source,bash]
+----
+git tag -a site-deps/7.8.0 -m 'Site dependencies for 7.8.0 release (RC1)'
+git push origin site-deps/7.8.0
+----
+====
 
 . Verify that the associated {project-github-url}/actions[GitHub Actions workflow] succeeds:
 .. The `project.build.outputTimestamp` property in `pom.xml` is updated
@@ -153,6 +166,16 @@ git push origin rel/7.8.0
 [IMPORTANT]
 ====
 The ASF infrastructure treats ``rel/``-prefixed git tags special and ensures they are immutable for provenance reasons.
+====
++
+[NOTE]
+====
+When releasing `logging-parent`, you also need to move the `site-deps/7.8.0` tag to the `rel/7.8.0` tag.
+[source,bash]
+----
+git tag -a site-deps/7.8.0 rel/7.8.0 -m 'Site dependencies for 7.8.0 release'
+git push -f origin site-deps/7.8.0
+----
 ====
 . Merge the `rel/7.8.0` tag (**not** the `release/7.8.0` branch!) to `main`
 +
