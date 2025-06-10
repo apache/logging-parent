@@ -45,9 +45,6 @@ on:
         description: GPG secret key for signing commits
         required: true
 
-env:
-  logging-parent-version: "12.2.0"
-
 jobs:
 
   deploy:
@@ -77,13 +74,14 @@ jobs:
             install
 
       # Node.js cache is needed for Antora
-      - name: Set up Node.js cache
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684   # 4.2.3
+      - name: Restore Node.js cache
+        id: nodejs-cache-restore
+        uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684   # 4.2.3
         with:
           # The cache is OS independent
           enableCrossOsArchive: true
           # The cache needs to be updated only when `logging-parent` is updated
-          key: "nodejs-cache-${{ env.logging-parent-version }}"
+          key: "nodejs-cache-${{ hashFiles('package-lock.json') }}"
           # Only the NPM modules need to be cached, since Node.js and NPM are retrieved from the Maven local repository
           path: node_modules
 
@@ -105,11 +103,13 @@ jobs:
           git config user.name "ASF Logging Services RM"
           git config user.email private@logging.apache.org
 
-      # Checking out a new branch will delete the `node_modules` folder
-      - name: Save Node.js modules
-        shell: bash
-        run: |
-          zip -q0X "$RUNNER_TEMP"/node_modules.zip node_modules
+      # Checking out a new branch will delete the `node_modules` folder,
+      # so we need to save the cache here.
+      - name: Save Node.js cache
+        uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684   # 4.2.3
+        with:
+          key: steps.nodejs-cache-restore.outputs.cache-primary-key
+          path: node_modules
 
       - name: Create the target branch
         shell: bash
@@ -181,8 +181,3 @@ jobs:
             git push -f origin
 
           fi
-
-      - name: Restore Node.js modules
-        shell: bash
-        run: |
-          unzip -q "$RUNNER_TEMP"/node_modules.zip
