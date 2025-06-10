@@ -3,6 +3,6 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="updated">
-  <issue id="387" link="https://github.com/apache/logging-parent/pull/387"/>
-  <description format="asciidoc">Update `org.eclipse.jgit:org.eclipse.jgit` to version `7.2.1.202505142326-r`</description>
+  <issue id="405" link="https://github.com/apache/logging-parent/pull/405"/>
+  <description format="asciidoc">Update `org.eclipse.jgit:org.eclipse.jgit` to version `7.3.0.202506031305-r`</description>
 </entry>
