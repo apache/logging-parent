@@ -2,7 +2,9 @@
 <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
-       type="updated">
-  <issue id="402" link="https://github.com/apache/logging-parent/pull/402"/>
-  <description format="asciidoc">Update `github/codeql-action` to version `3.28.19`</description>
+       type="fixed">
+  <issue id="388" link="https://github.com/apache/logging-parent/issues/388"/>
+  <description format="asciidoc">
+    Improve reliability of reproducibility verification.
+  </description>
 </entry>

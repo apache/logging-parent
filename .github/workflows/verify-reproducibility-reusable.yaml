@@ -61,7 +61,30 @@ jobs:
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
-          cache: maven
+
+      #
+      # Generates a cache key prefix to enable partial cache hits.
+      # If there's no exact match for the full cache key, any cache with this prefix can be used as a fallback.
+      # To avoid unbounded cache growth, the prefix includes the current month,
+      # ensuring a new cache is started each month.
+      #
+      - name: Compute Cache Key Prefix
+        shell: bash
+        run: |
+          date +"CACHE_KEY=verify-reproducibility-%Y-%m" >> $GITHUB_ENV
+
+      #
+      # Configures caching for the local Maven repository.
+      # Uses a custom cache key to isolate artifacts built in this workflow,
+      # preventing reproducibility results from being affected by cached outputs from other workflows.
+      #
+      - name: Set up Maven Cache
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684   # 4.2.3
+        with:
+          path: ~/.m2/repository
+          key: "${{ env.CACHE_KEY }}-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}"
+          restore-keys: |
+            ${{ env.CACHE_KEY }}-${{ runner.os }}-
 
       # `clean verify artifact:compare` is required to generate the build reproducibility report.
       # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
