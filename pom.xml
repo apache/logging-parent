@@ -244,7 +244,7 @@
 
     <!-- site-specific versions -->
     <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project. -->
-    <site-project.version>11.3.0</site-project.version>
+    <site-project.version>12.1.1</site-project.version>
 
   </properties>
 
