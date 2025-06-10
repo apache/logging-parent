@@ -108,7 +108,7 @@ jobs:
       - name: Save Node.js cache
         uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684   # 4.2.3
         with:
-          key: steps.nodejs-cache-restore.outputs.cache-primary-key
+          key: ${{ steps.nodejs-cache-restore.outputs.cache-primary-key }}
           path: node_modules
 
       - name: Create the target branch
