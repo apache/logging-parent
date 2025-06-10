@@ -38,6 +38,6 @@
 
 <#if release.date?has_content>Release date:: ${release.date}</#if>
 
-This patch release contains minor fixes addressing issues blocking the release of `log4j-tools`, `log4j-kotlin`, etc.
+This patch release addresses a blocker issue with the creation of a release distribution and enhances the reliability of our caching and reproducibility mechanisms.
 
 <#include "../.changelog.adoc.ftl">

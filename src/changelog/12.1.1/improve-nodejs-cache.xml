@@ -2,7 +2,7 @@
 <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
-       type="changed">
+       type="fixed">
   <issue id="366" link="https://github.com/apache/logging-parent/issues/366"/>
   <issue id="408" link="https://github.com/apache/logging-parent/pull/408"/>
   <description format="asciidoc">Improve Node.js caching using `package-lock.json`.</description>
