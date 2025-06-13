@@ -2,7 +2,7 @@
 <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
-       type="updated">
-  <issue id="391" link="https://github.com/apache/logging-parent/pull/391"/>
-  <description format="asciidoc">Update `fast-xml-parser` to version ``</description>
+       type="fixed">
+  <issue id="400" link="https://github.com/apache/logging-parent/issues/400"/>
+  <description format="asciidoc">Fix staging of binary distribution archive.</description>
 </entry>
