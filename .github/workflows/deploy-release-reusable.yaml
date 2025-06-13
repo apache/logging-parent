@@ -64,7 +64,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
 
       - name: Set up Java & GPG
-        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12   # 3.7.0
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00   # 3.7.0
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
@@ -200,16 +200,11 @@ jobs:
             --show-version --batch-mode --errors --no-transfer-progress \
             site
 
-      - name: Stage distribution attachments
+      - name: Collect distribution attachments information
         shell: bash
         run: |
-          # Dump deployed artifacts to a local folder
-          export ALT_DEPLOYMENT_REPO_FILEPATH="target/alt-deployment-repo"
-          mkdir "$ALT_DEPLOYMENT_REPO_FILEPATH"
-          ./mvnw \
-            --show-version --batch-mode --errors --no-transfer-progress \
-            -DaltDeploymentRepository=apache.releases.https::file:"$ALT_DEPLOYMENT_REPO_FILEPATH" \
-            deploy:deploy
+          # Folder where the Nexus Staging Maven plugin places the staged artifacts
+          export ALT_DEPLOYMENT_REPO_FILEPATH="target/nexus-staging/staging"
 
           # This regex needs to work for both Java (`distribution` profile) and `find` (while counting attachments)!
           # Hence, we don't escape dots, etc. with backslashes, which is problematic to get working in both worlds.

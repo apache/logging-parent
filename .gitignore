@@ -16,6 +16,7 @@
 # Maven
 target/
 .flattened-pom.xml
+/.mvn/extensions.xml
 /.mvn/wrapper/maven-wrapper.jar
 # IDEA
 .idea/
@@ -28,6 +29,5 @@ target/
 # Node.js
 node
 node_modules
-package-lock.json
 # Visual Studio
 /.vs/*

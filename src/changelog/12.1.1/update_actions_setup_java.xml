@@ -3,6 +3,6 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="updated">
-  <issue id="371" link="https://github.com/apache/logging-parent/pull/371"/>
-  <description format="asciidoc">Update `github/codeql-action` to version `3.28.15`</description>
+  <issue id="376" link="https://github.com/apache/logging-parent/pull/376"/>
+  <description format="asciidoc">Update `actions/setup-java` to version `4.7.1`</description>
 </entry>

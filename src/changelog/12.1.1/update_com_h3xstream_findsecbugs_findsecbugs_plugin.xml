@@ -3,6 +3,6 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="updated">
-  <issue id="371" link="https://github.com/apache/logging-parent/pull/371"/>
-  <description format="asciidoc">Update `github/codeql-action` to version `3.28.15`</description>
+  <issue id="380" link="https://github.com/apache/logging-parent/pull/380"/>
+  <description format="asciidoc">Update `com.h3xstream.findsecbugs:findsecbugs-plugin` to version `1.14.0`</description>
 </entry>
