@@ -173,86 +173,12 @@ This VDR is accessible through the following URL: <a href="https://logging.apach
 <h2 id="reusable-workflows"><a class="anchor" href="#reusable-workflows"></a>Reusable GitHub Actions workflows</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The provided reusable GitHub Actions workflows feature the following conveniences:</p>
+<p>Logging Parent publishes several
+<a href="https://docs.github.com/en/actions/sharing-automations/reusing-workflows">reusable workflows</a>
+that can be used from other repositories.</p>
 </div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/build-reusable.yaml"><code>build-reusable.yaml</code></a></dt>
-<dd>
-<div class="ulist">
-<ul>
-<li>
-<p>Compiles using the specified Java compiler version</p>
-</li>
-<li>
-<p>Submits build scans to the Develocity server</p>
-</li>
-</ul>
-</div>
-</dd>
-<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-release-reusable.yaml"><code>deploy-release-reusable.yaml</code></a></dt>
-<dd>
-<div class="ulist">
-<ul>
-<li>
-<p>Deploys release artifacts</p>
-</li>
-<li>
-<p>Updates <code>revision</code> and <code>project.build.outputTimestamp</code> Maven properties</p>
-</li>
-<li>
-<p>Generates the distribution ZIP containing Git-tracked sources, binary attachments, <code>NOTICE.txt</code>, etc.</p>
-</li>
-<li>
-<p>Generates the release vote &amp; announcement emails</p>
-</li>
-<li>
-<p>Uploads the distribution ZIP and emails to SVN</p>
-</li>
-</ul>
-</div>
-</dd>
-<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-site-reusable.yaml"><code>deploy-site-reusable.yaml</code></a></dt>
-<dd>
-<div class="ulist">
-<ul>
-<li>
-<p>Builds and deploys the website</p>
-</li>
-</ul>
-</div>
-</dd>
-<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-snapshot-reusable.yaml"><code>deploy-snapshot-reusable.yaml</code></a></dt>
-<dd>
-<div class="ulist">
-<ul>
-<li>
-<p>Deploys SNAPSHOT artifacts</p>
-</li>
-</ul>
-</div>
-</dd>
-<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/merge-dependabot-reusable.yaml"><code>merge-dependabot-reusable.yaml</code></a></dt>
-<dd>
-<div class="ulist">
-<ul>
-<li>
-<p>Merges <code>dependabot</code> PRs along with changelog entries</p>
-</li>
-</ul>
-</div>
-</dd>
-<dt class="hdlist1"><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/merge-dependabot-reusable.yaml"><code>verify-reproducibility-reusable.yaml</code></a></dt>
-<dd>
-<div class="ulist">
-<ul>
-<li>
-<p>Verifies reproducibility of a previous deployment workflow.</p>
-</li>
-</ul>
-</div>
-</dd>
-</dl>
+<div class="paragraph">
+<p>See <a href="workflows.html" class="xref page">Reusable GitHub Actions workflows</a> for details.</p>
 </div>
 <div class="sect2">
 <h3 id="release-instructions"><a class="anchor" href="#release-instructions"></a>Release instructions</h3>
@@ -362,7 +288,7 @@ The file will be created by the <code>reusable-build</code> workflow.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">build:
-  uses: apache/logging-parent/.github/workflows/build-reusable.yaml@rel/11.3.0
+  uses: apache/logging-parent/.github/workflows/build-reusable.yaml@rel/12.1.1
   secrets:
     DV_ACCESS_TOKEN: ${{ ! startsWith(github.refname, 'release/') &amp;&amp; secrets.DEVELOCITY_ACCESS_KEY }}
   with:

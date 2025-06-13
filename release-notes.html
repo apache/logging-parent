@@ -115,6 +115,96 @@
 <article class="doc">
 <h1 class="page">Release notes</h1>
 <div class="sect1">
+<h2 id="release-notes-12-1-1"><a class="anchor" href="#release-notes-12-1-1"></a>12.1.1</h2>
+<div class="sectionbody">
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Release date</dt>
+<dd>
+<p>2025-06-10</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This patch release addresses a blocker issue with the creation of a release distribution and enhances the reliability of our caching and reproducibility mechanisms.</p>
+</div>
+<div class="sect2">
+<h3 id="release-notes-12-1-1-fixed"><a class="anchor" href="#release-notes-12-1-1-fixed"></a>Fixed</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Fix staging of binary distribution archive. (<a href="https://github.com/apache/logging-parent/issues/400">400</a>)</p>
+</li>
+<li>
+<p>Improve Node.js caching using <code>package-lock.json</code>. (<a href="https://github.com/apache/logging-parent/issues/366">366</a>, <a href="https://github.com/apache/logging-parent/pull/408">408</a>)</p>
+</li>
+<li>
+<p>Improve reliability of reproducibility verification. (<a href="https://github.com/apache/logging-parent/issues/388">388</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="release-notes-12-1-1-updated"><a class="anchor" href="#release-notes-12-1-1-updated"></a>Updated</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Update <code>actions/setup-java</code> to version <code>4.7.1</code> (<a href="https://github.com/apache/logging-parent/pull/376">376</a>)</p>
+</li>
+<li>
+<p>Update <code>com.diffplug.spotless:spotless-maven-plugin</code> to version <code>2.44.5</code> (<a href="https://github.com/apache/logging-parent/pull/397">397</a>)</p>
+</li>
+<li>
+<p>Update <code>com.google.errorprone:error_prone_core</code> to version <code>2.38.0</code> (<a href="https://github.com/apache/logging-parent/pull/381">381</a>)</p>
+</li>
+<li>
+<p>Update <code>com.gradle:common-custom-user-data-maven-extension</code> to version <code>2.0.3</code> (<a href="https://github.com/apache/logging-parent/pull/407">407</a>)</p>
+</li>
+<li>
+<p>Update <code>com.gradle:develocity-maven-extension</code> to version <code>2.0.1</code> (<a href="https://github.com/apache/logging-parent/pull/398">398</a>)</p>
+</li>
+<li>
+<p>Update <code>com.h3xstream.findsecbugs:findsecbugs-plugin</code> to version <code>1.14.0</code> (<a href="https://github.com/apache/logging-parent/pull/380">380</a>)</p>
+</li>
+<li>
+<p>Update <code>com.palantir.javaformat:palantir-java-format</code> to version <code>2.68.0</code> (<a href="https://github.com/apache/logging-parent/pull/410">410</a>)</p>
+</li>
+<li>
+<p>Update <code>dependabot/fetch-metadata</code> to version <code>2.4.0</code> (<a href="https://github.com/apache/logging-parent/pull/386">386</a>)</p>
+</li>
+<li>
+<p>Update <code>github/codeql-action</code> to version <code>3.28.19</code> (<a href="https://github.com/apache/logging-parent/pull/402">402</a>)</p>
+</li>
+<li>
+<p>Update <code>gradle/develocity-actions</code> to version <code>1.4</code> (<a href="https://github.com/apache/logging-parent/pull/404">404</a>)</p>
+</li>
+<li>
+<p>Update <code>org.apache.groovy:groovy</code> to version <code>4.0.27</code> (<a href="https://github.com/apache/logging-parent/pull/395">395</a>)</p>
+</li>
+<li>
+<p>Update <code>org.codehaus.gmavenplus:gmavenplus-plugin</code> to version <code>4.2.0</code> (<a href="https://github.com/apache/logging-parent/pull/383">383</a>)</p>
+</li>
+<li>
+<p>Update <code>org.codehaus.mojo:build-helper-maven-plugin</code> to version <code>3.6.1</code> (<a href="https://github.com/apache/logging-parent/pull/403">403</a>)</p>
+</li>
+<li>
+<p>Update <code>org.codehaus.mojo:exec-maven-plugin</code> to version <code>3.5.1</code> (<a href="https://github.com/apache/logging-parent/pull/396">396</a>)</p>
+</li>
+<li>
+<p>Update <code>org.eclipse.jgit:org.eclipse.jgit</code> to version <code>7.3.0.202506031305-r</code> (<a href="https://github.com/apache/logging-parent/pull/405">405</a>)</p>
+</li>
+<li>
+<p>Update <code>org.jacoco:jacoco-maven-plugin</code> to version <code>0.8.13</code> (<a href="https://github.com/apache/logging-parent/pull/368">368</a>)</p>
+</li>
+<li>
+<p>Update <code>ossf/scorecard-action</code> to version <code>2.4.2</code> (<a href="https://github.com/apache/logging-parent/pull/399">399</a>)</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="release-notes-12-1-0"><a class="anchor" href="#release-notes-12-1-0"></a>12.1.0</h2>
 <div class="sectionbody">
 <div class="dlist">
@@ -166,7 +256,7 @@ It also fixes a breaking change in Error Prone that prevented projects from migr
 <p>Update <code>actions/upload-artifact</code> to version <code>4.6.2</code> (<a href="https://github.com/apache/logging-parent/pull/359">359</a>)</p>
 </li>
 <li>
-<p>Update <code>com.diffplug.spotless:spotless-maven-plugin</code> to version <code>2.44.3</code> (<a href="https://github.com/apache/logging-parent/pull/333">333</a>)</p>
+<p>Update <code>com.diffplug.spotless:spotless-maven-plugin</code> to version <code>2.44.4</code> (<a href="https://github.com/apache/logging-parent/pull/372">372</a>)</p>
 </li>
 <li>
 <p>Update <code>com.github.spotbugs:spotbugs-maven-plugin</code> to version <code>4.9.3.0</code> (<a href="https://github.com/apache/logging-parent/pull/349">349</a>)</p>
@@ -178,13 +268,13 @@ It also fixes a breaking change in Error Prone that prevented projects from migr
 <p>Update <code>com.gradle:develocity-maven-extension</code> to version <code>1.23.2</code> (<a href="https://github.com/apache/logging-parent/pull/338">338</a>)</p>
 </li>
 <li>
-<p>Update <code>com.palantir.javaformat:palantir-java-format</code> to version <code>2.61.0</code> (<a href="https://github.com/apache/logging-parent/pull/361">361</a>)</p>
+<p>Update <code>com.palantir.javaformat:palantir-java-format</code> to version <code>2.62.0</code> (<a href="https://github.com/apache/logging-parent/pull/370">370</a>)</p>
 </li>
 <li>
 <p>Update <code>de.skuzzle.enforcer:restrict-imports-enforcer-rule</code> to version <code>2.6.1</code> (<a href="https://github.com/apache/logging-parent/pull/365">365</a>)</p>
 </li>
 <li>
-<p>Update <code>github/codeql-action</code> to version <code>3.28.13</code> (<a href="https://github.com/apache/logging-parent/pull/364">364</a>)</p>
+<p>Update <code>github/codeql-action</code> to version <code>3.28.15</code> (<a href="https://github.com/apache/logging-parent/pull/371">371</a>)</p>
 </li>
 <li>
 <p>Update <code>org.apache:apache</code> to version <code>34</code> (<a href="https://github.com/apache/logging-parent/pull/353">353</a>)</p>
