@@ -5,6 +5,6 @@
        type="added">
   <issue id="417" link="https://github.com/apache/logging-parent/issues/417"/>
   <description format="asciidoc">
-    Added `process-dependabot-workflow` to handle Dependabot PRs under RTC restrictions.
+    Added `process-dependabot-reusable` to handle Dependabot PRs under RTC restrictions.
   </description>
 </entry>
