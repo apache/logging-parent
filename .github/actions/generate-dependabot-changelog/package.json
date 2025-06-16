@@ -1,5 +1,5 @@
 {
-  "name": "@copernik-eu/dependabot-changelog-action",
+  "name": "@apache-logging/dependabot-changelog-action",
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
