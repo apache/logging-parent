@@ -104,10 +104,19 @@ To verify the reproducibility of a release, you can use:
 include::example$build.yaml[tag=verify-reproducibility-release,indent=0]
 ----
 
-[#merge-dependabot]
-== {project-github-url}/blob/main/.github/workflows/merge-dependabot-reusable.yaml[`merge-dependabot-reusable.yaml`]
+[#process-dependabot]
+== {project-github-url}/blob/main/.github/workflows/process-dependabot-reusable.yaml[`process-dependabot-reusable.yaml`]
 
-Merges Dependabot PRs along with changelog entries.
+Helps to process Dependabot pull requests by:
+
+* Generating changelog entries for the updated dependencies.
+* Enabling the "auto-merge" option for the pull request.
+
+.Snippet from an {examples-base-link}/process-dependabot.yaml[example `process-dependabot.yaml`] using this workflow
+[source,yaml,subs=+attributes]
+----
+include::example$process-dependabot.yaml[tag=process-dependabot,indent=0]
+----
 
 [#deploy-site]
 == {project-github-url}/blob/main/.github/workflows/deploy-site-reusable.yaml[`deploy-site-reusable.yaml`]

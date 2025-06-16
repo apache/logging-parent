@@ -769,6 +769,9 @@
               <include>src/**/*.yaml</include>
               <include>src/**/*.yml</include>
             </includes>
+            <excludes>
+              <exclude>**/node_modules/**</exclude>
+            </excludes>
             <licenseHeader>
               <!-- https://www.apache.org/legal/src-headers.html#headers -->
               <content>#
