@@ -69,7 +69,7 @@ jobs:
 
       - name: Install `xmlstarlet`
         shell: bash
-        run: sudo apt update && sudo apt install -y xmlstarlet
+        run: sudo apt-get update && sudo apt-get install -y xmlstarlet
 
       - name: Find the release version major
         shell: bash
