@@ -78,7 +78,7 @@ jobs:
             pom.xml
           )
           if [[ ! $revision =~ ^[0-9]+\.[0-9]+\.[0-9]+(-SNAPSHOT)?$ ]]; then
-            echo "Invalid version format: $version"
+            echo "Invalid version format: $revision"
           exit 1
           fi
           parts=(${revision//./ })
@@ -115,7 +115,7 @@ jobs:
           mkdir -p "$release_changelog_path"
           cd "$release_changelog_path"
           # Generate the changelog entries for each updated dependency
-          echo $UPDATED_DEPENDENCIES | jq --compact-output '.[]' | while read -r dependency; do
+          echo "$UPDATED_DEPENDENCIES" | jq --compact-output '.[]' | while read -r dependency; do
             # Extract the dependency name and version
             dependency_name=$(echo "$dependency" | jq -r '.dependencyName')
             changelog_file_name=$(echo "update_${dependency_name,,}.xml" | sed -r -e 's/[^a-z0-9.-]/_/g' -e 's/_+/_/g')
@@ -147,4 +147,4 @@ jobs:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh pr merge --squash --auto "$PR_HTML_URL"
+          gh pr merge --squash --auto "$PR_URL"
