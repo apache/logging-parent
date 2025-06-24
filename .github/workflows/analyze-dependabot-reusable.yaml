@@ -1,0 +1,55 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to you under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: Dependabot Analyze PR
+
+on:
+  workflow_call:
+
+jobs:
+
+  analyze-pull-request:
+    # Skip this workflow on commits not pushed by Dependabot
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Fetch Dependabot metadata
+        id: dependabot
+        uses: ppkarwasz/fetch-metadata@feat/multi-versions
+        with:
+          github-token: ${{ github.token }}
+
+      #
+      # Stores the data required by the process-dependabot-reusable workflow as JSON files.
+      #
+      - name: Create artifacts
+        shell: bash
+        env:
+          PULL_REQUEST: ${{ toJSON(github.event.pull_request) }}
+          UPDATED_DEPENDENCIES: ${{ steps.dependabot.outputs.updated-dependencies-json }}
+        run: |
+          mkdir -p dependabot-metadata
+          echo "$PULL_REQUEST" > dependabot-metadata/pull_request.json
+          echo "$UPDATED_DEPENDENCIES" > dependabot-metadata/updated_dependencies.json
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # 4.6.2
+        with:
+          name: dependabot-metadata
+          path: dependabot-metadata

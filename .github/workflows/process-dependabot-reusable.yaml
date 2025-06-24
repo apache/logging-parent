@@ -1,0 +1,169 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to you under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: Dependabot Process PR
+
+on:
+  workflow_call:
+    inputs:
+      user-name:
+        description: The name of the user to use for the commit
+        default: 'ASF Logging Services RM'
+        type: string
+      user-email:
+        description: The email of the user to use for the commit
+        default: 'private@logging.apache.org'
+        type: string
+      analyze-workflow-run-id:
+        description: The ID of the workflow run that analyzed the PR
+        required: true
+        type: number
+    secrets:
+      RECURSIVE_TOKEN:
+        description: "A PAT with `contents: write` permission to push changes and trigger the next workflow run"
+        required: true
+      GPG_PASSPHRASE:
+        description: GPG passphrase for signing commits
+        required: false
+      GPG_PRIVATE_KEY:
+        description: GPG secret key for signing commits
+        required: true
+
+permissions: { }
+
+jobs:
+
+  generate-changelog:
+    # Skip this workflow on commits not pushed by Dependabot
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Fetch Dependabot metadata
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # 4.3.0
+        with:
+          github-token: ${{ github.token }}
+          name: dependabot-metadata
+          path: ${{ runner.temp }}/dependabot-metadata
+          run-id: ${{ inputs.analyze-workflow-run-id }}
+
+      - name: Process Dependabot metadata
+        shell: bash
+        run: |
+          # Extract the pull request metadata from the downloaded artifact
+          path="$RUNNER_TEMP/dependabot-metadata"
+          if [[ ! -f "$path/pull_request.json" ]]; then
+            echo "Pull request metadata not found at $path/pull_request.json"
+            exit 1
+          fi
+          if [[ ! -f "$path/updated_dependencies.json" ]]; then
+            echo "Updated dependencies metadata not found at $path/updated_dependencies.json"
+            exit 1
+          fi
+          # Extract the required metadata and set it as environment variables
+          pull_request="$path/pull_request.json"
+          echo "PR_ID=$(jq -r '.number' < "$pull_request")" >> $GITHUB_ENV
+          echo "PR_URL=$(jq -r '.html_url' < "$pull_request")" >> $GITHUB_ENV
+          echo "PR_HEAD_REF=$(jq -r '.head.ref' < "$pull_request")" >> $GITHUB_ENV
+
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
+        with:
+          ref: ${{ env.PR_HEAD_REF }}
+          token: ${{ secrets.RECURSIVE_TOKEN }}
+
+      - name: Install `xmlstarlet`
+        shell: bash
+        run: sudo apt-get update && sudo apt-get install -y xmlstarlet
+
+      - name: Find the release version major
+        shell: bash
+        run: |
+          revision=$(
+            xmlstarlet sel \
+            -N m=http://maven.apache.org/POM/4.0.0 \
+            --template --value-of /m:project/m:properties/m:revision \
+            pom.xml
+          )
+          if [[ ! $revision =~ ^[0-9]+\.[0-9]+\.[0-9]+(-SNAPSHOT)?$ ]]; then
+            echo "Invalid version format: $revision"
+            exit 1
+          fi
+          parts=(${revision//./ })
+          echo "RELEASE_VERSION_MAJOR=${parts[0]}" >> $GITHUB_ENV
+
+      - name: Create changelog entries
+        shell: bash
+        run: |
+          PULL_REQUEST="$RUNNER_TEMP/dependabot-metadata/pull_request.json"
+          UPDATED_DEPENDENCIES="$RUNNER_TEMP/dependabot-metadata/updated_dependencies.json"
+          # Generates the content of a changelog entry
+          function generate_changelog_entry() {
+            local dependency="$1"
+            local issue_id=$(xmlstarlet esc "$PR_ID")
+            local issue_link=$(xmlstarlet esc "$PR_URL")
+            local dependency_name=$(echo "$dependency" | jq -r '.dependencyName' | xmlstarlet esc)
+            local new_version=$(echo "$dependency" | jq -r '.newVersion' | xmlstarlet esc)
+            cat << CHANGELOG_ENTRY
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!-- SPDX-License-Identifier: Apache-2.0 -->
+          <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns="https://logging.apache.org/xml/ns"
+                 xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+                 type="updated">
+            <issue id="$issue_id" link="$issue_link"/>
+            <description format="asciidoc">Update \`$dependency_name\` to version \`$new_version\`.</description>
+          </entry>
+          CHANGELOG_ENTRY
+          }
+          # Ensure the changelog directory exists
+          release_changelog_path="src/changelog/.${RELEASE_VERSION_MAJOR}.x.x"
+          mkdir -p "$release_changelog_path"
+          cd "$release_changelog_path"
+          # Generate the changelog entries for each updated dependency
+          cat "$UPDATED_DEPENDENCIES" | jq --compact-output '.[]' | while read -r dependency; do
+            # Extract the dependency name and version
+            dependency_name=$(echo "$dependency" | jq -r '.dependencyName')
+            changelog_file_name=$(echo "update_${dependency_name,,}.xml" | sed -r -e 's/[^a-z0-9.-]/_/g' -e 's/_+/_/g')
+            generate_changelog_entry "$dependency" > "$changelog_file_name"
+          done
+
+      - name: Set up GPG
+        uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec # 6.3.0
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Add & commit changes
+        shell: bash
+        env:
+          USER_NAME: ${{ inputs.user-name }}
+          USER_EMAIL: ${{ inputs.user-email }}
+        run: |
+          git add src/changelog
+          git config user.name "$USER_NAME"
+          git config user.email "$USER_EMAIL"
+          git commit -S -m "Generate changelog entries for PR #$PR_ID"
+          git push origin
+
+      - name: Enable auto-merge on PR
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh pr merge --squash --auto "$PR_URL"
