@@ -43,6 +43,8 @@ on:
         description: GPG secret key for signing commits
         required: true
 
+# Explicitly drop all permissions inherited from the caller for security.
+# Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
 permissions: { }
 
 jobs:
@@ -51,6 +53,11 @@ jobs:
     # Skip this workflow on commits not pushed by Dependabot
     if: ${{ github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
+    permissions:
+      # The default GITHUB_TOKEN will be used to enable the "auto-merge" on the PR
+      # This requires the following two permissions:
+      contents: write
+      pull-requests: write
 
     steps:
 

@@ -20,6 +20,10 @@ name: Dependabot Analyze PR
 on:
   workflow_call:
 
+# Explicitly drop all permissions inherited from the caller for security.
+# Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
+permissions: { }
+
 jobs:
 
   analyze-pull-request:
