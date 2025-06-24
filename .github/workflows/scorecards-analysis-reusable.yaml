@@ -20,12 +20,18 @@ name: scorecards-analysis
 on:
   workflow_call:
 
+# Explicitly drop all permissions inherited from the caller for security.
+# Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
+permissions: { }
+
 jobs:
 
   analysis:
-
     name: "Scorecards analysis"
     runs-on: ubuntu-latest
+    # Permissions required to publish Security Alerts
+    permissions:
+      security-events: write
 
     steps:
 

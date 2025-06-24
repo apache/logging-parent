@@ -24,7 +24,7 @@ on:
       - "release/2*"
   pull_request:
 
-permissions: read-all
+permissions: { }
 
 jobs:
 

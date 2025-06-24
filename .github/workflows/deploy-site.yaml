@@ -27,7 +27,7 @@ on:
       - "**.md"
       - "**.txt"
 
-permissions: read-all
+permissions: { }
 
 jobs:
 

@@ -65,6 +65,10 @@ on:
 env:
   MAVEN_ARGS: ${{ inputs.maven-args }}
 
+# Explicitly drop all permissions inherited from the caller for security.
+# Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
+permissions: { }
+
 jobs:
 
   build:
