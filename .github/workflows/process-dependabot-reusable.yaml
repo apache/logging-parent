@@ -20,18 +20,18 @@ name: Dependabot Process PR
 on:
   workflow_call:
     inputs:
-      user_name:
+      user-name:
         description: The name of the user to use for the commit
         default: 'ASF Logging Services RM'
         type: string
-      user_email:
+      user-email:
         description: The email of the user to use for the commit
         default: 'private@logging.apache.org'
         type: string
-      ref:
-        description: The branch, tag or SHA to checkout
-        default: ${{ github.ref }}
-        type: string
+      analyze-workflow-run-id:
+        description: The ID of the workflow run that analyzed the PR
+        required: true
+        type: number
     secrets:
       AUTO_MERGE_TOKEN:
         description: GitHub token to enable auto-merge on PR
@@ -56,15 +56,36 @@ jobs:
     steps:
 
       - name: Fetch Dependabot metadata
-        id: dependabot
-        uses: dependabot/fetch-metadata@08eff52bf64351f401fb50d4972fa95b9f2c2d1b # 2.4.0
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # 4.3.0
         with:
           github-token: ${{ github.token }}
+          name: dependabot-metadata
+          path: ${{ runner.temp }}/dependabot-metadata
+          run-id: ${{ inputs.analyze-workflow-run-id }}
+
+      - name: Process Dependabot metadata
+        shell: bash
+        run: |
+          # Extract the pull request metadata from the downloaded artifact
+          path="$RUNNER_TEMP/dependabot-metadata"
+          if [[ ! -f "$path/pull_request.json" ]]; then
+            echo "Pull request metadata not found at $path/pull_request.json"
+            exit 1
+          fi
+          if [[ ! -f "$path/updated_dependencies.json" ]]; then
+            echo "Updated dependencies metadata not found at $path/updated_dependencies.json"
+            exit 1
+          fi
+          # Extract the required metadata and set it as environment variables
+          pull_request="$path/pull_request.json"
+          echo "PR_ID=$(jq -r '.number' < "$pull_request")" >> $GITHUB_ENV
+          echo "PR_URL=$(jq -r '.html_url' < "$pull_request")" >> $GITHUB_ENV
+          echo "PR_HEAD_REF=$(jq -r '.head.ref' < "$pull_request")" >> $GITHUB_ENV
 
       - name: Check out repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ env.PR_HEAD_REF }}
           token: ${{ secrets.CONTENT_WRITE_TOKEN }}
 
       - name: Install `xmlstarlet`
@@ -89,18 +110,16 @@ jobs:
 
       - name: Create changelog entries
         shell: bash
-        env:
-          PR_ID: ${{ github.event.pull_request.number }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
-          RELEASE_VERSION_MAJOR: ${{ env.RELEASE_VERSION_MAJOR }}
-          UPDATED_DEPENDENCIES: ${{ steps.dependabot.outputs.updated-dependencies-json }}
         run: |
+          PULL_REQUEST="$RUNNER_TEMP/dependabot-metadata/pull_request.json"
+          UPDATED_DEPENDENCIES="$RUNNER_TEMP/dependabot-metadata/updated_dependencies.json"
+          # Generates the content of a changelog entry
           function generate_changelog_entry() {
             local dependency="$1"
-            local dependency_name=$(echo "$dependency" | jq -r '.dependencyName' | xmlstarlet esc)
-            local new_version=$(echo "$dependency" | jq -r '.newVersion' | xmlstarlet esc)
             local issue_id=$(xmlstarlet esc "$PR_ID")
             local issue_link=$(xmlstarlet esc "$PR_URL")
+            local dependency_name=$(echo "$dependency" | jq -r '.dependencyName' | xmlstarlet esc)
+            local new_version=$(echo "$dependency" | jq -r '.newVersion' | xmlstarlet esc)
             cat << CHANGELOG_ENTRY
           <?xml version="1.0" encoding="UTF-8"?>
           <!-- SPDX-License-Identifier: Apache-2.0 -->
@@ -118,7 +137,7 @@ jobs:
           mkdir -p "$release_changelog_path"
           cd "$release_changelog_path"
           # Generate the changelog entries for each updated dependency
-          echo "$UPDATED_DEPENDENCIES" | jq --compact-output '.[]' | while read -r dependency; do
+          cat "$UPDATED_DEPENDENCIES" | jq --compact-output '.[]' | while read -r dependency; do
             # Extract the dependency name and version
             dependency_name=$(echo "$dependency" | jq -r '.dependencyName')
             changelog_file_name=$(echo "update_${dependency_name,,}.xml" | sed -r -e 's/[^a-z0-9.-]/_/g' -e 's/_+/_/g')
@@ -134,14 +153,13 @@ jobs:
       - name: Add & commit changes
         shell: bash
         env:
-          COMMIT_MSG: "Generate changelog entries for PR #${{ github.event.pull_request.number }}"
-          USER_NAME: ${{ inputs.user_name }}
-          USER_EMAIL: ${{ inputs.user_email }}
+          USER_NAME: ${{ inputs.user-name }}
+          USER_EMAIL: ${{ inputs.user-email }}
         run: |
           git add src/changelog
           git config user.name "$USER_NAME"
           git config user.email "$USER_EMAIL"
-          git commit -S -m "$COMMIT_MSG"
+          git commit -S -m "Generate changelog entries for PR #$PR_ID"
           git push origin
 
       - name: Enable auto-merge on PR

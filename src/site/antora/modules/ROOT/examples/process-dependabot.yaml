@@ -15,22 +15,28 @@
 # limitations under the License.
 #
 
-name: Dependabot Process PR
+name: "Dependabot Process PR"
 
 on:
-  pull_request_target: {}
+  workflow_run:
+    workflows:
+      - "Dependabot Analyze PR"
+    types:
+      - completed
 
-permissions: read-all
+permissions: { }
 
 jobs:
 
 # tag::process-dependabot[]
   process-dependabot:
     # Skip this workflow on commits not pushed by Dependabot
-    if: ${{ github.actor == 'dependabot[bot]' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.actor == 'dependabot[bot]' }}
     uses: apache/logging-parent/.github/workflows/process-dependabot-reusable.yaml@rel/{project-version}
     permissions:
       # The default GITHUB_TOKEN will be used to enable the "auto-merge" on the PR
+      # This requires the following two permissions:
+      contents: write
       pull-requests: write
     secrets:
       AUTO_MERGE_TOKEN: ${{ github.token }}
@@ -38,8 +44,10 @@ jobs:
       GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
     with:
-      user_name: 'Release Manager'
-      user_email: manager@example.com
-      # Necessary to let the reusable workflow reference itself
-      reusable_ref: rel/{project-version}
+      # These are the default values.
+      # The e-mail address must match the one used in the GPG key.
+      user_name: "ASF Logging Services RM"
+      user_email: "private@logging.apache.org"
+      # The run ID of the workflow that analyzed the PR.
+      analyze-workflow-run-id: ${{ github.event.workflow_run.id }}
 # end::process-dependabot[]

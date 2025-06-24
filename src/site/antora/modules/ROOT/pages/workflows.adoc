@@ -104,6 +104,25 @@ To verify the reproducibility of a release, you can use:
 include::example$build.yaml[tag=verify-reproducibility-release,indent=0]
 ----
 
+[#analyze-dependabot]
+== {project-github-url}/blob/main/.github/workflows/analyze-dependabot-reusable.yaml[`analyze-dependabot-reusable.yaml`]
+
+Analyzes Dependabot pull requests to collect detailed information about updated dependencies.
+Stores the results in the `dependabot-metadata` artifact,
+which is later consumed by the <<process-dependabot>> workflow to automate changelog generation and PR processing.
+
+[NOTE]
+====
+This workflow must be triggered by an event that includes the `pull_request` payload and does not require any privileges.
+It can then be used in a `pull_request` workflow.
+====
+
+.Snippet from an {examples-base-link}/analyze-dependabot.yaml[example `analyze-dependabot.yaml`] using this workflow
+[source,yaml,subs=+attributes]
+----
+include::example$analyze-dependabot.yaml[tag=analyze-dependabot,indent=0]
+----
+
 [#process-dependabot]
 == {project-github-url}/blob/main/.github/workflows/process-dependabot-reusable.yaml[`process-dependabot-reusable.yaml`]
 
@@ -111,6 +130,28 @@ Helps to process Dependabot pull requests by:
 
 * Generating changelog entries for the updated dependencies.
 * Enabling the "auto-merge" option for the pull request.
+
+The workflow needs the following privileged tokens:
+
+`AUTO_MERGE_TOKEN`::
+A GitHub token with `contents:write` and `pull_requests:write` permissions, used to enable auto-merge on pull requests.
+The default `GITHUB_TOKEN` **can** be used for this purpose.
+
+`CONTENT_WRITE_TOKEN`::
+A GitHub token required to push generated changelog files as a new commit to the repository.
+The default `GITHUB_TOKEN` can **not** be used,
+as it will not trigger required check runs and will prevent the pull request from being merged.
+A Personal Access Token (PAT) with `contents:write` permission must be provided instead.
+
+This workflow is designed to be triggered by the `workflow_run` event,
+as soon as the <<analyze-dependabot>> workflow completes.
+
+[NOTE]
+====
+When this workflow is triggered by `workflow_run`,
+GitHub Actions uses the "Actions" secret context instead of "Dependabot" secrets,
+even if the `github.actor` is `dependabot[bot]`.
+====
 
 .Snippet from an {examples-base-link}/process-dependabot.yaml[example `process-dependabot.yaml`] using this workflow
 [source,yaml,subs=+attributes]
