@@ -38,7 +38,7 @@ concurrency:
   group: ${{ github.ref_name == 'main' && github.ref || github.ref_name }}
   cancel-in-progress: true
 
-permissions: read-all
+permissions: { }
 
 jobs:
 

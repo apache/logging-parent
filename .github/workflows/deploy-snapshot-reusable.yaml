@@ -36,6 +36,10 @@ on:
         description: Nexus snapshot repository password for deploying artifacts
         required: true
 
+# Explicitly drop all permissions inherited from the caller for security.
+# Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
+permissions: { }
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
