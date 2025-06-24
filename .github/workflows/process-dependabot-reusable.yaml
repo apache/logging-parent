@@ -33,11 +33,8 @@ on:
         required: true
         type: number
     secrets:
-      AUTO_MERGE_TOKEN:
-        description: GitHub token to enable auto-merge on PR
-        required: true
-      CONTENT_WRITE_TOKEN:
-        description: GitHub token to push changes
+      RECURSIVE_TOKEN:
+        description: "A PAT with `contents: write` permission to push changes and trigger the next workflow run"
         required: true
       GPG_PASSPHRASE:
         description: GPG passphrase for signing commits
@@ -45,6 +42,8 @@ on:
       GPG_PRIVATE_KEY:
         description: GPG secret key for signing commits
         required: true
+
+permissions: { }
 
 jobs:
 
@@ -86,7 +85,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
         with:
           ref: ${{ env.PR_HEAD_REF }}
-          token: ${{ secrets.CONTENT_WRITE_TOKEN }}
+          token: ${{ secrets.RECURSIVE_TOKEN }}
 
       - name: Install `xmlstarlet`
         shell: bash
@@ -103,7 +102,7 @@ jobs:
           )
           if [[ ! $revision =~ ^[0-9]+\.[0-9]+\.[0-9]+(-SNAPSHOT)?$ ]]; then
             echo "Invalid version format: $revision"
-          exit 1
+            exit 1
           fi
           parts=(${revision//./ })
           echo "RELEASE_VERSION_MAJOR=${parts[0]}" >> $GITHUB_ENV
@@ -165,7 +164,6 @@ jobs:
       - name: Enable auto-merge on PR
         shell: bash
         env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ github.token }}
         run: |
           gh pr merge --squash --auto "$PR_URL"

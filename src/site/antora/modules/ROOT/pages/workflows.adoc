@@ -133,15 +133,19 @@ Helps to process Dependabot pull requests by:
 
 The workflow needs the following privileged tokens:
 
-`AUTO_MERGE_TOKEN`::
-A GitHub token with `contents:write` and `pull_requests:write` permissions, used to enable auto-merge on pull requests.
-The default `GITHUB_TOKEN` **can** be used for this purpose.
+`GITHUB_TOKEN`::
+The default GitHub token with `contents:write` and `pull_requests:write` permissions,
+used to enable auto-merge on pull requests.
++
+This token is automatically provided by GitHub Actions, but needs to be configured in the `permissions` property.
 
-`CONTENT_WRITE_TOKEN`::
+`RECURSIVE_TOKEN`::
 A GitHub token required to push generated changelog files as a new commit to the repository.
 The default `GITHUB_TOKEN` can **not** be used,
 as it will not trigger required check runs and will prevent the pull request from being merged.
 A Personal Access Token (PAT) with `contents:write` permission must be provided instead.
++
+The token must be passed as a secret named `RECURSIVE_TOKEN`.
 
 This workflow is designed to be triggered by the `workflow_run` event,
 as soon as the <<analyze-dependabot>> workflow completes.

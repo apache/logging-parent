@@ -39,8 +39,7 @@ jobs:
       contents: write
       pull-requests: write
     secrets:
-      AUTO_MERGE_TOKEN: ${{ github.token }}
-      CONTENT_WRITE_TOKEN: ${{ secrets.DEPENDABOT_TOKEN }}
+      RECURSIVE_TOKEN: ${{ secrets.DEPENDABOT_TOKEN }}
       GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
     with:
