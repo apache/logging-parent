@@ -24,6 +24,8 @@ on:
       - "release/2*"
   pull_request:
 
+# Default permissions for each job.
+# Additional permissions should be assigned on a per-job basis.
 permissions: { }
 
 jobs:

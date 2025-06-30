@@ -27,6 +27,8 @@ on:
       - "**.md"
       - "**.txt"
 
+# Default permissions for each job.
+# Additional permissions should be assigned on a per-job basis.
 permissions: { }
 
 jobs:
