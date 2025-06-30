@@ -393,7 +393,6 @@ deploy-site-rel:
   with:
     asf-yaml-content: |
       publish:
-        profile: ~
         whoami: ${{ github.ref_name }}-out
         subdir: content/log4j/2.x
     install-required: true
