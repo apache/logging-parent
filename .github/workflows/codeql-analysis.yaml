@@ -27,7 +27,9 @@ on:
   schedule:
     - cron: '32 12 * * 5'
 
-permissions: {}
+# Default permissions for each job.
+# Additional permissions should be assigned on a per-job basis.
+permissions: { }
 
 jobs:
 
@@ -36,8 +38,6 @@ jobs:
     runs-on: ubuntu-latest
     # Permissions required to publish Security Alerts
     permissions:
-      actions: read
-      contents: read
       security-events: write
 
     steps:
