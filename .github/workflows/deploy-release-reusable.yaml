@@ -52,12 +52,20 @@ on:
         description: Subversion password for uploading the release distribution
         required: true
 
+# Explicitly drop all permissions inherited from the caller for security.
+# Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
+permissions: { }
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     outputs:
       project-version: ${{ steps.version.outputs.project-version }}
       nexus-url: ${{ steps.nexus.outputs.nexus-url }}
+    permissions:
+      # Write permissions to allow the Maven `revision` property update, changelog release, etc.
+      contents: write
+
     steps:
 
       - name: Checkout repository
