@@ -211,7 +211,7 @@
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
     <node.version>21.7.1</node.version>
     <npm.version>10.5.0</npm.version>
-    <palantir-java-format.version>2.68.0</palantir-java-format.version>
+    <palantir-java-format.version>2.69.0</palantir-java-format.version>
 
     <!-- plugin versions -->
     <asciidoctor-maven-plugin.version>3.2.0</asciidoctor-maven-plugin.version>
@@ -240,7 +240,7 @@
     <!-- `findsecbugs-plugin:1.13.0` contains a bug blocking Log4j compilation: https://github.com/find-sec-bugs/find-sec-bugs/pull/728
          Hence, pinning the `1.12.0` instead. -->
     <findsecbugs-plugin.version>1.14.0</findsecbugs-plugin.version>
-    <groovy.version>4.0.27</groovy.version>
+    <groovy.version>4.0.28</groovy.version>
 
     <!-- site-specific versions -->
     <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project. -->
