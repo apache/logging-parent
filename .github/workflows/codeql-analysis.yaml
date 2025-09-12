@@ -27,7 +27,9 @@ on:
   schedule:
     - cron: '32 12 * * 5'
 
-permissions: {}
+# Default permissions for each job.
+# Additional permissions should be assigned on a per-job basis.
+permissions: { }
 
 jobs:
 
@@ -36,8 +38,6 @@ jobs:
     runs-on: ubuntu-latest
     # Permissions required to publish Security Alerts
     permissions:
-      actions: read
-      contents: read
       security-events: write
 
     steps:
@@ -46,9 +46,9 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@fca7ace96b7d713c7035871441bd52efbe39e27e    # 3.28.19
+        uses: github/codeql-action/init@ce28f5bb42b7a9f2c824e633a3f6ee835bab6858    # 3.29.0
         with:
           languages: actions
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@fca7ace96b7d713c7035871441bd52efbe39e27e    # 3.28.19
+        uses: github/codeql-action/analyze@ce28f5bb42b7a9f2c824e633a3f6ee835bab6858    # 3.29.0
