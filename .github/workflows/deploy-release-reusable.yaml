@@ -173,7 +173,7 @@ jobs:
       # Node.js cache is needed for Antora
       - name: Set up Node.js cache
         id: nodejs-cache
-        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809   # 4.2.4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830   # 4.3.0
         with:
           # We should be calculating the cache key using `package-lock.json` instead!
           # See https://stackoverflow.com/a/48524475/1278899

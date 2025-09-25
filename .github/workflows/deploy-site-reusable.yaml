@@ -82,7 +82,7 @@ jobs:
       # Node.js cache is needed for Antora
       - name: Restore Node.js cache
         id: nodejs-cache-restore
-        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809   # 4.2.4
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830   # 4.3.0
         with:
           # The cache is OS independent
           enableCrossOsArchive: true
@@ -112,7 +112,7 @@ jobs:
       # Checking out a new branch will delete the `node_modules` folder,
       # so we need to save the cache here.
       - name: Save Node.js cache
-        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809   # 4.2.4
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830   # 4.3.0
         with:
           key: ${{ steps.nodejs-cache-restore.outputs.cache-primary-key }}
           path: node_modules
