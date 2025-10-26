@@ -111,8 +111,8 @@ jobs:
             echo "Invalid version format: $revision"
             exit 1
           fi
-          parts=(${revision//./ })
-          echo "RELEASE_VERSION_MAJOR=${parts[0]}" >> $GITHUB_ENV
+          revisionMajor=${revision%%.*}
+          echo "RELEASE_VERSION_MAJOR=$revisionMajor" >> $GITHUB_ENV
 
       - name: Create changelog entries
         shell: bash
@@ -134,7 +134,7 @@ jobs:
                  xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
                  type="updated">
             <issue id="$issue_id" link="$issue_link"/>
-            <description format="asciidoc">Update \`$dependency_name\` to version \`$new_version\`.</description>
+            <description format="asciidoc">Update \`$dependency_name\` to version \`$new_version\`</description>
           </entry>
           CHANGELOG_ENTRY
           }
@@ -165,7 +165,7 @@ jobs:
           git add src/changelog
           git config user.name "$USER_NAME"
           git config user.email "$USER_EMAIL"
-          git commit -S -m "Generate changelog entries for PR #$PR_ID"
+          git commit -S -m "Generate changelog entries for #$PR_ID"
           git push origin
 
       - name: Enable auto-merge on PR
