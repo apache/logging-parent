@@ -35,7 +35,7 @@ jobs:
 
       - name: Fetch Dependabot metadata
         id: dependabot
-        uses: ppkarwasz/fetch-metadata@feat/multi-versions
+        uses: dependabot/fetch-metadata@08eff52bf64351f401fb50d4972fa95b9f2c2d1b # 2.4.0
         with:
           github-token: ${{ github.token }}
 
