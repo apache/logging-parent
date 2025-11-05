@@ -46,7 +46,7 @@ jobs:
           PULL_REQUEST: ${{ toJSON(github.event.pull_request) }}
           UPDATED_DEPENDENCIES: ${{ steps.dependabot.outputs.updated-dependencies-json }}
         run: |
-          mkdir -p dependabot-metadata
+          mkdir dependabot-metadata
           echo "$PULL_REQUEST" > dependabot-metadata/pull_request.json
           echo "$UPDATED_DEPENDENCIES" > dependabot-metadata/updated_dependencies.json
 
