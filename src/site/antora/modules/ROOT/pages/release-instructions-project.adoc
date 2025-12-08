@@ -67,7 +67,11 @@ For instance, `site-project.version` needs to be updated for `logging-parent`.
 ----
 ./mvnw -N -P changelog-release
 ----
-.. Edit the release notes (i.e., `src/changelog/7.8.0/.release-notes.adoc.ftl`)
+.. Open the generated release-notes template (`src/changelog/<version>/.release-notes.adoc.ftl`) and summarize the key user-visible changes for this release (e.g., new features, behavioral changes, significant bug fixes).
+.. Inspect all files under `src/changelog/<version>/` and ensure the entries accurately reflect what users need to know.
+In particular, ensure that all user-visible changes are documented and that no internal-only changes are included (e.g., test-only changes, test dependency updates, documentation updates, etc.).
+.. Review the changelog (i.e., `src/changelog/7.8.0/`) to ensure all changes pertinent to the user and only those are included (e.g., exclude documentation updates, test dependencies bumps, etc.).
+.. In case this is **not** a patch release, ensure that the end-of-maintenance dates of the previous releases is updated.
 
 . Commit & push your changes:
 +
