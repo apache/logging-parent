@@ -31,6 +31,15 @@ Releases of projects employing the {project-name} CI helper system can be verifi
 ----
 export projectName=...
 export releaseVersion=...
+----
+For example:
+[source,bash]
+----
+export projectName=log4j
+export releaseVersion=2.25.3
+----
+Using svn:
+----
 svn co https://dist.apache.org/repos/dist/dev/logging/$projectName/$releaseVersion \
   $projectName-$releaseVersion && cd $_
 ----
