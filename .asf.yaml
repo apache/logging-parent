@@ -1,5 +1,4 @@
 publish:
-  profile: ~
   whoami: main-site-pro-out
   subdir: content/logging-parent
 
@@ -9,6 +8,6 @@ publish:
 #
 # Random values to cause a change:
 #
-# - Seed: 3467
-# - Commit ID: fdabbcc139b982f2738fa8b7eb5cfc0d586d7a56
-# - Timestamp: 2026-02-17T14:16:24Z
+# - Seed: 30813
+# - Commit ID: f44c498d8038a9b2658d28339bc86a39f9b11cff
+# - Timestamp: 2026-02-17T14:23:59Z
