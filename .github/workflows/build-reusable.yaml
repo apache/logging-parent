@@ -1,0 +1,166 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to you under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: build-reusable
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: The Java compiler version
+        default: 17
+        type: string
+      maven-args:
+        description: Additional Maven arguments
+        type: string
+      ref:
+        description: The branch, tag or SHA to checkout
+        # When running on `pull_request_target` use the PR branch, not the target branch
+        default: ${{ github.event_name == 'pull_request_target' && github.head_ref || github.ref }}
+        type: string
+      repository:
+        description: GitHub repository name with owner
+        default: ${{ github.repository }}
+        type: string
+      reproducibility-check-enabled:
+        description: Runs a reproducibility check on the build
+        default: true
+        type: boolean
+      site-enabled:
+        description: Flag indicating if Maven `site` goal should be run
+        default: false
+        type: boolean
+      test-report-enabled:
+        description: Enables the upload of test reports
+        default: true
+        type: boolean
+      test-report-suffix:
+        description: Suffix to add to the uploaded artifacts
+        default: ''
+        type: string
+
+env:
+  MAVEN_ARGS: ${{ inputs.maven-args }}
+
+# Explicitly drop all permissions inherited from the caller for security.
+# Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
+permissions: { }
+
+jobs:
+
+  build:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ macos-latest, ubuntu-latest, windows-latest ]
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
+        with:
+          repository: ${{ inputs.repository }}
+          ref: ${{ inputs.ref }}
+
+      - name: Set up Java
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165   # 5.0.0
+        with:
+          distribution: zulu
+          java-version: ${{ inputs.java-version }}
+          cache: maven
+
+      # We use `install` instead of `verify`, otherwise the build website step below fails
+      - name: Build
+        id: build
+        shell: bash
+        run: |
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            -DtrimStackTrace=false \
+            -DinstallAtEnd=true \
+            clean install
+
+      # We upload tests results.
+      - name: Upload test reports
+        if: ${{ always() && inputs.test-report-enabled }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02   # 4.6.2
+        with:
+          name: "test-report-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}${{inputs.test-report-suffix}}"
+          path: |
+            **/target/surefire-reports
+            **/target/logs
+
+      # Node.js cache is needed for Antora
+      - name: Set up Node.js cache
+        if: inputs.site-enabled
+        id: nodejs-cache
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809   # 4.2.4
+        with:
+          # We should be calculating the cache key using `package-lock.json` instead!
+          # See https://stackoverflow.com/a/48524475/1278899
+          # For that, `package-lock.json` needs to be committed into the repository – right now it is `.gitignore`d.
+          # Once it is there, we should ideally switch from `npm i` to `npm ci`.
+          # For that, we need to configure `dependabot` to update hundreds of dependencies listed in `package-lock.json`.
+          # That translates to a never ending rain of `dependabot` PRs.
+          # I doubt if the wasted CPU cycles worth the gain.
+          key: "${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}"
+          # `actions/cache` doesn't recommend caching `node_modules`.
+          # Though none of its recipes fit our bill, since we install Node.js using `frontend-maven-plugin`.
+          # See https://github.com/actions/cache/blob/main/examples.md#node---npm
+          # We settle for this quick-n-dirty solution for the time being.
+          path: |
+            node
+            node_modules
+
+      - name: Build the website
+        if: inputs.site-enabled
+        shell: bash
+        env:
+          # Making Node.js cache hit visible for debugging purposes
+          NODEJS_CACHE_HIT: ${{ steps.nodejs-cache.outputs.cache-hit }}
+        run: |
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            site
+
+      # `clean verify artifact:compare` is required to generate the build reproducibility report.
+      # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
+      - name: Verify build reproducibility
+        if: inputs.reproducibility-check-enabled
+        id: reproducibility
+        shell: bash
+        run: |
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            -DskipTests=true \
+            clean verify artifact:compare
+
+      # Upload reproducibility results if the build fails.
+      - name: Upload reproducibility results
+        if: inputs.reproducibility-check-enabled && failure() && steps.reproducibility.conclusion == 'failure'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02   # 4.6.2
+        with:
+          name: reproducibility-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
+          path: |
+            **/target/bom.xml
+            **/target/*.buildcompare
+            **/target/*.jar
+            **/target/*.zip
+            **/target/reference/**

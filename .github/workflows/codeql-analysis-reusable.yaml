@@ -1,0 +1,74 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to you under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: codeql-analysis
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: The Java compiler version
+        default: 17
+        type: string
+      # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'kotlin', 'python', 'ruby' ]
+      # Learn more about CodeQL language support at https://git.io/codeql-language-support
+      language:
+        description: Language used in the repository
+        default: java
+        type: string
+
+# Explicitly drop all permissions inherited from the caller for security.
+# Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
+permissions: { }
+
+jobs:
+
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    # Permissions required to publish Security Alerts
+    permissions:
+      security-events: write
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@ce28f5bb42b7a9f2c824e633a3f6ee835bab6858    # 3.29.0
+        with:
+          # Also check GitHub Actions
+          languages: ${{ inputs.language }}, actions
+
+      - name: Setup JDK
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165   # 5.0.0
+        with:
+          distribution: zulu
+          java-version: ${{ inputs.java-version }}
+          cache: maven
+
+      - name: Build with Maven
+        shell: bash
+        run: |
+          ./mvnw \
+          --show-version --batch-mode --errors --no-transfer-progress \
+          -DskipTests \
+          clean verify
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@ce28f5bb42b7a9f2c824e633a3f6ee835bab6858    # 3.29.0

@@ -1,0 +1,115 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to you under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: verify-reproducibility-reusable
+
+on:
+  workflow_call:
+    inputs:
+      java-version:
+        description: The Java compiler version
+        default: 17
+        type: string
+      maven-args:
+        description: Additional Maven arguments
+        type: string
+      nexus-url:
+        description: The URL of the reference Nexus repository
+        type: string
+      runs-on:
+        description: The type of runners to use as JSON array
+        default: '["ubuntu-latest"]'
+        type: string
+
+env:
+  MAVEN_ARGS: ${{ inputs.maven-args }}
+  NEXUS_URL: ${{ inputs.nexus-url }}
+
+# Explicitly drop all permissions inherited from the caller for security.
+# Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
+permissions: { }
+
+jobs:
+
+  build:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: ${{ fromJSON(inputs.runs-on) }}
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Set up Java
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165   # 5.0.0
+        with:
+          distribution: zulu
+          java-version: ${{ inputs.java-version }}
+
+      #
+      # Generates a cache key prefix to enable partial cache hits.
+      # If there's no exact match for the full cache key, any cache with this prefix can be used as a fallback.
+      # To avoid unbounded cache growth, the prefix includes the current month,
+      # ensuring a new cache is started each month.
+      #
+      - name: Compute Cache Key Prefix
+        shell: bash
+        run: |
+          date +"CACHE_KEY=verify-reproducibility-%Y-%m" >> $GITHUB_ENV
+
+      #
+      # Configures caching for the local Maven repository.
+      # Uses a custom cache key to isolate artifacts built in this workflow,
+      # preventing reproducibility results from being affected by cached outputs from other workflows.
+      #
+      - name: Set up Maven Cache
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809   # 4.2.4
+        with:
+          path: ~/.m2/repository
+          key: "${{ env.CACHE_KEY }}-${{ runner.os }}-${{ hashFiles('**/pom.xml') }}"
+          restore-keys: |
+            ${{ env.CACHE_KEY }}-${{ runner.os }}-
+
+      # `clean verify artifact:compare` is required to generate the build reproducibility report.
+      # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
+      - name: Verify build reproducibility
+        shell: bash
+        run: |
+          ./mvnw \
+            --show-version --batch-mode --errors --no-transfer-progress \
+            -DskipTests=true \
+            -Dreference.repo="${NEXUS_URL}" \
+            clean verify artifact:compare
+
+      # Upload reproducibility results if the build fails.
+      - name: Upload reproducibility results
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02   # 4.6.2
+        with:
+          name: reproducibility-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
+          path: |
+            **/target/bom.xml
+            **/target/*.buildcompare
+            **/target/*.jar
+            **/target/*.zip
+            **/target/reference/**
