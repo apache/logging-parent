@@ -20,14 +20,6 @@ name: Dependabot Process PR
 on:
   workflow_call:
     inputs:
-      user-name:
-        description: The name of the user to use for the commit
-        default: 'ASF Logging Services RM'
-        type: string
-      user-email:
-        description: The email of the user to use for the commit
-        default: 'private@logging.apache.org'
-        type: string
       analyze-workflow-run-id:
         description: The ID of the workflow run that analyzed the PR
         required: true
@@ -156,13 +148,11 @@ jobs:
       - name: Add & commit changes
         shell: bash
         env:
-          USER_NAME: ${{ inputs.user-name }}
-          USER_EMAIL: ${{ inputs.user-email }}
           PR_ID: ${{ inputs.pr-id }}
         run: |
           git add src/changelog
-          git config user.name "$USER_NAME"
-          git config user.email "$USER_EMAIL"
+          git config user.name "ASF Logging Services RM"
+          git config user.email "private@logging.apache.org"
           git commit -S -m "Generate changelog entries for #$PR_ID"
           git push origin
 

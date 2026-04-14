@@ -43,10 +43,6 @@ jobs:
       GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
     with:
-      # These are the default values.
-      # The e-mail address must match the one used in the GPG key.
-      user_name: "ASF Logging Services RM"
-      user_email: "private@logging.apache.org"
       # The run ID of the workflow that analyzed the PR.
       analyze-workflow-run-id: ${{ github.event.workflow_run.id }}
       # Pull request metadata extracted from the triggering workflow run.
