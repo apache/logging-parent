@@ -83,13 +83,13 @@ jobs:
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd   # 6.0.2
         with:
           repository: ${{ inputs.repository }}
           ref: ${{ inputs.ref }}
 
       - name: Set up Java
-        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165   # 5.0.0
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654   # 5.2.0
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
@@ -122,7 +122,8 @@ jobs:
 
       - name: Setup Develocity Build Scan capture
         if: inputs.develocity-enabled
-        uses: gradle/develocity-actions/setup-maven@4a2aed82eea165ba2d5c494fc2a8730d7fdff229   # 1.4
+        # INFRA-approved GHAs: https://github.com/apache/infrastructure-actions/blob/main/actions.yml
+        uses: gradle/develocity-actions/setup-maven@4a2aed82eea165ba2d5c494fc2a8730d7fdff229   # 2.1
         with:
           develocity-access-key: ${{ secrets.DV_ACCESS_TOKEN }}
 
@@ -140,7 +141,7 @@ jobs:
       # We upload tests results.
       - name: Upload test reports
         if: ${{ always() && inputs.test-report-enabled }}
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02   # 4.6.2
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a   # 7.0.1
         with:
           name: "test-report-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}${{inputs.test-report-suffix}}"
           path: |
@@ -159,7 +160,7 @@ jobs:
       - name: Set up Node.js cache
         if: inputs.site-enabled
         id: nodejs-cache
-        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809   # 4.2.4
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae   # 5.0.5
         with:
           # We should be calculating the cache key using `package-lock.json` instead!
           # See https://stackoverflow.com/a/48524475/1278899
@@ -203,7 +204,7 @@ jobs:
       # Upload reproducibility results if the build fails.
       - name: Upload reproducibility results
         if: inputs.reproducibility-check-enabled && failure() && steps.reproducibility.conclusion == 'failure'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02   # 4.6.2
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a   # 7.0.1
         with:
           name: reproducibility-${{matrix.os}}-${{github.run_number}}-${{github.run_attempt}}
           path: |

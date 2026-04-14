@@ -69,10 +69,10 @@ jobs:
     steps:
 
       - name: Checkout repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd   # 6.0.2
 
       - name: Set up Java & GPG
-        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165   # 3.7.0
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654   # 5.2.0
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
@@ -173,7 +173,7 @@ jobs:
       # Node.js cache is needed for Antora
       - name: Set up Node.js cache
         id: nodejs-cache
-        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809   # 4.2.4
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae   # 5.0.5
         with:
           # We should be calculating the cache key using `package-lock.json` instead!
           # See https://stackoverflow.com/a/48524475/1278899
