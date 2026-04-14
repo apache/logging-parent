@@ -32,6 +32,10 @@ on:
         description: The head branch ref of the pull request to process
         required: true
         type: string
+      changelog-path:
+        description: The path to the changelog directory (e.g. `src/changelog/.2.x.x`)
+        required: true
+        type: string
     secrets:
       RECURSIVE_TOKEN:
         description: "A PAT with `contents: write` permission to push changes and trigger the next workflow run"
@@ -75,44 +79,24 @@ jobs:
           ref: ${{ inputs.pr-head-ref }}
           token: ${{ secrets.RECURSIVE_TOKEN }}
 
-      - name: Install `xmlstarlet`
-        shell: bash
-        run: sudo apt-get update && sudo apt-get install -y xmlstarlet
-
-      - name: Find the release version major
-        shell: bash
-        run: |
-          # Extract the revision property from the pom.xml
-          revision=$(
-            xmlstarlet sel \
-            -N m=http://maven.apache.org/POM/4.0.0 \
-            --template --value-of /m:project/m:properties/m:revision \
-            pom.xml
-          )
-
-          # Validate the version format and extract the major version
-          if [[ ! $revision =~ ^[0-9]+\.[0-9]+\.[0-9]+(-SNAPSHOT)?$ ]]; then
-            echo "Invalid version format: $revision"
-            exit 1
-          fi
-
-          revisionMajor=${revision%%.*}
-          echo "RELEASE_VERSION_MAJOR=$revisionMajor" >> $GITHUB_ENV
-
       - name: Create changelog entries
         shell: bash
         env:
           PR_ID: ${{ inputs.pr-id }}
           PR_URL: ${{ github.server_url }}/${{ github.repository }}/pull/${{ inputs.pr-id }}
+          CHANGELOG_PATH: ${{ inputs.changelog-path }}
           UPDATED_DEPENDENCIES: ${{ runner.temp }}/updated_dependencies.json
         run: |
+          # Escapes special XML characters in a string
+          xml_escape() { sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g' <<< "$1"; }
+
           # Generates the content of a changelog entry
           function generate_changelog_entry() {
             local dependency="$1"
-            local issue_id=$(xmlstarlet esc "$PR_ID")
-            local issue_link=$(xmlstarlet esc "$PR_URL")
-            local dependency_name=$(echo "$dependency" | jq -r '.dependencyName' | xmlstarlet esc)
-            local new_version=$(echo "$dependency" | jq -r '.newVersion' | xmlstarlet esc)
+            local issue_id=$(xml_escape "$PR_ID")
+            local issue_link=$(xml_escape "$PR_URL")
+            local dependency_name=$(xml_escape "$(echo "$dependency" | jq -r '.dependencyName')")
+            local new_version=$(xml_escape "$(echo "$dependency" | jq -r '.newVersion')")
             cat << CHANGELOG_ENTRY
           <?xml version="1.0" encoding="UTF-8"?>
           <!-- SPDX-License-Identifier: Apache-2.0 -->
@@ -127,9 +111,8 @@ jobs:
           }
 
           # Ensure the changelog directory exists
-          release_changelog_path="src/changelog/.${RELEASE_VERSION_MAJOR}.x.x"
-          mkdir -p "$release_changelog_path"
-          cd "$release_changelog_path"
+          mkdir -p "$CHANGELOG_PATH"
+          cd "$CHANGELOG_PATH"
 
           # Generate the changelog entries for each updated dependency
           cat "$UPDATED_DEPENDENCIES" | jq --compact-output '.[]' | while read -r dependency; do
@@ -149,8 +132,9 @@ jobs:
         shell: bash
         env:
           PR_ID: ${{ inputs.pr-id }}
+          CHANGELOG_PATH: ${{ inputs.changelog-path }}
         run: |
-          git add src/changelog
+          git add "$CHANGELOG_PATH"
           git config user.name "ASF Logging Services RM"
           git config user.email "private@logging.apache.org"
           git commit -S -m "Generate changelog entries for #$PR_ID"

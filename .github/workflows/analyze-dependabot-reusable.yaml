@@ -44,7 +44,8 @@ jobs:
         shell: bash
         env:
           UPDATED_DEPENDENCIES: ${{ steps.dependabot.outputs.updated-dependencies-json }}
-        run: echo "$UPDATED_DEPENDENCIES" > updated_dependencies.json
+        run: |
+          echo "$UPDATED_DEPENDENCIES" > updated_dependencies.json
 
       - name: Upload artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # 4.6.2
