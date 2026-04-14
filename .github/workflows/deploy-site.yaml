@@ -35,7 +35,7 @@ jobs:
 
   deploy-site-stg:
     if: github.repository == 'apache/logging-parent' && github.ref_name == 'main'
-    uses: ./.github/workflows/deploy-site-reusable.yaml
+    uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@gha/v0
     # Secrets for committing the generated site
     secrets:
       GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
@@ -52,7 +52,7 @@ jobs:
 
   deploy-site-pro:
     if: github.repository == 'apache/logging-parent' && github.ref_name == 'main-site-pro'
-    uses: ./.github/workflows/deploy-site-reusable.yaml
+    uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@gha/v0
     # Secrets for committing the generated site
     secrets:
       GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
@@ -82,7 +82,7 @@ jobs:
 
   deploy-site-rel:
     needs: export-version
-    uses: ./.github/workflows/deploy-site-reusable.yaml
+    uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@gha/v0
     # Secrets for committing the generated site
     secrets:
       GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}

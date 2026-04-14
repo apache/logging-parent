@@ -106,7 +106,7 @@ For example, you can use the snippet below:
 [source,yaml,subs="+attributes"]
 ----
 build:
-  uses: apache/logging-parent/.github/workflows/build-reusable.yaml@rel/{project-version}
+  uses: apache/logging-parent/.github/workflows/build-reusable.yaml@{project-gha-version}
   secrets:
     DV_ACCESS_TOKEN: ${{ ! startsWith(github.refname, 'release/') && secrets.DEVELOCITY_ACCESS_KEY }}
   with:

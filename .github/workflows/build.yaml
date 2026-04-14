@@ -23,14 +23,9 @@ on:
       - "main"
       - "release/*"
     paths-ignore:
-      - "**.adoc"
       - "**.md"
       - "**.txt"
   pull_request:
-    paths-ignore:
-      - "**.adoc"
-      - "**.md"
-      - "**.txt"
 
 # If the branch is `main`, run once per commit.
 # If the branch is `release/*`, allow only one concurrent run.
@@ -46,14 +41,14 @@ jobs:
 
   build:
     if: github.actor != 'dependabot[bot]'
-    uses: ./.github/workflows/build-reusable.yaml
+    uses: apache/logging-parent/.github/workflows/build-reusable.yaml@gha/v0
     with:
       site-enabled: true
 
   deploy-snapshot:
     needs: build
     if: github.repository == 'apache/logging-parent' && github.ref_name == 'main'
-    uses: ./.github/workflows/deploy-snapshot-reusable.yaml
+    uses: apache/logging-parent/.github/workflows/deploy-snapshot-reusable.yaml@gha/v0
     # Secrets for deployments
     secrets:
       NEXUS_USERNAME: ${{ secrets.NEXUS_USER }}
@@ -62,7 +57,7 @@ jobs:
   deploy-release:
     needs: build
     if: github.repository == 'apache/logging-parent' && startsWith(github.ref_name, 'release/')
-    uses: ./.github/workflows/deploy-release-reusable.yaml
+    uses: apache/logging-parent/.github/workflows/deploy-release-reusable.yaml@gha/v0
     # Secrets for deployments
     secrets:
       GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}

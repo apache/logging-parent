@@ -17,14 +17,9 @@
 
 version: 2
 
-# Add Maven Central explicitly to work around:
-#   https://github.com/dependabot/dependabot-core/issues/8329
-registries:
-  maven-central:
-    type: maven-repository
-    url: https://repo.maven.apache.org/maven2
-
 updates:
+
+  # region `main` updates
 
   - package-ecosystem: maven
     directory: "/"
@@ -54,3 +49,18 @@ updates:
       dependencies:
         patterns: [ "*" ]
     target-branch: "main"
+
+  # endregion
+
+  # region `gha/v0` updates
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly
+    groups:
+      dependencies:
+        patterns: [ "*" ]
+    target-branch: "gha/v0"
+
+  # endregion
