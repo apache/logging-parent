@@ -32,6 +32,14 @@ on:
         description: The ID of the workflow run that analyzed the PR
         required: true
         type: number
+      pr-id:
+        description: The number of the pull request to process
+        required: true
+        type: number
+      pr-head-ref:
+        description: The head branch ref of the pull request to process
+        required: true
+        type: string
     secrets:
       RECURSIVE_TOKEN:
         description: "A PAT with `contents: write` permission to push changes and trigger the next workflow run"
@@ -66,32 +74,13 @@ jobs:
         with:
           github-token: ${{ github.token }}
           name: dependabot-metadata
-          path: ${{ runner.temp }}/dependabot-metadata
+          path: ${{ runner.temp }}
           run-id: ${{ inputs.analyze-workflow-run-id }}
-
-      - name: Process Dependabot metadata
-        shell: bash
-        run: |
-          # Extract the pull request metadata from the downloaded artifact
-          path="$RUNNER_TEMP/dependabot-metadata"
-          if [[ ! -f "$path/pull_request.json" ]]; then
-            echo "Pull request metadata not found at $path/pull_request.json"
-            exit 1
-          fi
-          if [[ ! -f "$path/updated_dependencies.json" ]]; then
-            echo "Updated dependencies metadata not found at $path/updated_dependencies.json"
-            exit 1
-          fi
-          # Extract the required metadata and set it as environment variables
-          pull_request="$path/pull_request.json"
-          echo "PR_ID=$(jq -r '.number' < "$pull_request")" >> $GITHUB_ENV
-          echo "PR_URL=$(jq -r '.html_url' < "$pull_request")" >> $GITHUB_ENV
-          echo "PR_HEAD_REF=$(jq -r '.head.ref' < "$pull_request")" >> $GITHUB_ENV
 
       - name: Check out repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
         with:
-          ref: ${{ env.PR_HEAD_REF }}
+          ref: ${{ inputs.pr-head-ref }}
           token: ${{ secrets.RECURSIVE_TOKEN }}
 
       - name: Install `xmlstarlet`
@@ -120,10 +109,11 @@ jobs:
 
       - name: Create changelog entries
         shell: bash
+        env:
+          PR_ID: ${{ inputs.pr-id }}
+          PR_URL: ${{ github.server_url }}/${{ github.repository }}/pull/${{ inputs.pr-id }}
+          UPDATED_DEPENDENCIES: ${{ runner.temp }}/updated_dependencies.json
         run: |
-          PULL_REQUEST="$RUNNER_TEMP/dependabot-metadata/pull_request.json"
-          UPDATED_DEPENDENCIES="$RUNNER_TEMP/dependabot-metadata/updated_dependencies.json"
-
           # Generates the content of a changelog entry
           function generate_changelog_entry() {
             local dependency="$1"
@@ -168,6 +158,7 @@ jobs:
         env:
           USER_NAME: ${{ inputs.user-name }}
           USER_EMAIL: ${{ inputs.user-email }}
+          PR_ID: ${{ inputs.pr-id }}
         run: |
           git add src/changelog
           git config user.name "$USER_NAME"
@@ -179,5 +170,6 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
+          PR_URL: ${{ github.server_url }}/${{ github.repository }}/pull/${{ inputs.pr-id }}
         run: |
           gh pr merge --squash --auto "$PR_URL"

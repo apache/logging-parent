@@ -49,4 +49,7 @@ jobs:
       user_email: "private@logging.apache.org"
       # The run ID of the workflow that analyzed the PR.
       analyze-workflow-run-id: ${{ github.event.workflow_run.id }}
+      # Pull request metadata extracted from the triggering workflow run.
+      pr-id: ${{ github.event.workflow_run.pull_requests[0].number }}
+      pr-head-ref: ${{ github.event.workflow_run.pull_requests[0].head.ref }}
 # end::process-dependabot[]

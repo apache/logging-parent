@@ -39,19 +39,15 @@ jobs:
         with:
           github-token: ${{ github.token }}
 
-      # Creates the data required by the `process-dependabot-reusable` workflow as JSON files.
-      - name: Create artifacts
+      # Creates the data required by the `process-dependabot-reusable` workflow as a JSON file.
+      - name: Create artifact
         shell: bash
         env:
-          PULL_REQUEST: ${{ toJSON(github.event.pull_request) }}
           UPDATED_DEPENDENCIES: ${{ steps.dependabot.outputs.updated-dependencies-json }}
-        run: |
-          mkdir dependabot-metadata
-          echo "$PULL_REQUEST" > dependabot-metadata/pull_request.json
-          echo "$UPDATED_DEPENDENCIES" > dependabot-metadata/updated_dependencies.json
+        run: echo "$UPDATED_DEPENDENCIES" > updated_dependencies.json
 
-      - name: Upload artifacts
+      - name: Upload artifact
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # 4.6.2
         with:
           name: dependabot-metadata
-          path: dependabot-metadata
+          path: updated_dependencies.json
