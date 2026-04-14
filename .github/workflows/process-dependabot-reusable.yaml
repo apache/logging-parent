@@ -24,16 +24,16 @@ on:
         description: The ID of the workflow run that analyzed the PR
         required: true
         type: number
+      changelog-path:
+        description: The path to the changelog directory (e.g. `src/changelog/.2.x.x`)
+        required: true
+        type: string
       pr-id:
         description: The number of the pull request to process
         required: true
         type: number
       pr-head-ref:
         description: The head branch ref of the pull request to process
-        required: true
-        type: string
-      changelog-path:
-        description: The path to the changelog directory (e.g. `src/changelog/.2.x.x`)
         required: true
         type: string
     secrets:

@@ -43,10 +43,10 @@ jobs:
       GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
     with:
-      # The path to the changelog directory for the current development branch.
-      changelog-path: src/changelog/.2.x.x
       # The run ID of the workflow that analyzed the PR.
       analyze-workflow-run-id: ${{ github.event.workflow_run.id }}
+      # The path to the changelog directory for the current development branch.
+      changelog-path: src/changelog/.2.x.x
       # Pull request metadata extracted from the triggering workflow run.
       pr-id: ${{ github.event.workflow_run.pull_requests[0].number }}
       pr-head-ref: ${{ github.event.workflow_run.pull_requests[0].head.ref }}
