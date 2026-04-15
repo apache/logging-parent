@@ -44,8 +44,6 @@ jobs:
       pull-requests: write
     secrets:
       RECURSIVE_TOKEN: ${{ secrets.DEPENDABOT_TOKEN }}
-      GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-      GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
     with:
       # The path to the changelog directory for the current development branch.
       changelog-path: src/changelog/.2.x.x
