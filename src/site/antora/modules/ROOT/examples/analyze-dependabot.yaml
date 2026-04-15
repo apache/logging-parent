@@ -26,7 +26,12 @@ jobs:
 
 # tag::analyze-dependabot[]
   analyze-dependabot:
-    # Skip this workflow on PRs not created by Dependabot
-    if: ${{ github.repository == 'apache/logging-parent' && github.event.pull_request.user.login == 'dependabot[bot]' }}
+    # `github.actor` prevents recursive calls when `github-actions[bot]` pushes to the PR;
+    # `github.event.pull_request.user.login` skips PRs not opened by Dependabot.
+    if: ${{
+        github.repository == 'apache/logging-parent'
+        && github.actor == 'dependabot[bot]'
+        && github.event.pull_request.user.login == 'dependabot[bot]'
+      }}
     uses: apache/logging-parent/.github/workflows/analyze-dependabot-reusable.yaml@rel/{project-version}
 # end::analyze-dependabot[]

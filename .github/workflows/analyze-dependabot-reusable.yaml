@@ -27,8 +27,13 @@ permissions: { }
 jobs:
 
   analyze-pull-request:
-    # Defense-in-depth check
-    if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
+    # Defense-in-depth (in case the caller forgets):
+    # `github.actor` prevents recursive calls when `github-actions[bot]` pushes to the PR;
+    # `github.event.pull_request.user.login` skips PRs not opened by Dependabot.
+    if: ${{
+        github.actor == 'dependabot[bot]'
+        && github.event.pull_request.user.login == 'dependabot[bot]'
+      }}
     runs-on: ubuntu-latest
 
     steps:

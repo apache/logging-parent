@@ -36,8 +36,13 @@ permissions: { }
 jobs:
 
   generate-changelog:
-    # Defense-in-depth check
-    if: ${{ github.actor == 'dependabot[bot]' }}
+    # Defense-in-depth (in case the caller forgets):
+    # `github.actor` prevents recursive calls when `github-actions[bot]` pushes to the PR;
+    # `github.event.workflow_run.conclusion` only runs after a successful analysis workflow.
+    if: ${{
+        github.actor == 'dependabot[bot]'
+        && github.event.workflow_run.conclusion == 'success'
+      }}
     runs-on: ubuntu-latest
     permissions:
       # The default GITHUB_TOKEN will be used to enable the "auto-merge" on the PR
