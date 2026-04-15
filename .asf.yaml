@@ -72,7 +72,7 @@ github:
   protected_branches: { }
 
   rulesets:
-    - name: "Branch protection"
+    - name: "Branch protection (2)"
       type: branch
       branches:
         includes:
