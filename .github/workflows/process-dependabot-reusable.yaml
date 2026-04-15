@@ -100,7 +100,6 @@ jobs:
             local new_version=$(echo "$dependency" | jq -r '.newVersion' | xml_escape)
             cat << CHANGELOG_ENTRY
           <?xml version="1.0" encoding="UTF-8"?>
-          <!-- SPDX-License-Identifier: Apache-2.0 -->
           <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xmlns="https://logging.apache.org/xml/ns"
                  xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
