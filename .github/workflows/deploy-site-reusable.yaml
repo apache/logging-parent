@@ -45,11 +45,17 @@ on:
         description: GPG secret key for signing commits
         required: true
 
+# Explicitly drop all permissions inherited from the caller for security.
+# Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
+permissions: { }
+
 jobs:
 
   deploy:
-
     runs-on: ubuntu-latest
+    permissions:
+      # Write permissions for committing the generated site
+      contents: write
 
     steps:
 
@@ -57,7 +63,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683   # 4.2.2
 
       - name: Set up Java
-        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00   # 3.7.0
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165   # 3.7.0
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
@@ -76,7 +82,7 @@ jobs:
       # Node.js cache is needed for Antora
       - name: Restore Node.js cache
         id: nodejs-cache-restore
-        uses: actions/cache/restore@5a3ec84eff668545956fd18022155c47e93e2684   # 4.2.3
+        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809   # 4.2.4
         with:
           # The cache is OS independent
           enableCrossOsArchive: true
@@ -106,7 +112,7 @@ jobs:
       # Checking out a new branch will delete the `node_modules` folder,
       # so we need to save the cache here.
       - name: Save Node.js cache
-        uses: actions/cache/save@5a3ec84eff668545956fd18022155c47e93e2684   # 4.2.3
+        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809   # 4.2.4
         with:
           key: ${{ steps.nodejs-cache-restore.outputs.cache-primary-key }}
           path: node_modules

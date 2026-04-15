@@ -65,6 +65,10 @@ on:
 env:
   MAVEN_ARGS: ${{ inputs.maven-args }}
 
+# Explicitly drop all permissions inherited from the caller for security.
+# Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
+permissions: { }
+
 jobs:
 
   build:
@@ -85,7 +89,7 @@ jobs:
           ref: ${{ inputs.ref }}
 
       - name: Set up Java
-        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00   # 4.7.1
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165   # 5.0.0
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
@@ -155,7 +159,7 @@ jobs:
       - name: Set up Node.js cache
         if: inputs.site-enabled
         id: nodejs-cache
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684   # 4.2.3
+        uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809   # 4.2.4
         with:
           # We should be calculating the cache key using `package-lock.json` instead!
           # See https://stackoverflow.com/a/48524475/1278899
