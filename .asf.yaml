@@ -76,7 +76,7 @@ github:
       type: branch
       branches:
         includes:
-          - "test/rulesets"
+          - "refs/heads/test/rulesets"
       # All reviews must be addressed before merging
       required_conversation_resolution: true
       # Require checks to pass before merging
@@ -92,3 +92,8 @@ github:
       # At least one positive review must be present
       required_pull_request_reviews:
         required_approving_review_count: 1
+    - name: "Tag protection"
+      type: tag
+      branches:
+        includes:
+          - "refs/tags/rel/*"
