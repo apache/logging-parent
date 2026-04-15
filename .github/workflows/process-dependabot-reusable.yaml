@@ -56,8 +56,13 @@ jobs:
       - name: Get pull request metadata
         id: pr
         env:
+          # Reference of the payload: https://docs.github.com/en/webhooks/webhook-events-and-payloads#workflow_run
+          #
+          # The structure of `pull_requests` is not documented, so we'll dump it for debugging purposes.
           PULL_REQUESTS: ${{ toJSON(github.event.workflow_run.pull_requests) }}
         run: |
+          # Print payload for debugging
+          jq <<< "$PULL_REQUESTS"
           echo "id=$(echo "$PULL_REQUESTS" | jq -r '.[0].number')" >> "$GITHUB_OUTPUT"
           echo "head-ref=$(echo "$PULL_REQUESTS" | jq -r '.[0].head.ref')" >> "$GITHUB_OUTPUT"
 
