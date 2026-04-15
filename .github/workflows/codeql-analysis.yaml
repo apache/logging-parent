@@ -23,7 +23,9 @@ on:
   push:
     branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
+      - test/rulesets
   schedule:
     - cron: '32 12 * * 5'
 
