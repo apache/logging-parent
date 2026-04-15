@@ -67,7 +67,7 @@ jobs:
           echo "head-ref=$(echo "$PULL_REQUESTS" | jq -r '.[0].head.ref')" >> "$GITHUB_OUTPUT"
 
       - name: Fetch Dependabot metadata
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # 4.3.0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # 8.0.1
         with:
           github-token: ${{ github.token }}
           name: dependabot-metadata
@@ -75,7 +75,7 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
 
       - name: Check out repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           ref: ${{ steps.pr.outputs.head-ref }}
           token: ${{ secrets.RECURSIVE_TOKEN }}
@@ -123,7 +123,7 @@ jobs:
           done
 
       - name: Set up GPG
-        uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec # 6.3.0
+        uses: crazy-max/ghaction-import-gpg@2dc316deee8e90f13e1a351ab510b4d5bc0c82cd # 7.0.0
         with:
           gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
