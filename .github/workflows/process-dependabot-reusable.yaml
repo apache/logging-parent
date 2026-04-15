@@ -135,8 +135,8 @@ jobs:
           PR_ID: ${{ steps.pr.outputs.id }}
         run: |
           git add "$CHANGELOG_PATH"
-          git config user.name "ASF Logging Services RM"
-          git config user.email "private@logging.apache.org"
+          git config user.name "Copernik.eu RM"
+          git config user.email "bot@copernik.eu"
           git commit -S -m "Generate changelog entries for #$PR_ID"
           git push origin
 
