@@ -20,20 +20,8 @@ name: Dependabot Process PR
 on:
   workflow_call:
     inputs:
-      analyze-workflow-run-id:
-        description: The ID of the workflow run that analyzed the PR
-        required: true
-        type: number
       changelog-path:
         description: The path to the changelog directory (e.g. `src/changelog/.2.x.x`)
-        required: true
-        type: string
-      pr-id:
-        description: The number of the pull request to process
-        required: true
-        type: number
-      pr-head-ref:
-        description: The head branch ref of the pull request to process
         required: true
         type: string
     secrets:
@@ -65,25 +53,33 @@ jobs:
 
     steps:
 
+      - name: Get pull request metadata
+        id: pr
+        env:
+          PULL_REQUESTS: ${{ toJSON(github.event.workflow_run.pull_requests) }}
+        run: |
+          echo "id=$(echo "$PULL_REQUESTS" | jq -r '.[0].number')" >> "$GITHUB_OUTPUT"
+          echo "head-ref=$(echo "$PULL_REQUESTS" | jq -r '.[0].head.ref')" >> "$GITHUB_OUTPUT"
+
       - name: Fetch Dependabot metadata
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # 4.3.0
         with:
           github-token: ${{ github.token }}
           name: dependabot-metadata
           path: ${{ runner.temp }}
-          run-id: ${{ inputs.analyze-workflow-run-id }}
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Check out repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # 4.2.2
         with:
-          ref: ${{ inputs.pr-head-ref }}
+          ref: ${{ steps.pr.outputs.head-ref }}
           token: ${{ secrets.RECURSIVE_TOKEN }}
 
       - name: Create changelog entries
         shell: bash
         env:
-          PR_ID: ${{ inputs.pr-id }}
-          PR_URL: ${{ github.server_url }}/${{ github.repository }}/pull/${{ inputs.pr-id }}
+          PR_ID: ${{ steps.pr.outputs.id }}
+          PR_URL: ${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.pr.outputs.id }}
           CHANGELOG_PATH: ${{ inputs.changelog-path }}
           UPDATED_DEPENDENCIES: ${{ runner.temp }}/updated_dependencies.json
         run: |
@@ -131,8 +127,8 @@ jobs:
       - name: Add & commit changes
         shell: bash
         env:
-          PR_ID: ${{ inputs.pr-id }}
           CHANGELOG_PATH: ${{ inputs.changelog-path }}
+          PR_ID: ${{ steps.pr.outputs.id }}
         run: |
           git add "$CHANGELOG_PATH"
           git config user.name "ASF Logging Services RM"
@@ -144,6 +140,6 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-          PR_URL: ${{ github.server_url }}/${{ github.repository }}/pull/${{ inputs.pr-id }}
+          PR_ID: ${{ steps.pr.outputs.id }}
         run: |
-          gh pr merge --squash --auto "$PR_URL"
+          gh pr merge --squash --auto "$PR_ID"
