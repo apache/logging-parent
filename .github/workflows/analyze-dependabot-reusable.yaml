@@ -27,7 +27,7 @@ permissions: { }
 jobs:
 
   analyze-pull-request:
-    # Skip this workflow on commits not pushed by Dependabot
+    # Defense-in-depth check
     if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
 

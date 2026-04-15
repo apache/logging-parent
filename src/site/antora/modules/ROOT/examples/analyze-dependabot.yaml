@@ -26,7 +26,7 @@ jobs:
 
 # tag::analyze-dependabot[]
   analyze-dependabot:
-    # Skip this workflow on commits not pushed by Dependabot
-    if: ${{ github.repository == 'apache/logging-parent' && github.actor == 'dependabot[bot]' }}
+    # Skip this workflow on PRs not created by Dependabot
+    if: ${{ github.repository == 'apache/logging-parent' && github.event.pull_request.user.login == 'dependabot[bot]' }}
     uses: apache/logging-parent/.github/workflows/analyze-dependabot-reusable.yaml@rel/{project-version}
 # end::analyze-dependabot[]

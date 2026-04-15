@@ -42,7 +42,7 @@ permissions: { }
 jobs:
 
   generate-changelog:
-    # Skip this workflow on commits not pushed by Dependabot
+    # Defense-in-depth check
     if: ${{ github.actor == 'dependabot[bot]' }}
     runs-on: ubuntu-latest
     permissions:
