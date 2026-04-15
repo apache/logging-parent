@@ -84,15 +84,15 @@ jobs:
           UPDATED_DEPENDENCIES: ${{ runner.temp }}/updated_dependencies.json
         run: |
           # Escapes special XML characters in a string
-          xml_escape() { sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g' <<< "$1"; }
+          xml_escape() { sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g'; }
 
           # Generates the content of a changelog entry
           function generate_changelog_entry() {
             local dependency="$1"
-            local issue_id=$(xml_escape "$PR_ID")
-            local issue_link=$(xml_escape "$PR_URL")
-            local dependency_name=$(xml_escape "$(echo "$dependency" | jq -r '.dependencyName')")
-            local new_version=$(xml_escape "$(echo "$dependency" | jq -r '.newVersion')")
+            local issue_id=$(xml_escape <<< "$PR_ID")
+            local issue_link=$(xml_escape <<< "$PR_URL")
+            local dependency_name=$(echo "$dependency" | jq -r '.dependencyName' | xml_escape)
+            local new_version=$(echo "$dependency" | jq -r '.newVersion' | xml_escape)
             cat << CHANGELOG_ENTRY
           <?xml version="1.0" encoding="UTF-8"?>
           <!-- SPDX-License-Identifier: Apache-2.0 -->
