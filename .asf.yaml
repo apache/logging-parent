@@ -76,7 +76,7 @@ github:
       type: branch
       branches:
         includes:
-          - "refs/heads/main"
+          - "~DEFAULT_BRANCH"
       # All reviews must be addressed before merging
       required_conversation_resolution: true
       # Require checks to pass before merging
