@@ -1,0 +1,142 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to you under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: Dependabot Process PR
+
+on:
+  workflow_call:
+    inputs:
+      changelog-path:
+        description: The path to the changelog directory (e.g. `src/changelog/.2.x.x`)
+        required: true
+        type: string
+    secrets:
+      RECURSIVE_TOKEN:
+        description: "A PAT with `contents: write` permission to push changes and trigger the next workflow run"
+        required: true
+
+# Explicitly drop all permissions inherited from the caller for security.
+# Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
+permissions: { }
+
+jobs:
+
+  generate-changelog:
+    # Defense-in-depth (in case the caller forgets):
+    # `github.actor` prevents recursive calls when `github-actions[bot]` pushes to the PR;
+    # `github.event.workflow_run.conclusion` only runs after a successful analysis workflow.
+    if: ${{
+        github.actor == 'dependabot[bot]'
+        && github.event.workflow_run.conclusion == 'success'
+      }}
+    runs-on: ubuntu-latest
+    permissions:
+      # The default GITHUB_TOKEN will be used to enable the "auto-merge" on the PR
+      # This requires the following two permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+
+      - name: Get pull request metadata
+        id: pr
+        env:
+          # Reference of the payload: https://docs.github.com/en/webhooks/webhook-events-and-payloads#workflow_run
+          #
+          # The structure of `pull_requests` is not documented, so we'll dump it for debugging purposes.
+          PULL_REQUESTS: ${{ toJSON(github.event.workflow_run.pull_requests) }}
+        run: |
+          # Print payload for debugging
+          jq <<< "$PULL_REQUESTS"
+          echo "id=$(echo "$PULL_REQUESTS" | jq -r '.[0].number')" >> "$GITHUB_OUTPUT"
+          echo "head-ref=$(echo "$PULL_REQUESTS" | jq -r '.[0].head.ref')" >> "$GITHUB_OUTPUT"
+
+      - name: Fetch Dependabot metadata
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # 8.0.1
+        with:
+          github-token: ${{ github.token }}
+          name: dependabot-metadata
+          path: ${{ runner.temp }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Check out repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
+        with:
+          ref: ${{ steps.pr.outputs.head-ref }}
+          token: ${{ secrets.RECURSIVE_TOKEN }}
+
+      - name: Create changelog entries
+        shell: bash
+        env:
+          PR_ID: ${{ steps.pr.outputs.id }}
+          PR_URL: ${{ github.server_url }}/${{ github.repository }}/pull/${{ steps.pr.outputs.id }}
+          CHANGELOG_PATH: ${{ inputs.changelog-path }}
+          UPDATED_DEPENDENCIES: ${{ runner.temp }}/updated_dependencies.json
+        run: |
+          # Escapes special XML characters in a string
+          xml_escape() { sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/"/\&quot;/g'; }
+
+          # Generates the content of a changelog entry
+          function generate_changelog_entry() {
+            local dependency="$1"
+            local issue_id=$(xml_escape <<< "$PR_ID")
+            local issue_link=$(xml_escape <<< "$PR_URL")
+            local dependency_name=$(echo "$dependency" | jq -r '.dependencyName' | xml_escape)
+            local new_version=$(echo "$dependency" | jq -r '.newVersion' | xml_escape)
+            cat << CHANGELOG_ENTRY
+          <?xml version="1.0" encoding="UTF-8"?>
+          <entry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns="https://logging.apache.org/xml/ns"
+                 xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
+                 type="updated">
+            <issue id="$issue_id" link="$issue_link"/>
+            <description format="asciidoc">Update \`$dependency_name\` to version \`$new_version\`</description>
+          </entry>
+          CHANGELOG_ENTRY
+          }
+
+          # Ensure the changelog directory exists
+          mkdir -p "$CHANGELOG_PATH"
+          cd "$CHANGELOG_PATH"
+
+          # Generate the changelog entries for each updated dependency
+          cat "$UPDATED_DEPENDENCIES" | jq --compact-output '.[]' | while read -r dependency; do
+            # Extract the dependency name and version
+            dependency_name=$(echo "$dependency" | jq -r '.dependencyName')
+            changelog_file_name=$(echo "update_${dependency_name,,}.xml" | sed -r -e 's/[^a-z0-9.-]/_/g' -e 's/_+/_/g')
+            generate_changelog_entry "$dependency" > "$changelog_file_name"
+          done
+
+      - name: Add & commit changes
+        shell: bash
+        env:
+          CHANGELOG_PATH: ${{ inputs.changelog-path }}
+          PR_ID: ${{ steps.pr.outputs.id }}
+        run: |
+          git add "$CHANGELOG_PATH"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Generate changelog entries for #$PR_ID"
+          git push origin
+
+      - name: Enable auto-merge on PR
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_ID: ${{ steps.pr.outputs.id }}
+        run: |
+          gh pr merge --squash --auto "$PR_ID"

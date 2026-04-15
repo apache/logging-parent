@@ -1,0 +1,59 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to you under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+name: Dependabot Analyze PR
+
+on:
+  workflow_call: { }
+
+# Explicitly drop all permissions inherited from the caller for security.
+# Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
+permissions: { }
+
+jobs:
+
+  analyze-pull-request:
+    # Defense-in-depth (in case the caller forgets):
+    # `github.actor` prevents recursive calls when `github-actions[bot]` pushes to the PR;
+    # `github.event.pull_request.user.login` skips PRs not opened by Dependabot.
+    if: ${{
+        github.actor == 'dependabot[bot]'
+        && github.event.pull_request.user.login == 'dependabot[bot]'
+      }}
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Fetch Dependabot metadata
+        id: dependabot
+        uses: dependabot/fetch-metadata@ffa630c65fa7e0ecfa0625b5ceda64399aea1b36 # 3.0.0
+        with:
+          github-token: ${{ github.token }}
+
+      # Creates the data required by the `process-dependabot-reusable` workflow as a JSON file.
+      - name: Create artifact
+        shell: bash
+        env:
+          UPDATED_DEPENDENCIES: ${{ steps.dependabot.outputs.updated-dependencies-json }}
+        run: |
+          echo "$UPDATED_DEPENDENCIES" > updated_dependencies.json
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # 7.0.1
+        with:
+          name: dependabot-metadata
+          path: updated_dependencies.json
