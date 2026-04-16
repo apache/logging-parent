@@ -29,8 +29,6 @@ updates:
       dependencies:
         patterns: [ "*" ]
     target-branch: "main"
-    registries:
-      - maven-central
 
   - package-ecosystem: github-actions
     directory: "/"
