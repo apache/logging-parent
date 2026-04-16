@@ -134,7 +134,7 @@ Helps to process Dependabot pull requests by:
 The workflow needs the following privileged tokens:
 
 `GITHUB_TOKEN`::
-The default GitHub token with `contents:write` and `pull_requests:write` permissions,
+The default GitHub token with `contents:write` and `pull-requests: write` permissions,
 used to enable auto-merge on pull requests.
 +
 This token is automatically provided by GitHub Actions, but needs to be configured in the `permissions` property.
