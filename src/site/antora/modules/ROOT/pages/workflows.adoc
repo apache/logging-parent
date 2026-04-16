@@ -26,11 +26,10 @@ The Logging Parent project provides the following reusable GitHub Actions workfl
 * <<deploy-release>>
 * <<deploy-site>>
 * <<deploy-snapshot>>
-* <<merge-dependabot>>
 * <<verify-reproducibility>>
 
 [#build]
-== {project-github-url}/blob/main/.github/workflows/build-reusable.yaml[`build-reusable.yaml`]
+== {project-github-url}/blob/{project-gha-version}/.github/workflows/build-reusable.yaml[`build-reusable.yaml`]
 
 This workflow:
 
@@ -47,7 +46,7 @@ include::example$build.yaml[tag=build,indent=0]
 ----
 
 [#deploy-snapshot]
-== {project-github-url}/blob/main/.github/workflows/deploy-snapshot-reusable.yaml[`deploy-snapshot-reusable.yaml`]
+== {project-github-url}/blob/{project-gha-version}/.github/workflows/deploy-snapshot-reusable.yaml[`deploy-snapshot-reusable.yaml`]
 
 This workflow deploys SNAPSHOT artifacts.
 
@@ -61,7 +60,7 @@ include::example$build.yaml[tag=deploy-snapshot,indent=0]
 ----
 
 [#deploy-release]
-== {project-github-url}/blob/main/.github/workflows/deploy-release-reusable.yaml[`deploy-release-reusable.yaml`]
+== {project-github-url}/blob/{project-gha-version}/.github/workflows/deploy-release-reusable.yaml[`deploy-release-reusable.yaml`]
 
 This workflow:
 
@@ -81,7 +80,7 @@ include::example$build.yaml[tag=deploy-release,indent=0]
 ----
 
 [#verify-reproducibility]
-== {project-github-url}/blob/main/.github/workflows/merge-dependabot-reusable.yaml[`verify-reproducibility-reusable.yaml`]
+== {project-github-url}/blob/{project-gha-version}/.github/workflows/verify-reproducibility-reusable.yaml[`verify-reproducibility-reusable.yaml`]
 
 This workflow verifies the reproducibility of a previous <<deploy-snapshot>> or <<deploy-release>> workflow.
 
@@ -104,13 +103,8 @@ To verify the reproducibility of a release, you can use:
 include::example$build.yaml[tag=verify-reproducibility-release,indent=0]
 ----
 
-[#merge-dependabot]
-== {project-github-url}/blob/main/.github/workflows/merge-dependabot-reusable.yaml[`merge-dependabot-reusable.yaml`]
-
-Merges Dependabot PRs along with changelog entries.
-
 [#deploy-site]
-== {project-github-url}/blob/main/.github/workflows/deploy-site-reusable.yaml[`deploy-site-reusable.yaml`]
+== {project-github-url}/blob/{project-gha-version}/.github/workflows/deploy-site-reusable.yaml[`deploy-site-reusable.yaml`]
 
 This workflow builds and deploys the website.
 

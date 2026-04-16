@@ -36,7 +36,7 @@ jobs:
 # tag::snapshot[]
   deploy-site-stg:
     if: github.repository == 'apache/logging-log4j2' && github.ref_name == '2.x'
-    uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@rel/{project-version}
+    uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@{project-gha-version}
     # Secrets for committing the generated site
     secrets:
       GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
@@ -56,7 +56,7 @@ jobs:
 # tag::production[]
   deploy-site-pro:
     if: github.repository == 'apache/logging-log4j2' && github.ref_name == '2.x-site-pro'
-    uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@rel/12.1.0
+    uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@{project-gha-version}
     # Secrets for committing the generated site
     secrets:
       GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
@@ -87,7 +87,7 @@ jobs:
 
   deploy-site-rel:
     needs: export-version
-    uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@rel/{project-version}
+    uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@{project-gha-version}
     # Secrets for committing the generated site
     secrets:
       GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}

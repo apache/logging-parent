@@ -61,9 +61,9 @@ github:
   # Enforce squashing while merging PRs.
   # Otherwise, the git log gets polluted severely.
   enabled_merge_buttons:
-    squash:  true
-    merge:   false
-    rebase:  false
+    squash: true
+    merge: false
+    rebase: false
 
   features:
     issues: true
@@ -72,11 +72,16 @@ github:
   protected_branches: { }
 
   rulesets:
-    - name: "Branch protection (2)"
+    # The `.asf.yaml` processor has a bug that prevents it from parsing existing rulesets.
+    # So it can neither remove them nor modify them.
+    # Hence, we bump the counter in the name at each change.
+    # For details, see: https://github.com/apache/infrastructure-asfyaml/pull/93
+    - name: "Branch protection (3)"
       type: branch
       branches:
         includes:
           - "~DEFAULT_BRANCH"
+          - "refs/heads/gha/*"
       # All reviews must be addressed before merging
       required_conversation_resolution: true
       # Require checks to pass before merging

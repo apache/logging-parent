@@ -630,6 +630,8 @@
             <!-- License headers in GitHub templates pollute the prompt displayed to the user: -->
             <exclude>.github/ISSUE_TEMPLATE/*.md</exclude>
             <exclude>.github/pull_request_template.md</exclude>
+            <!-- `.logging-parent-bom-activator` activates the `bom` Maven profile: -->
+            <exclude>.logging-parent-bom-activator</exclude>
           </excludes>
         </configuration>
         <executions>

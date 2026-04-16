@@ -32,7 +32,7 @@ jobs:
 
 # tag::build[]
   build:
-    uses: apache/logging-parent/.github/workflows/build-reusable.yaml@rel/{project-version}
+    uses: apache/logging-parent/.github/workflows/build-reusable.yaml@{project-gha-version}
     secrets:
       DV_ACCESS_TOKEN: ${{ startsWith(github.ref_name, 'release/') && '' || secrets.DEVELOCITY_ACCESS_KEY }}
     with:
@@ -45,7 +45,7 @@ jobs:
   deploy-snapshot:
     needs: build
     if: github.repository == 'apache/logging-log4j2' && github.ref_name == '2.x'
-    uses: apache/logging-parent/.github/workflows/deploy-snapshot-reusable.yaml@rel/{project-version}
+    uses: apache/logging-parent/.github/workflows/deploy-snapshot-reusable.yaml@{project-gha-version}
     # Secrets for deployments
     secrets:
       NEXUS_USERNAME: ${{ secrets.NEXUS_USER }}
@@ -56,7 +56,7 @@ jobs:
   deploy-release:
     needs: build
     if: github.repository == 'apache/logging-log4j2' && startsWith(github.ref_name, 'release/')
-    uses: apache/logging-parent/.github/workflows/deploy-release-reusable.yaml@rel/{project-version}
+    uses: apache/logging-parent/.github/workflows/deploy-release-reusable.yaml@{project-gha-version}
     # Secrets for deployments
     secrets:
       GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
@@ -75,7 +75,7 @@ jobs:
   verify-reproducibility-snapshot:
     needs: deploy-snapshot
     name: "verify-reproducibility (${{ needs.deploy-snapshot.outputs.project-version }})"
-    uses: apache/logging-parent/.github/workflows/verify-reproducibility-reusable.yaml@rel/{project-version}
+    uses: apache/logging-parent/.github/workflows/verify-reproducibility-reusable.yaml@{project-gha-version}
     with:
       # Reference repository
       nexus-url: https://repository.apache.org/content/groups/snapshots
@@ -87,7 +87,7 @@ jobs:
   verify-reproducibility-release:
     needs: deploy-release
     name: "verify-reproducibility (${{ needs.deploy-release.outputs.project-version }})"
-    uses: apache/logging-parent/.github/workflows/verify-reproducibility-reusable.yaml@rel/{project-version}
+    uses: apache/logging-parent/.github/workflows/verify-reproducibility-reusable.yaml@{project-gha-version}
     with:
       # Reference repository
       nexus-url: ${{ needs.deploy-release.outputs.nexus-url }}
