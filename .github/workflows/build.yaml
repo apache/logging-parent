@@ -40,7 +40,6 @@ permissions: { }
 jobs:
 
   build:
-    if: github.actor != 'dependabot[bot]'
     uses: apache/logging-parent/.github/workflows/build-reusable.yaml@gha/v0
     with:
       site-enabled: true
