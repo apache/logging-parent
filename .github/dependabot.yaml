@@ -35,7 +35,9 @@ updates:
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
-      interval: monthly
+      interval: weekly
+    cooldown:
+      default-days: 7  
     groups:
       dependencies:
         patterns: [ "*" ]
