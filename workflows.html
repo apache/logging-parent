@@ -70,6 +70,9 @@
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="usage.html">Usage</a>
   </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="workflows.html">Reusable GitHub Actions workflows</a>
+  </li>
   <li class="nav-item" data-depth="1">
     <a class="nav-link" href="release-notes.html">Release notes</a>
   </li>
@@ -134,9 +137,6 @@
 <p><a href="#deploy-snapshot"><code>deploy-snapshot-reusable.yaml</code></a></p>
 </li>
 <li>
-<p><a href="#merge-dependabot"><code>merge-dependabot-reusable.yaml</code></a></p>
-</li>
-<li>
 <p><a href="#verify-reproducibility"><code>verify-reproducibility-reusable.yaml</code></a></p>
 </li>
 </ul>
@@ -144,7 +144,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="build"><a class="anchor" href="#build"></a><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/build-reusable.yaml"><code>build-reusable.yaml</code></a></h2>
+<h2 id="build"><a class="anchor" href="#build"></a><a href="https://github.com/apache/logging-parent/blob/gha/v0/.github/workflows/build-reusable.yaml"><code>build-reusable.yaml</code></a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This workflow:</p>
@@ -165,7 +165,7 @@
 <div class="title">Snippet from an <a href="https://github.com/apache/logging-parent/tree/main/src/site/antora/modules/ROOT/examples/build.yaml">example <code>build.yaml</code></a> using this workflow</div>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">build:
-  uses: apache/logging-parent/.github/workflows/build-reusable.yaml@rel/12.1.1
+  uses: apache/logging-parent/.github/workflows/build-reusable.yaml@gha/v0
   secrets:
     DV_ACCESS_TOKEN: ${{ startsWith(github.ref_name, 'release/') &amp;&amp; '' || secrets.DEVELOCITY_ACCESS_KEY }}
   with:
@@ -178,7 +178,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="deploy-snapshot"><a class="anchor" href="#deploy-snapshot"></a><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-snapshot-reusable.yaml"><code>deploy-snapshot-reusable.yaml</code></a></h2>
+<h2 id="deploy-snapshot"><a class="anchor" href="#deploy-snapshot"></a><a href="https://github.com/apache/logging-parent/blob/gha/v0/.github/workflows/deploy-snapshot-reusable.yaml"><code>deploy-snapshot-reusable.yaml</code></a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This workflow deploys SNAPSHOT artifacts.</p>
@@ -191,7 +191,7 @@
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">deploy-snapshot:
   needs: build
   if: github.repository == 'apache/logging-log4j2' &amp;&amp; github.ref_name == '2.x'
-  uses: apache/logging-parent/.github/workflows/deploy-snapshot-reusable.yaml@rel/12.1.1
+  uses: apache/logging-parent/.github/workflows/deploy-snapshot-reusable.yaml@gha/v0
   # Secrets for deployments
   secrets:
     NEXUS_USERNAME: ${{ secrets.NEXUS_USER }}
@@ -202,7 +202,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="deploy-release"><a class="anchor" href="#deploy-release"></a><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-release-reusable.yaml"><code>deploy-release-reusable.yaml</code></a></h2>
+<h2 id="deploy-release"><a class="anchor" href="#deploy-release"></a><a href="https://github.com/apache/logging-parent/blob/gha/v0/.github/workflows/deploy-release-reusable.yaml"><code>deploy-release-reusable.yaml</code></a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This workflow:</p>
@@ -234,7 +234,7 @@
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">deploy-release:
   needs: build
   if: github.repository == 'apache/logging-log4j2' &amp;&amp; startsWith(github.ref_name, 'release/')
-  uses: apache/logging-parent/.github/workflows/deploy-release-reusable.yaml@rel/12.1.1
+  uses: apache/logging-parent/.github/workflows/deploy-release-reusable.yaml@gha/v0
   # Secrets for deployments
   secrets:
     GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
@@ -253,7 +253,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="verify-reproducibility"><a class="anchor" href="#verify-reproducibility"></a><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/merge-dependabot-reusable.yaml"><code>verify-reproducibility-reusable.yaml</code></a></h2>
+<h2 id="verify-reproducibility"><a class="anchor" href="#verify-reproducibility"></a><a href="https://github.com/apache/logging-parent/blob/gha/v0/.github/workflows/verify-reproducibility-reusable.yaml"><code>verify-reproducibility-reusable.yaml</code></a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This workflow verifies the reproducibility of a previous <a href="#deploy-snapshot"><code>deploy-snapshot-reusable.yaml</code></a> or <a href="#deploy-release"><code>deploy-release-reusable.yaml</code></a> workflow.</p>
@@ -269,7 +269,7 @@
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">verify-reproducibility-snapshot:
   needs: deploy-snapshot
   name: "verify-reproducibility (${{ needs.deploy-snapshot.outputs.project-version }})"
-  uses: apache/logging-parent/.github/workflows/verify-reproducibility-reusable.yaml@rel/12.1.1
+  uses: apache/logging-parent/.github/workflows/verify-reproducibility-reusable.yaml@gha/v0
   with:
     # Reference repository
     nexus-url: https://repository.apache.org/content/groups/snapshots
@@ -286,7 +286,7 @@
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">verify-reproducibility-release:
   needs: deploy-release
   name: "verify-reproducibility (${{ needs.deploy-release.outputs.project-version }})"
-  uses: apache/logging-parent/.github/workflows/verify-reproducibility-reusable.yaml@rel/12.1.1
+  uses: apache/logging-parent/.github/workflows/verify-reproducibility-reusable.yaml@gha/v0
   with:
     # Reference repository
     nexus-url: ${{ needs.deploy-release.outputs.nexus-url }}
@@ -298,15 +298,7 @@
 </div>
 </div>
 <div class="sect1">
-<h2 id="merge-dependabot"><a class="anchor" href="#merge-dependabot"></a><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/merge-dependabot-reusable.yaml"><code>merge-dependabot-reusable.yaml</code></a></h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>Merges Dependabot PRs along with changelog entries.</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="deploy-site"><a class="anchor" href="#deploy-site"></a><a href="https://github.com/apache/logging-parent/blob/main/.github/workflows/deploy-site-reusable.yaml"><code>deploy-site-reusable.yaml</code></a></h2>
+<h2 id="deploy-site"><a class="anchor" href="#deploy-site"></a><a href="https://github.com/apache/logging-parent/blob/gha/v0/.github/workflows/deploy-site-reusable.yaml"><code>deploy-site-reusable.yaml</code></a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>This workflow builds and deploys the website.</p>
@@ -321,7 +313,7 @@
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">deploy-site-stg:
   if: github.repository == 'apache/logging-log4j2' &amp;&amp; github.ref_name == '2.x'
-  uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@rel/12.1.1
+  uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@gha/v0
   # Secrets for committing the generated site
   secrets:
     GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
@@ -358,7 +350,7 @@
 
 deploy-site-rel:
   needs: export-version
-  uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@rel/12.1.1
+  uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@gha/v0
   # Secrets for committing the generated site
   secrets:
     GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
@@ -383,7 +375,7 @@ deploy-site-rel:
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">deploy-site-pro:
   if: github.repository == 'apache/logging-log4j2' &amp;&amp; github.ref_name == '2.x-site-pro'
-  uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@rel/12.1.0
+  uses: apache/logging-parent/.github/workflows/deploy-site-reusable.yaml@gha/v0
   # Secrets for committing the generated site
   secrets:
     GPG_SECRET_KEY: ${{ secrets.LOGGING_GPG_SECRET_KEY }}
