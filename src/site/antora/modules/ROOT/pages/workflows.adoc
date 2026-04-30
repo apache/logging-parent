@@ -34,7 +34,6 @@ The Logging Parent project provides the following reusable GitHub Actions workfl
 This workflow:
 
 * Compiles using the specified Java compiler version
-* Submits build scans to the Develocity server
 
 [#build-examples]
 === Examples
