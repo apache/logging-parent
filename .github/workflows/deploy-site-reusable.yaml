@@ -60,10 +60,10 @@ jobs:
     steps:
 
       - name: Checkout the source branch
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd   # 6.0.2
+        uses: actions/checkout@v6
 
       - name: Set up Java
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654   # 5.2.0
+        uses: actions/setup-java@v5
         with:
           distribution: zulu
           java-version: ${{ inputs.java-version }}
@@ -82,7 +82,7 @@ jobs:
       # Node.js cache is needed for Antora
       - name: Restore Node.js cache
         id: nodejs-cache-restore
-        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae   # 5.0.5
+        uses: actions/cache/restore@v5
         with:
           # The cache is OS independent
           enableCrossOsArchive: true
@@ -112,7 +112,7 @@ jobs:
       # Checking out a new branch will delete the `node_modules` folder,
       # so we need to save the cache here.
       - name: Save Node.js cache
-        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae   # 5.0.5
+        uses: actions/cache/save@v5
         with:
           key: ${{ steps.nodejs-cache-restore.outputs.cache-primary-key }}
           path: node_modules
@@ -132,7 +132,7 @@ jobs:
           }
 
       - name: Checkout the target branch
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd   # 6.0.2
+        uses: actions/checkout@v6
         with:
           ref: ${{ inputs.target-branch }}
 
