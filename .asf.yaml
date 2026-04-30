@@ -16,14 +16,7 @@
 #
 
 # `.asf.yaml` is a branch-specific YAML configuration file for Git repositories to control features such as notifications, GitHub settings, etc.
-# See its documentation for details: https://github.com/apache/infrastructure-asfyaml
-
-#
-# Additional non-standard features
-#
-meta:
-  environments:
-    - github_rulesets
+# See its documentation for details: https://cwiki.apache.org/confluence/display/INFRA/Git+-+.asf.yaml+features
 
 # Bare minimum `notifications` to
 #
@@ -61,44 +54,43 @@ github:
   # Enforce squashing while merging PRs.
   # Otherwise, the git log gets polluted severely.
   enabled_merge_buttons:
-    squash: true
-    merge: false
-    rebase: false
+    squash:  true
+    merge:   false
+    rebase:  false
 
   features:
     issues: true
 
-  # Clear Protected Branches configuration: it is replaced by GitHub Rulesets
-  protected_branches: { }
-
-  rulesets:
-    # The `.asf.yaml` processor has a bug that prevents it from parsing existing rulesets.
-    # So it can neither remove them nor modify them.
-    # Hence, we bump the counter in the name at each change.
-    # For details, see: https://github.com/apache/infrastructure-asfyaml/pull/93
-    - name: "Branch protection (3)"
-      type: branch
-      branches:
-        includes:
-          - "~DEFAULT_BRANCH"
-          - "refs/heads/gha/*"
+  # Prevent force pushes to primary branches
+  protected_branches:
+    main:
+      # All commits must be signed
+      required_signatures: true
       # All reviews must be addressed before merging
       required_conversation_resolution: true
       # Require checks to pass before merging
       required_status_checks:
-        # The GitHub Actions app
-        # https://api.github.com/apps/github-actions
-        - app_slug: 15368
-          name: "build / build (ubuntu-latest)"
-        # The GitHub Advanced Security app
-        # https://api.github.com/apps/github-advanced-security
-        - app_slug: 57789
-          name: "CodeQL"
+        checks:
+          # The GitHub Actions app: 15368
+          - app_id: 15368
+            context: "build / build (ubuntu-latest)"
+          # The GitHub Advanced Security app: 57789
+          - app_id: 57789
+            context: "CodeQL"
       # At least one positive review must be present
       required_pull_request_reviews:
         required_approving_review_count: 1
-    - name: "Tag protection"
-      type: tag
-      branches:
-        includes:
-          - "refs/tags/rel/*"
+    gha/v0:
+      # All commits must be signed
+      required_signatures: true
+      # All reviews must be addressed before merging
+      required_conversation_resolution: true
+      # Require checks to pass before merging
+      required_status_checks:
+        checks:
+          # The GitHub Advanced Security app: 57789
+          - app_id: 57789
+            context: "CodeQL"
+      # At least one positive review must be present
+      required_pull_request_reviews:
+        required_approving_review_count: 1
