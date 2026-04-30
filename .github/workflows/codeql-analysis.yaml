@@ -38,11 +38,23 @@ permissions: { }
 jobs:
 
   analyze:
-    uses: apache/logging-parent/.github/workflows/codeql-analysis-reusable.yaml@gha/v0
-    with:
-      language: actions
+    name: Analyze
+    runs-on: ubuntu-latest
     # Permissions required to publish Security Alerts
     permissions:
-      actions: read
-      contents: read
       security-events: write
+
+    # This branch does not have a `pom.xml` file or any Java source code,
+    # therefore we can not reuse the reusable workflow.
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: actions
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
