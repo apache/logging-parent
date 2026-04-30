@@ -22,11 +22,9 @@ name: codeql-analysis
 on:
   push:
     branches:
-    - "gha/v0"
     - "main"
   pull_request:
     branches:
-      - "gha/v0"
       - "main"
   schedule:
     - cron: '32 12 * * 5'
