@@ -295,6 +295,131 @@
 </div>
 </div>
 <div class="sect1">
+<h2 id="analyze-dependabot"><a class="anchor" href="#analyze-dependabot"></a><a href="https://github.com/apache/logging-parent/blob/gha/v0/.github/workflows/analyze-dependabot-reusable.yaml"><code>analyze-dependabot-reusable.yaml</code></a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Analyzes Dependabot pull requests to collect detailed information about updated dependencies.
+Stores the results in the <code>dependabot-metadata</code> artifact,
+which is later consumed by the <a href="#process-dependabot"><code>process-dependabot-reusable.yaml</code></a> workflow to automate changelog generation and PR processing.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>This workflow must be triggered by an event that includes the <code>pull_request</code> payload and does not require any privileges.
+It can then be used in a <code>pull_request</code> workflow.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Snippet from an <a href="https://github.com/apache/logging-parent/tree/main/src/site/antora/modules/ROOT/examples/analyze-dependabot.yaml">example <code>analyze-dependabot.yaml</code></a> using this workflow</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">analyze-dependabot:
+  # `github.actor` prevents recursive calls when `github-actions[bot]` pushes to the PR;
+  # `github.event.pull_request.user.login` skips PRs not opened by Dependabot.
+  if: ${{
+      github.repository == 'apache/logging-parent'
+      &amp;&amp; github.actor == 'dependabot[bot]'
+      &amp;&amp; github.event.pull_request.user.login == 'dependabot[bot]'
+    }}
+  uses: apache/logging-parent/.github/workflows/analyze-dependabot-reusable.yaml@gha/v0</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="process-dependabot"><a class="anchor" href="#process-dependabot"></a><a href="https://github.com/apache/logging-parent/blob/gha/v0/.github/workflows/process-dependabot-reusable.yaml"><code>process-dependabot-reusable.yaml</code></a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Helps to process Dependabot pull requests by:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Generating changelog entries for the updated dependencies.</p>
+</li>
+<li>
+<p>Enabling the "auto-merge" option for the pull request.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The workflow needs the following privileged tokens:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>GITHUB_TOKEN</code></dt>
+<dd>
+<p>The default GitHub token with <code>contents:write</code> and <code>pull-requests: write</code> permissions,
+used to enable auto-merge on pull requests.</p>
+<div class="paragraph">
+<p>This token is automatically provided by GitHub Actions, but needs to be configured in the <code>permissions</code> property.</p>
+</div>
+</dd>
+<dt class="hdlist1"><code>RECURSIVE_TOKEN</code></dt>
+<dd>
+<p>A GitHub token required to push generated changelog files as a new commit to the repository.
+The default <code>GITHUB_TOKEN</code> can <strong>not</strong> be used,
+as it will not trigger required check runs and will prevent the pull request from being merged.
+A Personal Access Token (PAT) with <code>contents:write</code> permission must be provided instead.</p>
+<div class="paragraph">
+<p>The token must be passed as a secret named <code>RECURSIVE_TOKEN</code>.</p>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>This workflow is designed to be triggered by the <code>workflow_run</code> event,
+as soon as the <a href="#analyze-dependabot"><code>analyze-dependabot-reusable.yaml</code></a> workflow completes.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When this workflow is triggered by <code>workflow_run</code>,
+GitHub Actions uses the "Actions" secret context instead of "Dependabot" secrets,
+even if the <code>github.actor</code> is <code>dependabot[bot]</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">Snippet from an <a href="https://github.com/apache/logging-parent/tree/main/src/site/antora/modules/ROOT/examples/process-dependabot.yaml">example <code>process-dependabot.yaml</code></a> using this workflow</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">process-dependabot:
+  # Skip this workflow on commits not pushed by Dependabot
+  if: ${{
+      github.repository == 'apache/logging-parent'
+      &amp;&amp; github.actor == 'dependabot[bot]'
+      &amp;&amp; github.event.workflow_run.conclusion == 'success'
+    }}
+  uses: apache/logging-parent/.github/workflows/process-dependabot-reusable.yaml@gha/v0
+  permissions:
+    # The default GITHUB_TOKEN will be used to enable the "auto-merge" on the PR
+    # This requires the following two permissions:
+    contents: write
+    pull-requests: write
+  secrets:
+    RECURSIVE_TOKEN: ${{ secrets.DEPENDABOT_TOKEN }}
+  with:
+    # The path to the changelog directory for the current development branch.
+    changelog-path: src/changelog/.2.x.x</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="deploy-site"><a class="anchor" href="#deploy-site"></a><a href="https://github.com/apache/logging-parent/blob/gha/v0/.github/workflows/deploy-site-reusable.yaml"><code>deploy-site-reusable.yaml</code></a></h2>
 <div class="sectionbody">
 <div class="paragraph">
