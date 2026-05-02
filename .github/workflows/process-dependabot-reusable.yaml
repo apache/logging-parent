@@ -24,10 +24,6 @@ on:
         description: The path to the changelog directory (e.g. `src/changelog/.2.x.x`)
         required: true
         type: string
-    secrets:
-      RECURSIVE_TOKEN:
-        description: "A PAT with `contents: write` permission to push changes and trigger the next workflow run"
-        required: true
 
 # Explicitly drop all permissions inherited from the caller for security.
 # Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
@@ -45,9 +41,9 @@ jobs:
       }}
     runs-on: ubuntu-latest
     permissions:
-      # The default GITHUB_TOKEN will be used to enable the "auto-merge" on the PR
-      # This requires the following two permissions:
+      # Push changelog commit
       contents: write
+      # Switch PR into draft mode
       pull-requests: write
 
     steps:
@@ -83,7 +79,6 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           ref: ${{ steps.pr.outputs.head-ref }}
-          token: ${{ secrets.RECURSIVE_TOKEN }}
 
       - name: Create changelog entries
         shell: bash
@@ -144,10 +139,21 @@ jobs:
             git push origin "HEAD:${HEAD_REF}"
           fi
 
-      - name: Enable auto-merge on PR
+      # Pushes made with the default `GITHUB_TOKEN` do not trigger workflows (GitHub anti-recursion rule),
+      # so the required checks will not re-run against the changelog commit pushed above.
+      # Introducing a PAT is undesirable, so we park the PR in draft mode instead.
+      # A maintainer must then:
+      #   1. Approve the PR.
+      #   2. Mark the PR as “Ready for review”, this fires `ready_for_review`,
+      #      which runs CI against the changelog commit.
+      #   3. Enable “auto-merge”.
+      - name: Switch PR into draft mode
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
           PR_ID: ${{ steps.pr.outputs.id }}
         run: |
-          gh pr merge --squash --auto "$PR_ID"
+          is_draft=$(gh pr view "$PR_ID" --json isDraft -q .isDraft)
+          if [ "$is_draft" = "false" ]; then
+            gh pr ready --undo "$PR_ID"
+          fi
