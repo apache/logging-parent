@@ -20,18 +20,18 @@ name: "Dependabot Analyze PR"
 on:
   pull_request:
 
+# Default permissions for each job.
+# Additional permissions should be assigned on a per-job basis.
 permissions: { }
 
 jobs:
 
-# tag::analyze-dependabot[]
   analyze-dependabot:
     # `github.actor` prevents recursive calls when `github-actions[bot]` pushes to the PR;
     # `github.event.pull_request.user.login` skips PRs not opened by Dependabot.
     if: ${{
-        github.repository == 'apache/logging-parent'
-        && github.actor == 'dependabot[bot]'
-        && github.event.pull_request.user.login == 'dependabot[bot]'
+      github.repository == 'apache/logging-parent'
+      && github.actor == 'dependabot[bot]'
+      && github.event.pull_request.user.login == 'dependabot[bot]'
       }}
-    uses: apache/logging-parent/.github/workflows/analyze-dependabot-reusable.yaml@{project-gha-version}
-# end::analyze-dependabot[]
+    uses: apache/logging-parent/.github/workflows/analyze-dependabot-reusable.yaml@gha/v0

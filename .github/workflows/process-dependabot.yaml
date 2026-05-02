@@ -24,27 +24,28 @@ on:
     types:
       - completed
 
+# Default permissions for each job.
+# Additional permissions should be assigned on a per-job basis.
 permissions: { }
 
 jobs:
 
-# tag::process-dependabot[]
   process-dependabot:
     # Skip this workflow on commits not pushed by Dependabot
     if: ${{
-        github.repository == 'apache/logging-parent'
-        && github.actor == 'dependabot[bot]'
-        && github.event.workflow_run.conclusion == 'success'
+      github.repository == 'apache/logging-parent'
+      && github.actor == 'dependabot[bot]'
+      && github.event.workflow_run.conclusion == 'success'
       }}
-    uses: apache/logging-parent/.github/workflows/process-dependabot-reusable.yaml@{project-gha-version}
+    uses: apache/logging-parent/.github/workflows/process-dependabot-reusable.yaml@gha/v0
     permissions:
       # The default GITHUB_TOKEN will be used to enable the "auto-merge" on the PR
       # This requires the following two permissions:
       contents: write
       pull-requests: write
     secrets:
+      # This token will be used to push new content to the repo and trigger workflows again
       RECURSIVE_TOKEN: ${{ secrets.DEPENDABOT_TOKEN }}
     with:
       # The path to the changelog directory for the current development branch.
-      changelog-path: src/changelog/.2.x.x
-# end::process-dependabot[]
+      changelog-path: src/changelog/.12.x.x
