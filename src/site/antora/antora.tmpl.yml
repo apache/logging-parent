@@ -38,6 +38,7 @@ version: ~
 start_page: index.adoc
 asciidoc:
   attributes:
+    project-gha-version: "gha/v0"
     project-github-url: "${scm.url}"
     project-version: "${site-project.version}"
     project-name: Logging Parent

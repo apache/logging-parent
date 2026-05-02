@@ -26,16 +26,14 @@ The Logging Parent project provides the following reusable GitHub Actions workfl
 * <<deploy-release>>
 * <<deploy-site>>
 * <<deploy-snapshot>>
-* <<merge-dependabot>>
 * <<verify-reproducibility>>
 
 [#build]
-== {project-github-url}/blob/main/.github/workflows/build-reusable.yaml[`build-reusable.yaml`]
+== {project-github-url}/blob/{project-gha-version}/.github/workflows/build-reusable.yaml[`build-reusable.yaml`]
 
 This workflow:
 
 * Compiles using the specified Java compiler version
-* Submits build scans to the Develocity server
 
 [#build-examples]
 === Examples
@@ -47,7 +45,7 @@ include::example$build.yaml[tag=build,indent=0]
 ----
 
 [#deploy-snapshot]
-== {project-github-url}/blob/main/.github/workflows/deploy-snapshot-reusable.yaml[`deploy-snapshot-reusable.yaml`]
+== {project-github-url}/blob/{project-gha-version}/.github/workflows/deploy-snapshot-reusable.yaml[`deploy-snapshot-reusable.yaml`]
 
 This workflow deploys SNAPSHOT artifacts.
 
@@ -61,7 +59,7 @@ include::example$build.yaml[tag=deploy-snapshot,indent=0]
 ----
 
 [#deploy-release]
-== {project-github-url}/blob/main/.github/workflows/deploy-release-reusable.yaml[`deploy-release-reusable.yaml`]
+== {project-github-url}/blob/{project-gha-version}/.github/workflows/deploy-release-reusable.yaml[`deploy-release-reusable.yaml`]
 
 This workflow:
 
@@ -81,7 +79,7 @@ include::example$build.yaml[tag=deploy-release,indent=0]
 ----
 
 [#verify-reproducibility]
-== {project-github-url}/blob/main/.github/workflows/merge-dependabot-reusable.yaml[`verify-reproducibility-reusable.yaml`]
+== {project-github-url}/blob/{project-gha-version}/.github/workflows/verify-reproducibility-reusable.yaml[`verify-reproducibility-reusable.yaml`]
 
 This workflow verifies the reproducibility of a previous <<deploy-snapshot>> or <<deploy-release>> workflow.
 
@@ -105,7 +103,7 @@ include::example$build.yaml[tag=verify-reproducibility-release,indent=0]
 ----
 
 [#analyze-dependabot]
-== {project-github-url}/blob/main/.github/workflows/analyze-dependabot-reusable.yaml[`analyze-dependabot-reusable.yaml`]
+== {project-github-url}/blob/{project-gha-version}/.github/workflows/analyze-dependabot-reusable.yaml[`analyze-dependabot-reusable.yaml`]
 
 Analyzes Dependabot pull requests to collect detailed information about updated dependencies.
 Stores the results in the `dependabot-metadata` artifact,
@@ -124,7 +122,7 @@ include::example$analyze-dependabot.yaml[tag=analyze-dependabot,indent=0]
 ----
 
 [#process-dependabot]
-== {project-github-url}/blob/main/.github/workflows/process-dependabot-reusable.yaml[`process-dependabot-reusable.yaml`]
+== {project-github-url}/blob/{project-gha-version}/.github/workflows/process-dependabot-reusable.yaml[`process-dependabot-reusable.yaml`]
 
 Helps to process Dependabot pull requests by:
 
@@ -164,7 +162,7 @@ include::example$process-dependabot.yaml[tag=process-dependabot,indent=0]
 ----
 
 [#deploy-site]
-== {project-github-url}/blob/main/.github/workflows/deploy-site-reusable.yaml[`deploy-site-reusable.yaml`]
+== {project-github-url}/blob/{project-gha-version}/.github/workflows/deploy-site-reusable.yaml[`deploy-site-reusable.yaml`]
 
 This workflow builds and deploys the website.
 

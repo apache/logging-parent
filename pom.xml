@@ -231,9 +231,6 @@
     <spotbugs-maven-plugin.version>4.9.3.0</spotbugs-maven-plugin.version>
     <spotless-maven-plugin.version>2.44.5</spotless-maven-plugin.version>
     <xml-maven-plugin.version>1.1.0</xml-maven-plugin.version>
-    <!-- Due to a missing `maven-metadata.xml`, Dependabot does not update this automatically -->
-    <develocity-maven-plugin.version>2.1</develocity-maven-plugin.version>
-    <develocity-user-data-extension.version>2.0.3</develocity-user-data-extension.version>
 
     <!-- plugin dependencies versions -->
     <error-prone.version>2.38.0</error-prone.version>
@@ -301,20 +298,6 @@
           <groupId>org.cyclonedx</groupId>
           <artifactId>cyclonedx-maven-plugin</artifactId>
           <version>${cyclonedx-maven-plugin.version}</version>
-        </plugin>
-
-        <!-- Fake entry to be upgraded by Dependabot -->
-        <plugin>
-          <groupId>com.gradle</groupId>
-          <artifactId>develocity-maven-extension</artifactId>
-          <version>${develocity-maven-plugin.version}</version>
-        </plugin>
-
-        <!-- Fake entry to be upgraded by Dependabot -->
-        <plugin>
-          <groupId>com.gradle</groupId>
-          <artifactId>common-custom-user-data-maven-extension</artifactId>
-          <version>${develocity-user-data-extension.version}</version>
         </plugin>
 
         <plugin>
@@ -630,6 +613,8 @@
             <!-- License headers in GitHub templates pollute the prompt displayed to the user: -->
             <exclude>.github/ISSUE_TEMPLATE/*.md</exclude>
             <exclude>.github/pull_request_template.md</exclude>
+            <!-- `.logging-parent-bom-activator` activates the `bom` Maven profile: -->
+            <exclude>.logging-parent-bom-activator</exclude>
           </excludes>
         </configuration>
         <executions>

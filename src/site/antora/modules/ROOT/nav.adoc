@@ -17,6 +17,7 @@
 
 * xref:features.adoc[]
 * xref:usage.adoc[]
+* xref:workflows.adoc[]
 * xref:release-notes.adoc[]
 
 .Release support

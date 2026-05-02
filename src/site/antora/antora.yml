@@ -38,6 +38,7 @@ version: ~
 start_page: index.adoc
 asciidoc:
   attributes:
+    project-gha-version: "gha/v0"
     project-github-url: "https://github.com/awesome/project"
     project-version: "1.2.3"
     project-name: Logging Parent
