@@ -43,9 +43,6 @@ jobs:
       # This requires the following two permissions:
       contents: write
       pull-requests: write
-    secrets:
-      # This token will be used to push new content to the repo and trigger workflows again
-      RECURSIVE_TOKEN: ${{ secrets.DEPENDABOT_TOKEN }}
     with:
       # The path to the changelog directory for the current development branch.
       changelog-path: src/changelog/.12.x.x

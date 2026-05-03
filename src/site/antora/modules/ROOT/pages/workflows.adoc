@@ -126,33 +126,41 @@ include::example$analyze-dependabot.yaml[tag=analyze-dependabot,indent=0]
 
 Helps to process Dependabot pull requests by:
 
-* Generating changelog entries for the updated dependencies.
-* Enabling the "auto-merge" option for the pull request.
+* Generating changelog entries for the updated dependencies and committing them to the PR branch.
+* Switching the pull request into “draft mode”.
 
-The workflow needs the following privileged tokens:
+The workflow only needs the default `GITHUB_TOKEN` with `contents: write` and `pull-requests: write` permissions.
+No Personal Access Token (PAT) is required.
 
-`GITHUB_TOKEN`::
-The default GitHub token with `contents:write` and `pull-requests: write` permissions,
-used to enable auto-merge on pull requests.
-+
-This token is automatically provided by GitHub Actions, but needs to be configured in the `permissions` property.
-
-`RECURSIVE_TOKEN`::
-A GitHub token required to push generated changelog files as a new commit to the repository.
-The default `GITHUB_TOKEN` can **not** be used,
-as it will not trigger required check runs and will prevent the pull request from being merged.
-A Personal Access Token (PAT) with `contents:write` permission must be provided instead.
-+
-The token must be passed as a secret named `RECURSIVE_TOKEN`.
-
-This workflow is designed to be triggered by the `workflow_run` event,
-as soon as the <<analyze-dependabot>> workflow completes.
+This workflow is designed to be triggered by the `workflow_run` event, as soon as the <<analyze-dependabot>> workflow completes.
 
 [NOTE]
 ====
-When this workflow is triggered by `workflow_run`,
-GitHub Actions uses the "Actions" secret context instead of "Dependabot" secrets,
-even if the `github.actor` is `dependabot[bot]`.
+Avoiding a PAT is a deliberate security choice, but it has a consequence: pushes made with `GITHUB_TOKEN` do not retrigger workflows (GitHub anti-recursion rule), so the changelog commit cannot re-run the required checks on its own.
+This reusable workflow therefore parks the PR in “draft mode” and stops there.
+
+The expected flow for each Dependabot PR is:
+
+. The reusable workflow appends the changelog commit and converts the PR into draft.
+. A maintainer reviews the change, clicks *Ready for review*, and enables *Auto-merge*.
+. The required-check workflows re-run against the new HEAD; once they pass, *Auto-merge* completes the merge without further manual action.
+
+For step 3 to work, every workflow providing a required check must subscribe to `ready_for_review`:
+
+[source,yaml]
+----
+on:
+  pull_request:
+    types:
+      # Standard types
+      - opened
+      - synchronize
+      - reopened
+      # Used in Dependabot PRs to retrigger required workflows
+      - ready_for_review
+----
+
+This reusable workflow does **not** enable “Auto-merge”; a maintainer must do that by hand.
 ====
 
 .Snippet from an {examples-base-link}/process-dependabot.yaml[example `process-dependabot.yaml`] using this workflow
