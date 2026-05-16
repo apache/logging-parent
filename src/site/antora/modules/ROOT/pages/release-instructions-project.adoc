@@ -60,6 +60,7 @@ git checkout -B release/7.8.0 origin/main
 ====
 If your project refers to its own version in the site sources, those need to be updated too.
 For instance, `site-project.version` needs to be updated for `logging-parent`.
+Log4j also has site-related version properties in `pom.xml` that need to be updated.
 ====
 .. Release the changelog:
 +
@@ -89,6 +90,7 @@ You can iterate on the `release/7.8.0` branch to perfect it.
 .. *Signed artifacts* are uploaded to the _Staging Repositories_ in https://repository.apache.org/[repository.apache.org]
 .. *Signed distribution and its checksum* (e.g., `apache-{project-id}-7.8.0-{bin,src}.{zip,.zip.asc,.zip.sha512}`) are uploaded to https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}/7.8.0] Subversion repository (along with auxiliary files; website, email texts, etc.)
 .. {site-url-staging}-7.8.0[The release staging website] is deployed using the freshly populated `release/7.8.0-site-stg-out` branch
+.. Project-specific CI for `release/`-prefixed branches succeeds.
 
 +
 If not, commit the necessary fixes, push, and repeat.
@@ -99,13 +101,6 @@ If not, commit the necessary fixes, push, and repeat.
 Once the release is staged, the Release Manager should:
 
 . Follow the xref:release-review-instructions.adoc[] to verify the integrity of the release.
-. Some projects have additional integration tests that need to run on the release candidate artifacts:
-
-`logging-log4j2`::
-+
-Run the
-https://github.com/apache/logging-log4j-samples/actions/workflows/integration-test.yaml[integration-test.yaml]
-workflow using the appropriate version number and URL of the _Staging Repository_ as parameters.
 
 [#vote-release]
 == Vote the release
@@ -154,16 +149,22 @@ git push origin rel/7.8.0
 ====
 The ASF infrastructure treats ``rel/``-prefixed git tags special and ensures they are immutable for provenance reasons.
 ====
-. Merge the `rel/7.8.0` tag (**not** the `release/7.8.0` branch!) to `main`
+. Create a branch from `main`, merge the `rel/7.8.0` tag (**not** the `release/7.8.0` branch!), and push it
 +
 [source,bash]
 ----
-git checkout main
-git rebase origin/main    # Sync with the remote repository
-git merge rel/7.8.0       # Pull changes up to the newly created tag
+git checkout -B post-release/7.8.0 origin/main
+git merge rel/7.8.0                    # Pull changes up to the newly created tag
 ----
 . Set the revision property to the next development version (e.g., `7.9.0-SNAPSHOT`) in `pom.xml`
-. Commit changes and push the `main` branch
+. Commit changes and push the branch
++
+[source,bash]
+----
+git push -u origin post-release/7.8.0
+----
++
+. Open a pull request from `post-release/7.8.0` to `main`
 . Delete the local and remote copies of the `release/7.8.0` branch
 +
 [source,bash]
@@ -220,15 +221,16 @@ svn commit -m 'Remove `{project-id}` version `7.8.0` files released'
 [#publish-release-website]
 == Publish the release website
 
-. Merge the `rel/7.8.0` tag (**not** the `release/7.8.0` branch!) to `main-site-pro` and push it
+. Create a branch from `main-site-pro`, merge the `rel/7.8.0` tag (**not** the `release/7.8.0` branch!), and push it
 +
 [source,bash]
 ----
-git checkout main-site-pro
-git rebase origin/main-site-pro    # Sync with the remote repository
-git merge rel/7.8.0                # Pull changes up to the newly created tag
-git push origin main-site-pro
+git checkout -B publish-site/7.8.0 origin/main-site-pro
+git merge rel/7.8.0                         # Pull changes up to the newly created tag
+git push -u origin publish-site/7.8.0
 ----
++
+. Open a pull request from `publish-site/7.8.0` to `main-site-pro`
 +
 .If there is no `main-site-pro` branch yet
 [%collapsible]
