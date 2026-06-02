@@ -27,7 +27,7 @@
   <parent>
     <groupId>org.apache</groupId>
     <artifactId>apache</artifactId>
-    <version>37</version>
+    <version>38</version>
   </parent>
 
   <groupId>org.apache.logging</groupId>
@@ -211,7 +211,7 @@
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
     <node.version>21.7.1</node.version>
     <npm.version>10.5.0</npm.version>
-    <palantir-java-format.version>2.90.0</palantir-java-format.version>
+    <palantir-java-format.version>2.91.0</palantir-java-format.version>
 
     <!-- plugin versions -->
     <asciidoctor-maven-plugin.version>3.2.0</asciidoctor-maven-plugin.version>
@@ -229,7 +229,7 @@
     <maven-artifact-plugin.version>3.6.1</maven-artifact-plugin.version>
     <restrict-imports-enforcer-rule.version>3.0.0</restrict-imports-enforcer-rule.version>
     <spotbugs-maven-plugin.version>4.9.8.3</spotbugs-maven-plugin.version>
-    <spotless-maven-plugin.version>3.4.0</spotless-maven-plugin.version>
+    <spotless-maven-plugin.version>3.6.0</spotless-maven-plugin.version>
     <xml-maven-plugin.version>1.2.1</xml-maven-plugin.version>
 
     <!-- plugin dependencies versions -->
@@ -237,7 +237,7 @@
     <!-- `findsecbugs-plugin:1.13.0` contains a bug blocking Log4j compilation: https://github.com/find-sec-bugs/find-sec-bugs/pull/728
          Hence, pinning the `1.12.0` instead. -->
     <findsecbugs-plugin.version>1.14.0</findsecbugs-plugin.version>
-    <groovy.version>5.0.5</groovy.version>
+    <groovy.version>5.0.6</groovy.version>
 
     <!-- site-specific versions -->
     <!-- We use a separate property than `project.version` to refer to the most recent _published_ version of the project. -->
