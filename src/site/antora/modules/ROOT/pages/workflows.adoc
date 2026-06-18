@@ -130,13 +130,12 @@ Helps to process Dependabot pull requests by:
 * Switching the pull request into “draft mode”.
 
 The workflow only needs the default `GITHUB_TOKEN` with `contents: write` and `pull-requests: write` permissions.
-No Personal Access Token (PAT) is required.
 
 This workflow is designed to be triggered by the `workflow_run` event, as soon as the <<analyze-dependabot>> workflow completes.
 
 [NOTE]
 ====
-Avoiding a PAT is a deliberate security choice, but it has a consequence: pushes made with `GITHUB_TOKEN` do not retrigger workflows (GitHub anti-recursion rule), so the changelog commit cannot re-run the required checks on its own.
+Pushes made with `GITHUB_TOKEN` do not retrigger workflows (GitHub anti-recursion rule), so the changelog commit cannot re-run the required checks on its own.
 This reusable workflow therefore parks the PR in “draft mode” and stops there.
 
 The expected flow for each Dependabot PR is:
