@@ -342,41 +342,18 @@ It can then be used in a <code>pull_request</code> workflow.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Generating changelog entries for the updated dependencies.</p>
+<p>Generating changelog entries for the updated dependencies and committing them to the PR branch.</p>
 </li>
 <li>
-<p>Enabling the "auto-merge" option for the pull request.</p>
+<p>Switching the pull request into “draft mode”.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The workflow needs the following privileged tokens:</p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1"><code>GITHUB_TOKEN</code></dt>
-<dd>
-<p>The default GitHub token with <code>contents:write</code> and <code>pull-requests: write</code> permissions,
-used to enable auto-merge on pull requests.</p>
-<div class="paragraph">
-<p>This token is automatically provided by GitHub Actions, but needs to be configured in the <code>permissions</code> property.</p>
-</div>
-</dd>
-<dt class="hdlist1"><code>RECURSIVE_TOKEN</code></dt>
-<dd>
-<p>A GitHub token required to push generated changelog files as a new commit to the repository.
-The default <code>GITHUB_TOKEN</code> can <strong>not</strong> be used,
-as it will not trigger required check runs and will prevent the pull request from being merged.
-A Personal Access Token (PAT) with <code>contents:write</code> permission must be provided instead.</p>
-<div class="paragraph">
-<p>The token must be passed as a secret named <code>RECURSIVE_TOKEN</code>.</p>
-</div>
-</dd>
-</dl>
+<p>The workflow only needs the default <code>GITHUB_TOKEN</code> with <code>contents: write</code> and <code>pull-requests: write</code> permissions.</p>
 </div>
 <div class="paragraph">
-<p>This workflow is designed to be triggered by the <code>workflow_run</code> event,
-as soon as the <a href="#analyze-dependabot"><code>analyze-dependabot-reusable.yaml</code></a> workflow completes.</p>
+<p>This workflow is designed to be triggered by the <code>workflow_run</code> event, as soon as the <a href="#analyze-dependabot"><code>analyze-dependabot-reusable.yaml</code></a> workflow completes.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -386,9 +363,43 @@ as soon as the <a href="#analyze-dependabot"><code>analyze-dependabot-reusable.y
 </td>
 <td class="content">
 <div class="paragraph">
-<p>When this workflow is triggered by <code>workflow_run</code>,
-GitHub Actions uses the "Actions" secret context instead of "Dependabot" secrets,
-even if the <code>github.actor</code> is <code>dependabot[bot]</code>.</p>
+<p>Pushes made with <code>GITHUB_TOKEN</code> do not retrigger workflows (GitHub anti-recursion rule), so the changelog commit cannot re-run the required checks on its own.
+This reusable workflow therefore parks the PR in “draft mode” and stops there.</p>
+</div>
+<div class="paragraph">
+<p>The expected flow for each Dependabot PR is:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>The reusable workflow appends the changelog commit and converts the PR into draft.</p>
+</li>
+<li>
+<p>A maintainer reviews the change, clicks <strong>Ready for review</strong>, and enables <strong>Auto-merge</strong>.</p>
+</li>
+<li>
+<p>The required-check workflows re-run against the new HEAD; once they pass, <strong>Auto-merge</strong> completes the merge without further manual action.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For step 3 to work, every workflow providing a required check must subscribe to <code>ready_for_review</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">on:
+  pull_request:
+    types:
+      # Standard types
+      - opened
+      - synchronize
+      - reopened
+      # Used in Dependabot PRs to retrigger required workflows
+      - ready_for_review</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This reusable workflow does <strong>not</strong> enable “Auto-merge”; a maintainer must do that by hand.</p>
 </div>
 </td>
 </tr>
@@ -406,15 +417,13 @@ even if the <code>github.actor</code> is <code>dependabot[bot]</code>.</p>
     }}
   uses: apache/logging-parent/.github/workflows/process-dependabot-reusable.yaml@gha/v0
   permissions:
-    # The default GITHUB_TOKEN will be used to enable the "auto-merge" on the PR
-    # This requires the following two permissions:
+    # Append the changelog commit
     contents: write
+    # Convert the PR into draft
     pull-requests: write
-  secrets:
-    RECURSIVE_TOKEN: ${{ secrets.DEPENDABOT_TOKEN }}
   with:
     # The path to the changelog directory for the current development branch.
-    changelog-path: src/changelog/.2.x.x</code></pre>
+    changelog-path: src/changelog/.12.x.x</code></pre>
 </div>
 </div>
 </div>
