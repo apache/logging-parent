@@ -26,6 +26,13 @@ on:
       - "**.md"
       - "**.txt"
   pull_request:
+    types:
+      # Standard types
+      - opened
+      - synchronize
+      - reopened
+      # Used in Dependabot PRs to retrigger required workflows
+      - ready_for_review
 
 # If the branch is `main`, run once per commit.
 # If the branch is `release/*`, allow only one concurrent run.

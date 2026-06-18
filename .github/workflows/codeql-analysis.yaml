@@ -26,6 +26,13 @@ on:
   pull_request:
     branches:
       - "main"
+    types:
+      # Standard types
+      - opened
+      - synchronize
+      - reopened
+      # Used in Dependabot PRs to retrigger required workflows
+      - ready_for_review
   schedule:
     - cron: '32 12 * * 5'
 
