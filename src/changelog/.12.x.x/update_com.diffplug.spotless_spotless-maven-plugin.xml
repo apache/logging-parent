@@ -3,6 +3,6 @@
        xmlns="https://logging.apache.org/xml/ns"
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="updated">
-  <issue id="474" link="https://github.com/apache/logging-parent/pull/474"/>
-  <description format="asciidoc">Update `com.diffplug.spotless:spotless-maven-plugin` to version `3.4.0`</description>
+  <issue id="487" link="https://github.com/apache/logging-parent/pull/487"/>
+  <description format="asciidoc">Update `com.diffplug.spotless:spotless-maven-plugin` to version `3.8.0`</description>
 </entry>
