@@ -1,0 +1,430 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+
+:asf-parent-url: https://maven.apache.org/pom/asf/
+
+[#build-lifecycle]
+= Build lifecycle
+
+{project-name} extends the standard Maven _default_ (build) lifecycle that runs on a plain
+
+[source,bash]
+----
+./mvnw verify
+----
+
+with three kinds of additions:
+
+* <<checks>> that fail the build when a rule is violated,
+* <<artifacts>> that are generated and attached or embedded into your JARs, and
+* <<transformations>> applied to the POM before it is published.
+
+Some of these additions come from {project-name} itself, some are inherited from the
+{asf-parent-url}[ASF Parent POM], and some are activated only when a particular _activator file_ is present in your project.
+Each origin is called out below.
+
+Beyond a plain `./mvnw verify`, the parent also offers two opt-in mechanisms:
+
+* <<optional-extensions>> that you enable on the command line to modify a build, and
+* <<commands>> whose default goal performs a single task on its own.
+
+[#phase-map]
+== Overview
+
+The following table maps each addition to the Maven phase it binds to.
+Everything listed here is triggered by a plain `./mvnw verify`, unless it is marked as conditional on an activator file.
+
+[cols="2m,2,5a",options="header"]
+|===
+| Phase | Origin | Additions
+
+| validate
+| {asf-parent-url}[ASF Parent POM]
+|
+* <<check-build-environment>>
+
+| validate
+| {project-name}
+|
+* <<check-dependency-convergence>>
+* <<check-code-style>> _(no wildcard imports)_
+* <<check-changelog>>
+
+| generate-resources
+| {asf-parent-url}[ASF Parent POM]
+|
+* <<artifacts-asf>>
+
+| process-resources
+| {project-name}
+|
+* <<transformations-pom>>
+
+| compile
+| {project-name}
+|
+* <<check-static-analysis>> _(ErrorProne)_
+
+| process-classes
+| {project-name}
+|
+* <<artifacts-osgi>>
+* <<artifacts-jpms>>
+* <<artifacts-services>>
+
+| package
+| {project-name}
+|
+* <<artifacts-sbom,CycloneDX SBOM>>
+
+| verify
+| {project-name}
+|
+* <<check-code-style>> (Spotless)
+* <<check-license>>
+* <<check-static-analysis>> _(SpotBugs + FindSecBugs)_
+* <<check-api-compatibility,API compatibility (BND baseline)>>
+|===
+
+[#checks]
+== Additional checks
+
+The checks below run automatically during `./mvnw verify`.
+The trickier ones link to a debugging recipe in xref:troubleshooting.adoc[].
+
+[#check-build-environment]
+=== Maven & Java version
+
+_Phase:_ `validate`.
+_Enforced by the {asf-parent-url}[ASF Parent POM]._
+
+To build an Apache Logging Services project you need:
+
+* a *JDK 17* (the build pins the major version `17`, not a later one), and
+* *Maven 3.8.1 or later*, most conveniently through the bundled Maven Wrapper (`./mvnw`).
+
+Both requirements are checked by the `maven-enforcer-plugin` inherited from the ASF Parent POM, through its `requireJavaVersion` and `requireMavenVersion` rules.
+These rules can be modified using the properties below:
+
+[cols="2m,3,1m",options="header"]
+|===
+| Property | Controls | Default
+
+| minimalJavaBuildVersion
+| Range of JDK versions allowed to run the build
+| {java-compiler-version}
+
+| minimalMavenBuildVersion
+| Range of Maven versions allowed to run the build
+| 3.8.1
+
+| maven.compiler.release
+| Java bytecode level the sources are compiled to
+| 8
+|===
+
+Although most artifacts still target Java 8 bytecode (through the `javac --release 8` flag), JDK 17 is required to run the Maven plugins in use and to keep builds reproducible.
+Bytecode generation can differ between JDK major versions, so pinning a single one keeps the output byte-for-byte stable.
+
+[NOTE]
+====
+JDK 17 also requires the `--add-exports` and `--add-opens` flags declared in `.mvn/jvm.config`, needed by tools that reach into JDK compiler internals (such as Error Prone).
+See xref:usage.adoc[].
+====
+
+Some projects (currently only Log4j) additionally run their test suites against a real *JDK 8* through
+https://maven.apache.org/guides/mini/guide-using-toolchains.html[Maven Toolchains]
+in CI.
+This proves runtime compatibility with the Java 8 platform, beyond the bytecode and API-surface guarantees that `--release 8` provides on its own.
+
+[#check-dependency-convergence]
+=== Order-independent dependency resolution
+
+_Phase:_ `validate`.
+
+Maven's default conflict _mediation_ (nearest-wins, ties broken by declaration order) can resolve a dependency to a version _lower_ than some transitive dependency requires, and the outcome can shift when dependencies are reordered.
+The `maven-enforcer-plugin` `requireUpperBoundDeps` rule forbids this: it fails whenever a resolved version is lower than the highest one required across the graph.
+
+The fix is to pin that dependency to at least the highest required version, making resolution order-independent.
+See xref:troubleshooting.adoc#require-upper-bound-deps[the Order-independent dependency resolution recipe] for how to read the error and adjust the pin.
+
+[IMPORTANT]
+====
+Pinning a transitive dependency in your `<dependencyManagement>` only affects _your_ build.
+It has *no* influence on the versions resolved by downstream consumers of your artifacts.
+====
+
+[#check-code-style]
+=== Code style
+
+Code style is enforced by the `spotless-maven-plugin` in the `verify` phase, with one exception: the ban on wildcard imports is a `maven-enforcer-plugin` rule that runs earlier, in the `validate` phase.
+The following rules apply:
+
+All files::
++
+Line endings are normalized to UNIX (`LF`) and the ASF license header is required.
+Set a `.gitattributes` file so that Git checks files out with `LF` on every platform.
+
+Java::
++
+Sources follow the
+https://github.com/palantir/palantir-java-format[Palantir Java format], and imports must be explicit (wildcard imports are banned).
+
+XML, POM, `.properties` & YAML::
++
+`pom.xml` is sorted with the Spotless https://github.com/Ekryd/sortpom[sortPom] step; XML and YAML files also have trailing whitespace trimmed and a final newline enforced.
+
+Most violations are fixed automatically by:
+
+[source,bash]
+----
+./mvnw spotless:apply
+----
+
+Anything the formatter cannot fix must be corrected by hand.
+
+[NOTE]
+====
+The Spotless configuration must stay in sync with the project's `.editorconfig`.
+====
+
+[#check-changelog]
+=== Changelog validation
+
+_Phase:_ `validate`.
+_Activated by `src/changelog/`._
+
+Apache Logging Services projects track their release notes as individual XML files under `src/changelog/`, managed by the https://github.com/apache/logging-log4j-tools/tree/main/log4j-changelog-maven-plugin[`log4j-changelog-maven-plugin`].
+When that directory is present, the `xml-maven-plugin` validates every entry against the Log4j Changelog schema, so a malformed entry fails the build early instead of breaking release-note generation later.
+
+The schema is documented on the {logging-services-url}/xml/ns/#log4j-changelog[Log4j XML schema page].
+
+[#check-static-analysis]
+=== Static analysis
+
+Two static analysis tools scan the code on every build.
+
+Error Prone::
++
+_Phase:_ `compile`.
+Bundled into the `maven-compiler-plugin` (alongside `-Xlint:all`), it catches common Java mistakes as the code compiles.
+Its checks are fixed by {project-name} and are not configurable per project.
+
+SpotBugs + FindSecBugs::
++
+_Phase:_ `verify`.
+The `spotbugs-maven-plugin` runs SpotBugs together with the https://find-sec-bugs.github.io/[FindSecBugs] plugin for security-oriented bug patterns.
+False positives can be suppressed by adding a `spotbugs-exclude.xml` file to the project root; its presence alone activates the exclusion filter.
+
+[#check-license]
+=== License validation
+
+_Phase:_ `verify`.
+
+The https://creadur.apache.org/rat[`apache-rat-plugin`] verifies that the project complies with the
+https://www.apache.org/legal/src-headers.html[ASF Source Header and Copyright Notice Policy], failing the build when a file is missing the required ASF license header.
+
+Files that legitimately cannot carry a header or have been exempted from carrying one have been added to an exclude list.
+
+[#check-api-compatibility]
+=== API compatibility
+
+_Phase:_ `verify`.
+
+Public APIs must not change without an *explicit* version bump.
+The `bnd-baseline-maven-plugin` compares each module's exported packages against their last release and enforces https://docs.osgi.org/whitepaper/semantic-versioning/[OSGi semantic versioning]: a backward-compatible addition needs a _minor_ increment, a breaking change a _major_ one, and an internal-only fix a _micro_ one.
+Package versions are declared with the `@Version` annotation in each package's `package-info.java`.
+
+When a change is not matched by the right increment, the build fails with a table reporting the detected _delta_ (`MICRO`, `MINOR`, or `MAJOR`) and the version the plugin suggests.
+The rules for choosing the increment, and how to resolve such a failure, are explained in xref:troubleshooting.adoc#bnd-baseline[the API compatibility recipe].
+
+[#artifacts]
+== Additional generated artifacts
+
+Beyond the main JAR, the build attaches or embeds the following.
+
+[#artifacts-osgi]
+=== OSGi manifest
+
+_Phase:_ `process-classes`.
+
+The `bnd-maven-plugin` generates an OSGi `META-INF/MANIFEST.MF` and hands it to the `maven-jar-plugin`, which packages it instead of its own default manifest.
+BND derives the manifest from the compiled bytecode:
+
+* `Bundle-SymbolicName` is computed from the `groupId` and `artifactId`;
+* `Export-Package` lists the packages annotated with `org.osgi.annotation.bundle.Export` in their `package-info.java`;
+* `Import-Package` is inferred from the packages the code actually references.
+
+This automatic inference is correct in the vast majority of cases, but a few situations must be declared explicitly, for example an _optional_ dependency, whose import BND marks as mandatory unless told otherwise.
+Such cases can be tuned through the following properties, without redefining the whole BND configuration:
+
+[cols="2m,4,2",options="header"]
+|===
+| Property | Purpose | Default
+
+| bnd-extra-package-options
+| Extra `Import-Package` instructions.
+| _(empty)_
+
+| bnd-bundle-symbolicname
+| Override the computed `Bundle-SymbolicName`
+| derived from `groupId` and `artifactId`
+
+| bnd-multi-release
+| Value of the `Multi-Release` manifest header
+| `false`
+
+| bnd-extra-config
+| Arbitrary extra BND instructions, appended last.
+| _(empty)_
+|===
+
+For the full set of `bnd-*` properties and worked examples, see xref:usage.adoc[].
+
+[#artifacts-jpms]
+=== JPMS module descriptor
+
+_Phase:_ `process-classes`.
+
+The same `bnd-maven-plugin` execution that produces the <<artifacts-osgi,OSGi manifest>> also synthesizes a JPMS `module-info` descriptor from the same metadata.
+This gives each module a proper, stable module name and its `requires`, `exports`, `provides`, and `uses` directives without a hand-written `module-info.java`, which could not target Java 8 anyway.
+
+The module name defaults to the `Bundle-SymbolicName`, and the `requires` directives are inferred from the imported packages.
+When that inference needs adjusting, use the following properties:
+
+[cols="2m,4,1",options="header"]
+|===
+| Property | Purpose | Default
+
+| bnd-module-name
+| Override the generated JPMS module name
+| the `Bundle-SymbolicName`
+
+| bnd-extra-module-options
+| Refine the computed `requires` directives (see the https://bnd.bndtools.org/chapters/330-jpms.html#advanced-options[BND JPMS options]); use only when `bnd-extra-package-options` cannot express the change
+| _(empty)_
+|===
+
+[TIP]
+====
+To keep incremental recompiles working, a `maven-clean-plugin` execution deletes any stale
+`module-info.class` from the output directory before each compilation.
+This works around a `javac` limitation and is not something you need to configure.
+
+The same deletion, however, makes the classes folder look modified on every invocation.
+Use `-Dbnd.skip` to suppress the BND processing when you do not need to modify the descriptors.
+====
+
+[#artifacts-services]
+=== ServiceLoader descriptor
+
+_Phase:_ `process-classes`.
+
+`java.util.ServiceLoader` requires a provider-registration file under `META-INF/services/` and, on the module path, matching `provides` and `uses` directives in `module-info`.
+Rather than maintaining these by hand, {project-name} lets BND generate them from two annotations:
+
+`aQute.bnd.annotation.spi.ServiceProvider`::
++
+Placed on a service _implementation_, it registers the class in the appropriate `META-INF/services/<service>` file and adds a `provides <service> with <implementation>` directive to the JPMS descriptor.
+
+`aQute.bnd.annotation.spi.ServiceConsumer`::
++
+Placed on a type that looks services up through `ServiceLoader`, it adds the matching `uses <service>` directive to the JPMS descriptor.
+
+Driving both the class-path (`META-INF/services/`) and module-path (`module-info`) registrations from a single annotation keeps the two representations from drifting apart.
+
+[#artifacts-sbom]
+=== CycloneDX SBOM
+
+_Phase:_ `package`.
+
+The `cyclonedx-maven-plugin` generates a
+https://cyclonedx.org/capabilities/vdr[CycloneDX Software Bill of Materials (SBOM)] for every module, describing its resolved dependencies.
+Each SBOM is attached as an XML artifact with the `cyclonedx` classifier (`<artifactId>-<version>-cyclonedx.xml`) and carries a `vulnerability-assertion` external reference to the shared Apache Logging Services VDR.
+See xref:features.adoc#cyclonedx-sbom[] for details.
+
+[#artifacts-asf]
+=== Embedded LICENSE, NOTICE, and DEPENDENCIES
+
+_Phase:_ `generate-resources`.
+
+The `maven-remote-resources-plugin`, configured by the {asf-parent-url}[ASF Parent POM] and its shared resource bundle, contributes three files under the `META-INF/` directory of every produced JAR:
+
+`META-INF/LICENSE`:: the Apache License 2.0 text;
+`META-INF/NOTICE`:: the artifact's attribution notices;
+`META-INF/DEPENDENCIES`:: a list of the module's transitive dependencies, grouped by organization and annotated with their licenses.
+
+`META-INF/DEPENDENCIES` is always generated from the resolved dependency tree.
+`META-INF/LICENSE` and `META-INF/NOTICE`, on the other hand, are only _defaults_: a module's own `src/main/resources/META-INF/LICENSE` or `META-INF/NOTICE` takes precedence, so a module that records third-party attributions ships its curated files instead of the generated ones.
+
+[#transformations]
+== Artifact transformations
+
+[#transformations-pom]
+=== POM flattening
+
+_Phase:_ `process-resources`.
+
+The POM you write is not the POM that gets published.
+{project-name} uses https://maven.apache.org/maven-ci-friendly.html[CI-friendly versioning], so the project version is the `$\{revision}` property, and a POM still holding an unresolved `$\{revision}` is not consumable by Maven.
+The `flatten-maven-plugin` therefore rewrites the POM into a `.flattened-pom.xml`, which is the file actually installed and deployed.
+The rewrite runs in one of two modes:
+
+Default (`resolveCiFriendliesOnly`)::
++
+Only the CI-friendly properties (`$\{revision}` and friends) are resolved; the rest of the POM, including its `parent`, is preserved as-is.
+
+BOM (`bom`)::
++
+_Activated by `.logging-parent-bom-activator`._
+The POM is reduced to a self-contained Bill of Materials: besides resolving the version, the `parent`, `build`, `properties`, and `profiles` sections are removed, leaving only the managed dependencies.
+This keeps consumers of the BOM free of unrelated build configuration.
++
+A BOM must therefore *not* reference a property defined solely in an ancestor POM: `bom`-mode interpolation resolves variables from the module's own POM only, so an inherited property would be left unresolved after flattening.
+
+[#optional-extensions]
+== Optional lifecycle extensions
+
+The following profiles are not activated automatically; you enable them on the command line to add behavior to an otherwise normal build.
+
+`-Prelease`::
+Generates the additional artifacts a release requires: it attaches the `-sources` JAR and enforces that neither the project version nor any of its dependencies is a SNAPSHOT.
++
+NOTE: Apache Logging Service projects do *not* use the ASF Parent POM's `apache-release` profile; this `release` profile, together with the `deploy` or `distribution` commands, replace it.
+
+`-Pcoverage`::
+Runs the `jacoco-maven-plugin` to collect test coverage during the build and write an HTML report under `target/site/jacoco`.
+
+`-Dapache.snapshots`::
+Activates the ASF Parent POM's `use-apache-snapshots` profile, adding the https://repository.apache.org/snapshots[Apache snapshots repository].
+It lets you build only some modules of a project and resolve the rest from the regularly published SNAPSHOT artifacts, instead of building every upstream module locally.
+
+[#commands]
+== Additional commands
+
+A few profiles are not lifecycle extensions but _commands_: each carries a `defaultGoal`, so enabling the profile without naming a phase runs a single task and nothing else.
+They are normally invoked by the reusable deployment workflows, but can also be run by hand.
+
+`./mvnw -Pchangelog-release`::
+Moves the pending changelog entries from `src/changelog/.<version>.x.x/` into the released version's directory and regenerates the release notes.
+
+`./mvnw -Pdistribution`::
+Builds the source (`src.zip`) and binary (`bin.zip`) distribution archives from the Git-tracked files.
+Requires the `attachmentFilepathPattern` and `attachmentCount` properties and a prior `package`.
+
+`./mvnw -Pdeploy`::
+Signs the artifacts and deploys them to the Apache Nexus staging repository via the `nexus-staging-maven-plugin` (skipping tests, SpotBugs, and Spotless).
