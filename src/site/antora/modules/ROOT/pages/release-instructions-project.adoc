@@ -90,7 +90,6 @@ You can iterate on the `release/7.8.0` branch to perfect it.
 .. *Signed artifacts* are uploaded to the _Staging Repositories_ in https://repository.apache.org/[repository.apache.org]
 .. *Signed distribution and its checksum* (e.g., `apache-{project-id}-7.8.0-{bin,src}.{zip,.zip.asc,.zip.sha512}`) are uploaded to https://dist.apache.org/repos/dist/dev/logging/{project-id}[dist.apache.org/repos/dist/**dev**/logging/{project-id}/7.8.0] Subversion repository (along with auxiliary files; website, email texts, etc.)
 .. {site-url-staging}-7.8.0[The release staging website] is deployed using the freshly populated `release/7.8.0-site-stg-out` branch
-.. Project-specific CI for `release/`-prefixed branches succeeds.
 
 +
 If not, commit the necessary fixes, push, and repeat.
@@ -149,7 +148,7 @@ git push origin rel/7.8.0
 ====
 The ASF infrastructure treats ``rel/``-prefixed git tags special and ensures they are immutable for provenance reasons.
 ====
-. Create a branch from `main`, merge the `rel/7.8.0` tag (**not** the `release/7.8.0` branch!), and push it
+. Create a branch from `main`, merge the `rel/7.8.0` tag (**not** the `release/7.8.0` branch!), and create a PR from that
 +
 [source,bash]
 ----
