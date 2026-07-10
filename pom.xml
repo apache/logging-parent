@@ -43,60 +43,42 @@
 
   <inceptionYear>1999</inceptionYear>
 
+  <!--
+    These entries exist only to satisfy the Maven Central requirement of at least one
+    developer with a name and an email address. They deliberately point to stable team
+    aliases instead of individuals.
+
+    The `<developers>` section is inherited by child projects, so these entries apply to
+    the whole Apache Logging Services family and should NOT be overridden downstream.
+
+    We do not track individual developers or contributors here: Git history and the
+    project team page (https://logging.apache.org/team-list.html) are the authoritative,
+    always up-to-date sources.
+    -->
   <developers>
 
     <developer>
-      <id>ggregory</id>
-      <name>Gary Gregory</name>
-      <email>ggregory@apache.org</email>
-      <url>https://www.garygregory.com</url>
+      <id>logging-dev</id>
+      <name>Apache Logging Services Project Management Committee (PMC)</name>
+      <email>dev@logging.apache.org</email>
+      <url>https://logging.apache.org/team-list.html</url>
       <organization>The Apache Software Foundation</organization>
       <organizationUrl>https://www.apache.org/</organizationUrl>
       <roles>
-        <role>PMC Member</role>
+        <role>PMC</role>
       </roles>
-      <timezone>America/New_York</timezone>
     </developer>
 
     <developer>
-      <id>grobmeier</id>
-      <name>Christian Grobmeier</name>
-      <email>grobmeier@apache.org</email>
+      <id>logging-security</id>
+      <name>Apache Logging Services Security Team</name>
+      <email>security@logging.apache.org</email>
+      <url>https://logging.apache.org/security.html</url>
+      <organization>The Apache Software Foundation</organization>
+      <organizationUrl>https://www.apache.org/</organizationUrl>
       <roles>
-        <role>PMC Member</role>
+        <role>security</role>
       </roles>
-      <timezone>Europe/Berlin</timezone>
-    </developer>
-
-    <developer>
-      <id>mattsicker</id>
-      <name>Matt Sicker</name>
-      <email>mattsicker@apache.org</email>
-      <organization>Apple</organization>
-      <roles>
-        <role>PMC Member</role>
-      </roles>
-      <timezone>America/Chicago</timezone>
-    </developer>
-
-    <developer>
-      <id>pkarwasz</id>
-      <name>Piotr P. Karwasz</name>
-      <email>pkarwasz@apache.org</email>
-      <roles>
-        <role>PMC Member</role>
-      </roles>
-      <timezone>Europe/Warsaw</timezone>
-    </developer>
-
-    <developer>
-      <id>vy</id>
-      <name>Volkan Yazıcı</name>
-      <email>vy@apache.org</email>
-      <roles>
-        <role>PMC Chair</role>
-      </roles>
-      <timezone>Europe/Amsterdam</timezone>
     </developer>
 
   </developers>
