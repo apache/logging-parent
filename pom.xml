@@ -43,18 +43,7 @@
 
   <inceptionYear>1999</inceptionYear>
 
-  <!--
-    These entries exist only to satisfy the Maven Central requirement of at least one
-    developer with a name and an email address. They deliberately point to stable team
-    aliases instead of individuals.
-
-    The `<developers>` section is inherited by child projects, so these entries apply to
-    the whole Apache Logging Services family and should NOT be overridden downstream.
-
-    We do not track individual developers or contributors here: Git history and the
-    project team page (https://logging.apache.org/team-list.html) are the authoritative,
-    always up-to-date sources.
-    -->
+  <!-- Maven Central requires a `developers` element containing at least one `developer` to with a `name` and an `email`. -->
   <developers>
 
     <developer>
@@ -79,20 +68,6 @@
       <roles>
         <role>security</role>
       </roles>
-    </developer>
-
-    <!-- Don't remove these entries -->
-    <developer>
-      <id>ggregory</id>
-      <name>Gary Gregory</name>
-      <email>ggregory@apache.org</email>
-      <url>https://www.garygregory.com</url>
-      <organization>The Apache Software Foundation</organization>
-      <organizationUrl>https://www.apache.org/</organizationUrl>
-      <roles>
-        <role>PMC Member</role>
-      </roles>
-      <timezone>America/New_York</timezone>
     </developer>
 
   </developers>
