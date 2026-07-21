@@ -79,6 +79,8 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # 7.0.0
         with:
           ref: ${{ steps.pr.outputs.head-ref }}
+          # An action triggered by `workflow_run` has access to secrets.
+          # Checking out untrusted code requires an explicit opt-in.
           allow-unsafe-pr-checkout: true
 
       - name: Create changelog entries
