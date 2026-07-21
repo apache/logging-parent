@@ -79,6 +79,7 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # 7.0.0
         with:
           ref: ${{ steps.pr.outputs.head-ref }}
+          # Required to allow GitHub Actions to check out the Dependabot PR branch
           allow-unsafe-pr-checkout: true
 
       - name: Create changelog entries
