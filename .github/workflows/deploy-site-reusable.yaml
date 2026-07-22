@@ -42,8 +42,8 @@ on:
         type: string
     secrets:
       GPG_SECRET_KEY:
-        description: GPG secret key for signing commits
-        required: true
+        description: GPG secret key for signing commits (if absent, commits will not be signed)
+        required: false
 
 # Explicitly drop all permissions inherited from the caller for security.
 # Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
@@ -104,10 +104,14 @@ jobs:
 
       - name: Set up Git user
         shell: bash
+        env:
+          GPG_KEY_PRESENT: ${{ secrets.GPG_SECRET_KEY != '' }}
         run: |
           # Set up user name and email required for `git commit`
           git config user.name "ASF Logging Services RM"
           git config user.email private@logging.apache.org
+          # Sign commits only if a GPG key is available
+          git config --type bool commit.gpgsign "$GPG_KEY_PRESENT"
 
       # Checking out a new branch will delete the `node_modules` folder,
       # so we need to save the cache here.
@@ -127,7 +131,7 @@ jobs:
             git checkout --orphan "$TARGET_BRANCH"
             echo "Content for initializing an orphan branch for the website to be generated from \`$SOURCE_COMMIT_ID\`" > README.txt
             git add README.txt
-            git commit -S README.txt -m "Initial content for the website to be generated from \`$SOURCE_COMMIT_ID\`"
+            git commit README.txt -m "Initial content for the website to be generated from \`$SOURCE_COMMIT_ID\`"
             git push origin "$TARGET_BRANCH"
           }
 
@@ -163,7 +167,7 @@ jobs:
           if [ -n "$(git status --porcelain)" ]; then
 
             # Commit & push site changes
-            git commit -S -a -m "Add website content generated from \`$SOURCE_COMMIT_ID\`"
+            git commit -a -m "Add website content generated from \`$SOURCE_COMMIT_ID\`"
             git push -f origin
 
             # Populate `.asf.yaml`
@@ -180,7 +184,7 @@ jobs:
           # - Timestamp: $(date --utc '+%Y-%m-%dT%H:%M:%SZ')
           EOF
             git add .asf.yaml
-            git commit -S .asf.yaml -m "Add \`.asf.yaml\` along with an INFRA fix for the website content generated from \`$SOURCE_COMMIT_ID\`"
+            git commit .asf.yaml -m "Add \`.asf.yaml\` along with an INFRA fix for the website content generated from \`$SOURCE_COMMIT_ID\`"
 
             # Push changes *separately*!
             # A separate small commit push necessary due to the INFRA issue explained above.
