@@ -39,9 +39,9 @@ jobs:
       }}
     uses: apache/logging-parent/.github/workflows/process-dependabot-reusable.yaml@gha/v0
     permissions:
-      # The default GITHUB_TOKEN will be used to enable the "auto-merge" on the PR
-      # This requires the following two permissions:
+      # Append the changelog commit
       contents: write
+      # Enable auto-merge on the PR
       pull-requests: write
     with:
       # The path to the changelog directory for the current development branch.

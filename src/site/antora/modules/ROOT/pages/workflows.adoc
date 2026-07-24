@@ -127,7 +127,7 @@ include::example$analyze-dependabot.yaml[tag=analyze-dependabot,indent=0]
 Helps to process Dependabot pull requests by:
 
 * Generating changelog entries for the updated dependencies and committing them to the PR branch.
-* Switching the pull request into “draft mode”.
+* Enabling the “auto-merge” option on the pull request.
 
 The workflow only needs the default `GITHUB_TOKEN` with `contents: write` and `pull-requests: write` permissions.
 
@@ -135,31 +135,16 @@ This workflow is designed to be triggered by the `workflow_run` event, as soon a
 
 [NOTE]
 ====
-Pushes made with `GITHUB_TOKEN` do not retrigger workflows (GitHub anti-recursion rule), so the changelog commit cannot re-run the required checks on its own.
-This reusable workflow therefore parks the PR in “draft mode” and stops there.
+Pushes made with `GITHUB_TOKEN` do not automatically retrigger workflows (GitHub anti-recursion rule), so the changelog commit cannot re-run the required checks on its own.
+However,
+https://github.blog/changelog/2026-06-11-bot-created-pull-requests-can-run-workflows-if-approved/[since June 2026],
+the workflow runs are created in an approval-required state instead of being dropped, and a maintainer can start them manually.
 
 The expected flow for each Dependabot PR is:
 
-. The reusable workflow appends the changelog commit and converts the PR into draft.
-. A maintainer reviews the change, clicks *Ready for review*, and enables *Auto-merge*.
-. The required-check workflows re-run against the new HEAD; once they pass, *Auto-merge* completes the merge without further manual action.
-
-For step 3 to work, every workflow providing a required check must subscribe to `ready_for_review`:
-
-[source,yaml]
-----
-on:
-  pull_request:
-    types:
-      # Standard types
-      - opened
-      - synchronize
-      - reopened
-      # Used in Dependabot PRs to retrigger required workflows
-      - ready_for_review
-----
-
-This reusable workflow does **not** enable “Auto-merge”; a maintainer must do that by hand.
+. The reusable workflow appends the changelog commit to the PR branch and enables “auto-merge”.
+. A maintainer reviews the change, approves the PR, and clicks *Approve workflows to run*.
+. The required-check workflows run against the new HEAD; once they pass, *Auto-merge* completes the merge without further manual action.
 ====
 
 .Snippet from an {examples-base-link}/process-dependabot.yaml[example `process-dependabot.yaml`] using this workflow
