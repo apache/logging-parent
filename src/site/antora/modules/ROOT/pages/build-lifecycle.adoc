@@ -177,7 +177,19 @@ The following rules apply:
 All files::
 +
 Line endings are normalized to UNIX (`LF`) and the ASF license header is required.
-Set a `.gitattributes` file so that Git checks files out with `LF` on every platform.
+Set a https://git-scm.com/docs/gitattributes[`.gitattributes` file] so that Git checks files out with `LF` on every platform.
+For example:
++
+[source,gitattributes]
+----
+*.properties text lf
+*.java       text lf
+*.yaml       text lf
+*.yml        text lf
+*.xml        text lf
+# Only this file needs to have CRLF line endings
+/mvnw.cmd text crlf
+----
 
 Java::
 +
@@ -404,6 +416,8 @@ The following profiles are not activated automatically; you enable them on the c
 `-Prelease`::
 Generates the additional artifacts a release requires: it attaches the `-sources` JAR and enforces that neither the project version nor any of its dependencies is a SNAPSHOT.
 +
+Both conditions must hold: the project version itself must be a release version, and *every* dependency must be a non-SNAPSHOT version.
++
 NOTE: Apache Logging Service projects do *not* use the ASF Parent POM's `apache-release` profile; this `release` profile, together with the `deploy` or `distribution` commands, replace it.
 
 `-Pcoverage`::
@@ -420,7 +434,7 @@ A few profiles are not lifecycle extensions but _commands_: each carries a `defa
 They are normally invoked by the reusable deployment workflows, but can also be run by hand.
 
 `./mvnw -Pchangelog-release`::
-Moves the pending changelog entries from `src/changelog/.<version>.x.x/` into the released version's directory and regenerates the release notes.
+Moves the pending changelog entries from `src/changelog/.<major>.x.x/` into the released version's directory and regenerates the release notes.
 
 `./mvnw -Pdistribution`::
 Builds the source (`src.zip`) and binary (`bin.zip`) distribution archives from the Git-tracked files.
