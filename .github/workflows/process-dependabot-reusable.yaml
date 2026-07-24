@@ -43,6 +43,8 @@ jobs:
     permissions:
       # Push changelog commit
       contents: write
+      # Enable auto-merge on the PR
+      pull-requests: write
 
     steps:
 
@@ -141,3 +143,11 @@ jobs:
             git commit -m "Generate changelog entries for #$PR_ID"
             git push origin "HEAD:${HEAD_REF}"
           fi
+
+      - name: Enable auto-merge on PR
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_ID: ${{ steps.pr.outputs.id }}
+        run: |
+          gh pr merge --squash --auto "$PR_ID"
