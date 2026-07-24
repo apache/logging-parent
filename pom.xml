@@ -217,6 +217,8 @@
     <restrict-imports-enforcer-rule.version>3.0.0</restrict-imports-enforcer-rule.version>
     <spotbugs-maven-plugin.version>4.9.8.3</spotbugs-maven-plugin.version>
     <spotless-maven-plugin.version>3.4.0</spotless-maven-plugin.version>
+    <!-- RAT `0.18` requires Java 17; therefore `org.apache:apache` is stuck on RAT `0.16.1` -->
+    <version.apache-rat-plugin>0.18</version.apache-rat-plugin>
     <xml-maven-plugin.version>1.2.1</xml-maven-plugin.version>
 
     <!-- plugin dependencies versions -->
@@ -587,21 +589,31 @@
       <plugin>
         <groupId>org.apache.rat</groupId>
         <artifactId>apache-rat-plugin</artifactId>
+        <!-- Mirror the RAT invocation of the ASF Trusted Releases platform (ATR):
+             https://github.com/apache/tooling-trusted-releases/blob/main/atr/tasks/checks/rat.py -->
         <configuration>
           <consoleOutput>true</consoleOutput>
+          <inputExcludeStds>
+            <inputExcludeStd>MISC</inputExcludeStd>
+            <inputExcludeStd>HIDDEN_DIR</inputExcludeStd>
+            <inputExcludeStd>MAC</inputExcludeStd>
+          </inputExcludeStds>
+          <counterMins>
+            <counterMin>LICENSE_CATEGORIES:0</counterMin>
+            <counterMin>LICENSE_NAMES:0</counterMin>
+            <counterMin>STANDARDS:0</counterMin>
+          </counterMins>
           <excludes combine.children="append">
-            <exclude>.java-version</exclude>
-            <exclude>.mvn/jvm.config</exclude>
-            <exclude>**/*.txt</exclude>
-            <!-- The license header in changelog entry files causing Git to match irrelevant files.
-                 This is eventually causing merge conflicts.
-                 Hence, we avoid enforcing license headers there. -->
-            <exclude>src/changelog/**/*.xml</exclude>
-            <!-- License headers in GitHub templates pollute the prompt displayed to the user: -->
-            <exclude>.github/ISSUE_TEMPLATE/*.md</exclude>
-            <exclude>.github/pull_request_template.md</exclude>
-            <!-- `.logging-parent-bom-activator` activates the `bom` Maven profile: -->
-            <exclude>.logging-parent-bom-activator</exclude>
+            <!-- Generated files, always excluded by ATR (`GENERATED_FILE_SUFFIXES` in `atr/constants.py`): -->
+            <exclude>**/*.bundle.js</exclude>
+            <exclude>**/*.chunk.js</exclude>
+            <exclude>**/*.css.map</exclude>
+            <exclude>**/*.js.map</exclude>
+            <exclude>**/*.min.css</exclude>
+            <exclude>**/*.min.js</exclude>
+            <exclude>**/*.min.map</exclude>
+            <!-- ATR excludes the `.rat-excludes` file itself from the check: -->
+            <exclude>.rat-excludes</exclude>
           </excludes>
         </configuration>
         <executions>
@@ -933,6 +945,72 @@
   </build>
 
   <profiles>
+
+    <!-- The two `apache-rat-*` profiles below mirror the behavior of the ATR license check:
+         - when the checked tree contains no `.rat-excludes` file,
+           ATR applies the SCM and IDE related standard exclusion collections;
+         - when a `.rat-excludes` file is present, ATR passes it via the `input-exclude-file` option instead.
+
+         The `.rat-excludes` file is looked up in the root directory of the multi-module build,
+         which corresponds to the root of the source archive checked by ATR.
+         See: https://github.com/apache/tooling-trusted-releases/blob/main/atr/tasks/checks/rat.py -->
+    <profile>
+
+      <id>apache-rat-std-excludes</id>
+
+      <activation>
+        <file>
+          <missing>${maven.multiModuleProjectDirectory}/.rat-excludes</missing>
+        </file>
+      </activation>
+
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>org.apache.rat</groupId>
+            <artifactId>apache-rat-plugin</artifactId>
+            <configuration>
+              <inputExcludeStds combine.children="append">
+                <inputExcludeStd>MAVEN</inputExcludeStd>
+                <inputExcludeStd>ECLIPSE</inputExcludeStd>
+                <inputExcludeStd>IDEA</inputExcludeStd>
+                <inputExcludeStd>GIT</inputExcludeStd>
+                <inputExcludeStd>STANDARD_SCMS</inputExcludeStd>
+              </inputExcludeStds>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+
+    </profile>
+
+    <profile>
+
+      <id>apache-rat-excludes-file</id>
+
+      <activation>
+        <file>
+          <exists>${maven.multiModuleProjectDirectory}/.rat-excludes</exists>
+        </file>
+      </activation>
+
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>org.apache.rat</groupId>
+            <artifactId>apache-rat-plugin</artifactId>
+            <configuration>
+              <inputExcludeFile>${maven.multiModuleProjectDirectory}/.rat-excludes</inputExcludeFile>
+            </configuration>
+          </plugin>
+
+        </plugins>
+      </build>
+
+    </profile>
 
     <!-- `bom` profile to generate BOMs -->
     <profile>
