@@ -19,6 +19,10 @@
 * xref:usage.adoc[]
 * xref:release-notes.adoc[]
 
+.Build
+* xref:build-lifecycle.adoc[]
+* xref:troubleshooting.adoc[]
+
 .Release support
 * xref:release-review-instructions.adoc[]
 * xref:release-instructions-project.adoc[]
