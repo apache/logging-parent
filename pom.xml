@@ -155,6 +155,10 @@
     <!-- The same property will be used by `maven-deploy-plugin` and `nexus-staging-maven-plugin` -->
     <maven.deploy.skip>false</maven.deploy.skip>
 
+    <!-- Disable `maven-site-plugin` globally: sites are generated with Antora (see the `antora` profile) -->
+    <maven.site.skip>true</maven.site.skip>
+    <maven.site.deploy.skip>true</maven.site.deploy.skip>
+
     <!-- JPMS and OSGi options -->
     <!-- Overrides some options in multi-release JARs -->
     <bnd-multi-release>false</bnd-multi-release>
@@ -1409,14 +1413,6 @@
           <exists>src/site/antora</exists>
         </file>
       </activation>
-
-      <properties>
-
-        <!-- disable `maven-site-plugin`-->
-        <maven.site.skip>true</maven.site.skip>
-        <maven.site.deploy.skip>true</maven.site.deploy.skip>
-
-      </properties>
 
       <build>
         <plugins>
