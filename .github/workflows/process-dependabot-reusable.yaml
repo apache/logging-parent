@@ -43,8 +43,6 @@ jobs:
     permissions:
       # Push changelog commit
       contents: write
-      # Switch PR into draft mode
-      pull-requests: write
 
     steps:
 
@@ -79,6 +77,8 @@ jobs:
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # 7.0.0
         with:
           ref: ${{ steps.pr.outputs.head-ref }}
+          # The credentials will be used in the "Add & commit changes" step
+          persist-credentials: true
           # An action triggered by `workflow_run` has access to secrets.
           # Checking out untrusted code requires an explicit opt-in.
           allow-unsafe-pr-checkout: true
@@ -140,23 +140,4 @@ jobs:
           else
             git commit -m "Generate changelog entries for #$PR_ID"
             git push origin "HEAD:${HEAD_REF}"
-          fi
-
-      # Pushes made with the default `GITHUB_TOKEN` do not trigger workflows (GitHub anti-recursion rule),
-      # so the required checks will not re-run against the changelog commit pushed above.
-      # Introducing a PAT is undesirable, so we park the PR in draft mode instead.
-      # A maintainer must then:
-      #   1. Approve the PR.
-      #   2. Mark the PR as “Ready for review”, this fires `ready_for_review`,
-      #      which runs CI against the changelog commit.
-      #   3. Enable “auto-merge”.
-      - name: Switch PR into draft mode
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-          PR_ID: ${{ steps.pr.outputs.id }}
-        run: |
-          is_draft=$(gh pr view "$PR_ID" --json isDraft -q .isDraft)
-          if [ "$is_draft" = "false" ]; then
-            gh pr ready --undo "$PR_ID"
           fi
