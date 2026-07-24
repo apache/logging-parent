@@ -18,3 +18,7 @@
 *.xml  text eol=lf
 *.yaml text eol=lf
 *.yml  text eol=lf
+
+# Maven Wrapper scripts: `mvnw.cmd` must keep CRLF for `cmd.exe`
+/mvnw     text eol=lf
+/mvnw.cmd text eol=crlf
