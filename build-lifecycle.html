@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Build lifecycle :: Apache Logging Parent</title>
+    <link rel="canonical" href="https://logging.apache.org/logging-parent/build-lifecycle.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.9">
+<link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
+<!-- `@asciidoctor/tabs` extension styles -->
+<link rel="stylesheet" href="./_/css/vendor/tabs.css">
+<style>
+  /* Swap colors of `IMPORTANT` and `WARNING` blocks */
+  .doc .admonitionblock.important .icon { background-color: #f70; }
+  .doc .admonitionblock.warning .icon { background-color: #e40046; }
+  /* Default `h4`, `h5`, and `h6` are smaller than the normal text, fix header font sizing: */
+  .doc h1 { font-size: 1.9rem; }
+  .doc h2 { font-size: 1.7rem; }
+  .doc h3 { font-size: 1.5rem; font-weight: 400; }
+  .doc h4 { font-size: 1.3rem; font-weight: 500; }
+  .doc h5 { font-size: 1.1rem; font-weight: 500; text-decoration: underline; }
+  .doc h6 { font-size: 0.9rem; font-weight: 500; text-decoration: underline; }
+  /* Default `code`, `pre`, and `.colist` (source code annotations) fonts are too big, adjust them: */
+  .doc .colist>table code, .doc p code, .doc thead code { font-size: 0.8em; }
+  .doc pre { font-size: 0.7rem; }
+  .doc .colist { font-size: 0.75rem; }
+  /* Make links more visible: */
+  .doc a { text-decoration: underline; }
+  .doc a code { text-decoration: underline; color: #1565c0; }
+  /* Tab header fonts aren't rendered good, adjusting the font weight: */
+  .tablist > ul li { font-weight: 500; }
+  /* `page-toclevels` greater than 4 are not supported by Antora UI, patching it: */
+  .toc .toc-menu li[data-level="4"] a {
+    padding-left: 2.75rem;
+  }
+  /* Replace the default highlight.js color for strings from red (unnecessarily signaling something negative) to green: */
+  .hljs-string {
+    color: #0f8532;
+  }
+</style>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <span class="navbar-item title">Apache Logging Parent</span>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://logging.apache.org">a subproject of&nbsp;<strong>Apache Logging Services</strong></a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Home</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="features.html">Features</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="usage.html">Usage</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="workflows.html">Reusable GitHub Actions workflows</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-notes.html">Release notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Build</span>
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="build-lifecycle.html">Build lifecycle</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Release support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-review-instructions.html">Project release review instructions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-project.html">Project release instructions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-xml-schema.html">XML schema release instructions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li>Build</li>
+    <li><a href="build-lifecycle.html">Build lifecycle</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/apache/logging-parent/edit/main/src/site/antora/modules/ROOT/pages/build-lifecycle.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Build lifecycle</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Logging Parent extends the standard Maven <em>default</em> (build) lifecycle that runs on a plain</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw verify</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>with three kinds of additions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#checks">Additional checks</a> that fail the build when a rule is violated,</p>
+</li>
+<li>
+<p><a href="#artifacts">Additional generated artifacts</a> that are generated and attached or embedded into your JARs, and</p>
+</li>
+<li>
+<p><a href="#transformations">Artifact transformations</a> applied to the POM before it is published.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Some of these additions come from Logging Parent itself, some are inherited from the
+<a href="https://maven.apache.org/pom/asf/">ASF Parent POM</a>, and some are activated only when a particular <em>activator file</em> is present in your project.
+Each origin is called out below.</p>
+</div>
+<div class="paragraph">
+<p>Beyond a plain <code>./mvnw verify</code>, the parent also offers two opt-in mechanisms:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="#optional-extensions">Optional lifecycle extensions</a> that you enable on the command line to modify a build, and</p>
+</li>
+<li>
+<p><a href="#commands">Additional commands</a> whose default goal performs a single task on its own.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="phase-map"><a class="anchor" href="#phase-map"></a>Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following table maps each addition to the Maven phase it binds to.
+Everything listed here is triggered by a plain <code>./mvnw verify</code>, unless it is marked as conditional on an activator file.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 22.2222%;">
+<col style="width: 22.2222%;">
+<col style="width: 55.5556%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Phase</th>
+<th class="tableblock halign-left valign-top">Origin</th>
+<th class="tableblock halign-left valign-top">Additions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>validate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://maven.apache.org/pom/asf/">ASF Parent POM</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#check-build-environment">Maven &amp; Java version</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>validate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Logging Parent</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#check-dependency-convergence">Order-independent dependency resolution</a></p>
+</li>
+<li>
+<p><a href="#check-code-style">Code style</a> <em>(no wildcard imports)</em></p>
+</li>
+<li>
+<p><a href="#check-changelog">Changelog validation</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>generate-resources</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="https://maven.apache.org/pom/asf/">ASF Parent POM</a></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#artifacts-asf">Embedded LICENSE, NOTICE, and DEPENDENCIES</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>process-resources</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Logging Parent</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#transformations-pom">POM flattening</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>compile</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Logging Parent</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#check-static-analysis">Static analysis</a> <em>(ErrorProne)</em></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>process-classes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Logging Parent</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#artifacts-osgi">OSGi manifest</a></p>
+</li>
+<li>
+<p><a href="#artifacts-jpms">JPMS module descriptor</a></p>
+</li>
+<li>
+<p><a href="#artifacts-services">ServiceLoader descriptor</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>package</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Logging Parent</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#artifacts-sbom">CycloneDX SBOM</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>verify</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Logging Parent</p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p><a href="#check-code-style">Code style</a> (Spotless)</p>
+</li>
+<li>
+<p><a href="#check-license">License validation</a></p>
+</li>
+<li>
+<p><a href="#check-static-analysis">Static analysis</a> <em>(SpotBugs + FindSecBugs)</em></p>
+</li>
+<li>
+<p><a href="#check-api-compatibility">API compatibility (BND baseline)</a></p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="sect1">
+<h2 id="checks"><a class="anchor" href="#checks"></a>Additional checks</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The checks below run automatically during <code>./mvnw verify</code>.
+The trickier ones link to a debugging recipe in <a href="troubleshooting.html" class="xref page">Troubleshooting</a>.</p>
+</div>
+<div class="sect2">
+<h3 id="check-build-environment"><a class="anchor" href="#check-build-environment"></a>Maven &amp; Java version</h3>
+<div class="paragraph">
+<p><em>Phase:</em> <code>validate</code>.
+<em>Enforced by the <a href="https://maven.apache.org/pom/asf/">ASF Parent POM</a>.</em></p>
+</div>
+<div class="paragraph">
+<p>To build an Apache Logging Services project you need:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>a <strong>JDK 17</strong> (the build pins the major version <code>17</code>, not a later one), and</p>
+</li>
+<li>
+<p><strong>Maven 3.8.1 or later</strong>, most conveniently through the bundled Maven Wrapper (<code>./mvnw</code>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Both requirements are checked by the <code>maven-enforcer-plugin</code> inherited from the ASF Parent POM, through its <code>requireJavaVersion</code> and <code>requireMavenVersion</code> rules.
+These rules can be modified using the properties below:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 50%;">
+<col style="width: 16.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Controls</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>minimalJavaBuildVersion</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Range of JDK versions allowed to run the build</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[17,18)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>minimalMavenBuildVersion</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Range of Maven versions allowed to run the build</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>3.8.1</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>maven.compiler.release</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Java bytecode level the sources are compiled to</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>8</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Although most artifacts still target Java 8 bytecode (through the <code>javac --release 8</code> flag), JDK 17 is required to run the Maven plugins in use and to keep builds reproducible.
+Bytecode generation can differ between JDK major versions, so pinning a single one keeps the output byte-for-byte stable.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>JDK 17 also requires the <code>--add-exports</code> and <code>--add-opens</code> flags declared in <code>.mvn/jvm.config</code>, needed by tools that reach into JDK compiler internals (such as Error Prone).
+See <a href="usage.html" class="xref page">Usage</a>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Some projects (currently only Log4j) additionally run their test suites against a real <strong>JDK 8</strong> through
+<a href="https://maven.apache.org/guides/mini/guide-using-toolchains.html">Maven Toolchains</a>
+in CI.
+This proves runtime compatibility with the Java 8 platform, beyond the bytecode and API-surface guarantees that <code>--release 8</code> provides on its own.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="check-dependency-convergence"><a class="anchor" href="#check-dependency-convergence"></a>Order-independent dependency resolution</h3>
+<div class="paragraph">
+<p><em>Phase:</em> <code>validate</code>.</p>
+</div>
+<div class="paragraph">
+<p>Maven&#8217;s default conflict <em>mediation</em> (nearest-wins, ties broken by declaration order) can resolve a dependency to a version <em>lower</em> than some transitive dependency requires, and the outcome can shift when dependencies are reordered.
+The <code>maven-enforcer-plugin</code> <code>requireUpperBoundDeps</code> rule forbids this: it fails whenever a resolved version is lower than the highest one required across the graph.</p>
+</div>
+<div class="paragraph">
+<p>The fix is to pin that dependency to at least the highest required version, making resolution order-independent.
+See <a href="troubleshooting.html#require-upper-bound-deps" class="xref page">the Order-independent dependency resolution recipe</a> for how to read the error and adjust the pin.</p>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Pinning a transitive dependency in your <code>&lt;dependencyManagement&gt;</code> only affects <em>your</em> build.
+It has <strong>no</strong> influence on the versions resolved by downstream consumers of your artifacts.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="check-code-style"><a class="anchor" href="#check-code-style"></a>Code style</h3>
+<div class="paragraph">
+<p>Code style is enforced by the <code>spotless-maven-plugin</code> in the <code>verify</code> phase, with one exception: the ban on wildcard imports is a <code>maven-enforcer-plugin</code> rule that runs earlier, in the <code>validate</code> phase.
+The following rules apply:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">All files</dt>
+<dd>
+<div class="paragraph">
+<p>Line endings are normalized to UNIX (<code>LF</code>) and the ASF license header is required.
+Set a <a href="https://git-scm.com/docs/gitattributes"><code>.gitattributes</code> file</a> so that Git checks files out with <code>LF</code> on every platform.
+For example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-gitattributes hljs" data-lang="gitattributes">*.properties text lf
+*.java       text lf
+*.yaml       text lf
+*.yml        text lf
+*.xml        text lf
+# Only this file needs to have CRLF line endings
+/mvnw.cmd text crlf</code></pre>
+</div>
+</div>
+</dd>
+<dt class="hdlist1">Java</dt>
+<dd>
+<div class="paragraph">
+<p>Sources follow the
+<a href="https://github.com/palantir/palantir-java-format">Palantir Java format</a>, and imports must be explicit (wildcard imports are banned).</p>
+</div>
+</dd>
+<dt class="hdlist1">XML, POM, <code>.properties</code> &amp; YAML</dt>
+<dd>
+<div class="paragraph">
+<p><code>pom.xml</code> is sorted with the Spotless <a href="https://github.com/Ekryd/sortpom">sortPom</a> step; XML and YAML files also have trailing whitespace trimmed and a final newline enforced.</p>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Most violations are fixed automatically by:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">./mvnw spotless:apply</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Anything the formatter cannot fix must be corrected by hand.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The Spotless configuration must stay in sync with the project&#8217;s <code>.editorconfig</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="check-changelog"><a class="anchor" href="#check-changelog"></a>Changelog validation</h3>
+<div class="paragraph">
+<p><em>Phase:</em> <code>validate</code>.
+<em>Activated by <code>src/changelog/</code>.</em></p>
+</div>
+<div class="paragraph">
+<p>Apache Logging Services projects track their release notes as individual XML files under <code>src/changelog/</code>, managed by the <a href="https://github.com/apache/logging-log4j-tools/tree/main/log4j-changelog-maven-plugin"><code>log4j-changelog-maven-plugin</code></a>.
+When that directory is present, the <code>xml-maven-plugin</code> validates every entry against the Log4j Changelog schema, so a malformed entry fails the build early instead of breaking release-note generation later.</p>
+</div>
+<div class="paragraph">
+<p>The schema is documented on the <a href="https://logging.apache.org/xml/ns/#log4j-changelog">Log4j XML schema page</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="check-static-analysis"><a class="anchor" href="#check-static-analysis"></a>Static analysis</h3>
+<div class="paragraph">
+<p>Two static analysis tools scan the code on every build.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Error Prone</dt>
+<dd>
+<div class="paragraph">
+<p><em>Phase:</em> <code>compile</code>.
+Bundled into the <code>maven-compiler-plugin</code> (alongside <code>-Xlint:all</code>), it catches common Java mistakes as the code compiles.
+Its checks are fixed by Logging Parent and are not configurable per project.</p>
+</div>
+</dd>
+<dt class="hdlist1">SpotBugs + FindSecBugs</dt>
+<dd>
+<div class="paragraph">
+<p><em>Phase:</em> <code>verify</code>.
+The <code>spotbugs-maven-plugin</code> runs SpotBugs together with the <a href="https://find-sec-bugs.github.io/">FindSecBugs</a> plugin for security-oriented bug patterns.
+False positives can be suppressed by adding a <code>spotbugs-exclude.xml</code> file to the project root; its presence alone activates the exclusion filter.</p>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="check-license"><a class="anchor" href="#check-license"></a>License validation</h3>
+<div class="paragraph">
+<p><em>Phase:</em> <code>verify</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <a href="https://creadur.apache.org/rat"><code>apache-rat-plugin</code></a> verifies that the project complies with the
+<a href="https://www.apache.org/legal/src-headers.html">ASF Source Header and Copyright Notice Policy</a>, failing the build when a file is missing the required ASF license header.</p>
+</div>
+<div class="paragraph">
+<p>Files that legitimately cannot carry a header or have been exempted from carrying one have been added to an exclude list.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="check-api-compatibility"><a class="anchor" href="#check-api-compatibility"></a>API compatibility</h3>
+<div class="paragraph">
+<p><em>Phase:</em> <code>verify</code>.</p>
+</div>
+<div class="paragraph">
+<p>Public APIs must not change without an <strong>explicit</strong> version bump.
+The <code>bnd-baseline-maven-plugin</code> compares each module&#8217;s exported packages against their last release and enforces <a href="https://docs.osgi.org/whitepaper/semantic-versioning/">OSGi semantic versioning</a>: a backward-compatible addition needs a <em>minor</em> increment, a breaking change a <em>major</em> one, and an internal-only fix a <em>micro</em> one.
+Package versions are declared with the <code>@Version</code> annotation in each package&#8217;s <code>package-info.java</code>.</p>
+</div>
+<div class="paragraph">
+<p>When a change is not matched by the right increment, the build fails with a table reporting the detected <em>delta</em> (<code>MICRO</code>, <code>MINOR</code>, or <code>MAJOR</code>) and the version the plugin suggests.
+The rules for choosing the increment, and how to resolve such a failure, are explained in <a href="troubleshooting.html#bnd-baseline" class="xref page">the API compatibility recipe</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="artifacts"><a class="anchor" href="#artifacts"></a>Additional generated artifacts</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Beyond the main JAR, the build attaches or embeds the following.</p>
+</div>
+<div class="sect2">
+<h3 id="artifacts-osgi"><a class="anchor" href="#artifacts-osgi"></a>OSGi manifest</h3>
+<div class="paragraph">
+<p><em>Phase:</em> <code>process-classes</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>bnd-maven-plugin</code> generates an OSGi <code>META-INF/MANIFEST.MF</code> and hands it to the <code>maven-jar-plugin</code>, which packages it instead of its own default manifest.
+BND derives the manifest from the compiled bytecode:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Bundle-SymbolicName</code> is computed from the <code>groupId</code> and <code>artifactId</code>;</p>
+</li>
+<li>
+<p><code>Export-Package</code> lists the packages annotated with <code>org.osgi.annotation.bundle.Export</code> in their <code>package-info.java</code>;</p>
+</li>
+<li>
+<p><code>Import-Package</code> is inferred from the packages the code actually references.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>This automatic inference is correct in the vast majority of cases, but a few situations must be declared explicitly, for example an <em>optional</em> dependency, whose import BND marks as mandatory unless told otherwise.
+Such cases can be tuned through the following properties, without redefining the whole BND configuration:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 25%;">
+<col style="width: 50%;">
+<col style="width: 25%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bnd-extra-package-options</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Extra <code>Import-Package</code> instructions.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>(empty)</em></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bnd-bundle-symbolicname</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Override the computed <code>Bundle-SymbolicName</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">derived from <code>groupId</code> and <code>artifactId</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bnd-multi-release</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Value of the <code>Multi-Release</code> manifest header</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bnd-extra-config</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Arbitrary extra BND instructions, appended last.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>(empty)</em></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>For the full set of <code>bnd-*</code> properties and worked examples, see <a href="usage.html" class="xref page">Usage</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="artifacts-jpms"><a class="anchor" href="#artifacts-jpms"></a>JPMS module descriptor</h3>
+<div class="paragraph">
+<p><em>Phase:</em> <code>process-classes</code>.</p>
+</div>
+<div class="paragraph">
+<p>The same <code>bnd-maven-plugin</code> execution that produces the <a href="#artifacts-osgi">OSGi manifest</a> also synthesizes a JPMS <code>module-info</code> descriptor from the same metadata.
+This gives each module a proper, stable module name and its <code>requires</code>, <code>exports</code>, <code>provides</code>, and <code>uses</code> directives without a hand-written <code>module-info.java</code>, which could not target Java 8 anyway.</p>
+</div>
+<div class="paragraph">
+<p>The module name defaults to the <code>Bundle-SymbolicName</code>, and the <code>requires</code> directives are inferred from the imported packages.
+When that inference needs adjusting, use the following properties:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 28.5714%;">
+<col style="width: 57.1428%;">
+<col style="width: 14.2858%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Purpose</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bnd-module-name</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Override the generated JPMS module name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">the <code>Bundle-SymbolicName</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>bnd-extra-module-options</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Refine the computed <code>requires</code> directives (see the <a href="https://bnd.bndtools.org/chapters/330-jpms.html#advanced-options">BND JPMS options</a>); use only when <code>bnd-extra-package-options</code> cannot express the change</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>(empty)</em></p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>To keep incremental recompiles working, a <code>maven-clean-plugin</code> execution deletes any stale
+<code>module-info.class</code> from the output directory before each compilation.
+This works around a <code>javac</code> limitation and is not something you need to configure.</p>
+</div>
+<div class="paragraph">
+<p>The same deletion, however, makes the classes folder look modified on every invocation.
+Use <code>-Dbnd.skip</code> to suppress the BND processing when you do not need to modify the descriptors.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="artifacts-services"><a class="anchor" href="#artifacts-services"></a>ServiceLoader descriptor</h3>
+<div class="paragraph">
+<p><em>Phase:</em> <code>process-classes</code>.</p>
+</div>
+<div class="paragraph">
+<p><code>java.util.ServiceLoader</code> requires a provider-registration file under <code>META-INF/services/</code> and, on the module path, matching <code>provides</code> and <code>uses</code> directives in <code>module-info</code>.
+Rather than maintaining these by hand, Logging Parent lets BND generate them from two annotations:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>aQute.bnd.annotation.spi.ServiceProvider</code></dt>
+<dd>
+<div class="paragraph">
+<p>Placed on a service <em>implementation</em>, it registers the class in the appropriate <code>META-INF/services/&lt;service&gt;</code> file and adds a <code>provides &lt;service&gt; with &lt;implementation&gt;</code> directive to the JPMS descriptor.</p>
+</div>
+</dd>
+<dt class="hdlist1"><code>aQute.bnd.annotation.spi.ServiceConsumer</code></dt>
+<dd>
+<div class="paragraph">
+<p>Placed on a type that looks services up through <code>ServiceLoader</code>, it adds the matching <code>uses &lt;service&gt;</code> directive to the JPMS descriptor.</p>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p>Driving both the class-path (<code>META-INF/services/</code>) and module-path (<code>module-info</code>) registrations from a single annotation keeps the two representations from drifting apart.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="artifacts-sbom"><a class="anchor" href="#artifacts-sbom"></a>CycloneDX SBOM</h3>
+<div class="paragraph">
+<p><em>Phase:</em> <code>package</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>cyclonedx-maven-plugin</code> generates a
+<a href="https://cyclonedx.org/capabilities/vdr">CycloneDX Software Bill of Materials (SBOM)</a> for every module, describing its resolved dependencies.
+Each SBOM is attached as an XML artifact with the <code>cyclonedx</code> classifier (<code>&lt;artifactId&gt;-&lt;version&gt;-cyclonedx.xml</code>) and carries a <code>vulnerability-assertion</code> external reference to the shared Apache Logging Services VDR.
+See <a href="features.html#cyclonedx-sbom" class="xref page">features.adoc#cyclonedx-sbom</a> for details.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="artifacts-asf"><a class="anchor" href="#artifacts-asf"></a>Embedded LICENSE, NOTICE, and DEPENDENCIES</h3>
+<div class="paragraph">
+<p><em>Phase:</em> <code>generate-resources</code>.</p>
+</div>
+<div class="paragraph">
+<p>The <code>maven-remote-resources-plugin</code>, configured by the <a href="https://maven.apache.org/pom/asf/">ASF Parent POM</a> and its shared resource bundle, contributes three files under the <code>META-INF/</code> directory of every produced JAR:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>META-INF/LICENSE</code></dt>
+<dd>
+<p>the Apache License 2.0 text;</p>
+</dd>
+<dt class="hdlist1"><code>META-INF/NOTICE</code></dt>
+<dd>
+<p>the artifact&#8217;s attribution notices;</p>
+</dd>
+<dt class="hdlist1"><code>META-INF/DEPENDENCIES</code></dt>
+<dd>
+<p>a list of the module&#8217;s transitive dependencies, grouped by organization and annotated with their licenses.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph">
+<p><code>META-INF/DEPENDENCIES</code> is always generated from the resolved dependency tree.
+<code>META-INF/LICENSE</code> and <code>META-INF/NOTICE</code>, on the other hand, are only <em>defaults</em>: a module&#8217;s own <code>src/main/resources/META-INF/LICENSE</code> or <code>META-INF/NOTICE</code> takes precedence, so a module that records third-party attributions ships its curated files instead of the generated ones.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="transformations"><a class="anchor" href="#transformations"></a>Artifact transformations</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="transformations-pom"><a class="anchor" href="#transformations-pom"></a>POM flattening</h3>
+<div class="paragraph">
+<p><em>Phase:</em> <code>process-resources</code>.</p>
+</div>
+<div class="paragraph">
+<p>The POM you write is not the POM that gets published.
+Logging Parent uses <a href="https://maven.apache.org/maven-ci-friendly.html">CI-friendly versioning</a>, so the project version is the <code>${revision}</code> property, and a POM still holding an unresolved <code>${revision}</code> is not consumable by Maven.
+The <code>flatten-maven-plugin</code> therefore rewrites the POM into a <code>.flattened-pom.xml</code>, which is the file actually installed and deployed.
+The rewrite runs in one of two modes:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Default (<code>resolveCiFriendliesOnly</code>)</dt>
+<dd>
+<div class="paragraph">
+<p>Only the CI-friendly properties (<code>${revision}</code> and friends) are resolved; the rest of the POM, including its <code>parent</code>, is preserved as-is.</p>
+</div>
+</dd>
+<dt class="hdlist1">BOM (<code>bom</code>)</dt>
+<dd>
+<div class="paragraph">
+<p><em>Activated by <code>.logging-parent-bom-activator</code>.</em>
+The POM is reduced to a self-contained Bill of Materials: besides resolving the version, the <code>parent</code>, <code>build</code>, <code>properties</code>, and <code>profiles</code> sections are removed, leaving only the managed dependencies.
+This keeps consumers of the BOM free of unrelated build configuration.</p>
+</div>
+<div class="paragraph">
+<p>A BOM must therefore <strong>not</strong> reference a property defined solely in an ancestor POM: <code>bom</code>-mode interpolation resolves variables from the module&#8217;s own POM only, so an inherited property would be left unresolved after flattening.</p>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="optional-extensions"><a class="anchor" href="#optional-extensions"></a>Optional lifecycle extensions</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The following profiles are not activated automatically; you enable them on the command line to add behavior to an otherwise normal build.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>-Prelease</code></dt>
+<dd>
+<p>Generates the additional artifacts a release requires: it attaches the <code>-sources</code> JAR and enforces that neither the project version nor any of its dependencies is a SNAPSHOT.</p>
+<div class="paragraph">
+<p>Both conditions must hold: the project version itself must be a release version, and <strong>every</strong> dependency must be a non-SNAPSHOT version.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Apache Logging Service projects do <strong>not</strong> use the ASF Parent POM&#8217;s <code>apache-release</code> profile; this <code>release</code> profile, together with the <code>deploy</code> or <code>distribution</code> commands, replace it.
+</td>
+</tr>
+</table>
+</div>
+</dd>
+<dt class="hdlist1"><code>-Pcoverage</code></dt>
+<dd>
+<p>Runs the <code>jacoco-maven-plugin</code> to collect test coverage during the build and write an HTML report under <code>target/site/jacoco</code>.</p>
+</dd>
+<dt class="hdlist1"><code>-Dapache.snapshots</code></dt>
+<dd>
+<p>Activates the ASF Parent POM&#8217;s <code>use-apache-snapshots</code> profile, adding the <a href="https://repository.apache.org/snapshots">Apache snapshots repository</a>.
+It lets you build only some modules of a project and resolve the rest from the regularly published SNAPSHOT artifacts, instead of building every upstream module locally.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="commands"><a class="anchor" href="#commands"></a>Additional commands</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>A few profiles are not lifecycle extensions but <em>commands</em>: each carries a <code>defaultGoal</code>, so enabling the profile without naming a phase runs a single task and nothing else.
+They are normally invoked by the reusable deployment workflows, but can also be run by hand.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1"><code>./mvnw -Pchangelog-release</code></dt>
+<dd>
+<p>Moves the pending changelog entries from <code>src/changelog/.&lt;major&gt;.x.x/</code> into the released version&#8217;s directory and regenerates the release notes.</p>
+</dd>
+<dt class="hdlist1"><code>./mvnw -Pdistribution</code></dt>
+<dd>
+<p>Builds the source (<code>src.zip</code>) and binary (<code>bin.zip</code>) distribution archives from the Git-tracked files.
+Requires the <code>attachmentFilepathPattern</code> and <code>attachmentCount</code> properties and a prior <code>package</code>.</p>
+</dd>
+<dt class="hdlist1"><code>./mvnw -Pdeploy</code></dt>
+<dd>
+<p>Signs the artifacts and deploys them to the Apache Nexus staging repository via the <code>nexus-staging-maven-plugin</code> (skipping tests, SpotBugs, and Spotless).</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>
+    Copyright © 1999-2026 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
+    Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
+    Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
+  </p>
+  <p>
+    Apache, Log4j, and the Apache feather logo are trademarks or registered trademarks of The Apache Software Foundation.
+    Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+    Other names may be trademarks of their respective owners.
+  </p>
+</footer>
+<script id="site-script" src="./_/js/site.js" data-ui-root-path="./_"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+<!-- `@asciidoctor/tabs` extension scripts -->
+<script async src="./_/js/vendor/tabs.js"></script>
+  </body>
+</html>

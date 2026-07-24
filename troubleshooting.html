@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Troubleshooting :: Apache Logging Parent</title>
+    <link rel="canonical" href="https://logging.apache.org/logging-parent/troubleshooting.html">
+    <meta name="generator" content="Antora 3.2.0-alpha.9">
+<link rel="stylesheet" href="./_/css/site.css">
+<link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
+<!-- `@asciidoctor/tabs` extension styles -->
+<link rel="stylesheet" href="./_/css/vendor/tabs.css">
+<style>
+  /* Swap colors of `IMPORTANT` and `WARNING` blocks */
+  .doc .admonitionblock.important .icon { background-color: #f70; }
+  .doc .admonitionblock.warning .icon { background-color: #e40046; }
+  /* Default `h4`, `h5`, and `h6` are smaller than the normal text, fix header font sizing: */
+  .doc h1 { font-size: 1.9rem; }
+  .doc h2 { font-size: 1.7rem; }
+  .doc h3 { font-size: 1.5rem; font-weight: 400; }
+  .doc h4 { font-size: 1.3rem; font-weight: 500; }
+  .doc h5 { font-size: 1.1rem; font-weight: 500; text-decoration: underline; }
+  .doc h6 { font-size: 0.9rem; font-weight: 500; text-decoration: underline; }
+  /* Default `code`, `pre`, and `.colist` (source code annotations) fonts are too big, adjust them: */
+  .doc .colist>table code, .doc p code, .doc thead code { font-size: 0.8em; }
+  .doc pre { font-size: 0.7rem; }
+  .doc .colist { font-size: 0.75rem; }
+  /* Make links more visible: */
+  .doc a { text-decoration: underline; }
+  .doc a code { text-decoration: underline; color: #1565c0; }
+  /* Tab header fonts aren't rendered good, adjusting the font weight: */
+  .tablist > ul li { font-weight: 500; }
+  /* `page-toclevels` greater than 4 are not supported by Antora UI, patching it: */
+  .toc .toc-menu li[data-level="4"] a {
+    padding-left: 2.75rem;
+  }
+  /* Replace the default highlight.js color for strings from red (unnecessarily signaling something negative) to green: */
+  .hljs-string {
+    color: #0f8532;
+  }
+</style>
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <span class="navbar-item title">Apache Logging Parent</span>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <a class="navbar-item" href="https://logging.apache.org">a subproject of&nbsp;<strong>Apache Logging Services</strong></a>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <button class="nav-menu-toggle" aria-label="Toggle expand/collapse all" style="display: none"></button>
+    <h3 class="title"><a href="index.html">Home</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="features.html">Features</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="usage.html">Usage</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="workflows.html">Reusable GitHub Actions workflows</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-notes.html">Release notes</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Build</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="build-lifecycle.html">Build lifecycle</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="troubleshooting.html">Troubleshooting</a>
+  </li>
+</ul>
+  </li>
+  <li class="nav-item" data-depth="0">
+    <button class="nav-item-toggle"></button>
+    <span class="nav-text">Release support</span>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-review-instructions.html">Project release review instructions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-project.html">Project release instructions</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-instructions-xml-schema.html">XML schema release instructions</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Home</a></li>
+    <li>Build</li>
+    <li><a href="troubleshooting.html">Troubleshooting</a></li>
+  </ul>
+</nav>
+<div class="edit-this-page"><a href="https://github.com/apache/logging-parent/edit/main/src/site/antora/modules/ROOT/pages/troubleshooting.adoc">Edit this Page</a></div>
+</div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Troubleshooting</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This page collects debugging recipes for the build checks that are not self-explanatory.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The version numbers <code>x.y.z</code> and <code>a.b.c</code> used on this page are placeholders for the project version and a package version, with increments written as <code>x.y+1.0</code> or <code>a.b.c+1</code>.
+Real build output contains concrete versions instead.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="bnd-baseline"><a class="anchor" href="#bnd-baseline"></a>API compatibility (BND baseline)</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="build-lifecycle.html#check-api-compatibility" class="xref page">API compatibility check</a> (<code>bnd-baseline-maven-plugin</code>) fails a build when the public API of a module changed in a way that is not reflected in its version numbers.
+When it trips, <code>./mvnw verify</code> prints a report (also written to <code>target/baseline/&lt;artifactId&gt;-&lt;version&gt;.txt</code>) similar to:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">===============================================================
+  Name                             Type     Delta     New               Old      Suggest
+  org.apache.logging.log4j.api     BUNDLE   MAJOR     x.y+1.0.SNAPSHOT  x.y.z    -
+===============================================================
+  Name                             Type     Delta     New       Old      Suggest  If Prov.
+* org.apache.logging.log4j         PACKAGE  MINOR     a.b.c     a.b.c    a.b+1.0  -
+  MINOR              PACKAGE    org.apache.logging.log4j
+    MINOR            CLASS      org.apache.logging.log4j.MarkerManager
+      ADDED          METHOD     triggerBaselineError()
+        ADDED        ACCESS     static
+        ADDED        RETURN     int
+  org.apache.logging.log4j.message PACKAGE  UNCHANGED d.e.f     d.e.f    ok       -
+  ...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Read it as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The rows marked with <code>*</code> are the ones you must fix.</p>
+</li>
+<li>
+<p><code>Delta</code> is the kind of change BND detected in that package: <code>MICRO</code>, <code>MINOR</code>, or <code>MAJOR</code>.</p>
+</li>
+<li>
+<p><code>Old</code> is the version of the package in the last release, <code>New</code> is the version you currently declare.</p>
+</li>
+<li>
+<p><code>Suggest</code> is the <strong>minimal</strong> version that would satisfy the detected change.</p>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The <code>Suggest</code> value is only BND&#8217;s <em>minimal</em> acceptable version; we do not always adopt it verbatim.
+For a <code>MICRO</code> change we follow the suggestion, but for a <code>MINOR</code> change we align the package version with the project version instead.
+See <a href="#bnd-baseline-why">Why these rules?</a> for the rationale.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>The indented tree below a package explains <em>why</em> that delta was computed (here, a <code>static</code> method <code>triggerBaselineError()</code> was <code>ADDED</code>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Package versions are declared with the <code>@Version</code> annotation of the package&#8217;s <code>package-info.java</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Version("a.b.c")
+package org.apache.logging.log4j;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>How you resolve the failure depends on the <code>Delta</code>.</p>
+</div>
+<div class="sect2">
+<h3 id="bnd-baseline-micro"><a class="anchor" href="#bnd-baseline-micro"></a><code>MICRO</code></h3>
+<div class="paragraph">
+<p>A change that is both binary- and source-compatible but that BND still detects, most commonly an annotation added to or removed from an API member and retained in its bytecode.</p>
+</div>
+<div class="paragraph">
+<p>Bump the <strong>patch</strong> component of the package version to the value in the <code>Suggest</code> column, <strong>not</strong> to the upcoming project version, by editing its <code>package-info.java</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Version("a.b.c+1")
+package org.apache.logging.log4j;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Here we keep the suggested <code>a.b.c+1</code>, regardless of the upcoming project version; see <a href="#bnd-baseline-why">Why these rules?</a>.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="bnd-baseline-minor"><a class="anchor" href="#bnd-baseline-minor"></a><code>MINOR</code></h3>
+<div class="paragraph">
+<p>A backward-compatible addition to the public API: a new method, class, field, or constant.
+In the report above, adding the <code>triggerBaselineError()</code> method produced a <code>MINOR</code> delta on <code>org.apache.logging.log4j</code>.</p>
+</div>
+<div class="paragraph">
+<p>Resolve it in three steps:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>Make the project version a minor upgrade over the last release.</strong>
+Adding API requires a new minor release, so the project version must reflect it.
+If the <code>&lt;revision&gt;</code> property is only a patch upgrade (for example <code>x.y.1-SNAPSHOT</code> after the <code>x.y.0</code> release), raise it to the next minor version (<code>x.y+1.0-SNAPSHOT</code>).</p>
+</li>
+<li>
+<p><strong>Record the change in the changelog.</strong>
+Add an entry of type <code>added</code> (or <code>changed</code> / <code>deprecated</code>, as appropriate) to the pending changelog directory <code>src/changelog/.&lt;major&gt;.x.x/</code>, so the addition appears in the release notes.</p>
+</li>
+<li>
+<p><strong>Bump the package version.</strong>
+Set the <code>@Version</code> in the package&#8217;s <code>package-info.java</code> to the upcoming project version, <strong>not</strong> to the minimal value in the <code>Suggest</code> column:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">@Version("x.y+1.0")
+package org.apache.logging.log4j;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Using the project version <code>x.y+1.0</code> rather than the suggested <code>a.b+1.0</code> is deliberate; see <a href="#bnd-baseline-why">Why these rules?</a>.</p>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="bnd-baseline-major"><a class="anchor" href="#bnd-baseline-major"></a><code>MAJOR</code></h3>
+<div class="paragraph">
+<p>A breaking change: a public member was removed, renamed, or changed in an incompatible way.
+On a stable branch (for example Log4j <code>2.x</code>) this is <strong>not</strong> accepted, and bumping the package major version is not an option.</p>
+</div>
+<div class="paragraph">
+<p>Instead of changing the version, rework the change so that it stays backward-compatible, for example by deprecating a member instead of removing it, or by adding an overload instead of altering an existing signature.</p>
+</div>
+<div class="paragraph">
+<p>If you are convinced the report is a false positive (for example, the member you removed was documented as private), ask the development team before overriding the check.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="bnd-baseline-why"><a class="anchor" href="#bnd-baseline-why"></a>Why these rules?</h3>
+<div class="paragraph">
+<p>These conventions make a package&#8217;s <code>@Version</code> tell you, at a glance, when its public API last changed.</p>
+</div>
+<div class="paragraph">
+<p>Because a <code>MINOR</code> change sets the package version to the project version, while a <code>MICRO</code> change only increments the patch component, a package version such as <code>a.b.c</code> reads as:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>its public API last changed in release <code>a.b.0</code>, and</p>
+</li>
+<li>
+<p><code>c</code> smaller, API-compatible revisions have been published since.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Had we used BND&#8217;s minimal <code>Suggest</code> value instead, the minor component would not line up with any release, and the version would carry no such meaning.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="require-upper-bound-deps"><a class="anchor" href="#require-upper-bound-deps"></a>Order-independent dependency resolution</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The <a href="build-lifecycle.html#check-dependency-convergence" class="xref page">Order-independent dependency resolution check</a> (the <code>maven-enforcer-plugin</code> <code>requireUpperBoundDeps</code> rule) fails when the version Maven resolves for a dependency is lower than a version required elsewhere in the graph.</p>
+</div>
+<div class="paragraph">
+<p>A failure looks like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">Rule 0: ...RequireUpperBoundDeps failed with message:
+Failed while enforcing RequireUpperBoundDeps. The error(s) are [
+Require upper bound dependencies error for commons-codec:commons-codec:1.10. Paths to dependency are:
++-test:upperbound-test:1.0
+  +-commons-codec:commons-codec:1.10
+and
++-test:upperbound-test:1.0
+  +-org.apache.httpcomponents:httpclient:4.5.13
+    +-commons-codec:commons-codec:1.11
+]</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Read it as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The header names the <strong>resolved</strong> version that is too low (<code>commons-codec:1.10</code>).</p>
+</li>
+<li>
+<p>Each <code>Paths to dependency</code> block is one route through the tree.
+The first route shows how the low version was selected (here <code>commons-codec</code> is declared directly); the others show who requires a higher version (<code>httpclient:4.5.13</code> needs <code>1.11</code>).</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>To fix it, find where the too-low version is defined, usually in the project&#8217;s parent POM, where all dependency versions are managed.</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">If the parent POM does <strong>not</strong> pin <code>commons-codec</code></dt>
+<dd>
+<p>Add it to the parent&#8217;s <code>&lt;dependencyManagement&gt;</code> at a version at least as high as the highest one required (<code>1.11</code> here).</p>
+</dd>
+<dt class="hdlist1">If the parent POM already pins <code>commons-codec</code></dt>
+<dd>
+<p>The pin is what forced the lower version, so it is the cause of the failure.
+Bump it to at least the required minimum (<code>1.11</code>).</p>
+<div class="paragraph">
+<p>It is also worth trying to <strong>remove</strong> the pin altogether: the direct dependencies that once needed it may have since upgraded to mutually compatible versions, making the pin unnecessary.</p>
+</div>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <p>
+    Copyright © 1999-2026 <a href="https://www.apache.org/">The Apache Software Foundation</a>.
+    Licensed under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache Software License, Version 2.0</a>.
+    Please read our <a href="https://privacy.apache.org/policies/privacy-policy-public.html">privacy policy</a>.
+  </p>
+  <p>
+    Apache, Log4j, and the Apache feather logo are trademarks or registered trademarks of The Apache Software Foundation.
+    Oracle and Java are registered trademarks of Oracle and/or its affiliates.
+    Other names may be trademarks of their respective owners.
+  </p>
+</footer>
+<script id="site-script" src="./_/js/site.js" data-ui-root-path="./_"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+<!-- `@asciidoctor/tabs` extension scripts -->
+<script async src="./_/js/vendor/tabs.js"></script>
+  </body>
+</html>
