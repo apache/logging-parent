@@ -112,7 +112,12 @@ jobs:
           NEXUS_URL: ${{ inputs.nexus-url }}
           REFERENCE_ARTIFACT_NAME: ${{ inputs.reference-artifact-name }}
         run: |
-          REFERENCE_REPO="$NEXUS_URL"
+          REFERENCE_REPO=""
+
+          if [ -n "$NEXUS_URL" ] && [ -n "$REFERENCE_ARTIFACT_NAME" ]; then
+            echo '::error::Provide exactly one of `nexus-url` or `reference-artifact-name`, not both.'
+            exit 1
+          fi
 
           # Computes the URI of the local repository, if `reference-artifact-name` was given.
           if [ -n "$REFERENCE_ARTIFACT_NAME" ]; then
@@ -123,10 +128,9 @@ jobs:
             fi
             # Strip the leading `/`, if present, to form a valid `file:///` URL on all platforms
             REFERENCE_REPO="file:///${TEMP_DIR#/}/reference-repository"
-          fi
-
-          # Runs Maven
-          if [ -z "$REFERENCE_REPO" ]; then
+          elif [ -n "$NEXUS_URL" ]; then
+            REFERENCE_REPO="$NEXUS_URL"
+          else
             echo '::error::Either `nexus-url` or `reference-artifact-name` must be provided.'
             exit 1
           fi
