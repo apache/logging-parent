@@ -50,6 +50,7 @@ jobs:
           whoami: ${{ github.ref_name }}-site-stg-out
           subdir: content/log4j/2.x
       install-required: true
+      npm-dependencies-ref: {project-gha-version}
       target-branch: ${{ github.ref_name }}-site-stg-out
 # end::snapshot[]
 
@@ -69,6 +70,7 @@ jobs:
           whoami: ${{ github.ref_name }}-out
           subdir: content/log4j/2.x
       install-required: true
+      npm-dependencies-ref: {project-gha-version}
       target-branch: ${{ github.ref_name }}-out
 # end::production[]
 
@@ -101,5 +103,6 @@ jobs:
           whoami: ${{ github.ref_name }}-site-stg-out
           subdir: content/log4j/${{ needs.export-version.outputs.version }}
       install-required: true
+      # `npm-dependencies-ref` is omitted: the `package.json` committed in the repository is used
       target-branch: ${{ github.ref_name }}-site-stg-out
 # end::release-candidate[]
