@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "@org.apache.logging/logging-parent": "github:apache/logging-parent#gha/v0"
+    "@org.apache.logging/logging-parent": "github:apache/logging-parent#feat/gha/npm-central-deps"
   }
 }
