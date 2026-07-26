@@ -28,7 +28,14 @@ on:
         description: Additional Maven arguments
         type: string
       nexus-url:
-        description: The URL of the reference Nexus repository
+        description: >
+          The URL of the reference Nexus repository.
+          Exactly one of `nexus-url` and `reference-artifact-name` must be provided.
+        type: string
+      reference-artifact-name:
+        description: >
+          Name of a run artifact containing the reference Maven repository.
+          Exactly one of `nexus-url` and `reference-artifact-name` must be provided.
         type: string
       runs-on:
         description: The type of runners to use as JSON array
@@ -37,7 +44,6 @@ on:
 
 env:
   MAVEN_ARGS: ${{ inputs.maven-args }}
-  NEXUS_URL: ${{ inputs.nexus-url }}
 
 # Explicitly drop all permissions inherited from the caller for security.
 # Reference: https://docs.github.com/en/actions/sharing-automations/reusing-workflows#access-and-permissions
@@ -90,15 +96,48 @@ jobs:
           restore-keys: |
             ${{ env.CACHE_KEY }}-${{ runner.os }}-
 
+      # Contains the exact artifacts deployed by `deploy-snapshot-reusable`.
+      - name: Download reference repository
+        if: inputs.reference-artifact-name
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ inputs.reference-artifact-name }}
+          path: ${{ runner.temp }}/reference-repository
+
       # `clean verify artifact:compare` is required to generate the build reproducibility report.
       # For details, see: https://maven.apache.org/guides/mini/guide-reproducible-builds.html#how-to-test-my-maven-build-reproducibility
       - name: Verify build reproducibility
         shell: bash
+        env:
+          NEXUS_URL: ${{ inputs.nexus-url }}
+          REFERENCE_ARTIFACT_NAME: ${{ inputs.reference-artifact-name }}
         run: |
+          REFERENCE_REPO=""
+
+          if [ -n "$NEXUS_URL" ] && [ -n "$REFERENCE_ARTIFACT_NAME" ]; then
+            echo '::error::Provide exactly one of `nexus-url` or `reference-artifact-name`, not both.'
+            exit 1
+          fi
+
+          # Computes the URI of the local repository, if `reference-artifact-name` was given.
+          if [ -n "$REFERENCE_ARTIFACT_NAME" ]; then
+            TEMP_DIR="$RUNNER_TEMP"
+            # On Windows, convert `D:\a\_temp` to `D:/a/_temp`
+            if command -v cygpath > /dev/null; then
+              TEMP_DIR=$(cygpath -m "$TEMP_DIR")
+            fi
+            # Strip the leading `/`, if present, to form a valid `file:///` URL on all platforms
+            REFERENCE_REPO="file:///${TEMP_DIR#/}/reference-repository"
+          elif [ -n "$NEXUS_URL" ]; then
+            REFERENCE_REPO="$NEXUS_URL"
+          else
+            echo '::error::Either `nexus-url` or `reference-artifact-name` must be provided.'
+            exit 1
+          fi
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             -DskipTests=true \
-            -Dreference.repo="${NEXUS_URL}" \
+            -Dreference.repo="${REFERENCE_REPO}" \
             clean verify artifact:compare
 
       # Upload reproducibility results if the build fails.
