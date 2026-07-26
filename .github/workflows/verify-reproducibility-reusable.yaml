@@ -112,13 +112,13 @@ jobs:
           NEXUS_URL: ${{ inputs.nexus-url }}
           REFERENCE_ARTIFACT_NAME: ${{ inputs.reference-artifact-name }}
         run: |
-          REFERENCE_REPO=""
-
           if [ -n "$NEXUS_URL" ] && [ -n "$REFERENCE_ARTIFACT_NAME" ]; then
             echo '::error::Provide exactly one of `nexus-url` or `reference-artifact-name`, not both.'
             exit 1
           fi
 
+          echo '::group::Determine reference repository'
+          REFERENCE_REPO=""
           # Computes the URI of the local repository, if `reference-artifact-name` was given.
           if [ -n "$REFERENCE_ARTIFACT_NAME" ]; then
             TEMP_DIR="$RUNNER_TEMP"
@@ -134,11 +134,37 @@ jobs:
             echo '::error::Either `nexus-url` or `reference-artifact-name` must be provided.'
             exit 1
           fi
+          echo "Using reference repository: $REFERENCE_REPO"
+          echo '::endgroup::'
+
+          echo '::group::Purge snapshots from the local Maven repository'
+          # Snapshot artifacts restored from the GitHub Actions cache shadow the reference repository during resolution,
+          # so their presence means the cache was polluted by a previous run.
+          if [ -d ~/.m2/repository ]; then
+            find ~/.m2/repository -type d -name '*-SNAPSHOT' -prune -print0 | while IFS= read -r -d '' dir; do
+              find "$dir" -type f -print0 | while IFS= read -r -d '' file; do
+                echo "::warning::Purging stale snapshot file: $file"
+              done
+              rm -rf "$dir"
+            done
+          fi
+          echo '::endgroup::'
+
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             -DskipTests=true \
             -Dreference.repo="${REFERENCE_REPO}" \
             clean verify artifact:compare
+
+      # Remove all snapshots from the local Maven repository before it is saved to the GitHub Actions cache,
+      # so that the reference artifacts resolved by `artifact:compare` do not contaminate the cache.
+      - name: Purge snapshots from Maven cache
+        if: always()
+        shell: bash
+        run: |
+          if [ -d ~/.m2/repository ]; then
+            find ~/.m2/repository -type d -name '*-SNAPSHOT' -prune -exec rm -rf {} +
+          fi
 
       # Upload reproducibility results if the build fails.
       - name: Upload reproducibility results
