@@ -40,7 +40,7 @@ jobs:
     permissions:
       # Append the changelog commit
       contents: write
-      # Convert the PR into draft
+      # Enable auto-merge on the PR
       pull-requests: write
     with:
       # The path to the changelog directory for the current development branch.
