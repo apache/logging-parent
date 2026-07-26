@@ -141,8 +141,8 @@ jobs:
           # Snapshot artifacts restored from the GitHub Actions cache shadow the reference repository during resolution,
           # so their presence means the cache was polluted by a previous run.
           if [ -d ~/.m2/repository ]; then
-            find ~/.m2/repository -type d -name '*-SNAPSHOT' -prune | while IFS= read -r dir; do
-              find "$dir" -type f | while IFS= read -r file; do
+            find ~/.m2/repository -type d -name '*-SNAPSHOT' -prune -print0 | while IFS= read -r -d '' dir; do
+              find "$dir" -type f -print0 | while IFS= read -r -d '' file; do
                 echo "::warning::Purging stale snapshot file: $file"
               done
               rm -rf "$dir"
