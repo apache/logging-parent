@@ -27,6 +27,15 @@ on:
       maven-args:
         description: Additional Maven arguments
         type: string
+      npm-dependencies-ref:
+        description: |
+          Git branch or tag to download `package.json` and `package-lock.json` from.
+          If empty, no files are downloaded.
+        type: string
+      npm-dependencies-repository:
+        description: URL of the Git repository to download the NPM dependency manifests from
+        default: "https://github.com/apache/logging-parent.git"
+        type: string
       ref:
         description: The branch, tag or SHA to checkout
         # When running on `pull_request_target` use the PR branch, not the target branch
@@ -112,20 +121,26 @@ jobs:
             **/target/surefire-reports
             **/target/logs
 
+      # NPM dependencies are managed centrally on the `gha/v0` branch of `apache/logging-parent`.
+      - name: Download NPM dependency manifests
+        if: inputs.site-enabled && inputs.npm-dependencies-ref
+        shell: bash
+        env:
+          NPM_DEPENDENCIES_REPOSITORY: ${{ inputs.npm-dependencies-repository }}
+          NPM_DEPENDENCIES_REF: ${{ inputs.npm-dependencies-ref }}
+        run: |
+          git clone --depth 1 --branch "$NPM_DEPENDENCIES_REF" "$NPM_DEPENDENCIES_REPOSITORY" "$RUNNER_TEMP/npm-dependencies"
+          cp "$RUNNER_TEMP/npm-dependencies/package.json" \
+            "$RUNNER_TEMP/npm-dependencies/package-lock.json" \
+            "$GITHUB_WORKSPACE"
+
       # Node.js cache is needed for Antora
       - name: Set up Node.js cache
         if: inputs.site-enabled
         id: nodejs-cache
         uses: actions/cache@v6
         with:
-          # We should be calculating the cache key using `package-lock.json` instead!
-          # See https://stackoverflow.com/a/48524475/1278899
-          # For that, `package-lock.json` needs to be committed into the repository – right now it is `.gitignore`d.
-          # Once it is there, we should ideally switch from `npm i` to `npm ci`.
-          # For that, we need to configure `dependabot` to update hundreds of dependencies listed in `package-lock.json`.
-          # That translates to a never ending rain of `dependabot` PRs.
-          # I doubt if the wasted CPU cycles worth the gain.
-          key: "${{ runner.os }}-nodejs-cache-${{ hashFiles('node', 'node_modules') }}"
+          key: "${{ runner.os }}-nodejs-cache-${{ hashFiles('package.json', 'package-lock.json') }}"
           # `actions/cache` doesn't recommend caching `node_modules`.
           # Though none of its recipes fit our bill, since we install Node.js using `frontend-maven-plugin`.
           # See https://github.com/actions/cache/blob/main/examples.md#node---npm
