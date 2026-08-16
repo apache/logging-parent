@@ -61,9 +61,6 @@ github:
   features:
     issues: true
 
-  # Clear Protected Branches configuration: it is replaced by GitHub Rulesets
-  protected_branches: ~
-
   rulesets:
     - name: "Branch protection: parent POM"
       type: branch
