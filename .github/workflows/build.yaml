@@ -47,8 +47,9 @@ permissions: { }
 jobs:
 
   build:
-    uses: apache/logging-parent/.github/workflows/build-reusable.yaml@gha/v0
+    uses: apache/logging-parent/.github/workflows/build-reusable.yaml@feat/gha/npm-central-deps
     with:
+      npm-dependencies-ref: feat/gha/npm-central-deps
       site-enabled: true
 
   deploy-snapshot:

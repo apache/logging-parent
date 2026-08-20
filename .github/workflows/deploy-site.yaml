@@ -48,6 +48,7 @@ jobs:
           profile: ~
           whoami: ${{ github.ref_name }}-site-stg-out
           subdir: content/logging-parent
+      npm-dependencies-ref: gha/v0
       target-branch: ${{ github.ref_name }}-site-stg-out
 
   deploy-site-pro:
@@ -64,6 +65,7 @@ jobs:
         publish:
           whoami: ${{ github.ref_name }}-out
           subdir: content/logging-parent
+      npm-dependencies-ref: gha/v0
       target-branch: ${{ github.ref_name }}-out
 
   export-version:

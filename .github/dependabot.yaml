@@ -41,15 +41,6 @@ updates:
         patterns: [ "*" ]
     target-branch: "main"
 
-  - package-ecosystem: npm
-    directory: "/"
-    schedule:
-      interval: monthly
-    groups:
-      dependencies:
-        patterns: [ "*" ]
-    target-branch: "main"
-
   # endregion
 
   # region `gha/v0` updates
@@ -62,6 +53,18 @@ updates:
       default-days: 7
     groups:
       dependencies:
+        patterns: [ "*" ]
+    target-branch: "gha/v0"
+
+  # The NPM dependencies shared by all Apache Logging websites are managed on the `gha/v0` branch
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: monthly
+    cooldown:
+      default-days: 7
+    groups:
+      npm-updates:
         patterns: [ "*" ]
     target-branch: "gha/v0"
 
