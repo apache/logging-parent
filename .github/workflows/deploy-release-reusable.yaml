@@ -88,6 +88,11 @@ jobs:
           # Set up user name and email required for `git commit`
           git config user.name "ASF Logging Services RM"
           git config user.email private@logging.apache.org
+          # Share the author date of the checked out commit with all automatic commits
+          # and the `project.build.outputTimestamp` Maven property.
+          # The author date, unlike the committer date, survives squash commits and
+          # rebases, which makes re-runs of this workflow idempotent.
+          echo "GIT_AUTHOR_DATE=$(TZ=UTC0 git show --quiet --date="format-local:%Y-%m-%dT%H:%M:%SZ" --format="%ad")" >> $GITHUB_ENV
 
       - name: Export version
         id: version
@@ -142,11 +147,8 @@ jobs:
             fi
           }
           update_property revision "$PROJECT_VERSION" "Set version to \`$PROJECT_VERSION\`"
-          # The author date, unlike the committer date, survives squash commits and rebases.
-          # Backdating the commit below to it makes re-runs of this step no-ops.
-          export TIMESTAMP=$(TZ=UTC0 git show --quiet --date="format-local:%Y-%m-%dT%H:%M:%SZ" --format="%ad")
-          export GIT_AUTHOR_DATE="$TIMESTAMP"
-          update_property project.build.outputTimestamp "$TIMESTAMP" "Update the \`project.build.outputTimestamp\` property"
+          # `GIT_AUTHOR_DATE` is exported by the `Set up Git user` step
+          update_property project.build.outputTimestamp "$GIT_AUTHOR_DATE" "Update the \`project.build.outputTimestamp\` property"
           git push -f origin
 
       - name: Upload to Nexus
