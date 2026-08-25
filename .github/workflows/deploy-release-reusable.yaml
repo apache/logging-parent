@@ -82,7 +82,7 @@ jobs:
           server-password: NEXUS_PASSWORD
           gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
 
-      - name: Set up Git user
+      - name: Set up Git
         shell: bash
         run: |
           # Set up user name and email required for `git commit`
@@ -147,7 +147,7 @@ jobs:
             fi
           }
           update_property revision "$PROJECT_VERSION" "Set version to \`$PROJECT_VERSION\`"
-          # `GIT_AUTHOR_DATE` is exported by the `Set up Git user` step
+          # `GIT_AUTHOR_DATE` is exported by the `Set up Git` step
           update_property project.build.outputTimestamp "$GIT_AUTHOR_DATE" "Update the \`project.build.outputTimestamp\` property"
           git push -f origin
 
