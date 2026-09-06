@@ -28,6 +28,9 @@ on:
       project-version:
         description: The version of the project
         value: ${{ jobs.deploy.outputs.project-version }}
+      repository-artifact-name:
+        description: Name of the run artifact containing the deployed Maven repository
+        value: ${{ jobs.deploy.outputs.repository-artifact-name }}
     secrets:
       NEXUS_USERNAME:
         description: Nexus snapshot repository username for deploying artifacts
@@ -45,6 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       project-version: ${{ steps.version.outputs.project-version }}
+      repository-artifact-name: deploy-snapshot-repository
     steps:
 
       - name: Checkout repository
@@ -83,3 +87,13 @@ jobs:
           ./mvnw \
             --show-version --batch-mode --errors --no-transfer-progress \
             -P deploy
+
+      # `nexus-staging-maven-plugin` gathers the artifacts in this directory before uploading them.
+      # `verify-reproducibility-reusable` uses this artifact.
+      - name: Upload deployed repository
+        uses: actions/upload-artifact@v7
+        with:
+          name: deploy-snapshot-repository
+          path: target/nexus-staging/deferred
+          if-no-files-found: error
+          retention-days: 1
