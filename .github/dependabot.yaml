@@ -29,6 +29,10 @@ updates:
       dependencies:
         patterns: [ "*" ]
     target-branch: "main"
+    ignore:
+      # 1.8.0 NPEs on the ${revision} CI-friendly version setup
+      - dependency-name: "org.codehaus.mojo:flatten-maven-plugin"
+        versions: [ "[1.8,)" ]
 
   - package-ecosystem: github-actions
     directory: "/"
