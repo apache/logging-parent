@@ -82,12 +82,17 @@ jobs:
           server-password: NEXUS_PASSWORD
           gpg-private-key: ${{ secrets.GPG_SECRET_KEY }}
 
-      - name: Set up Git user
+      - name: Set up Git
         shell: bash
         run: |
           # Set up user name and email required for `git commit`
           git config user.name "ASF Logging Services RM"
           git config user.email private@logging.apache.org
+          # Share the author date of the checked out commit with all automatic commits
+          # and the `project.build.outputTimestamp` Maven property.
+          # The author date, unlike the committer date, survives squash commits and
+          # rebases, which makes re-runs of this workflow idempotent.
+          echo "GIT_AUTHOR_DATE=$(TZ=UTC0 git show --quiet --date="format-local:%Y-%m-%dT%H:%M:%SZ" --format="%ad")" >> $GITHUB_ENV
 
       - name: Export version
         id: version
@@ -104,53 +109,47 @@ jobs:
           # Export version to calling workflow
           echo "project-version=$PROJECT_VERSION" >> $GITHUB_OUTPUT
 
-      - name: Set the Maven `revision` property
-        shell: bash
-        run: |
-          export REVISION=$(./mvnw \
-            --non-recursive --quiet --batch-mode \
-            -DforceStdout=true \
-            -Dexpression=revision \
-            help:evaluate \
-            | tail -n 1)
-          if [ "$REVISION" != "$PROJECT_VERSION" ]; then
-            echo "Maven \`revision\` property \`$REVISION\` doesn't match with the project version \`$PROJECT_VERSION\`, updating \`pom.xml\`..."
-            ./mvnw \
-              --non-recursive --batch-mode --errors --no-transfer-progress \
-              -Dproperty=revision \
-              -DnewVersion="$PROJECT_VERSION" \
-              -DgenerateBackupPoms=false \
-              versions:set-property
-            git commit -S pom.xml -m "Set version to \`$PROJECT_VERSION\`"
-            git push -f origin
-          fi
-
-      - name: Set the Maven `project.build.outputTimestamp` property
-        shell: bash
-        run: |
-          export PROPERTY="project.build.outputTimestamp"
-          grep -qE '^[\t ]+<'$PROPERTY'>' pom.xml || {
-            echo "Failed to find the \`$PROPERTY\` Maven property!"
-            exit 1
-          }
-          export TIMESTAMP=$(TZ=UTC0 git show --quiet --date="format-local:%Y-%m-%dT%H:%M:%SZ" --format="%cd")
-          sed -r 's|^([\t ]+<'$PROPERTY'>).+(</'$PROPERTY'>)$|\1'$TIMESTAMP'\2|g' -i pom.xml
-          if [ -n "$(git status --porcelain)" ]; then
-            git commit -S pom.xml -m "Update the \`$PROPERTY\` property"
-            git push -f origin
-          fi
-
       - name: Release changelog
         shell: bash
         run: |
+          # `revision` is overridden explicitly, since the `pom.xml` is only updated in the next step
           ./mvnw \
             --non-recursive --batch-mode --errors --no-transfer-progress \
+            -Drevision="$PROJECT_VERSION" \
             -P changelog-release
           git add src
-          if [ -n "$(git status --porcelain)" ]; then
+          if [ -n "$(git status --porcelain -- src)" ]; then
             git commit -S src -m "Release changelog for version \`$PROJECT_VERSION\`"
-            git push -f origin
           fi
+
+      - name: Set the Maven `revision` and `project.build.outputTimestamp` properties
+        shell: bash
+        run: |
+          # update_property <property> <value> <commit-message>
+          # Updates <property> in every `pom.xml` defining it and commits if anything changed
+          update_property() {
+            local property="$1" value="$2" message="$3" pom poms
+            readarray -t poms < <(git grep -lE "^[[:space:]]*<$property>" -- 'pom.xml' '*/pom.xml' ':!src/**')
+            [ "${#poms[@]}" -gt 0 ] || {
+              echo "Failed to find the \`$property\` Maven property!"
+              exit 1
+            }
+            for pom in "${poms[@]}"; do
+              ./mvnw -f "$pom" \
+                --non-recursive --batch-mode --errors --no-transfer-progress \
+                -Dproperty="$property" \
+                -DnewVersion="$value" \
+                -DgenerateBackupPoms=false \
+                versions:set-property
+            done
+            if [ -n "$(git status --porcelain -- "${poms[@]}")" ]; then
+              git commit -S -m "$message" -- "${poms[@]}"
+            fi
+          }
+          update_property revision "$PROJECT_VERSION" "Set version to \`$PROJECT_VERSION\`"
+          # `GIT_AUTHOR_DATE` is exported by the `Set up Git` step
+          update_property project.build.outputTimestamp "$GIT_AUTHOR_DATE" "Update the \`project.build.outputTimestamp\` property"
+          git push -f origin
 
       - name: Upload to Nexus
         id: nexus
