@@ -1,0 +1,171 @@
+////
+    Licensed to the Apache Software Foundation (ASF) under one or more
+    contributor license agreements.  See the NOTICE file distributed with
+    this work for additional information regarding copyright ownership.
+    The ASF licenses this file to You under the Apache License, Version 2.0
+    (the "License"); you may not use this file except in compliance with
+    the License.  You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+////
+
+[#troubleshooting]
+= Troubleshooting
+
+This page collects debugging recipes for the build checks that are not self-explanatory.
+
+NOTE: The version numbers `x.y.z` and `a.b.c` used on this page are placeholders for the project version and a package version, with increments written as `x.y+1.0` or `a.b.c+1`.
+Real build output contains concrete versions instead.
+
+[#bnd-baseline]
+== API compatibility (BND baseline)
+
+The xref:build-lifecycle.adoc#check-api-compatibility[API compatibility check] (`bnd-baseline-maven-plugin`) fails a build when the public API of a module changed in a way that is not reflected in its version numbers.
+When it trips, `./mvnw verify` prints a report (also written to `target/baseline/<artifactId>-<version>.txt`) similar to:
+
+[source]
+----
+===============================================================
+  Name                             Type     Delta     New               Old      Suggest
+  org.apache.logging.log4j.api     BUNDLE   MAJOR     x.y+1.0.SNAPSHOT  x.y.z    -
+===============================================================
+  Name                             Type     Delta     New       Old      Suggest  If Prov.
+* org.apache.logging.log4j         PACKAGE  MINOR     a.b.c     a.b.c    a.b+1.0  -
+  MINOR              PACKAGE    org.apache.logging.log4j
+    MINOR            CLASS      org.apache.logging.log4j.MarkerManager
+      ADDED          METHOD     triggerBaselineError()
+        ADDED        ACCESS     static
+        ADDED        RETURN     int
+  org.apache.logging.log4j.message PACKAGE  UNCHANGED d.e.f     d.e.f    ok       -
+  ...
+----
+
+Read it as follows:
+
+* The rows marked with `*` are the ones you must fix.
+* `Delta` is the kind of change BND detected in that package: `MICRO`, `MINOR`, or `MAJOR`.
+* `Old` is the version of the package in the last release, `New` is the version you currently declare.
+* `Suggest` is the *minimal* version that would satisfy the detected change.
++
+[IMPORTANT]
+====
+The `Suggest` value is only BND's _minimal_ acceptable version; we do not always adopt it verbatim.
+For a `MICRO` change we follow the suggestion, but for a `MINOR` change we align the package version with the project version instead.
+See <<bnd-baseline-why>> for the rationale.
+====
+* The indented tree below a package explains _why_ that delta was computed (here, a `static` method `triggerBaselineError()` was `ADDED`).
+
+Package versions are declared with the `@Version` annotation of the package's `package-info.java`:
+
+[source,java]
+----
+@Version("a.b.c")
+package org.apache.logging.log4j;
+----
+
+How you resolve the failure depends on the `Delta`.
+
+[#bnd-baseline-micro]
+=== `MICRO`
+
+A change that is both binary- and source-compatible but that BND still detects, most commonly an annotation added to or removed from an API member and retained in its bytecode.
+
+Bump the *patch* component of the package version to the value in the `Suggest` column, *not* to the upcoming project version, by editing its `package-info.java`:
+
+[source,java]
+----
+@Version("a.b.c+1")
+package org.apache.logging.log4j;
+----
+
+Here we keep the suggested `a.b.c+1`, regardless of the upcoming project version; see <<bnd-baseline-why>>.
+
+[#bnd-baseline-minor]
+=== `MINOR`
+
+A backward-compatible addition to the public API: a new method, class, field, or constant.
+In the report above, adding the `triggerBaselineError()` method produced a `MINOR` delta on `org.apache.logging.log4j`.
+
+Resolve it in three steps:
+
+. *Make the project version a minor upgrade over the last release.*
+Adding API requires a new minor release, so the project version must reflect it.
+If the `<revision>` property is only a patch upgrade (for example `x.y.1-SNAPSHOT` after the `x.y.0` release), raise it to the next minor version (`x.y+1.0-SNAPSHOT`).
+. *Record the change in the changelog.*
+Add an entry of type `added` (or `changed` / `deprecated`, as appropriate) to the pending changelog directory `src/changelog/.<major>.x.x/`, so the addition appears in the release notes.
+. *Bump the package version.*
+Set the `@Version` in the package's `package-info.java` to the upcoming project version, *not* to the minimal value in the `Suggest` column:
++
+[source,java]
+----
+@Version("x.y+1.0")
+package org.apache.logging.log4j;
+----
++
+Using the project version `x.y+1.0` rather than the suggested `a.b+1.0` is deliberate; see <<bnd-baseline-why>>.
+
+[#bnd-baseline-major]
+=== `MAJOR`
+
+A breaking change: a public member was removed, renamed, or changed in an incompatible way.
+On a stable branch (for example Log4j `2.x`) this is *not* accepted, and bumping the package major version is not an option.
+
+Instead of changing the version, rework the change so that it stays backward-compatible, for example by deprecating a member instead of removing it, or by adding an overload instead of altering an existing signature.
+
+If you are convinced the report is a false positive (for example, the member you removed was documented as private), ask the development team before overriding the check.
+
+[#bnd-baseline-why]
+=== Why these rules?
+
+These conventions make a package's `@Version` tell you, at a glance, when its public API last changed.
+
+Because a `MINOR` change sets the package version to the project version, while a `MICRO` change only increments the patch component, a package version such as `a.b.c` reads as:
+
+* its public API last changed in release `a.b.0`, and
+* `c` smaller, API-compatible revisions have been published since.
+
+Had we used BND's minimal `Suggest` value instead, the minor component would not line up with any release, and the version would carry no such meaning.
+
+[#require-upper-bound-deps]
+== Order-independent dependency resolution
+
+The xref:build-lifecycle.adoc#check-dependency-convergence[Order-independent dependency resolution check] (the `maven-enforcer-plugin` `requireUpperBoundDeps` rule) fails when the version Maven resolves for a dependency is lower than a version required elsewhere in the graph.
+
+A failure looks like this:
+
+[source]
+----
+Rule 0: ...RequireUpperBoundDeps failed with message:
+Failed while enforcing RequireUpperBoundDeps. The error(s) are [
+Require upper bound dependencies error for commons-codec:commons-codec:1.10. Paths to dependency are:
++-test:upperbound-test:1.0
+  +-commons-codec:commons-codec:1.10
+and
++-test:upperbound-test:1.0
+  +-org.apache.httpcomponents:httpclient:4.5.13
+    +-commons-codec:commons-codec:1.11
+]
+----
+
+Read it as follows:
+
+* The header names the *resolved* version that is too low (`commons-codec:1.10`).
+* Each `Paths to dependency` block is one route through the tree.
+The first route shows how the low version was selected (here `commons-codec` is declared directly); the others show who requires a higher version (`httpclient:4.5.13` needs `1.11`).
+
+To fix it, find where the too-low version is defined, usually in the project's parent POM, where all dependency versions are managed.
+
+If the parent POM does *not* pin `commons-codec`::
+Add it to the parent's `<dependencyManagement>` at a version at least as high as the highest one required (`1.11` here).
+
+If the parent POM already pins `commons-codec`::
+The pin is what forced the lower version, so it is the cause of the failure.
+Bump it to at least the required minimum (`1.11`).
++
+It is also worth trying to *remove* the pin altogether: the direct dependencies that once needed it may have since upgraded to mutually compatible versions, making the pin unnecessary.
