@@ -2,12 +2,15 @@
   "name": "@org.apache.logging/logging-parent",
   "version": "1.0.0",
   "license": "Apache-2.0",
+  "//": {
+    "asciidoctor-kroki": "Keep on the 0.18.x line: 1.x requires Asciidoctor.js 4, which Antora does not support yet (https://gitlab.com/antora/antora/-/work_items/1213)",
+    "fast-xml-parser": "Not used by Antora itself, but required by the `apiref` Antora extension of Log4j Core"
+  },
   "dependencies": {
-    "@antora/cli": "^3.2.0-alpha.4",
-    "@antora/site-generator-default": "^3.2.0-alpha.4",
+    "@antora/cli": "^3.2.0",
+    "@antora/site-generator-default": "^3.2.0",
     "@asciidoctor/tabs": "^1.0.0-beta.6",
     "asciidoctor-kroki": "^0.18.1",
-    "fast-xml-parser": "^5.0.6",
-    "handlebars": "^4.7.8"
+    "fast-xml-parser": "^5.11.1"
   }
 }
