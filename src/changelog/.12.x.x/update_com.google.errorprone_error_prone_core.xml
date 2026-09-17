@@ -4,5 +4,6 @@
        xsi:schemaLocation="https://logging.apache.org/xml/ns https://logging.apache.org/xml/ns/log4j-changelog-0.xsd"
        type="updated">
   <issue id="519" link="https://github.com/apache/logging-parent/pull/519"/>
+  <issue id="525" link="https://github.com/apache/logging-parent/pull/525"/>
   <description format="asciidoc">Update `com.google.errorprone:error_prone_core` to version `2.42.0`, the last version supporting JDK 17</description>
 </entry>
