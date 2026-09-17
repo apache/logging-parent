@@ -71,5 +71,9 @@ updates:
       npm-updates:
         patterns: [ "*" ]
     target-branch: "gha/v0"
+    ignore:
+      # 1.x requires Asciidoctor.js 4, which Antora does not support yet: https://gitlab.com/antora/antora/-/work_items/1213
+      - dependency-name: "asciidoctor-kroki"
+        versions: [ ">=1.0.0" ]
 
   # endregion
