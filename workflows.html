@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Reusable GitHub Actions workflows :: Apache Logging Parent</title>
     <link rel="canonical" href="https://logging.apache.org/logging-parent/workflows.html">
-    <meta name="generator" content="Antora 3.2.0-alpha.9">
+    <meta name="generator" content="Antora 3.2.0-alpha.11">
 <link rel="stylesheet" href="./_/css/site.css">
 <link rel="icon" href="./_/../_images/favicon.ico" type="image/x-icon">
 <!-- `@asciidoctor/tabs` extension styles -->
@@ -446,6 +446,10 @@ This reusable workflow therefore parks the PR in “draft mode” and stops ther
 <div class="paragraph">
 <p>This workflow builds and deploys the website.</p>
 </div>
+<div class="paragraph">
+<p>If the <code>npm-dependencies-ref</code> input is provided, the NPM dependencies are downloaded from that branch or tag of <a href="https://github.com/apache/logging-parent"><code>logging-parent</code></a> (or of the repository given in <code>npm-dependencies-repository</code>).
+Otherwise the <code>package.json</code> committed in the repository is used.</p>
+</div>
 <div class="sect2">
 <h3 id="deploy-site-examples"><a class="anchor" href="#deploy-site-examples"></a>Examples</h3>
 <div class="paragraph">
@@ -470,6 +474,7 @@ This reusable workflow therefore parks the PR in “draft mode” and stops ther
         whoami: ${{ github.ref_name }}-site-stg-out
         subdir: content/log4j/2.x
     install-required: true
+    npm-dependencies-ref: gha/v0
     target-branch: ${{ github.ref_name }}-site-stg-out</code></pre>
 </div>
 </div>
@@ -507,6 +512,7 @@ deploy-site-rel:
         whoami: ${{ github.ref_name }}-site-stg-out
         subdir: content/log4j/${{ needs.export-version.outputs.version }}
     install-required: true
+    # `npm-dependencies-ref` is omitted: the `package.json` committed in the repository is used
     target-branch: ${{ github.ref_name }}-site-stg-out</code></pre>
 </div>
 </div>
@@ -531,6 +537,7 @@ deploy-site-rel:
         whoami: ${{ github.ref_name }}-out
         subdir: content/log4j/2.x
     install-required: true
+    npm-dependencies-ref: gha/v0
     target-branch: ${{ github.ref_name }}-out</code></pre>
 </div>
 </div>
