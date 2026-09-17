@@ -173,6 +173,9 @@ include::example$process-dependabot.yaml[tag=process-dependabot,indent=0]
 
 This workflow builds and deploys the website.
 
+If the `npm-dependencies-ref` input is provided, the NPM dependencies are downloaded from that branch or tag of {project-github-url}[`logging-parent`] (or of the repository given in `npm-dependencies-repository`).
+Otherwise the `package.json` committed in the repository is used.
+
 [#deploy-site-examples]
 === Examples
 
