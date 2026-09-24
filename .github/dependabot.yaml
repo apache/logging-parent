@@ -33,6 +33,9 @@ updates:
       # 1.8.0 NPEs on the ${revision} CI-friendly version setup: https://github.com/mojohaus/flatten-maven-plugin/issues/523
       - dependency-name: "org.codehaus.mojo:flatten-maven-plugin"
         versions: [ "[1.8,)" ]
+      # 2.43.0 and later require JDK 21 to run, whereas downstream projects still build with JDK 17
+      - dependency-name: "com.google.errorprone:error_prone_core"
+        versions: [ "[2.43,)" ]
 
   - package-ecosystem: github-actions
     directory: "/"
