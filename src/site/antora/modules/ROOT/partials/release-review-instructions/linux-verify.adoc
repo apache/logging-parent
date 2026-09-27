@@ -17,6 +17,7 @@ limitations under the License.
 
 [source,bash]
 ----
+export CI=false
 sh mvnw verify \
   -Prelease artifact:compare \ #<1>
   -Dreference.repo=https://repository.apache.org/... #<2>
