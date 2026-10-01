@@ -199,7 +199,7 @@
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
     <node.version>21.7.1</node.version>
     <npm.version>10.5.0</npm.version>
-    <palantir-java-format.version>2.98.0</palantir-java-format.version>
+    <palantir-java-format.version>2.99.0</palantir-java-format.version>
 
     <!-- plugin versions -->
     <asciidoctor-maven-plugin.version>3.2.0</asciidoctor-maven-plugin.version>
@@ -216,7 +216,7 @@
     <maven-artifact-plugin.version>3.7.0</maven-artifact-plugin.version>
     <restrict-imports-enforcer-rule.version>3.0.2</restrict-imports-enforcer-rule.version>
     <spotbugs-maven-plugin.version>4.10.4.1</spotbugs-maven-plugin.version>
-    <spotless-maven-plugin.version>3.10.2</spotless-maven-plugin.version>
+    <spotless-maven-plugin.version>3.10.3</spotless-maven-plugin.version>
     <xml-maven-plugin.version>1.2.2</xml-maven-plugin.version>
 
     <!-- plugin dependencies versions -->
