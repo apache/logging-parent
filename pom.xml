@@ -199,7 +199,7 @@
     <!-- These are annotation with a retention of CLASS. They can be freely upgraded. -->
     <node.version>21.7.1</node.version>
     <npm.version>10.5.0</npm.version>
-    <palantir-java-format.version>2.99.0</palantir-java-format.version>
+    <palantir-java-format.version>2.103.0</palantir-java-format.version>
 
     <!-- plugin versions -->
     <asciidoctor-maven-plugin.version>3.2.0</asciidoctor-maven-plugin.version>
@@ -211,12 +211,12 @@
     <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
     <frontend-maven-plugin.version>2.0.2</frontend-maven-plugin.version>
     <gmavenplus-plugin.version>5.1.0</gmavenplus-plugin.version>
-    <jacoco-maven-plugin.version>0.8.15</jacoco-maven-plugin.version>
+    <jacoco-maven-plugin.version>0.8.16</jacoco-maven-plugin.version>
     <log4j-changelog-maven-plugin.version>0.9.0</log4j-changelog-maven-plugin.version>
     <maven-artifact-plugin.version>3.7.0</maven-artifact-plugin.version>
     <restrict-imports-enforcer-rule.version>3.0.2</restrict-imports-enforcer-rule.version>
-    <spotbugs-maven-plugin.version>4.10.4.1</spotbugs-maven-plugin.version>
-    <spotless-maven-plugin.version>3.10.3</spotless-maven-plugin.version>
+    <spotbugs-maven-plugin.version>4.10.5.0</spotbugs-maven-plugin.version>
+    <spotless-maven-plugin.version>3.10.4</spotless-maven-plugin.version>
     <xml-maven-plugin.version>1.2.2</xml-maven-plugin.version>
 
     <!-- plugin dependencies versions -->
