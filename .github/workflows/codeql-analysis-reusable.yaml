@@ -39,7 +39,7 @@ jobs:
 
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Permissions required to publish Security Alerts
     permissions:
       security-events: write

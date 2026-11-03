@@ -61,7 +61,7 @@ permissions: { }
 jobs:
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       # Write permissions for committing the generated site
       contents: write
