@@ -45,7 +45,7 @@ permissions: { }
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       project-version: ${{ steps.version.outputs.project-version }}
       repository-artifact-name: deploy-snapshot-repository

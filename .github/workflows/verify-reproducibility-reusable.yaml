@@ -39,7 +39,7 @@ on:
         type: string
       runs-on:
         description: The type of runners to use as JSON array
-        default: '["ubuntu-latest"]'
+        default: '["ubuntu-24.04"]'
         type: string
 
 env:
