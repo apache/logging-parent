@@ -64,10 +64,12 @@ jobs:
 
     steps:
 
+      # Check out the commit that triggered the workflow, not the branch head:
+      # a newer push may have landed since `deploy-snapshot` built the reference artifacts.
       - name: Checkout repository
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.ref }}
+          ref: ${{ github.sha }}
 
       - name: Set up Java
         uses: actions/setup-java@v6
